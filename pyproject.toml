@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm", "wheel", "pip"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nullm"
+dynamic = ["version", "dependencies"]
+description = ""
+authors = [
+    { name = "darkshapes" },
+]
+requires-python = ">= 3.11"
+
+[project.optional-dependencies]
+core = [
+    # PyTorch extensions
+    # (torch, torchvision, and torchaudio version are determined by system in setup.py)
+    "diffusers",
+    "transformers",
+    "accelerate",
+    "peft",
+
+    # Other machine learning libraries
+    "llama-cpp-python",
+    "sentencepiece",
+    "scipy",
+
+    # Graph data structure
+    "networkx",
+
+    # Server libraries
+    "fastapi",
+    "uvicorn",
+    "watchfiles",
+    "websockets",
+
+    # Environment management
+    "dulwich",
+    "virtualenv",
+
+    # Data validation
+    "pydantic",
+    "pydantic_settings",
+]
+dev = [
+    # Testing frameworks and tools
+    "pytest",
+    "pytest-asyncio",
+]
+
+[tool.setuptools]
+packages = ["null"]
+
+[tool.setuptools_scm]
