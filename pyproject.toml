@@ -1,54 +1,29 @@
-[build-system]
-requires = ["setuptools", "setuptools-scm", "wheel", "pip"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "nullm"
-dynamic = ["version", "dependencies"]
-description = ""
+name = "null"
+description = "Automated, local-first diffusers"
+version = "0.0.01"
 authors = [
     { name = "darkshapes" },
 ]
 requires-python = ">= 3.11"
-
-[project.optional-dependencies]
-core = [
-    # PyTorch extensions
-    # (torch, torchvision, and torchaudio version are determined by system in setup.py)
+dependencies = [
     "diffusers",
     "transformers",
     "accelerate",
-    "peft",
-
-    # Other machine learning libraries
     "llama-cpp-python",
+    "peft",
     "sentencepiece",
     "scipy",
-
-    # Graph data structure
-    "networkx",
-
-    # Server libraries
-    "fastapi",
-    "uvicorn",
-    "watchfiles",
-    "websockets",
-
-    # Environment management
-    "dulwich",
-    "virtualenv",
-
-    # Data validation
     "pydantic",
     "pydantic_settings",
 ]
+
+[project.urls]
+repository = "https://github.com/darkshapes/null"
+
+
+[project.optional-dependencies]
 dev = [
-    # Testing frameworks and tools
-    "pytest",
+    "pytest",         # test tools
     "pytest-asyncio",
 ]
-
-[tool.setuptools]
-packages = ["null"]
-
-[tool.setuptools_scm]
