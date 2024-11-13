@@ -1,53 +1,6 @@
 # null
 
-Approaching zero-setup generative AI.
-
-<!-- ###### install [uv](https://docs.astral.sh/uv/)
-###### create virtual environment
-> ```
-> uv venv .null
-> ```
-
-###### activate (windows)
-> ```
-> Set-ExecutionPolicy Bypass -Scope Process -Force; .null\Scripts\Activate.ps1
-> ```
-
-###### activate( linux | macos)
-> ```
-> .null\bin\activate
-> ```
-
-###### install torch (nvidia/cuda device)
-> ```
-> uv pip install torch==2.3.1+cu121 torchvision torchaudio xformers --index-url https://download.pytorch.org/whl/cu121 --compile-bytecode
-> ```
-
-###### install torch (apple/mps device)
-> ```
-> uv pip install torch torchvision torchaudio xformers --compile-bytecode
-> ```
-
-###### add environment variables (windows)
->
-> set HF_HUB_OFFLINE=True; set DISABLE_TELEMETRY=YES
->
-
-###### add environment variables (linux/macos)
->
-> export HF_HUB_OFFLINE=True && export DISABLE_TELEMETRY=YES
->
-
-###### clone repo
-> ```
-> git clone https://github.com/darkshapes/null.git
-> ```
-
-###### install null
-> ```
-> uv pip install -e null --compile-bytecode
-> ``` -->
-
+Approaching zero-setup generative AI. Test modules.  [darkshapes](https://github.com/darkshapes/)
 
 <
 ###### create virtual environment
@@ -82,7 +35,7 @@ Approaching zero-setup generative AI.
 
 ###### clone repo
 > ```
-> git clone https://github.com/darkshapes/null.git
+> git clone https://github.com/exdysa/null.git
 > ```
 
 ###### install null
@@ -104,19 +57,3 @@ Approaching zero-setup generative AI.
 > ```
 > git clone https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0 null/metadata/STA-XL
 > ```
-
-<!--
-###### install ninja
-> ```
-> uv pip install ninja --compile-bytecode
-> ```
-
-###### set max jobs for compilation
-> ```
-> set MAX_JOBS=4;
-> ```
-
-###### install flash attention
-> ```
->  uv pip install flash_attn-2.5.9.post1+cu122torch2.3.1cxx11abiFALSE-cp312-cp312-win_amd64.whl --no-build-isolation --compile-bytecode;
-> ``` -->
