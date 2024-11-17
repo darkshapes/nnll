@@ -1,8 +1,31 @@
 # null
 
-Approaching zero-setup generative AI. Test modules.  [darkshapes](https://github.com/darkshapes/)
+Approaching zero-setup generative AI. Experimental modules. [darkshapes](https://github.com/darkshapes/)
 
-<
+<details open><summary>
+index:
+
+</summary>
+
+> nll 00 :
+> `map` `lambda`  nested `dict` traversal
+
+ > nll 01 :
+ > `lambda` nested `OrderedDict` traversal
+
+> nll 02 :
+> recursive dict traversal method
+
+> nll 03 :
+> recursive dict traversal alternate method
+
+</details>
+
+<details><summary>
+setup
+
+</summary>
+
 ###### create virtual environment
 > ```
 > py -3.12 -m venv .venv_null
@@ -57,3 +80,5 @@ Approaching zero-setup generative AI. Test modules.  [darkshapes](https://github
 > ```
 > git clone https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0 null/metadata/STA-XL
 > ```
+
+</details>
