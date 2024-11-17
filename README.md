@@ -1,11 +1,14 @@
 # mull
 
-Approaching zero-setup generative AI.  Experimental machine learning module library. [darkshapes](https://github.com/darkshapes/)
+Approaching zero-setup generative AI.  Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
 
 <details open><summary>
 index:
 
 </summary>
+
+> core :
+> refined veteran methods
 
 > mll 00 :
 > `map` `lambda`  nested `dict` traversal
@@ -22,7 +25,14 @@ index:
 > mll 04 :
 > comparison of safetensor loading methods
 
->
+> mll 05 :
+> comparison of gguf loading methods
+
+> nll 06 :
+> further recursive dict study
+
+> nll 07 :
+> class-based model tagger
 
 </details>
 
