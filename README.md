@@ -1,25 +1,25 @@
-# null
+# mull
 
-Approaching zero-setup generative AI. Experimental modules. [darkshapes](https://github.com/darkshapes/)
+Approaching zero-setup generative AI.  Experimental machine learning module library. [darkshapes](https://github.com/darkshapes/)
 
 <details open><summary>
 index:
 
 </summary>
 
-> nll 00 :
+> mll 00 :
 > `map` `lambda`  nested `dict` traversal
 
- > nll 01 :
+ > mll 01 :
  > `lambda` nested `OrderedDict` traversal
 
-> nll 02 :
+> mll 02 :
 > recursive dict traversal method
 
-> nll 03 :
+> mll 03 :
 > recursive dict traversal alternate method
 
-> nll 04 :
+> mll 04 :
 > comparison of safetensor loading methods
 
 >
@@ -63,12 +63,7 @@ setup
 
 ###### clone repo
 > ```
-> git clone https://github.com/exdysa/null.git
-> ```
-
-###### install null
-> ```
-> pip install -e null
+> git clone https://github.com/exdysa/mull.git
 > ```
 
 ###### add environment variables (windows)
@@ -83,7 +78,7 @@ setup
 
 ##### clone metadata
 > ```
-> git clone https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0 null/metadata/STA-XL
+> git clone https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0 mull/metadata/STA-XL
 > ```
 
 </details>
