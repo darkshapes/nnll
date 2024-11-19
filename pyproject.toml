@@ -1,0 +1,21 @@
+
+[tool.setuptools]
+py-modules = []
+
+[project]
+dependencies = [
+    "safetensors",
+    "llama-cpp-python",
+    "gguf",
+    "numpy",
+    "diffusers",
+    "transformers",
+    "sentencepiece",
+    "torch",
+]
+
+name            = "mull"
+version         = "0.0.0"
+description     = "Experimental ML modules library"
+authors         = [{ name = "EXDYSA" }]
+requires-python = ">= 3.12"
