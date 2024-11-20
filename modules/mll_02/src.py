@@ -73,6 +73,11 @@ mock_data = {
 }
 
 def find_matching_model_recursive(file_attributes, data_dict):
+    """
+    Recursive method to crawl dictionary for key matches
+    `file attributes` examination data of file attributes
+    `data_dict` precollected and identified attributes
+    """
     for key, value in data_dict.items():
         if isinstance(value, dict):
             result = find_matching_model_recursive(file_attributes, value)

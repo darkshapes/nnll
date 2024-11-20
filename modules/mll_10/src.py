@@ -14,8 +14,7 @@ if modules_path not in sys.path:
 
 from mll_08.src import soft_random, seed_planter
 from mll_09.src import create_encodings
-
-
+from mll_12.src import define_encoders
 
 
 seed = soft_random()
@@ -33,10 +32,35 @@ device = "mps"
 location = "your_pretrained_model_location"
 expressions = {"some_key": "some_value"}
 
+clip_l = { "tokenizer_method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VL", "local_files_only": True,  }
+clip_l = { "method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VG", "local_files_only": True,}
+"class_name": "CLIPTOKENIZER",
+"class_name": "CLIPTOKENIZERFAST",
+"class_name": "CLIPTEXTMODEL",
+"class_name": "CLIPTEXTMODELWITHPROJECTION",
 
-clip = "/Users/unauthorized/Downloads/models/metadata/CLI-VL"
-clip2 = "/Users/unauthorized/Downloads/models/metadata/CLI-VG"
+"use_safetensors" : True
+"local_files_only": True
+torch_dtype=torch.float16,
+variant='fp16',
+
+
+encoders = define_encoders(device, tokenizer_dict, text_encoder_dict)
 encodings = create_encodings(queue, clip, clip2, device)
+
+
+def create_encodings(device, queue, paths):
+    tokenizer_models, text_encoder_models = define_encoders(paths, device)
+    with torch.no_grad():
+        for generation in queue:
+            generation['embeddings'] = encode_prompt(
+                [generation['prompt'], generation['prompt']],
+                tokenizer_models, text_encoder_models
+            )
+    return queue
+
+    del tokenizer, text_encoder, tokenizer_2, text_encoder_2
+
 
 vae_file = "/Users/unauthorized/Downloads/models/image/sdxl.vae.safetensors"
 config_file = "/Users/unauthorized/Downloads/models/metadata/STA-XL/config.json"

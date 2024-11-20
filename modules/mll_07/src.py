@@ -1,4 +1,11 @@
 
+"""
+Identification system for neural network models
+`domain_name`  [ml/info/dev] see `domain class` for details
+`architecture` the family and version (stable diffusion 3.5, lumina next)
+`components`   attributes and process stage (lora, unet)
+"""
+
 class Domain:
     """
     Domains:

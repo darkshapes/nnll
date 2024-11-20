@@ -16,6 +16,11 @@ mock_data = {
 }
 
 def find_matching_model(file_attributes, data_dict):
+    """
+    Basic dictionary comparison method using conditionals
+    `file_attributes` metadata from file under examination
+    `data_dict` precollected and labeled values of file metadata
+    """
     for key, value in data_dict.items():
         if key == file_attributes.get("neuralnet"):
             if "type_1" in file_attributes:
@@ -26,7 +31,7 @@ def find_matching_model(file_attributes, data_dict):
     return False, None
 
 class TestFindMatchingModel(unittest.TestCase):
-    
+
     def test_positive_match(self):
         file_attributes = {
             "neuralnet": "type_1",
@@ -36,7 +41,7 @@ class TestFindMatchingModel(unittest.TestCase):
             "hash": "0b0c3b4a0"
         }
         self.assertEqual(find_matching_model(file_attributes, mock_data), (True, "model_name"))
-    
+
     def test_negative_match(self):
         file_attributes = {
             "neuralnet": "type_1",
@@ -46,7 +51,7 @@ class TestFindMatchingModel(unittest.TestCase):
             "hash": "0b0c3b4a0"
         }
         self.assertEqual(find_matching_model(file_attributes, mock_data), (False, None))
-    
+
     def test_missing_neuralnet(self):
         file_attributes = {
             "layers": "model.diffusion_model.attn.norm1.weight",
@@ -55,7 +60,7 @@ class TestFindMatchingModel(unittest.TestCase):
             "hash": "0b0c3b4a0"
         }
         self.assertEqual(find_matching_model(file_attributes, mock_data), (False, None))
-    
+
     def test_missing_type_1(self):
         file_attributes = {
             "neuralnet": "type_1",
@@ -66,7 +71,7 @@ class TestFindMatchingModel(unittest.TestCase):
             "hash": "0b0c3b4a0"
         }
         self.assertEqual(find_matching_model(file_attributes, mock_data), (False, None))
-    
+
     def test_partial_match(self):
         file_attributes = {
             "neuralnet": "type_1",
@@ -76,7 +81,7 @@ class TestFindMatchingModel(unittest.TestCase):
             # Missing hash attribute
         }
         self.assertEqual(find_matching_model(file_attributes, mock_data), (False, None))
-    
+
     def test_empty_file_attributes(self):
         file_attributes = {}
         self.assertEqual(find_matching_model(file_attributes, mock_data), (False, None))

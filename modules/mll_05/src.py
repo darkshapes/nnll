@@ -1,4 +1,13 @@
 
+"""
+Practical analysis and comparison of two methods for loading GGUF files.
+ungguf   - llama cpp python
+unggufed - gguf (from py lib of llama cpp)
+`file_name` path to gguf file to load
+`id_values` data inferred from the model and its header
+19/11/24 Verdict : use llama cpp
+"""
+
 import os
 import struct
 from collections import defaultdict
@@ -7,6 +16,7 @@ from gguf import GGUFReader  # smaller import?
 
 
 def ungguf(file_name: str, id_values: dict):
+
     id_values["file_size"] = os.path.getsize(file_name)  # how big will be important for memory management
     file_data = defaultdict(dict)
     try:

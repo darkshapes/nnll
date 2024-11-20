@@ -17,7 +17,10 @@ from diffusers import (
     FluxPipeline,
     AuraFlowPipeline,
     AutoencoderKL,
-    AutoencoderTiny
+    AutoencoderTiny,
+    StableCascadePriorPipeline,
+    StableCascadeDecoderPipeline,
+    StableCascadeCombinedPipeline
 )
 
 from diffusers.schedulers import (
@@ -29,26 +32,27 @@ from diffusers.schedulers import (
     DDIMScheduler,
     LCMScheduler,
     TCDScheduler,
-    AysSchedules,  # Note: This seems to be a typo; it should likely be `AISchedule` or something similar.
+    AysSchedules,
     HeunDiscreteScheduler,
     UniPCMultistepScheduler,
     LMSDiscreteScheduler,
-    DEISMultistepScheduler
+    DEISMultistepScheduler,
+    DDPMWuerstchenScheduler
 )
 
 tokenizer_classes = {
     "CLIPTOKENIZER"    : CLIPTokenizer,     # CLIP L
     "CLIPTOKENIZERFAST": CLIPTokenizerFast, # CLIP G
-    "T5TOKENIZERFAST"  : T5TokenizerFast,   #T5 XXL
-    "T5TOKENIZER"      : T5Tokenizer,       #T5 XXL
-    "AUTOTOKENIZER"    : AutoTokenizer,     #CHATGLM
+    "T5TOKENIZERFAST"  : T5TokenizerFast,   # T5 XXL
+    "T5TOKENIZER"      : T5Tokenizer,       # T5 XXL
+    "AUTOTOKENIZER"    : AutoTokenizer,     # CHATGLM
 }
 
 encoder_classes = {
     "CLIPTEXTMODEL"              : CLIPTextModel,               # CLIP L
     "CLIPTEXTMODELWITHPROJECTION": CLIPTextModelWithProjection, # CLIP G
-    "T5ENCODERMODEL"             : T5EncoderModel,              #T5
-    "AUTOMODEL"                  : AutoModel,                   #CHATGLM
+    "T5ENCODERMODEL"             : T5EncoderModel,              # T5
+    "AUTOMODEL"                  : AutoModel,                   # CHATGLM
 }
 
 autoencoder_classes = {
@@ -57,11 +61,15 @@ autoencoder_classes = {
 }
 
 pipe_classes = {
-    "AUTOPIPE"    : AutoPipelineForText2Image,
-    "SDXLPIPE"    : StableDiffusionXLPipeline,
-    "SD15PIPE"    : StableDiffusionPipeline,
-    "FLUXPIPE"    : FluxPipeline,
-    "AURAFLOWPIPE": AuraFlowPipeline,
+    "AUTOPIPE"       : AutoPipelineForText2Image,
+    "AURAFLOWPIPE"   : AuraFlowPipeline,
+    "FLUXPIPE"       : FluxPipeline,
+    "SDXLPIPE"       : StableDiffusionXLPipeline,
+    "SD15PIPE"       : StableDiffusionPipeline,
+    "CASCADEPRIOR"   : StableCascadePriorPipeline,
+    "CASCADEDECODER" : StableCascadeDecoderPipeline,
+    "CASCADECOMBINED": StableCascadeCombinedPipeline
+
 }
 
 scheduler_classes = {
@@ -77,10 +85,11 @@ scheduler_classes = {
     "HEUNDISCRETE"          : HeunDiscreteScheduler,
     "UNIPCMULTISTEP"        : UniPCMultistepScheduler,
     "LMSDISCRETE"           : LMSDiscreteScheduler,
-    "DEISMULTISTEP"         : DEISMultistepScheduler
+    "DEISMULTISTEP"         : DEISMultistepScheduler,
+    "DDPMWUERSTCHEN"        : DDPMWuerstchenScheduler
 }
 
-def method_crafter(key_class: dict, method_name:str, location:str, expressions:dict):
+def method_crafter(class_name: dict, method_name:str, location:str, expressions:dict):
     """
     #### Facilitates dynamic and iterative creation of 🧨 Diffusers and 🤗 Transformers classes.
     #### `key_class`  : *`_classes` [`scheduler`/`tokenizer`/`pipeline`] a key from a dict of known library classes
@@ -90,9 +99,10 @@ def method_crafter(key_class: dict, method_name:str, location:str, expressions:d
     #### OUTPUT       : a `dict` containing the formatted request to instantiate the class
     """
     config_methods = {"from_config", "from_single_file", "from_pretrained",}
-    return {
-        key: getattr(cls, config_methods.get(method_name,"from_config"))(location, **expressions)
-        for key, cls in key_class.items()
-    }
-
-
+    if method_name not in config_methods:
+        raise AttributeError(f"Method {method_name} not found")
+    else:
+        return {
+            key: getattr(cls, method_name)(location, **expressions)
+            for key, cls in class_name.items()
+        }

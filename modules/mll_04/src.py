@@ -2,6 +2,13 @@ import struct
 import json
 from safetensors.torch import load_file
 
+"""
+Practical analysis and comparison of two methods for loading safetensors.
+unsafetensors - scrape header using basic file handling
+untorchtensors - using the safetensors library itself
+`file_name` path to .safetensors file to load
+19/11/24 Verdict : basic file method tends to be faster and fail less
+"""
 
 def __unsafetensors(file_name: str):
     with open(file_name, 'rb') as file:
