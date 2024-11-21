@@ -2,36 +2,71 @@
 
 Approaching zero-setup generative AI.  Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
 
+neural network link library : Approaching zero-setup generative AI.
+Experimental python machine learning modules. [darkshapes](https://github.com/darkshapes/)
+
+Please link if you purpose our code:
+```
+[nnll](https://github.com/darkshapes/nnll)
+```
+
 <details open><summary>
 index:
 
 </summary>
 
-> core :
-> refined veteran methods
+
+> `modules` : lab experiments, prototype and comparative work
+
+> `core` : future sub-module highlighting apex methods from `modules`,
 
 > [mll 00](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_00/src.py#L29) :
 > `map` `lambda`  nested `dict` traversal
 
-> [mll 01 - lambda nested dict traversal:](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_00/src.py#L29)
-> [mll 02 - recursive nested dict crawl](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_02/src.py#L76)
-> [mll 03 - basic nested dict comparison](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_03/src.py#L19):
-> [mll 04 - loading safetensors](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_04/src.py#L5)
-> [mll 05 - loading gguf](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_05/src.py#L2)
-> [mll 06 - dict crawler](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_06/src.py#L14)
-> [mll 07 - nn id system](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_07/src.py#L2)
-> [mll 08 - seed methods](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_08/src.py#L7)
-> [mll 09 - token encoder type 1](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_09/src.py#L12)
-> mll 10 - minimal inference code for generative images
-> [mll 11 - pipe constructor](https://github.com/exdysa/mull/blob/a9d6af0c16c90b070df009340264a9d0d9349519/modules/mll_11/src.py#L93)
-> [mll 13 - token encoder type 2]
-> [mll 14 - token encoder type 3]
-> [mll 15 - prototype token sculptor revisiting mll 08]
-> [mll 16 - alternate methods of torch.no_grad inference]
-> [mll 17 - modular variable autoencoder component]
-> [mll 18 - output image formatting]
-> [mll 19 - metadata encoding method 1/comparison]
-> [mll 20 - self-embedding hash/snapshots]
+> [nnll 01 - lambda-condensed nested dict traversal:](https://github.com/exdysa/nnll/blob/main/modules/nnll_01/src.py#L8)
+
+> [nnll 02 - recursive nested dict crawl](https://github.com/exdysa/nnll/blob/main/modules/nnll_02/src.py#L76)
+
+> [nnll 03 - basic nested dict comparison](https://github.com/exdysa/nnll/blob/main/modules/nnll_03/src.py#L19):
+
+> [nnll 04 - loading safetensors](https://github.com/exdysa/nnll/blob/main/modules/nnll_04/src.py#L5)
+
+> [nnll 05 - loading gguf](https://github.com/exdysa/nnll/blob/main/modules/nnll_05/src.py#L2)
+
+> [nnll 06 - dict crawler](https://github.com/exdysa/nnll/blob/main/modules/nnll_06/src.py#L14)
+
+> [nnll 07 - universal model id system](https://github.com/exdysa/nnll/blob/main/modules/nnll_07/src.py#L2)
+
+> [nnll 08 - various seed methods](https://github.com/exdysa/nnll/blob/main/modules/nnll_08/src.py#L2)
+
+> [nnll 09 - token encoder type 1](https://github.com/exdysa/nnll/modules/nnll_09/src.py#L12)
+
+> [nnll 10 - minimal generative inference (incomplete)](https://github.com/exdysa/nnll/blob/main/modules/nnll_10/src.py#L15)
+
+> [nnll 11 - diffusers pipe constructor](https://github.com/exdysa/nnll/blob/main/modules/nnll_11/src.py#L93)
+
+> [nnll 12 -  (incomplete) iterative text encoder initialization](https://github.com/exdysa/nnll/blob/main/modules/nnll_12/src.py#L5)
+
+> [nnll 13 - system capability agent (incomplete)](https://github.com/exdysa/nnll/blob/main/modules/nnll_13/src.py#L1)
+
+> [nnll 14 - iterative gpu detector](https://github.com/exdysa/nnll/blob/main/modules/nnll_14/src.py#L7)
+
+> [nnll xx - token encoder type 2]
+
+> [nnll xx - token encoder type 3]
+
+> [nnll xx - prototype token sculptor revisiting nnll 08]
+
+> [nnll xx - alternate methods of torch.no_grad inference]
+
+> [nnll xx - modular variable autoencoder component]
+
+> [nnll xx - output image formatting]
+
+> [nnll xx - metadata encoding method 1/comparison]
+
+> [nnll xx - self-embedding hash/snapshots]
+
 > ...
 </details>
 
