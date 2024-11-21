@@ -1,7 +1,8 @@
 # nnll
 
-Approaching zero-setup generative AI.  Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
-
+neural network link library : Approaching zero-setup generative AI.
+Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
+s
 <details open><summary>
 index:
 
