@@ -12,9 +12,9 @@ modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if modules_path not in sys.path:
     sys.path.append(modules_path)
 
-from mll_08.src import soft_random, seed_planter
-from mll_09.src import create_encodings
-from mll_12.src import define_encoders
+from nnll_08.src import soft_random, seed_planter
+from nnll_09.src import create_encodings
+from nnll_12.src import define_encoders
 
 
 seed = soft_random()

@@ -1,4 +1,4 @@
-# mull
+# nnll
 
 Approaching zero-setup generative AI.  Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
 
@@ -10,51 +10,51 @@ index:
 > core :
 > selected methods
 
-> [mll 00 - lambda-condensed nested dict traversal](https://github.com/exdysa/mull/blob/main/modules/mll_00/src.py#L29) :
+> [nnll 00 - lambda-condensed nested dict traversal](https://github.com/exdysa/nnll/blob/main/modules/nnll_00/src.py#L29) :
 
-> [mll 01 - lambda-condensed nested dict traversal:](https://github.com/exdysa/mull/blob/main/modules/mll_01/src.py#L8)
+> [nnll 01 - lambda-condensed nested dict traversal:](https://github.com/exdysa/nnll/blob/main/modules/nnll_01/src.py#L8)
 
-> [mll 02 - recursive nested dict crawl](https://github.com/exdysa/mull/blob/main/modules/mll_02/src.py#L76)
+> [nnll 02 - recursive nested dict crawl](https://github.com/exdysa/nnll/blob/main/modules/nnll_02/src.py#L76)
 
-> [mll 03 - basic nested dict comparison](https://github.com/exdysa/mull/blob/main/modules/mll_03/src.py#L19):
+> [nnll 03 - basic nested dict comparison](https://github.com/exdysa/nnll/blob/main/modules/nnll_03/src.py#L19):
 
-> [mll 04 - loading safetensors](https://github.com/exdysa/mull/blob/main/modules/mll_04/src.py#L5)
+> [nnll 04 - loading safetensors](https://github.com/exdysa/nnll/blob/main/modules/nnll_04/src.py#L5)
 
-> [mll 05 - loading gguf](https://github.com/exdysa/mull/blob/main/modules/mll_05/src.py#L2)
+> [nnll 05 - loading gguf](https://github.com/exdysa/nnll/blob/main/modules/nnll_05/src.py#L2)
 
-> [mll 06 - dict crawler](https://github.com/exdysa/mull/blob/main/modules/mll_06/src.py#L14)
+> [nnll 06 - dict crawler](https://github.com/exdysa/nnll/blob/main/modules/nnll_06/src.py#L14)
 
-> [mll 07 - nn id system](https://github.com/exdysa/mull/blob/main/modules/mll_07/src.py#L2)
+> [nnll 07 - nn id system](https://github.com/exdysa/nnll/blob/main/modules/nnll_07/src.py#L2)
 
-> [mll 08 - seed methods](https://github.com/exdysa/mull/blob/main/modules/mll_08/src.py#L2)
+> [nnll 08 - seed methods](https://github.com/exdysa/nnll/blob/main/modules/nnll_08/src.py#L2)
 
-> [mll 09 - token encoder type 1](https://github.com/exdysa/mull/modules/mll_09/src.py#L12)
+> [nnll 09 - token encoder type 1](https://github.com/exdysa/nnll/modules/nnll_09/src.py#L12)
 
-> [mll 10 - minimal generative inference (incomplete)](https://github.com/exdysa/mull/blob/main/modules/mll_10/src.py#L15)
+> [nnll 10 - minimal generative inference (incomplete)](https://github.com/exdysa/nnll/blob/main/modules/nnll_10/src.py#L15)
 
-> [mll 11 - pipe constructor](https://github.com/exdysa/mull/blob/main/modules/mll_11/src.py#L93)
+> [nnll 11 - pipe constructor](https://github.com/exdysa/nnll/blob/main/modules/nnll_11/src.py#L93)
 
-> [mll 12 -  (incomplete) iterative text encoder initialization](https://github.com/exdysa/mull/blob/main/modules/mll_12/src.py#L5)
+> [nnll 12 -  (incomplete) iterative text encoder initialization](https://github.com/exdysa/nnll/blob/main/modules/nnll_12/src.py#L5)
 
-> [mll 13 - system capability agent (incomplete)](https://github.com/exdysa/mull/blob/main/modules/mll_13/src.py#L1)
+> [nnll 13 - system capability agent (incomplete)](https://github.com/exdysa/nnll/blob/main/modules/nnll_13/src.py#L1)
 
-> [mll 14 - iterative gpu check](https://github.com/exdysa/mull/blob/main/modules/mll_14/src.py#L7)
+> [nnll 14 - iterative gpu check](https://github.com/exdysa/nnll/blob/main/modules/nnll_14/src.py#L7)
 
-> [mll xx - token encoder type 2]
+> [nnll xx - token encoder type 2]
 
-> [mll xx - token encoder type 3]
+> [nnll xx - token encoder type 3]
 
-> [mll xx - prototype token sculptor revisiting mll 08]
+> [nnll xx - prototype token sculptor revisiting nnll 08]
 
-> [mll xx - alternate methods of torch.no_grad inference]
+> [nnll xx - alternate methods of torch.no_grad inference]
 
-> [mll xx - modular variable autoencoder component]
+> [nnll xx - modular variable autoencoder component]
 
-> [mll xx - output image formatting]
+> [nnll xx - output image formatting]
 
-> [mll xx - metadata encoding method 1/comparison]
+> [nnll xx - metadata encoding method 1/comparison]
 
-> [mll xx - self-embedding hash/snapshots]
+> [nnll xx - self-embedding hash/snapshots]
 
 > ...
 </details>
@@ -66,17 +66,17 @@ setup
 
 ###### create virtual environment
 > ```
-> py -3.12 -m venv .venv_null
+> py -3.12 -m venv .venv_nnll
 > ``` -->
 
 ###### activate (windows)
 > ```
-> Set-ExecutionPolicy Bypass -Scope Process -Force; .venv_null\Scripts\Activate.ps1
+> Set-ExecutionPolicy Bypass -Scope Process -Force; .venv_nnll\Scripts\Activate.ps1
 > ```
 
 ###### activate( linux | macos)
 > ```
-> .venv_null\bin\activate
+> .venv_nnll\bin\activate
 > ```
 
 ###### upgrade pip
@@ -96,7 +96,7 @@ setup
 
 ###### clone repo
 > ```
-> git clone https://github.com/exdysa/mull.git
+> git clone https://github.com/darkshapes/nnll.git
 > ```
 
 ###### add environment variables (windows)
@@ -111,7 +111,7 @@ setup
 
 ##### clone metadata
 > ```
-> git clone https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0 mull/metadata/STA-XL
+> git clone https://huggingface.co/exdysa/metadata nnll/metadata
 > ```
 
 </details>
