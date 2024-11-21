@@ -46,14 +46,14 @@ def ungguf(file_name: str, id_values: dict):
 
 def unggufed(file_name: str, id_values: dict):
     try:  # method using gguf library, better for LDM conversions
-        reader = GGUFReader(file_name, 'r')  # obsolete in numpy 2, also slower
+        reader = GGUFReader(file_name, "r")  # obsolete in numpy 2, also slower
     except ValueError as error_log:
         print(error_log)  # >:V
     else:
         id_values["dtype"] = reader.data.dtype.name  # get dtype from metadata
         print(reader.fields.get("general.name"))
         arch = reader.fields["general.architecture"]  # model type category, usually prevents the need  toblock scan for llms
-        id_values["name"] = str(bytes(arch.parts[arch.data[0]]), encoding='utf-8')  # retrieve model name from the dict data
+        id_values["name"] = str(bytes(arch.parts[arch.data[0]]), encoding="utf-8")  # retrieve model name from the dict data
         if len(arch.types) > 1:
             id_values["name"] = arch.types  # if we get a result, save it
         for tensor in reader.tensors:

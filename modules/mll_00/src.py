@@ -24,7 +24,6 @@ matching_layer = next(filter(lambda layer: layer == parameter_name, state_dict),
 
 import unittest
 
-# Updated Python code that compares the JSON data to a dict
 def get_matching_layer(json_file_dict):
     """`
     Test of effectiveness with `map` `lambda` function for nested `dict` traversal
@@ -64,5 +63,5 @@ class TestJsonComparison(unittest.TestCase):
         result = get_matching_layer({})
         self.assertEqual(result, 0)
 
-if __name__ == '__main__':
-    unittest.main(argv=['first-arg-is-ignored'], exit=False)
+if __name__ == "__main__":
+    unittest.main(argv=["first-arg-is-ignored"], exit=False)

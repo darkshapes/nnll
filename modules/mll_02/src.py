@@ -97,5 +97,5 @@ file_attributes = {
     "hash": "0b0c3b4a0"
 }
 
-# Should return (True, 'model_name')
+# Should return (True, "model_name")...
 print(find_matching_model_recursive(file_attributes, mock_data))

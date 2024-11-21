@@ -86,5 +86,5 @@ class TestFindMatchingModel(unittest.TestCase):
         file_attributes = {}
         self.assertEqual(find_matching_model(file_attributes, mock_data), (False, None))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

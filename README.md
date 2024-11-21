@@ -8,11 +8,11 @@ index:
 </summary>
 
 > core :
-> refined veteran methods
+> selected methods
 
-> [mll 00 - > lambda-condensed nested dict traversal](https://github.com/exdysa/mull/blob/main/modules/mll_00/src.py#L29) :
+> [mll 00 - lambda-condensed nested dict traversal](https://github.com/exdysa/mull/blob/main/modules/mll_00/src.py#L29) :
 
-> [mll 01 - lambda nested dict traversal:](https://github.com/exdysa/mull/blob/main/modules/mll_00/src.py#L29)
+> [mll 01 - lambda-condensed nested dict traversal:](https://github.com/exdysa/mull/blob/main/modules/mll_01/src.py#L8)
 
 > [mll 02 - recursive nested dict crawl](https://github.com/exdysa/mull/blob/main/modules/mll_02/src.py#L76)
 
@@ -26,29 +26,35 @@ index:
 
 > [mll 07 - nn id system](https://github.com/exdysa/mull/blob/main/modules/mll_07/src.py#L2)
 
-> [mll 08 - seed methods](https://github.com/exdysa/mull/blob/main/modules/mll_08/src.py#L7)
+> [mll 08 - seed methods](https://github.com/exdysa/mull/blob/main/modules/mll_08/src.py#L2)
 
 > [mll 09 - token encoder type 1](https://github.com/exdysa/mull/modules/mll_09/src.py#L12)
 
-> mll 10 - minimal inference code for generative images
+> [mll 10 - minimal generative inference (incomplete)](https://github.com/exdysa/mull/blob/main/modules/mll_10/src.py#L15)
 
 > [mll 11 - pipe constructor](https://github.com/exdysa/mull/blob/main/modules/mll_11/src.py#L93)
 
-> [mll 13 - token encoder type 2]
+> [mll 12 -  (incomplete) iterative text encoder initialization](https://github.com/exdysa/mull/blob/main/modules/mll_12/src.py#L5)
 
-> [mll 14 - token encoder type 3]
+> [mll 13 - system capability agent (incomplete)](https://github.com/exdysa/mull/blob/main/modules/mll_13/src.py#L1)
 
-> [mll 15 - prototype token sculptor revisiting mll 08]
+> [mll 14 - iterative gpu check](https://github.com/exdysa/mull/blob/main/modules/mll_14/src.py#L7)
 
-> [mll 16 - alternate methods of torch.no_grad inference]
+> [mll xx - token encoder type 2]
 
-> [mll 17 - modular variable autoencoder component]
+> [mll xx - token encoder type 3]
 
-> [mll 18 - output image formatting]
+> [mll xx - prototype token sculptor revisiting mll 08]
 
-> [mll 19 - metadata encoding method 1/comparison]
+> [mll xx - alternate methods of torch.no_grad inference]
 
-> [mll 20 - self-embedding hash/snapshots]
+> [mll xx - modular variable autoencoder component]
+
+> [mll xx - output image formatting]
+
+> [mll xx - metadata encoding method 1/comparison]
+
+> [mll xx - self-embedding hash/snapshots]
 
 > ...
 </details>

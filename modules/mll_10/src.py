@@ -34,16 +34,19 @@ expressions = {"some_key": "some_value"}
 
 clip_l = { "tokenizer_method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VL", "local_files_only": True,  }
 clip_l = { "method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VG", "local_files_only": True,}
+
+class_dict = {
 "class_name": "CLIPTOKENIZER",
 "class_name": "CLIPTOKENIZERFAST",
 "class_name": "CLIPTEXTMODEL",
 "class_name": "CLIPTEXTMODELWITHPROJECTION",
-
-"use_safetensors" : True
-"local_files_only": True
-torch_dtype=torch.float16,
-variant='fp16',
-
+}
+model_expressions = {
+    "use_safetensors" : True,
+    "local_files_only": True,
+    "torch_dtype" : torch.float16,
+    "variant"     : "fp16"
+}
 
 encoders = define_encoders(device, tokenizer_dict, text_encoder_dict)
 encodings = create_encodings(queue, clip, clip2, device)

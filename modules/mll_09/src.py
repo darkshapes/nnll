@@ -4,7 +4,7 @@ import sys
 import torch
 from transformers import CLIPTokenizer, CLIPTextModel, CLIPTextModelWithProjection
 
-modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if modules_path not in sys.path:
     sys.path.append(modules_path)
 
@@ -20,9 +20,9 @@ def encode_prompt(prompts, tokenizers, text_encoders):
         cond_input = tokenizer(
             prompt,
             max_length=tokenizer.model_max_length,
-            padding='max_length',
+            padding="max_length",
             truncation=True,
-            return_tensors='pt',
+            return_tensors="pt",
         )
 
         prompt_embeds = text_encoder(cond_input.input_ids.to("cuda"), output_hidden_states=True)
