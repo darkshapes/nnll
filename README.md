@@ -50,6 +50,8 @@ index:
 
 > [nnll 14 - iterative gpu check](https://github.com/darkshapes/nnll/blob/main/modules/nnll_14/src.py#L7)
 
+> [nnll 15 - class-based iterative gpu check](https://github.com/darkshapes/nnll/blob/main/modules/nnll_15/src.py#L7)
+
 > [nnll xx - token encoder type 2]
 
 > [nnll xx - token encoder type 3]

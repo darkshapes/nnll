@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from sys import platform
 import torch
-from src import supported_backends
+from src import supported_backends, check_function
 
 class TestSupportedBackends(unittest.TestCase):
 
