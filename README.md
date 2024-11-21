@@ -1,45 +1,54 @@
 # nnll
 
+Approaching zero-setup generative AI.  Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
+
 neural network link library : Approaching zero-setup generative AI.
-Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
-s
+Experimental python machine learning modules. [darkshapes](https://github.com/darkshapes/)
+
+Please link if you purpose our code:
+```
+[nnll](https://github.com/darkshapes/nnll)
+```
+
 <details open><summary>
 index:
 
 </summary>
 
-> core :
-> selected methods
 
-> [nnll 00 - lambda-condensed nested dict traversal](https://github.com/exdysa/nnll/blob/main/modules/nnll_00/src.py#L29) :
+> `modules` : lab experiments, prototype and comparative work
 
-> [nnll 01 - lambda-condensed nested dict traversal:](https://github.com/exdysa/nnll/blob/main/modules/nnll_01/src.py#L8)
+> `core` : future sub-module highlighting apex methods from `modules`,
 
-> [nnll 02 - recursive nested dict crawl](https://github.com/exdysa/nnll/blob/main/modules/nnll_02/src.py#L76)
+> [nnll 00 - lambda-condensed nested dict traversal](https://github.com/darkshapes/nnll/blob/main/modules/nnll_00/src.py#L29)
 
-> [nnll 03 - basic nested dict comparison](https://github.com/exdysa/nnll/blob/main/modules/nnll_03/src.py#L19):
+> [nnll 01 - lambda-condensed nested dict traversal:](https://github.com/darkshapes/nnll/blob/main/modules/nnll_01/src.py#L8)
 
-> [nnll 04 - loading safetensors](https://github.com/exdysa/nnll/blob/main/modules/nnll_04/src.py#L5)
+> [nnll 02 - recursive nested dict crawl](https://github.com/darkshapes/nnll/blob/main/modules/nnll_02/src.py#L76)
 
-> [nnll 05 - loading gguf](https://github.com/exdysa/nnll/blob/main/modules/nnll_05/src.py#L2)
+> [nnll 03 - basic nested dict comparison](https://github.com/darkshapes/nnll/blob/main/modules/nnll_03/src.py#L19)
 
-> [nnll 06 - dict crawler](https://github.com/exdysa/nnll/blob/main/modules/nnll_06/src.py#L14)
+> [nnll 04 - loading safetensors](https://github.com/darkshapes/nnll/blob/main/modules/nnll_04/src.py#L5)
 
-> [nnll 07 - nn id system](https://github.com/exdysa/nnll/blob/main/modules/nnll_07/src.py#L2)
+> [nnll 05 - loading gguf](https://github.com/darkshapes/nnll/blob/main/modules/nnll_05/src.py#L2)
 
-> [nnll 08 - seed methods](https://github.com/exdysa/nnll/blob/main/modules/nnll_08/src.py#L2)
+> [nnll 06 - dict crawler](https://github.com/darkshapes/nnll/blob/main/modules/nnll_06/src.py#L14)
 
-> [nnll 09 - token encoder type 1](https://github.com/exdysa/nnll/modules/nnll_09/src.py#L12)
+> [nnll 07 - nn id system](https://github.com/darkshapes/nnll/blob/main/modules/nnll_07/src.py#L2)
 
-> [nnll 10 - minimal generative inference (incomplete)](https://github.com/exdysa/nnll/blob/main/modules/nnll_10/src.py#L15)
+> [nnll 08 - seed methods](https://github.com/darkshapes/nnll/blob/main/modules/nnll_08/src.py#L2)
 
-> [nnll 11 - pipe constructor](https://github.com/exdysa/nnll/blob/main/modules/nnll_11/src.py#L93)
+> [nnll 09 - token encoder type 1](https://github.com/darkshapes/nnll/modules/nnll_09/src.py#L12)
 
-> [nnll 12 -  (incomplete) iterative text encoder initialization](https://github.com/exdysa/nnll/blob/main/modules/nnll_12/src.py#L5)
+> [nnll 10 - minimal generative inference (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_10/src.py#L15)
 
-> [nnll 13 - system capability agent (incomplete)](https://github.com/exdysa/nnll/blob/main/modules/nnll_13/src.py#L1)
+> [nnll 11 - pipe constructor](https://github.com/darkshapes/nnll/blob/main/modules/nnll_11/src.py#L93)
 
-> [nnll 14 - iterative gpu check](https://github.com/exdysa/nnll/blob/main/modules/nnll_14/src.py#L7)
+> [nnll 12 -  (incomplete) iterative text encoder initialization](https://github.com/darkshapes/nnll/blob/main/modules/nnll_12/src.py#L5)
+
+> [nnll 13 - system capability agent (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_13/src.py#L1)
+
+> [nnll 14 - iterative gpu check](https://github.com/darkshapes/nnll/blob/main/modules/nnll_14/src.py#L7)
 
 > [nnll xx - token encoder type 2]
 
@@ -97,7 +106,7 @@ setup
 
 ###### clone repo
 > ```
-> git clone https://github.com/darkshapes/nnll.git
+> git clone https://github.com/darkshapes/mull.git
 > ```
 
 ###### add environment variables (windows)
