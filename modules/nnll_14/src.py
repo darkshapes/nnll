@@ -3,6 +3,8 @@ import sys
 import random
 import torch
 
+check_function = lambda module, attr_name: (hasattr(module, attr_name) and not getattr(module, attr_name)())
+
 def supported_backends():
     """
     #### Initial check of system hardware. Counts all gpus and cpus if available.
@@ -10,7 +12,6 @@ def supported_backends():
     #### OUTPUT: iterates string values of available devices
     """
     possible = ["cuda", "cpu", "mps"] # The most common processing frameworks
-    print(sys.platform)
     compatible = possible[:-1] if sys.platform.lower() != "darwin" else possible[1:] # Skip impossible gpu combinations
     for backend in compatible:
         if not hasattr(torch, backend):

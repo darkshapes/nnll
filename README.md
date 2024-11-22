@@ -52,7 +52,9 @@ index:
 
 > [nnll 15 - dynamic iterative gpu check (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_15/src.py#L24)
 
-> [nnll 16 - scalable, modular gpu device class system](https://github.com/darkshapes/nnll/blob/main/modules/nnll_16/src.py#L6)
+> [nnll 16 - scalable, modular gpu device class system (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_16/src.py#L6)
+
+> [nnll 17 - example device classes for nll_16 (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_17/src.py#L4)
 
 > [nnll xx - token encoder type 2]
 

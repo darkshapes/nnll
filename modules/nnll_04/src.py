@@ -1,3 +1,4 @@
+
 import struct
 import json
 from safetensors.torch import load_file
@@ -23,8 +24,8 @@ def __unsafetensors(file_name: str):
                 header.pop("__metadata__")
             return header
         except Exception as error_log:  # couldn't open file
-            print(error_log)
 
+            print(error_log)
 
 def __untorchtensors(file_name: str):
     try:
