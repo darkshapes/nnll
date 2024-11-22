@@ -1,43 +1,46 @@
 
 import torch
 import sys
-
-class Backend:
-    def is_available(self):
-        return False
-
-    def is_built(self):
-        return False
-
-check_function = lambda module, attr_name: (hasattr(module, attr_name) and not getattr(module, attr_name)())
-
-def check_attribute(module, attr_name, error_out, error_msg):
-    if hasattr(module, attr_name) and callable(getattr(module, attr_name)):
-        return getattr(module, attr_name)()
-    raise error_out(error_msg); return False
-
-is_built_result = check_attribute(backend_module, "is_built")
-is_available_result = check_attribute(backend_module, "is_available")
+import psutil
 
 def supported_backends():
     """
     #### Initial check of system hardware. Counts all gpus and cpus if available.
-    #### Precursor to further ZLUDA/XPS/ROCM|HIP discernment
+    #### Precursor to further ZLUDA/XPS/ROCM|HIP discernment if needed
     #### OUTPUT: iterates string values of available devices
     """
-    possible = {
-                "is_available": ["xps", "cuda", "cpu", "mps" ],
-                "is_built" : ["cuda", "mps"],
-                "device_count": ["xps", "cuda", "cpu", "mps" ]
-                "mps": "is_available", "is_built", "device_count", "recommended_max_memory"
+
+    torch_pc = {
+                "is_available": ["xpu", "cuda"]
+    }
+
+    torch_darwin = {
+                "is_available": ["mps"]
+    }
+
+    torch_modules = {
+                "device_count": ["xpu", "cuda", "mps" ],
+                "recommended_max_memory" : ["mps"]
                 }
 
-    # Processing frameworks
+    torch_backend_modules = {
+                "is_built" : ["cuda", "mps"],
+    }
 
-    psutil.virtual_memory().total # cpu mem
-    compatible = possible[:-1] if sys.platform.lower() != "darwin" else possible[1:] # Skip impossible gpu combinations
+    # check_function = lambda module, attr_name: (hasattr(module, attr_name) and not getattr(module, attr_name)())
+
+    def check_attribute(module, attr_name, error_out, error_msg):
+        if hasattr(module, attr_name) and callable(getattr(module, attr_name)):
+            return getattr(module, attr_name)()
+        raise error_out(error_msg); return False
+
+    # Processing frameworks
+    psutil.virtual_memory().total # CPU mem, safe to assume there is one CPU, generally only one found on consumer hardware
+    compatible = torch_pc if sys.platform.lower() != "darwin" else torch_darwin # Skip impossible gpu combinations
     for backend in compatible:
-            backend_module = check_attribute(torch, backend, ValueError(f"Unsupported or unavailable backend: {backend}"))
+            torch_module = check_attribute(torch, backend, ValueError(f"Unsupported or unavailable backend: {backend}"))
+            backend_module = check_attribute(torch.backends, backend, ValueError(f"Unsupported or unavailable backend: {backend}"))
+
             if backend_module != False:
                 check_attribute(backend_module, "is_available", RuntimeError, (f"{backend.lower()} is not an available device.")) # Is the device present?
                 check_attribute(backend_module, "is_built", RuntimeError, (f"{backend.lower()} is an available but not a configured device.")) # Is the device setup?
@@ -49,3 +52,5 @@ def supported_backends():
                     else:
                         yield backend
 
+
+support= supported_backends()
