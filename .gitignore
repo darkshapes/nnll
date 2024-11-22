@@ -1,6 +1,7 @@
 
-mull.egg-info/
+null.egg-info/
 build/
 src.cpython-312.pyc
 .gitignore
+__init__.cpython-312.pyc
 .DS_Store
