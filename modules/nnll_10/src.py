@@ -6,34 +6,32 @@ import torch
 from diffusers import AutoencoderKL, AutoPipelineForText2Image
 from diffusers.schedulers import AysSchedules
 from diffusers.schedulers.scheduling_dpmsolver_multistep import DPMSolverMultistepScheduler
-from transformers import CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
+# from transformers import CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
 modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if modules_path not in sys.path:
     sys.path.append(modules_path)
 
 from nnll_08.src import soft_random, seed_planter
-from nnll_09.src import create_encodings
+from nnll_09.src import encode_prompt # from nnll_18.src import get_pipeline_embeds
+import nnll_11.src as nnll11
+from nnll_11.src import method_crafter
 from nnll_12.src import define_encoders
+from nnll_14.src import supported_backends
 
-
-seed = soft_random()
-prompt = "A slice of a rich and delicious chocolate cake presented on a table in a luxurious palace reminiscent of Versailles"
+device = next(iter(set(supported_backends())))
 queue = []
-
-
 queue.extend([{
-    "prompt": prompt,
-    "seed": seed,
+    "prompt": "A slice of a rich and delicious chocolate cake presented on a table in a luxurious palace reminiscent of Versailles",
+    "seed": soft_random(),
 }])
-
-device = "mps"
 
 location = "your_pretrained_model_location"
 expressions = {"some_key": "some_value"}
 
-clip_l = { "tokenizer_method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VL", "local_files_only": True,  }
-clip_l = { "method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VG", "local_files_only": True,}
+# encoder = method_crafter(nnll11.encoder_classes,"from_pretrained")
+# clip_l = { "tokenizer_method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VL", "local_files_only": True,  }
+# clip_l = { "method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VG", "local_files_only": True,}
 
 class_dict = {
 "class_name": "CLIPTOKENIZER",
@@ -48,10 +46,6 @@ model_expressions = {
     "variant"     : "fp16"
 }
 
-encoders = define_encoders(device, tokenizer_dict, text_encoder_dict)
-encodings = create_encodings(queue, clip, clip2, device)
-
-
 def create_encodings(device, queue, paths):
     tokenizer_models, text_encoder_models = define_encoders(paths, device)
     with torch.no_grad():
@@ -63,6 +57,9 @@ def create_encodings(device, queue, paths):
     return queue
 
     del tokenizer, text_encoder, tokenizer_2, text_encoder_2
+
+encoders = define_encoders(device, tokenizer_dict, text_encoder_dict)
+encodings = create_encodings(queue, clip, clip2, device)
 
 
 vae_file = "/Users/unauthorized/Downloads/models/image/sdxl.vae.safetensors"
@@ -82,6 +79,9 @@ pipe = AutoPipelineForText2Image.from_pretrained(
     local_files_only=True,
     vae=vae
 ).to(device)
+
+prompt_embeds, negative_prompt_embeds = get_pipeline_embeds(pipe, prompt, negative_prompt, "cuda")
+
 
 ays = AysSchedules["StableDiffusionXLTimesteps"]
 
@@ -104,6 +104,11 @@ for i, generation in enumerate(queue, start=1):
         generator=generator,
         output_type='latent',
     ).images
+
+image = pipe(prompt_embeds=prompt_embeds, negative_prompt_embeds=negative_prompt_embeds).images[0]
+
+image.save("done.png")
+
 
 pipe.upcast_vae()
 output_dir = "./"

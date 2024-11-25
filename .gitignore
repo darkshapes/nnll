@@ -5,3 +5,9 @@ src.cpython-312.pyc
 .gitignore
 __init__.cpython-312.pyc
 .DS_Store
+modules/nnll_14/__pycache__/src.cpython-312.pyc
+mull.egg-info/dependency_links.txt
+mull.egg-info/PKG-INFO
+mull.egg-info/requires.txt
+mull.egg-info/top_level.txt
+mull.egg-info/SOURCES.txt

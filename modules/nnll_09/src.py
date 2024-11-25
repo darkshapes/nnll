@@ -8,7 +8,7 @@ modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if modules_path not in sys.path:
     sys.path.append(modules_path)
 
-def encode_prompt(prompts, tokenizers, text_encoders):
+def encode_prompt(device, prompts, tokenizers, text_encoders):
     """
     ####  Create prompt encodings prior to loading main model to lower memory overhead
     #### `prompts`: prompt string fed from a list of prompts
@@ -25,7 +25,7 @@ def encode_prompt(prompts, tokenizers, text_encoders):
             return_tensors="pt",
         )
 
-        prompt_embeds = text_encoder(cond_input.input_ids.to("cuda"), output_hidden_states=True)
+        prompt_embeds = text_encoder(cond_input.input_ids.to(device), output_hidden_states=True)
 
         pooled_prompt_embeds = prompt_embeds[0]
         embeddings_list.append(prompt_embeds.hidden_states[-2])

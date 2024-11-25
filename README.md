@@ -1,82 +1,86 @@
 # nnll
 
-Approaching zero-setup generative AI.  Experimental machine learning library modules. [darkshapes](https://github.com/darkshapes/)
+### neural network link library
 
-neural network link library : Approaching zero-setup generative AI.
-Experimental python machine learning modules. [darkshapes](https://github.com/darkshapes/)
-
-Please link if you purpose our code:
-```
-[nnll](https://github.com/darkshapes/nnll)
-```
-
-<details open><summary>
-index:
-
-</summary>
-
+### Approaching zero-setup generative AI. [darkshapes](https://github.com/darkshapes/)
 
 > `modules` : lab experiments, prototype and comparative work
 
 > `core` : future sub-module highlighting apex methods from `modules`,
 
-> [nnll 00 - lambda-condensed nested dict traversal](https://github.com/darkshapes/nnll/blob/main/modules/nnll_00/src.py#L29)
 
-> [nnll 01 - lambda-condensed nested dict traversal:](https://github.com/darkshapes/nnll/blob/main/modules/nnll_01/src.py#L8)
+#### modules index :
 
-> [nnll 02 - recursive nested dict crawl](https://github.com/darkshapes/nnll/blob/main/modules/nnll_02/src.py#L76)
+<details><summary>
 
-> [nnll 03 - basic nested dict comparison](https://github.com/darkshapes/nnll/blob/main/modules/nnll_03/src.py#L19)
+> `  nnll_00-09`
+</summary>
 
-> [nnll 04 - loading safetensors](https://github.com/darkshapes/nnll/blob/main/modules/nnll_04/src.py#L5)
+> [nnll 00 - lambda-condensed nested dict traversal](https://github.com/darkshapes/nnll/blob/main/modules/nnll_00/src.py#L29)<br>
+> [nnll 01 - lambda-condensed nested dict traversal:](https://github.com/darkshapes/nnll/blob/main/modules/nnll_01/src.py#L8)<br>
+> [nnll 02 - recursive nested dict crawl](https://github.com/darkshapes/nnll/blob/main/modules/nnll_02/src.py#L76)<br>
+> [nnll 03 - basic nested dict comparison](https://github.com/darkshapes/nnll/blob/main/modules/nnll_03/src.py#L19)<br>
+> [nnll 04 - loading safetensors](https://github.com/darkshapes/nnll/blob/main/modules/nnll_04/src.py#L5)<br>
+> [nnll 05 - loading gguf](https://github.com/darkshapes/nnll/blob/main/modules/nnll_05/src.py#L2)<br>
+> [nnll 06 - dict crawler](https://github.com/darkshapes/nnll/blob/main/modules/nnll_06/src.py#L14)<br>
+> [nnll 07 - nn id system](https://github.com/darkshapes/nnll/blob/main/modules/nnll_07/src.py#L2)<br>
+> [nnll 08 - seed methods](https://github.com/darkshapes/nnll/blob/main/modules/nnll_08/src.py#L2)<br>
+> [nnll 09 - token encoder type 1](https://github.com/darkshapes/nnll/modules/nnll_09/src.py#L12)<br>
 
-> [nnll 05 - loading gguf](https://github.com/darkshapes/nnll/blob/main/modules/nnll_05/src.py#L2)
-
-> [nnll 06 - dict crawler](https://github.com/darkshapes/nnll/blob/main/modules/nnll_06/src.py#L14)
-
-> [nnll 07 - nn id system](https://github.com/darkshapes/nnll/blob/main/modules/nnll_07/src.py#L2)
-
-> [nnll 08 - seed methods](https://github.com/darkshapes/nnll/blob/main/modules/nnll_08/src.py#L2)
-
-> [nnll 09 - token encoder type 1](https://github.com/darkshapes/nnll/modules/nnll_09/src.py#L12)
-
-> [nnll 10 - minimal generative inference (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_10/src.py#L15)
-
-> [nnll 11 - pipe constructor](https://github.com/darkshapes/nnll/blob/main/modules/nnll_11/src.py#L93)
-
-> [nnll 12 -  (incomplete) iterative text encoder initialization](https://github.com/darkshapes/nnll/blob/main/modules/nnll_12/src.py#L5)
-
-> [nnll 13 - system capability agent (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_13/src.py#L1)
-
-> [nnll 14 - iterative gpu check](https://github.com/darkshapes/nnll/blob/main/modules/nnll_14/src.py#L7)
-
-> [nnll 15 - dynamic iterative gpu check (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_15/src.py#L24)
-
-> [nnll 16 - scalable, modular gpu device class system (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_16/src.py#L6)
-
-> [nnll 17 - example device classes for nll_16 (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_17/src.py#L4)
-
-> [nnll xx - token encoder type 2]
-
-> [nnll xx - token encoder type 3]
-
-> [nnll xx - prototype token sculptor revisiting nnll 08]
-
-> [nnll xx - alternate methods of torch.no_grad inference]
-
-> [nnll xx - modular variable autoencoder component]
-
-> [nnll xx - output image formatting]
-
-> [nnll xx - metadata encoding method 1/comparison]
-
-> [nnll xx - self-embedding hash/snapshots]
-
-> ...
 </details>
 
 <details><summary>
-setup
+
+> `  nnll_10-19`
+
+</summary>
+
+> [nnll 10 - minimal diffusers sdxl inference (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_10/src.py#L15)<br>
+> [nnll 11 - pipe constructor](https://github.com/darkshapes/nnll/blob/main/modules/nnll_11/src.py#L93)<br>
+> [nnll 12 -  (incomplete) iterative text encoder initialization](https://github.com/darkshapes/nnll/blob/main/modules/nnll_12/src.py#L5)<br>
+> [nnll 13 - system capability agent (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_13/src.py#L1)<br>
+> [nnll 14 - iterative gpu check](https://github.com/darkshapes/nnll/blob/main/modules/nnll_14/src.py#L7)<br>
+> [nnll 15 - dynamic iterative gpu check (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_15/src.py#L24)<br>
+> [nnll 16 - scalable, modular gpu device class system (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_16/src.py#L6)<br>
+> [nnll 17 - example device classes for nll_16 (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_17/src.py#L4)<br>
+> [nnll 18 - alternate token encoder for extra prompt length](https://github.com/darkshapes/nnll/blob/main/modules/nnll_18/src.py#L5)<br>
+> [nnll 19 - study of `spandrel`](https://github.com/darkshapes/nnll/blob/x/dev/modules/nnll_19/study.py#L5)<br>
+
+</details>
+
+<details><summary>
+
+> `  nnll_20-29`
+
+</summary>
+
+> [nnll 20 - minimal diffusers flux inference (incomplete)](https://github.com/darkshapes/nnll/blob/x/dev/modules/nnll_20/src.py#L8)<br>
+> [nnll 21 - simple symlink routine](https://github.com/darkshapes/nnll/blob/x/dev/modules/nnll_21/src.py#L5)<br>
+> [nnll 22 - diffusers symlink routine derived from nnll_19 abstraction](https://github.com/darkshapes/nnll/blob/x/dev/modules/nnll_22/src.py#L5)<br>
+
+</details>
+
+<details><summary>
+
+> `   nnll_xx (planned explorations)`
+
+</summary>
+
+> [nnll xx - token encoder type 3]<br>
+> [nnll xx - prototype token sculptor revisiting nnll 08]<br>
+> [nnll xx - alternate methods of torch.no_grad inference]<br>
+> [nnll xx - modular variable autoencoder component]<br>
+> [nnll xx - output image formatting]<br>
+> [nnll xx - metadata encoding method 1/comparison]<br>
+> [nnll xx - self-embedding hash/snapshots]<br>
+> ...
+
+</details>
+
+
+<details><summary>
+
+#### setup
 
 </summary>
 

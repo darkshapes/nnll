@@ -92,7 +92,7 @@ scheduler_classes = {
 def method_crafter(class_name: dict, method_name:str, location:str, expressions:dict):
     """
     #### Facilitates dynamic and iterative creation of 🧨 Diffusers and 🤗 Transformers classes.
-    #### `key_class`  : *`_classes` [`scheduler`/`tokenizer`/`pipeline`] a key from a dict of known library classes
+    #### `key_class`  : *`_classes` [`scheduler`/`tokenizer`/`pipeline`/`autoencoder`/`encoder`] a key from a dict of known library classes
     #### `method_name`: `from_`* [`config`/`single_file`/`pretrained`] the desired class method to load with
     #### `location`   : path to the model or configuration appropriate for the method
     #### `expressions`: a set of arguments to pass to the method

@@ -1,3 +1,4 @@
+
 from nnll_11.src import method_crafter, encoder_classes, tokenizer_classes
 
 def define_encoders(device, encoder_dict *paths):

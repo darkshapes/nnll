@@ -29,5 +29,3 @@ def supported_backends():
                         yield f"{backend}:{i}"
                 else:
                     yield backend
-
-
