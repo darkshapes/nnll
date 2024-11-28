@@ -14,10 +14,10 @@ from nnll_14.src import supported_backends
 from nnll_21.src import symlinker
 from nnll_22.src import TextEncoderLink, UNetLink, AutoencoderLink, AbstractLink
 
-device = next(iter(set(supported_backends())))
+device: str = next(iter(set(supported_backends())))
 
 output_dir = "/Users/unauthorized/Pictures/output/"
-prompt_path = os.path.join(output_dir,"prompt.txt")
+prompt_path = os.path.join(output_dir, "prompt.txt")
 with open(prompt_path, "r") as file:
     prompt = next(iter(line.strip() for line in file if line.strip() != ""), "")
 
@@ -25,9 +25,9 @@ encoder_a = TextEncoderLink()
 encoder_b = TextEncoderLink()
 
 clip_model = "/Users/unauthorized/Downloads/models/text/clip_l.flux1-dev.diffusers.safetensors"
-encoder_1 = encoder_a.create_symlink(model_type="clip-l", target_path=clip_model)
-
 t5_models = ["/Users/unauthorized/Downloads/models/text/t5xxl.flux1-dev.diffusers.1of2safetensors.safetensors", "/Users/unauthorized/Downloads/models/text/t5xxl.flux1-dev.diffusers.1of2safetensors.safetensors"]
+
+encoder_1 = encoder_a.create_symlink(model_type="clip-l", target_path=clip_model)
 encoder_2 = encoder_b.create_symlink(model_type="t5-xxl", target_path=t5_models)
 
 tokenizer = CLIPTokenizer.from_pretrained(encoder_1)

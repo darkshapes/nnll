@@ -2,19 +2,22 @@
 import sys
 from abc import ABC, abstractmethod
 from importlib import import_module
+from typing import TypeVar
 from functools import reduce
+
+ancestor = TypeVar("ancestor", covariant=True)
 
 class Backend(ABC):
     """Dynamically retrieve methods and set attribute flags given a library."""
-    def __init__(self, module_name, backend_type: str):
+    def __init__(self, module_name : str = None, package_name: Callable  = None):
         """
         #### Class structured around iterating methods from a framework
-        #### `backend_type`: device suffix received from subclasses
+        #### `package_name`: base
+        #### `module_name`: device suffix received from subclasses
         #### OUTPUT:
         """
-
-        self.framework = lambda module_name: import_module(module_name) if module_name in sys.modules else None
-        self.backend_type = backend_type
+        self.module_name = module_name
+        self.framework = lambda package_name: import_module(package_name) if package_name in sys.modules else None
         self.configure()
 
     @abstractmethod
@@ -23,9 +26,9 @@ class Backend(ABC):
 
     def attribute(self, methods: list) -> any:
         """
-        #### Dynamically set class variables based on system configuration
+        #### Dynamically set class variables
         #### `method`: The sequence of methods as a list
-        #### `framework`: The base framework for the methods (default is Pytorch)
+        #### `framework`: The base framework for the methods
         #### OUTPUT: Boolean values assigned to respective main class variables
         """
         try:

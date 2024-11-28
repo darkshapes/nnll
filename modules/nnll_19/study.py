@@ -51,12 +51,12 @@ T = TypeVar("T", bound=torch.nn.Module, covariant=True) # generic type that has 
  # The covariant=True means that if you have two classes,
  # say MyModel1 and MyModel2, where MyModel2 is a subclass of MyModel1, then
  # MyClass[MyModel2] would be considered a subtype of MyClass[MyModel1].
-StateDict = Dict[str, Any]. # statedict is defined as a dictionary
+StateDict = Dict[str, Any] # statedict is defined as a dictionary
 ArchId = NewType("ArchId", str) # archid is a  new type we just made up, its secretly a string but a different type of string!!
 
-class Architecture(ABC, Generic[T]):
+class Architecture(ABC, Generic[T]): # Generic makes a sort of "any" type possible while preventing mixing various types
     def __init__(self, *, id: ArchId | str, detect: Callable[[StateDict], bool], name: str | None = None,) -> None:
-        super().__init__() #this is calling Generic/ABC
+        super().__init__() #this is calling ABC/Generic
         self._id: Final[ArchId] = ArchId(id) #Final type
             # Use the typing.Final object to mark a global or attribute as final, documenting that the value will never change once assigned to:
             # GLOBAL_CONSTANT: Final[str] = "This is a constant value because it is final"
