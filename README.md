@@ -47,8 +47,9 @@
 
 > [nnll 20 - minimal diffusers flux inference (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_20/src.py#L8)<br>
 > [nnll 21 - minimal symlink routine](https://github.com/darkshapes/nnll/blob/main/modules/nnll_21/src.py#L5)<br>
-> [nnll 22* - diffusers symlink routine(nnll_19, 21)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_22/src.py#L5)<br>
-> [nnll 23* - dynamic module constructor (nnll 11,12,14,15,16)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_23/src.py#L5)<br>
+> [nnll 22* - diffusers symlink routine(nnll 19, 21)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_22/src.py#L5)<br>
+> [nnll 23* - dynamic module constructor (nnll 11, 12, 14, 15, 16)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_23/src.py#L5)<br>
+> [nnll_24* - nested dictionary criteria match (nnll 02, 03, 06)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_24/src.py#L5)
 
 </details>
 

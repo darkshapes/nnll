@@ -2,7 +2,7 @@
 
 iterator_operated_on = [map(lambda each: [for each] do_operate, [using_this_iterable])]
 single_value_operated_on = from functools import reduce; reduce(lambda each: [for each] do_operate, [start at]0))
-iterator_filtered_as_true = [filter(lambda each: x modulo 2 == 0 (no remainder), [iterable])]
+iterator_filtered_to_one_value = [filter(lambda each: x modulo 2 == 0 (no remainder), [iterable])]
 
 
 >>> doubled_numbers = list(map(lambda x: x * 2, numbers))
@@ -24,6 +24,7 @@ matching_layer = next(filter(lambda layer: layer == parameter_name, state_dict),
 
 import unittest
 
+
 def get_matching_layer(json_file_dict):
     """`
     Test of effectiveness with `map` `lambda` function for nested `dict` traversal
@@ -31,7 +32,7 @@ def get_matching_layer(json_file_dict):
     """
     matching_layer = next(iter(
         map(lambda stored_value: stored_value, json_file_dict.keys())
-        ), 0)
+    ), 0)
     return matching_layer
 
 
@@ -62,6 +63,7 @@ class TestJsonComparison(unittest.TestCase):
         # Test with an empty dict, should return 0
         result = get_matching_layer({})
         self.assertEqual(result, 0)
+
 
 if __name__ == "__main__":
     unittest.main(argv=["first-arg-is-ignored"], exit=False)
