@@ -11,3 +11,5 @@ mull.egg-info/PKG-INFO
 mull.egg-info/requires.txt
 mull.egg-info/top_level.txt
 mull.egg-info/SOURCES.txt
+modules/nnll_24/__pycache__/test_src.cpython-312-pytest-8.3.3.pyc
+.vscode/settings.json
