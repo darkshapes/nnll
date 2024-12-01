@@ -1,0 +1,52 @@
+{
+    "float_chart": {
+        "F64": [
+            "fp64",
+            "torch.float64"
+        ],
+        "F32": [
+            "fp32",
+            "torch.float32"
+        ],
+        "F16": [
+            "fp16",
+            "torch.float16"
+        ],
+        "BF16": [
+            "bf16",
+            "torch.bfloat16"
+        ],
+        "F8_E4M3": [
+            "fp8e4m3fn",
+            "torch.float8_e4m3fn"
+        ],
+        "F8_E5M2": [
+            "fp8e5m2",
+            "torch.float8_e5m2"
+        ],
+        "I64": [
+            "i64",
+            "torch.int64"
+        ],
+        "I32": [
+            "i32",
+            "torch.int32"
+        ],
+        "I16": [
+            "i16",
+            "torch.int16"
+        ],
+        "I8": [
+            "i8",
+            "torch.int8"
+        ],
+        "U8": [
+            "u8",
+            "torch.uint8"
+        ],
+        "NF4": [
+            "nf4",
+            "nf4"
+        ]
+    }
+}

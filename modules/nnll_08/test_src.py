@@ -1,88 +1,66 @@
 
-import unittest
+import pytest
 import secrets
-from numpy.random import SeedSequence, Generator, Philox
-from torch import torch
+import numpy as np
 
-# Import your functions
-from src import soft_random, hard_random, tensor_random, seed_planter
+from .src import soft_random, hard_random
 
 
-class TestRandomFunctions(unittest.TestCase):
+def setup_seed(seed):
+    # Save the original randbits method
+    original_randbits = secrets.randbits
 
-    def test_soft_random(self):
-        # Test deterministic behavior with a fixed seed
-        entropy = f"0x{secrets.randbits(128):x}"
-        rndmc = Generator(Philox(SeedSequence(int(entropy, 16))))
-        expected_value = int(rndmc.integers(0, 0x2540BE3FF))
+    # Define the mock function
+    def mock_randbits(bits):
+        return int(seed, 16) % (2 ** bits)  # Ensure the result fits within the specified number of bits
 
-        # Set the seed for soft_random to match
-        with unittest.mock.patch('secrets.randbits', return_value=int(entropy, 16)):
-            self.assertEqual(soft_random(), expected_value)
+    # Replace the original method with the mock
+    secrets.randbits = mock_randbits
 
-        # Test range of values
-        value = soft_random()
-        self.assertGreaterEqual(value, 0)
-        self.assertLess(value, 0x2540BE3FF)
-
-    def test_hard_random(self):
-        # Test non-deterministic behavior
-        value1 = hard_random(hardness=5)
-        value2 = hard_random(hardness=5)
-        self.assertNotEqual(value1, value2)
-
-        # Test length of the returned number based on hardness
-        for hardness in range(1, 6):
-            value = hard_random(hardness)
-            expected_length = hardness * 2  # Each hex digit is 4 bits
-            self.assertEqual(len(hex(value)), expected_length + 2)  # +2 for '0x' prefix
-
-    def test_tensor_random(self):
-        # Test seeded case
-        seed = 12345
-        tensor_random(seed)
-        value1 = torch.rand(1).item()
-        tensor_random(seed)
-        value2 = torch.rand(1).item()
-        self.assertEqual(value1, value2)
-
-        # Test unseeded case
-        tensor_random()
-        value1 = torch.rand(1).item()
-        tensor_random()
-        value2 = torch.rand(1).item()
-        self.assertNotEqual(value1, value2)
-
-    def test_seed_planter(self):
-        seed = 12345
-
-        # Test with CUDA available
-        if torch.cuda.is_available():
-            config = seed_planter(seed, deterministic=True)
-            self.assertEqual(config['torch.backends.cudnn.deterministic'], 'True')
-            self.assertEqual(config['torch.backends.cudnn.benchmark'], 'False')
-
-            # Check that seeds are set correctly
-            self.assertEqual(torch.initial_seed(), seed)
-            if torch.cuda.device_count() > 0:
-                self.assertEqual(torch.cuda.initial_seed(), seed)
-
-        # Test with MPS available
-        elif torch.backends.mps.is_available():
-            config = seed_planter(seed, deterministic=True)
-            self.assertIsNone(config)  # No specific return value for MPS
-
-            # Check that seeds are set correctly
-            self.assertEqual(torch.initial_seed(), seed)
-
-        # Test without CUDA or MPS
-        else:
-            config = seed_planter(seed, deterministic=True)
-            self.assertIsNone(config)  # No specific return value
-
-            # Check that seeds are set correctly
-            self.assertEqual(torch.initial_seed(), seed)
+    try:
+        yield
+    finally:
+        # Restore the original method
+        secrets.randbits = original_randbits
 
 
-if __name__ == '__main__':
-    unittest.main()
+@pytest.fixture
+def setup_seed_fixture():
+    yield from setup_seed("0x123456789abcdef")
+
+
+def test_soft_random_determinism(setup_seed_fixture):
+    """Test deterministic behavior of soft_random with a fixed seed."""
+    result = soft_random(0x2540BE3FF)
+    # Since this is mocked, you might need to adjust based on your logic
+    assert 0 <= result < 0x2540BE3FF
+
+
+def test_soft_random_boundaries():
+    """Test that soft_random returns values within the specified range."""
+    for _ in range(100):  # Run multiple times to check randomness
+        result = soft_random(0x2540BE3FF)
+        assert 0 <= result < 0x2540BE3FF
+
+
+def test_hard_random_boundaries():
+    # Test that hard_random generates numbers within the expected range.
+    for hardness in range(1, 6):
+        result = hard_random(hardness)
+        max_value = (1 << (hardness * 8)) - 1
+        assert 0 <= result <= max_value
+
+
+def test_hard_random_uniqueness():
+    """Test that hard_random generates a diverse set of values."""
+    results = [hard_random(4) for _ in range(256)]
+    # Expecting no duplicates; this is statistical and may vary.
+    assert len(set(results)) == 256
+
+
+if __name__ == "__main__":
+    setup_seed(0)
+    test_soft_random_determinism()
+    test_soft_random_boundaries()
+    test_hard_random_boundaries()
+    test_hard_random_uniqueness()

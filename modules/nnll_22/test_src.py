@@ -2,17 +2,20 @@ import unittest
 from unittest.mock import patch, MagicMock
 import os
 
-from src import AbstractLink, AutoencoderLink, TextEncoderLink, UNetLink
+from .src import AbstractLink, AutoencoderLink, TextEncoderLink, UNetLink
+
 
 class ConcreteLink(AbstractLink):
     """
     A concrete subclass of AbstractLink for testing purposes.
     """
+
     def get_filename(self) -> str:
         return "test_model.pth"
 
     def get_folder_name(self, index: int) -> str:
         return f"folder_{index}"
+
 
 class TestAbstractLink(unittest.TestCase):
 
@@ -29,6 +32,7 @@ class TestAbstractLink(unittest.TestCase):
         mock_normpath.return_value = "/Users/unauthorized/Downloads/models/metadata"
         link = ConcreteLink("/Users/unauthorized/Downloads/models/metadata")
         self.assertEqual(link.metadata_folder, "/Users/unauthorized/Downloads/models/metadata")
+
 
 class TestAutoencoderLink(unittest.TestCase):
 

@@ -3,9 +3,6 @@ import pytest
 import os
 import sys
 
-modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if modules_path not in sys.path:
-    sys.path.append(modules_path)
 
 from nnll_24.src import find_value_path
 
