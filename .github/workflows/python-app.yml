@@ -1,0 +1,22 @@
+  - name: pytest-reporter
+  # You may pin to the exact commit or the version.
+  # uses: dima-engineer/pytest-reporter@b5d8399b6f8f101d571f8ee3a4d4fe4a0f89dd3b
+  uses: dima-engineer/pytest-reporter@v3.0.4
+  with:
+    # Path to the requirements file if you use pip. ./requirements.txt by default
+    requirements-file: pyproject.toml # optional, default is ./requirements.txt
+    # root directory to recursively search for .py files
+    pytest-root-dir: # optional, default is .
+    # directory with pytest tests. if left empty will identify test(s) dir by default
+    pytest-tests-dir: # optional, default is ./
+    # list of directories and/or files to ignore
+    cov-omit-list: # optional, default is 
+    # fail if any single file coverage is less than threshold
+    cov-threshold-single: # optional, default is 0
+    # fail if the total coverage is less than threshold
+    cov-threshold-total: # optional, default is 0
+    # Add support for async tests
+    async-tests: # optional
+    # Version of poetry. Latest if not specified.
+    poetry-version: # optional
+          
