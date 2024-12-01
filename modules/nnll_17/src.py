@@ -2,29 +2,28 @@
 import os
 import sys
 
-modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if modules_path not in sys.path:
-    sys.path.append(modules_path)
 
 from nnll_16.src import Backend
+
 
 class CUDADevice(Backend):
     def __init__(self): super().__init__("cuda")
 
     def configure(self):
         if self.attribute("is_available") == True and self.attribute("is_built", True) == True:
-            torch_methods = [f"get_device_properties({self.backend_type}).total_memory", "get_device_name"] # move this to dictionary
+            torch_methods = [f"get_device_properties({self.backend_type}).total_memory", "get_device_name"]  # move this to dictionary
             device_count = self.attribute(self.torch_count)
             for i in range(device_count):
                 for m in torch_methods:
                     self.attribute(m)
-            torch_methods = ["is_flash_attention_available", "mem_efficient_sdp_enabled"] # move this also to dictionary
+            torch_methods = ["is_flash_attention_available", "mem_efficient_sdp_enabled"]  # move this also to dictionary
             for m in torch_methods:
                 self.attribute(m)
 
+
 class MPSDevice(Backend):
     def __init__(self):
-        framework=super().__init__(package_name="torch")
+        framework = super().__init__(package_name="torch")
 
     def configure(self):
         self.framework = "torch"
@@ -37,16 +36,17 @@ class MPSDevice(Backend):
             for m in torch_methods:
                 self.attribute(m)
 
+
 class XPUDevice(Backend):
     def __init__(self): super().__init__("xpu")
 
     def configure(self):
         if self.attribute(self.torch_exists):
-                torch_methods = ["max_memory_reserved", "get_device_name"]
-                device_count = self.attribute(self.torch_count)
-                for _ in range(device_count):
-                    for m in torch_methods:
-                        self.attribute(m)
+            torch_methods = ["max_memory_reserved", "get_device_name"]
+            device_count = self.attribute(self.torch_count)
+            for _ in range(device_count):
+                for m in torch_methods:
+                    self.attribute(m)
 
 # class DMLDevice(Backend):
 #     def __init__(self): super().__init__("dml")
@@ -62,9 +62,9 @@ class XPUDevice(Backend):
 #     except ModuleNotFoundError:
 #         pass
 
+
 cuda_device = MPSDevice()
 print(f"{cuda_device}")
-
 
 
 """

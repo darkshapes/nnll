@@ -5,9 +5,6 @@ import torch
 from transformers import CLIPTextModel, T5EncoderModel, CLIPTokenizer, T5Tokenizer
 from diffusers import FluxPipeline, AutoencoderKL
 
-modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if modules_path not in sys.path:
-    sys.path.append(modules_path)
 
 from nnll_09.src import encode_prompt
 from nnll_14.src import supported_backends
@@ -35,14 +32,16 @@ tokenizer_2 = T5Tokenizer.from_pretrained(encoder_2)
 text_encoder = CLIPTextModel.from_pretrained(encoder_1)
 text_encoder_2 = T5EncoderModel.from_pretrained(encoder_2)
 
+
 def create_encodings(device, prompt):
     with torch.no_grad():
 
-        embeddings= encode_prompt(device,
-            [prompt, prompt],
-            [tokenizer, tokenizer_2], [text_encoder, text_encoder_2]
-            )
+        embeddings = encode_prompt(device,
+                                   [prompt, prompt],
+                                   [tokenizer, tokenizer_2], [text_encoder, text_encoder_2]
+                                   )
     return embeddings
+
 
 embeddings = create_encodings(device, prompt)
 
@@ -60,7 +59,7 @@ pipe = FluxPipeline.from_single_file(
     text_encoder_2=None,
     vae=vae,
     torch_dtype=torch.bfloat16
-    ).to(device)
+).to(device)
 
 with torch.no_grad():
     image = pipe(
@@ -79,5 +78,5 @@ with torch.no_grad():
     file_prefix = "nnll_test"
     counter = [s.endswith('png') for s in output_dir].count(True)  # get existing images
     filename = f"{file_prefix}_{"{:02d}".format(counter)}.png"
-    file_path = os.path.join(output_dir,filename)
+    file_path = os.path.join(output_dir, filename)
     image.save(file_path)

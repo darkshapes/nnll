@@ -1,5 +1,5 @@
 
-from src import Domain, Architecture, Component
+from .src import Domain, Architecture, Component
 
 
 def main():

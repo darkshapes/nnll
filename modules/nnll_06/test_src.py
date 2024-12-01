@@ -1,5 +1,6 @@
 
-from src import compare_dicts
+from .src import compare_dicts
+
 known_values = {
     "general": {
         "architecture": "LLaMA-7B",

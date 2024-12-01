@@ -8,18 +8,12 @@ from diffusers.schedulers import AysSchedules
 from diffusers.schedulers.scheduling_dpmsolver_multistep import DPMSolverMultistepScheduler
 # from transformers import CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
-modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if modules_path not in sys.path:
-    sys.path.append(modules_path)
-
 from nnll_08.src import soft_random, seed_planter
-from nnll_09.src import encode_prompt # from nnll_18.src import get_pipeline_embeds
-import nnll_11.src as nnll11
-from nnll_11.src import method_crafter
-from nnll_12.src import define_encoders
-from nnll_14.src import supported_backends
+from nnll_09.src import encode_prompt  # from nnll_18.src import get_pipeline_embeds
+from nnll_23.src import DynamicMethodConstructor
 
-device = next(iter(set(supported_backends())))
+
+# device = next(iter(set(supported_backends())))
 queue = []
 queue.extend([{
     "prompt": "A slice of a rich and delicious chocolate cake presented on a table in a luxurious palace reminiscent of Versailles",
@@ -34,17 +28,18 @@ expressions = {"some_key": "some_value"}
 # clip_l = { "method_name": "from_pretrained", "location": "/Users/unauthorized/Downloads/models/metadata/CLI-VG", "local_files_only": True,}
 
 class_dict = {
-"class_name": "CLIPTOKENIZER",
-"class_name": "CLIPTOKENIZERFAST",
-"class_name": "CLIPTEXTMODEL",
-"class_name": "CLIPTEXTMODELWITHPROJECTION",
+    "class_name": "CLIPTOKENIZER",
+    "class_name": "CLIPTOKENIZERFAST",
+    "class_name": "CLIPTEXTMODEL",
+    "class_name": "CLIPTEXTMODELWITHPROJECTION",
 }
 model_expressions = {
-    "use_safetensors" : True,
+    "use_safetensors": True,
     "local_files_only": True,
-    "torch_dtype" : torch.float16,
-    "variant"     : "fp16"
+    "torch_dtype": torch.float16,
+    "variant": "fp16"
 }
+
 
 def create_encodings(device, queue, paths):
     tokenizer_models, text_encoder_models = define_encoders(paths, device)
@@ -58,13 +53,14 @@ def create_encodings(device, queue, paths):
 
     del tokenizer, text_encoder, tokenizer_2, text_encoder_2
 
+
 encoders = define_encoders(device, tokenizer_dict, text_encoder_dict)
 encodings = create_encodings(queue, clip, clip2, device)
 
 
 vae_file = "/Users/unauthorized/Downloads/models/image/sdxl.vae.safetensors"
 config_file = "/Users/unauthorized/Downloads/models/metadata/STA-XL/config.json"
-vae = AutoencoderKL.from_single_file(vae_file, config=config_file, local_files_only=True,  torch_dtype=torch.float16, variant="fp16").to(device)
+vae = AutoencoderKL.from_single_file(vae_file, config=config_file, local_files_only=True, torch_dtype=torch.float16, variant="fp16").to(device)
 
 model = "/Users/unauthorized/Downloads/models/metadata/STA-XL"
 

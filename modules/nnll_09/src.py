@@ -4,9 +4,6 @@ import sys
 import torch
 from transformers import CLIPTokenizer, CLIPTextModel, CLIPTextModelWithProjection
 
-modules_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-if modules_path not in sys.path:
-    sys.path.append(modules_path)
 
 def encode_prompt(device, prompts, tokenizers, text_encoders):
     """

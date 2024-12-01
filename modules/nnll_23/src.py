@@ -51,7 +51,6 @@ class DynamicMethodConstructor:
 if __name__ == "__main__":
     constructor = DynamicMethodConstructor()
     # Load methods dynamically based on system specifications or available files
-    d = constructor.load_method('cuda_available', 'torch.cuda', 'is_available')
     constructor.load_method('cuda_exists', 'torch.backends.cuda', 'is_built')
     constructor.load_method('mps_available', 'torch.mps', 'is_available')
     constructor.load_method('mps_exists', 'torch.backends.mps', 'is_built')

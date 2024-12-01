@@ -1,8 +1,11 @@
 
+# courtesy HamenderSingh https://github.com/huggingface/diffusers/issues/2136#issuecomment-1952590982
+
 import torch
 
+
 def get_pipeline_embeds(pipeline, prompt, negative_prompt, device):
-    """ courtesy HamenderSingh https://github.com/huggingface/diffusers/issues/2136#issuecomment-1952590982
+    """"
     Get pipeline embeds for prompts bigger than the maxlength of the pipe
     :param pipeline:
     :param prompt:
@@ -11,7 +14,6 @@ def get_pipeline_embeds(pipeline, prompt, negative_prompt, device):
     :return:
     """
     max_length = pipeline.tokenizer.model_max_length
-
 
     # simple way to determine length of tokens
     input_ids = pipeline.tokenizer(prompt, return_tensors="pt", truncation=False).input_ids.to(device)

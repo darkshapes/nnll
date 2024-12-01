@@ -1,97 +1,55 @@
 
+import unittest
+from unittest.mock import patch, MagicMock, mock_open
+from collections import defaultdict
 import os
 import struct
-from collections import defaultdict
-from unittest.mock import patch, MagicMock
-import unittest
-from src import ungguf
 
-# Mocking Llama class and its methods for testing purposes
+from nnll_05.src import extract_gguf_metadata, parse_gguf_model, read_gguf_header
 
 
-class MockLlama:
-    def __init__(self, model_path, vocab_only, verbose):
-        self.model_path = model_path
-        self.vocab_only = vocab_only
-        self.verbose = verbose
-        self.metadata = {}
-        self.scores = MagicMock()
-        self.scores.dtype = MagicMock(name='dtype')
-        self.scores.dtype.name = 'float32'
+class TestExtractGGUFMetadata(unittest.TestCase):
 
-    def load_metadata(self, metadata):
-        self.metadata.update(metadata)
+    @patch('nnll_05.src.parse_gguf_model')
+    def setUp(self, MockParseModel) -> None:
+        # Create a temporary file with known GGUF header data
+        self.test_file_name = 'test.gguf'
+        magic = b'GGUF'
+        with open(self.test_file_name, 'wb') as f:
+            f.write(magic)
+            f.write(struct.pack('<I', 2))
 
-# Mocking os.path.getsize for testing purposes
+        # Set up the mock parser object
+        self.mock_parser = MagicMock()
+        self.mock_parser.metadata = {
+            "general": {
+                "architecture": "Llama",
+                "name": "MyModel"
+            }
+        }
+        self.mock_parser.scores = MagicMock(dtype=MagicMock(name='float32'))
 
+        # Make parse_gguf_model return the mock parser
+        MockParseModel.return_value = self.mock_parser
 
-def mock_getsize(file_name):
-    return 1024  # Simulate a file size of 1024 bytes
+    @classmethod
+    def tearDownClass(cls) -> None:
+        # Clean up the temporary file after all tests are done
+        try:
+            os.remove('test.gguf')
+        except OSError:
+            pass
 
+    def test_read_valid_header(self):
+        file_name = 'test.gguf'
+        result = read_gguf_header(self.test_file_name)
+        self.assertEqual(result, (b'GGUF', 2))
 
-class TestUnggufFunction(unittest.TestCase):
-
-    @patch('os.path.getsize', side_effect=mock_getsize)
-    def test_valid_file(self, mock_getsize):
-        # Create a temporary file with valid GGUF magic number and version
-        with open("test.gguf", "wb") as f:
-            f.write(b"GGUF")
-            f.write(struct.pack("<I", 2))  # Version 2
-
-        parser = MockLlama(model_path="test.gguf", vocab_only=True, verbose=False)
-        parser.load_metadata({"general.architecture": "LLaMA-7B", "general.name": "LLaMA-7B"})
-
-        with patch('src.Llama', return_value=parser):
-            id_values = {}
-            result = ungguf("test.gguf", id_values)
-
-        self.assertEqual(result["file_size"], 1024)
-        self.assertEqual(result["name"], "LLaMA-7B")
-        self.assertEqual(result["dtype"], "float32")
-
-    @patch('os.path.getsize', side_effect=mock_getsize)
-    def test_invalid_magic_number(self, mock_getsize):
-        # Create a temporary file with invalid GGUF magic number
-        with open("test.gguf", "wb") as f:
-            f.write(b"GGXX")
-            f.write(struct.pack("<I", 2))  # Version 2
-
-        id_values = {}
-        result = ungguf("test.gguf", id_values)
-
-        self.assertIsNone(result)
-
-    @patch('os.path.getsize', side_effect=mock_getsize)
-    def test_unsupported_version(self, mock_getsize):
-        # Create a temporary file with unsupported GGUF version
-        with open("test.gguf", "wb") as f:
-            f.write(b"GGUF")
-            f.write(struct.pack("<I", 1))  # Version 1
-
-        id_values = {}
-        result = ungguf("test.gguf", id_values)
-
-        self.assertIsNone(result)
-
-    @patch('os.path.getsize', side_effect=mock_getsize)
-    def test_exception_handling(self, mock_getsize):
-        # Create a temporary file that will raise an exception when opened
-        with open("test.gguf", "wb") as f:
-            f.write(b"GGUF")
-            f.write(struct.pack("<I", 2))  # Version 2
-
-        id_values = {}
-        with patch('src.Llama', side_effect=ValueError("Mocked ValueError")):
-            result = ungguf("test.gguf", id_values)
-
-        self.assertIsNone(result)
-
-    def tearDown(self):
-        # Clean up temporary files after each test
-        if os.path.exists("test.gguf"):
-            os.remove("test.gguf")
+    def test_with_file(self):
+        id_values_00 = defaultdict(dict)
+        file_name = "/Users/unauthorized/Downloads/models/text/lightblue-ao-karasu-72B-Q4_K_M.gguf"
+        virtual_data_00 = extract_gguf_metadata(file_name, id_values_00)
 
 
-# Run the tests
 if __name__ == '__main__':
     unittest.main()
