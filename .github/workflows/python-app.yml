@@ -37,7 +37,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: Badge
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: 'github-check'
