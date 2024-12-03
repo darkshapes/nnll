@@ -27,7 +27,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv .venv
           source .venv/bin/activate
-          pip install llama_cpp numpy torch pytest
+          pip install llama_cpp_python numpy torch pytest
       - name: Run tests
         run: pytest
 
