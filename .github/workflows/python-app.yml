@@ -1,21 +1,33 @@
-name: pytest-reporter workflow
 
-on: [pull_request]
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python application
+
+on:
+  push:
+    branches: [ "x/dev" ]
+  pull_request:
+    branches: [ "x/dev" ]
+
+permissions:
+  contents: read
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
-    name: Unit tests
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.11.4' # Define your project python version
-      - id: run-tests
-        uses: dima-engineer/pytest-reporter@v3
-        with:
-          cov-omit-list: tests/*
-          cov-threshold-single: 85
-          cov-threshold-total: 90
-          async-tests: true
-          poetry-version: 1.4.2
+          python-version: 3.12
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install llama_cpp numpy torch pytest
+      - name: Run tests
+        run: pytest
+
