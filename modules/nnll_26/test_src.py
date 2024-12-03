@@ -1,6 +1,6 @@
 
 import unittest
-from torch import torch
+import torch
 
 from nnll_26.src import random_tensor
 

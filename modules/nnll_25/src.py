@@ -30,20 +30,28 @@ def extract_tensor_data(source_data_item: dict, id_values: dict) -> dict:
     }
 
 
-def match_regex(reference_data: str, source_item_data: str) -> bool:  # pass using conditiona; - if entry.startswith("r'"): # Regex conversion
+def match_pattern_and_regex(reference_data: str, source_item_data: str) -> bool:
     """
     Match a regex pattern to metadata (specifically state dict layers)\n
     :param reference_data: `str` A regex pattern from known identifiers
     :param source_item_data: `str` Values from the metadata (specifically state dicts layers)
-    :return: boolean value of match (or not)
+    :return: boolean value of match (or not)\n
+    note: prep with conditional `if entry.startswith("r'")`
     """
-    expression = (source_item_data
-                  .replace("d+", r"\d+")  # Replace 'd+' with '\d+' for digits
-                  .replace(".", r"\.")    # Escape literal dots with '\.'
-                  .strip("r'")            # Strip the 'r' and quotes from the string
-                  )
-    regex_entry = re.compile(expression)
-    return next((regex_entry.search(k) for k in source_item_data), False)  # this should trigger extract tensor data if not false
+    if source_item_data.startswith("r'"):
+        # Regex conversion
+        expression = (source_item_data
+                      .replace("d+", r"\d+")  # Replace 'd+' with '\d+' for digits
+                      .replace(".", r"\.")    # Escape literal dots with '\.'
+                      .strip("r'")            # Strip the 'r' and quotes from the string
+                      )
+        print(expression)
+        regex_entry = re.compile(expression)
+        return bool(regex_entry.search(reference_data))
+    elif source_item_data != "" and reference_data != "":
+        return source_item_data == reference_data
+    else:
+        return False
 
 
 def compute_file_hash(file_name: str) -> str:
@@ -57,11 +65,6 @@ def compute_file_hash(file_name: str) -> str:
     """
     if not os.path.exists(file_name):
         raise FileNotFoundError(f"File '{file_name}' does not exist.")
-
-    try:
+    else:
         with open(file_name, 'rb') as f:
             return hashlib.sha256(f.read()).hexdigest()
-    except PermissionError as error_log:
-        raise PermissionError(f"Program was denied permission to read file '{file_name}': {error_log}")
-    except IOError as error_log:
-        raise IOError(f"I/O error while processing file '{file_name}': {error_log}")
