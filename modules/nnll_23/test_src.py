@@ -40,7 +40,3 @@ class TestDynamicMethodConstructor(unittest.TestCase):
         self.constructor.load_method('euler', 'numpy.random', 'randn')  # Using numpy as an example
         result = self.constructor.call_method('euler', 2, 3)  # Example with numpy's randn
         self.assertEqual(result.shape, (2, 3))  # Shape should be (2, 3)
-
-
-if __name__ == '__main__':
-    unittest.main()

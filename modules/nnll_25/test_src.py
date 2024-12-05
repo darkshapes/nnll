@@ -1,4 +1,5 @@
 
+
 import os
 from unittest import TestCase, mock
 import pytest
@@ -6,7 +7,7 @@ import hashlib
 from unittest.mock import patch, mock_open, MagicMock
 from functools import reduce
 
-from nnll_25.src import compute_file_hash, match_pattern_and_regex, extract_tensor_data
+from nnll_25.src import ExtractAndMatchMetadata
 
 
 class AttributeFunctionTests(TestCase):
@@ -14,31 +15,32 @@ class AttributeFunctionTests(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # Create a temporary test file for permission and I/O error tests
+        cls.test_module = ExtractAndMatchMetadata()
         cls.test_file_name = "test.txt"
         with open(cls.test_file_name, 'wb') as f:
             f.write(b"Hello, World!")
 
     def test_valid_file(cls):
         expected_hash = hashlib.sha256(b"Hello, World!").hexdigest()
-        assert compute_file_hash(cls.test_file_name) == expected_hash
+        assert cls.test_module.compute_file_hash(cls.test_file_name) == expected_hash
 
     def test_nonexistent_file(cls):
         with pytest.raises(FileNotFoundError):
-            compute_file_hash('nonexistent_file.txt')
+            cls.test_module.compute_file_hash('nonexistent_file.txt')
 
     @mock.patch('builtins.open', side_effect=PermissionError)
     def test_permission_error(cls, mock_open):
         with pytest.raises(PermissionError) as exc_info:
-            compute_file_hash(cls.test_file_name)
+            cls.test_module.compute_file_hash(cls.test_file_name)
         cls.assertEqual(type(exc_info.value), PermissionError)
 
     @mock.patch('builtins.open', side_effect=IOError)
     def test_io_error(cls, mock_open):
         with pytest.raises(OSError) as exc_info:
-            compute_file_hash("n.txt")
+            cls.test_module.compute_file_hash("n.txt")
         assert "File 'n.txt' does not exist." in str(exc_info.value)
 
-    @ classmethod
+    @classmethod
     def tearDownClass(cls) -> None:
         # Clean up the temporary file after all tests are done
         try:
@@ -86,7 +88,8 @@ combined_testdata = testdata_00 + testdata_01 + testdata_02 + testdata_03 + test
 class TestRegex:
     @pytest.mark.parametrize("reference_data,source_item_data,expected", combined_testdata)
     def test_valid_regex(self, reference_data, source_item_data, expected):
-        result = match_pattern_and_regex(reference_data, source_item_data)
+        test_module = ExtractAndMatchMetadata()
+        result = test_module.match_pattern_and_regex(reference_data, source_item_data)
         assert result == expected
 
 
@@ -127,4 +130,5 @@ class TensorTest:
 
     @pytest.mark.parametrize("source_data_item, id_values, expected", )
     def test_basic_functionality(source_data_item, id_values, expected):
-        assert extract_tensor_data(source_data_item, id_values) == expected
+        test_module = ExtractAndMatchMetadata()
+        assert test_module.extract_tensor_data(source_data_item, id_values) == expected

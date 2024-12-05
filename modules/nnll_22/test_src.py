@@ -1,3 +1,4 @@
+
 import unittest
 from unittest.mock import patch, MagicMock
 import os
@@ -203,7 +204,3 @@ class TestUNetLink(unittest.TestCase):
             mock_symlink.assert_any_call(path, expected_symlink_full_paths[i])
 
         self.assertEqual(result, expected_symlink_full_paths)
-
-
-if __name__ == "__main__":
-    unittest.main()

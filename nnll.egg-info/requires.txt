@@ -1,0 +1,9 @@
+llama-cpp-python
+numpy
+diffusers
+transformers
+sentencepiece
+torch
+wheel
+ninja
+xformers

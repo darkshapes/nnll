@@ -5,10 +5,10 @@ from collections import defaultdict
 import os
 import struct
 
-from nnll_05.src import extract_gguf_metadata, parse_gguf_model, read_gguf_header
+from nnll_05.src import load_gguf_metadata, read_gguf_header
 
 
-class TestExtractGGUFMetadata(unittest.TestCase):
+class TestLoadGGUFMetadata(unittest.TestCase):
 
     @patch('nnll_05.src.parse_gguf_model')
     def setUp(self, MockParseModel) -> None:
@@ -32,14 +32,6 @@ class TestExtractGGUFMetadata(unittest.TestCase):
         # Make parse_gguf_model return the mock parser
         MockParseModel.return_value = self.mock_parser
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        # Clean up the temporary file after all tests are done
-        try:
-            os.remove('test.gguf')
-        except OSError:
-            pass
-
     def test_read_valid_header(self):
         file_name = 'test.gguf'
         result = read_gguf_header(self.test_file_name)
@@ -48,8 +40,12 @@ class TestExtractGGUFMetadata(unittest.TestCase):
     def test_with_file(self):
         id_values_00 = defaultdict(dict)
         file_name = "/Users/unauthorized/Downloads/models/text/lightblue-ao-karasu-72B-Q4_K_M.gguf"
-        virtual_data_00 = extract_gguf_metadata(file_name, id_values_00)
+        virtual_data_00 = load_gguf_metadata(file_name)
 
-
-if __name__ == '__main__':
-    unittest.main()
+    @classmethod
+    def tearDownClass(cls) -> None:
+        # Clean up the temporary file after all tests are done
+        try:
+            os.remove('test.gguf')
+        except OSError:
+            pass

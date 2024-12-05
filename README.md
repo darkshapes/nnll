@@ -1,3 +1,4 @@
+
 # nnll
 
 ### neural network link library
@@ -17,21 +18,22 @@
 
 > [nnll 00 - lambda-condensed nested dict traversal](https://github.com/darkshapes/nnll/blob/main/modules/nnll_00/src.py#L29)<br>
 > [nnll 01 - lambda-condensed nested dict traversal:](https://github.com/darkshapes/nnll/blob/main/modules/nnll_01/src.py#L8)<br>
-> [nnll 04 - loading safetensors comparative analysis](https://github.com/darkshapes/nnll/blob/main/modules/nnll_04/src.py#L5)<br>
-> [nnll 05 - loading gguf comparative analysis](https://github.com/darkshapes/nnll/blob/main/modules/nnll_05/src.py#L2)<br>
+> [nnll 04 - loading safetensors (based on previous performance analysis)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_04/src.py#L5)<br>
+> [nnll 05 - loading gguf (based on previous performance analysis)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_05/src.py#L2)<br>
+> [nnll 06 - basic recursive dict crawler](https://github.com/darkshapes/nnll/blob/main/modules/nnll_06/src.py#L14)<br>
 > [nnll 07 - nn class/type id system](https://github.com/darkshapes/nnll/blob/main/modules/nnll_07/src.py#L2)<br>
 > [nnll 08 - seed methods](https://github.com/darkshapes/nnll/blob/main/modules/nnll_08/src.py#L2)<br>
 > [nnll 09 - token encoder type 1](https://github.com/darkshapes/nnll/modules/nnll_09/src.py#L12)<br>
 > [nnll 13 - system capability agent (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_13/src.py#L1)<br>
+> [nnll 16 - scalable, modular gpu device class system (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_16/src.py#L6)<br>
 > [nnll 17 - example device classes for nll_16 (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_17/src.py#L4)<br>
-> [nnll 18 - alternate token encoder for extra prompt length](https://github.com/darkshapes/nnll/blob/main/modules/nnll_18/src.py#L5)<br>
+> [nnll 18 - alternate token encoder for extra prompt length (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_18/src.py#L5)<br>
 
 </details>
 
 <details><summary>
 
 > `  nnll_20-39`
-
 </summary>
 
 > [nnll 22 - diffusers symlink routine(nnll 19, 21)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_22/src.py#L5)<br>
@@ -40,10 +42,11 @@
 > [nnll_25 - tensor and hash data, regex comparison ](https://github.com/darkshapes/nnll/blob/main/modules/nnll_25/src.py#L9)<br>
 > [nnll_26 - pytorch-specific seed and tensor routines](https://github.com/darkshapes/nnll/blob/main/modules/nnll_26/src.py)<br>
 > [nnll_27 - pretty column-formatted console printer](https://github.com/darkshapes/nnll/blob/main/modules/nnll_27/src.py#L6)<br>
-> [nnll_28 - pt/ckpt loader](https://github.com/darkshapes/nnll/blob/main/modules/nnll_28/src.py#L8)<br>
-> [nnll_29 - ]()<br>
+> [nnll_28 - torch pickletensor loader](https://github.com/darkshapes/nnll/blob/main/modules/nnll_28/src.py#L8)<br>
+> [nnll_29 - model indexer (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_29/src.py#L11)<br>
+> [nnll 30 - barebones json read/write](https://github.com/darkshapes/nnll/blob/main/modules/nnll_30/src.py#L5)<br>
 
-</details>
+<details>
 
 <details><summary>
 
@@ -74,7 +77,7 @@
 > py -3.12 -m venv .venv_nnll
 > ``` -->
 
-###### activate (windows)
+###### activate (windows powershell)
 > ```
 > Set-ExecutionPolicy Bypass -Scope Process -Force; .venv_nnll\Scripts\Activate.ps1
 > ```
@@ -91,17 +94,17 @@
 
 ###### install torch (nvidia/cuda device)
 > ```
-> pip install torch==2.3.1+cu121 torchvision torchaudio xformers --index-url https://download.pytorch.org/whl/cu121
+> pip install torch==2.3.1+cu121 torchvision torchaudio xformers flash-attn --index-url https://download.pytorch.org/whl/cu121
 > ```
 
 ###### install torch (apple/mps device)
 > ```
-> pip install torch torchvision torchaudio xformers flash-attn
+> pip install torch torchvision torchaudio xformers
 > ```
 
 ###### clone repo
 > ```
-> git clone https://github.com/darkshapes/mull.git
+> git clone https://github.com/darkshapes/nnll.git
 > ```
 
 ###### add environment variables (windows)

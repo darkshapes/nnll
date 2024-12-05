@@ -52,7 +52,3 @@ def test_find_value_path():
     # Test matching at the top level
     reference_map_top_level_match = {'c': 2, 'd': 1}
     assert find_value_path(reference_map_top_level_match, file_tags) == ['c', 'd']
-
-
-if __name__ == "__main__":
-    pytest.main([__file__])
