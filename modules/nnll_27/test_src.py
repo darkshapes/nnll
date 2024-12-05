@@ -67,7 +67,3 @@ class TestPrinterMethods(unittest.TestCase):
         # Verify the calls to wipe_printer
         mock_wipe_printer.assert_called_once_with(title, expected_header, expected_horizontal_bar, expected_data)
         self.assertIsNone(result)  # The method should return None
-
-
-if __name__ == '__main__':
-    unittest.main()

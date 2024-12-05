@@ -3,56 +3,60 @@ import os
 from collections import defaultdict
 import struct
 from llama_cpp import Llama
-from pathlib import Path
 
 
-def read_gguf_header(file_name: str):
+def read_gguf_header(file_path: str):
     try:
-        with open(file_name, "rb") as file:
+        with open(file_path, "rb") as file:
             magic = file.read(4)
             version = struct.unpack("<I", file.read(4))[0]
             return magic, version
     except (ValueError, Exception) as e:
-        print(f"Error reading GGUF header from {file_name}: {e}")
+        print(f"Error reading GGUF header from {file_path}: {e}")
         return None
 
 
-def parse_gguf_model(file_name: str):
-    parser = Llama(model_path=file_name, vocab_only=True, verbose=False)
+def parse_gguf_model(file_path: str):
+    parser = Llama(model_path=file_path, vocab_only=True, verbose=False)
     return parser
 
 
-def extract_gguf_metadata(file_name: str, id_values=None):
-    if id_values is None:
-        id_values = defaultdict(dict)
+def load_gguf_metadata(file_path: str) -> dict:
+    """
+    Collect metadata from a gguf file header\n
+    :param file_path: `str` the full path to the file being opened
+    :return: `dict` the key value pair structure found in the file
+    """
+
+    file_metadata = defaultdict(dict)
 
     # File size for memory management
     try:
-        file_size = os.path.getsize(file_name)
+        file_size = os.path.getsize(file_path)
     except FileNotFoundError as e:
         print(f"File not found: {e}")
         return {}
 
-    id_values["file_size"] = file_size
+    file_metadata["size"] = file_size
 
-    header_info = read_gguf_header(file_name)
+    header_info = read_gguf_header(file_path)
     if header_info is None or header_info[0] != b"GGUF":
-        print(f"Invalid GGUF magic number in '{file_name}'")
+        print(f"Invalid GGUF magic number in '{file_path}'")
         return {}
 
     magic, version = header_info
     if version < 2:
-        print(f"Unsupported GGUF version {version} in '{file_name}'")
+        print(f"Unsupported GGUF version {version} in '{file_path}'")
         return {}
 
-    parser = parse_gguf_model(file_name)
+    parser = parse_gguf_model(file_path)
     if not parser:
-        return id_values
+        return file_metadata
 
     arch = parser.metadata.get("general.architecture", "")
     name = parser.metadata.get("general.name", "")
-    id_values["name"] = name or arch
+    file_metadata["name"] = name or arch
 
-    id_values["dtype"] = getattr(parser.scores, 'dtype', None) and parser.scores.dtype.name  # e.g., 'float32'
+    file_metadata["dtype"] = getattr(parser.scores, 'dtype', None) and parser.scores.dtype.name  # e.g., 'float32'
 
-    return id_values
+    return file_metadata

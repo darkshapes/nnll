@@ -36,7 +36,3 @@ class TestRandomFunctions(unittest.TestCase):
         random_tensor()  # Again, no seed provided
         value2 = torch.rand(1).item()
         self.assertNotEqual(value1, value2)
-
-
-if __name__ == '__main__':
-    unittest.main()

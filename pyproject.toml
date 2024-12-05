@@ -4,18 +4,19 @@ py-modules = []
 
 [project]
 dependencies = [
-    "safetensors",
     "llama-cpp-python",
-    "gguf",
     "numpy",
     "diffusers",
     "transformers",
     "sentencepiece",
     "torch",
+    "wheel",
+    "ninja",
+    "xformers",
 ]
 
-name            = "mull"
+name            = "nnll"
 version         = "0.0.0"
 description     = "Experimental ML modules library"
-authors         = [{ name = "EXDYSA" }]
+authors         = [{ name = "darkshapes" }]
 requires-python = ">= 3.12"

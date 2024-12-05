@@ -2,7 +2,6 @@
 import os
 import sys
 
-
 from nnll_16.src import Backend
 
 
@@ -63,11 +62,11 @@ class XPUDevice(Backend):
 #         pass
 
 
-cuda_device = MPSDevice()
-print(f"{cuda_device}")
+# cuda_device = MPSDevice()
+# print(f"{cuda_device}")
 
 
-"""
-class contains torch value and getattr
-we need to pass cuda and backends on demand to getattr
-"""
+# """
+# class contains torch value and getattr
+# we need to pass cuda and backends on demand to getattr
+# """
