@@ -19,8 +19,3 @@ def load_safetensors_metadata(file_path: str) -> dict:
             # it is usually empty on safetensors ._.
             header.pop("__metadata__")
         return header
-
-
-file_name = "~/Downloads/models/lora/Hyper-FLUX.1-dev-8steps-lora.safetensors"
-virtual_data_00 = load_safetensors_metadata(file_name)
-print(virtual_data_00["transformer.single_transformer_blocks.0.attn.to_k.lora_A.weight"].get("shape"))  # preferred

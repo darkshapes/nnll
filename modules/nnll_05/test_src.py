@@ -2,9 +2,12 @@
 import unittest
 from unittest.mock import patch, MagicMock, mock_open
 from collections import defaultdict
-import os
 import struct
 
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_05.src import load_gguf_metadata, read_gguf_header
 
 

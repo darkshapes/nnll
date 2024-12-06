@@ -9,10 +9,14 @@ Identification system for neural network models
 
 class Domain:
     """
-    Domains:
-    ml : Publicly released machine learning models with an identifier in the database
-    info : Metadata with an identifier in the database
-    dev : Any pre-release or under evaluation items without an identifier in an expected format
+    ### Domains:
+    Valid domains can be anything, though our guidelines are \n
+    ***ml*** : Publicly released machine learning models with an identifier in the database\n
+    ***info*** : Metadata with an identifier in the database\n
+    ***dev*** : Any pre-release or under evaluation items without an identifier in an expected format\n
+    methods\n
+    - `add_architecture()`,
+    - `to_dict()`
     """
 
     def __init__(self, domain_name):
@@ -32,7 +36,12 @@ class Domain:
 
 class Architecture:
     """
-    Known generative and deep learning architectures. See tuning.json for more information
+    Known generative and deep learning architectures.\n
+    model_forms.json contains the lengthy key list of supported architectures
+    #### ***Component*** The methodology classifying the file (eg: unet, vae, lora)
+    methods\n
+    - `add_component()`,
+    - `to_dict()`
     """
 
     def __init__(self, architecture):
@@ -52,14 +61,27 @@ class Architecture:
 
 class Component:
     """
-    Modalities, contents, techniques, or purposes of an identified model that the system should know of.
+    Specifics of Modalities, contents, techniques, or purposes of an identified model that effect processing.\n
+    This enables us to filter, organize, and prepare files, allowing automated workflow construction
+    ***file_size*** : The total size in **bytes** of the file\n
+    ***dtype*** : The model datatype format (if applicable, to know if and how precision can be lowered)\n
+    ***component_name*** : The formal title or technique of the of component
+    ***library*** : The format and compatability of the model structure, including but not limited to\n
+    - `pytorch`
+    - `diffusers`
+    - `compvis`
+    ***custom_slot_1***, ***custom_slot_2*** : Empty filters appeneded to the attributes list\n
+    (Note: Future functionality should include dynamically adding permament custom attributes)
+
     """
 
     def __init__(self, model_type, **kwargs):
         self.model_type = model_type
-        self.allowed_keys = {"dtype", "file_size", "library", "component_name"}
+        self.allowed_keys = {"dtype", "file_size", "library", "component_name", "custom_slot_1", "custom_slot_2"}
         for key, value in kwargs.items():
-            if key in self.allowed_keys:
+            if key not in self.allowed_keys:
+                raise KeyError(f"Valid attributes can only be one of the following : {print(k for k in self.allowed_keys)}")
+            else:
                 setattr(self, key, value)
 
     def to_dict(self):

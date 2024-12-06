@@ -1,9 +1,9 @@
 
 import unittest
+
 import os
 import sys
-
-
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_23.src import DynamicMethodConstructor
 
 

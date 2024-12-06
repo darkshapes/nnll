@@ -2,9 +2,10 @@
 import re
 import os
 import hashlib
+import sys
 
 
-class ExtractAndMatchMetadata():
+class ExtractAndMatchMetadata:
 
     def extract_tensor_data(self, source_data_item: dict, id_values: dict) -> dict:
         """
@@ -39,7 +40,7 @@ class ExtractAndMatchMetadata():
         :return: boolean value of match (or not)\n
         note: prep with conditional `if entry.startswith("r'")`
         """
-        if source_item_data.startswith("r'"):
+        if type(source_item_data) == str and source_item_data.startswith("r'"):
             # Regex conversion
             expression = (source_item_data
                           .replace("d+", r"\d+")  # Replace 'd+' with '\d+' for digits
@@ -54,17 +55,20 @@ class ExtractAndMatchMetadata():
         else:
             return False
 
-    def compute_file_hash(self, file_name: str) -> str:
+    def compute_file_hash(self, file_path: str) -> str:
         """
         Compute and return the SHA256 hash of a given file.\n
-        :param file_name: `str` Valid path to a file
+        :param file_path: `str` Valid path to a file
         :return: `str` Hexadecimal representation of the SHA256 hash.
         :raises FileNotFoundError: File does not exist at the specified path.
         :raises PermissionError: Insufficient permissions to read the file.
         :raises IOError:  I/O related errors during file operations.
         """
-        if not os.path.exists(file_name):
-            raise FileNotFoundError(f"File '{file_name}' does not exist.")
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File '{file_path}' does not exist.")
         else:
-            with open(file_name, 'rb') as f:
+            with open(file_path, 'rb') as f:
                 return hashlib.sha256(f.read()).hexdigest()
+
+    # def search_basic_match(self, reference_data: dict, source_item_data: dict):
+    #     return all(reference_data.get(key) == value for key, value in source_item_data.items())
