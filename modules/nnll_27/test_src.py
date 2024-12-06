@@ -3,7 +3,9 @@ import sys
 import unittest
 from unittest.mock import patch, MagicMock
 import gc
-import nnll_27
+import os
+
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_27.src import wipe_printer, pretty_tabled_output
 
 

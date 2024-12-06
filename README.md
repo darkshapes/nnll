@@ -3,14 +3,28 @@
 
 ### neural network link library
 
-### Approaching zero-setup, fault-tolerant, generative AI. [darkshapes](https://github.com/darkshapes/)
+### Approaching zero-setup, fault-tolerant generative AI. [darkshapes](https://github.com/darkshapes/)
 
-> `modules` : experiments, prototypes, comparative work, studies
+```
+Goals -
+> Compatability: Platform, framework, language agnostic solutions
+> Modularity   : Independently functioning, tested and ready-made components
+> Simplicity   : Streamline generative process chain creation
+> Rapidity     : Granular and automated hyperparameter and resource optimization
+> Reliably     : Failure-resistant on full-spectrum consumer hardware
 
-> `core` : future sub-modules highlighting apex methods from `modules`,
+Features -
+> Auto architecture identification (available, prototyped in sdbx)
+> Automated workflow generation (as prototyped in sdbx)
+> Accelerated inference via auto hyperparameter and module optimization (as prototyped in sdbx)
+> Distributed discrete graphics processing (concept stage)
+> Highly parallel processing (concept stage)
+```
+
+> `modules` : experiments, prototypes, comparative work, studies. x/dev branch updated **~nightly**.<br>
+> `core` : feature combination examples, curated apex methods from `modules`, stable, **long-term support**.
 
 #### modules index :
-
 <details><summary>
 
 > `  nnll_00-19`
@@ -46,7 +60,7 @@
 > [nnll_29 - model indexer (incomplete)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_29/src.py#L11)<br>
 > [nnll 30 - barebones json read/write](https://github.com/darkshapes/nnll/blob/main/modules/nnll_30/src.py#L5)<br>
 
-<details>
+</details>
 
 <details><summary>
 
@@ -105,6 +119,11 @@
 ###### clone repo
 > ```
 > git clone https://github.com/darkshapes/nnll.git
+> ```
+
+###### install
+> ```
+> pip install -e nnll
 > ```
 
 ###### add environment variables (windows)

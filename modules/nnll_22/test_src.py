@@ -3,7 +3,10 @@ import unittest
 from unittest.mock import patch, MagicMock
 import os
 
-from .src import AbstractLink, AutoencoderLink, TextEncoderLink, UNetLink
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
+from nnll_22.src import AbstractLink, AutoencoderLink, TextEncoderLink, UNetLink
 
 
 class ConcreteLink(AbstractLink):

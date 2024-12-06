@@ -4,6 +4,10 @@ import json
 import unittest
 from tempfile import TemporaryDirectory
 
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_30.src import write_json_file, read_json_file
 
 

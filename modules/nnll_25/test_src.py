@@ -7,6 +7,9 @@ import hashlib
 from unittest.mock import patch, mock_open, MagicMock
 from functools import reduce
 
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_25.src import ExtractAndMatchMetadata
 
 

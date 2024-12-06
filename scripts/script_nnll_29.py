@@ -1,6 +1,6 @@
 
 import os
-from os import Path
+from pathlib import Path
 from tqdm.auto import tqdm
 from modules.nnll_29.src import BlockIndex
 

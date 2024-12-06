@@ -3,7 +3,7 @@ import pytest
 import os
 import sys
 
-
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_24.src import find_value_path
 
 

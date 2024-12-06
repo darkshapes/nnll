@@ -2,6 +2,9 @@
 import os
 import sys
 
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_16.src import Backend
 
 

@@ -2,6 +2,10 @@
 import unittest
 import torch
 
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
 from nnll_26.src import random_tensor
 
 

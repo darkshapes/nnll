@@ -1,18 +1,25 @@
 
+import os
+import sys
 
-def find_value_path(reference_map: dict, file_tags: dict) -> list | None:
+sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
+from nnll_25.src import ExtractAndMatchMetadata
+
+
+def find_value_path(reference_map: dict, source_item_data: dict, corresponding_values: dict = {}) -> list | None:
     """
-    Find path in target nested dictionary where values match `file_tags`.\n
-    :param reference_map: `dict` The taget dictionary structure to search within.
-    :param file_tags: `dict` Key-value pairs to search for.
+    Find path in target nested dictionary where values match `source_item_data`.\n
+    :param reference_data: `str` A regex pattern from known identifiers
+    :param source_item_data: `str` Values from the metadata (specifically state dicts layers)
     :return: `list` The path of keys through the target `dict` leading to a matching subtree, or None if no match is found.
     """
-    def recursive_search(nested_dict: dict, current_path: list = []) -> list | None:
-        for k, v in nested_dict.items():
+    def recursive_search(nested_map: dict, current_path: list = []) -> list | None:
+        run_instance_process = ExtractAndMatchMetadata()
+        for k, v in nested_map.items():
             new_path = current_path + [k]
 
-            if isinstance(v, dict):  # Check if we've reached the deepest level, and whether it matches file_tags
-                if all(v.get(key) == value for key, value in file_tags.items()):
+            if isinstance(v, dict):  # Check if we've reached the deepest level, and whether it matches source_item_data
+                if all(run_instance_process.match_pattern_and_regex(v.get(key), value) for key, value in source_item_data.items()):
                     return new_path  # Found a match
 
                 result = recursive_search(v, new_path)  # Recurse into deeper levels
@@ -23,7 +30,7 @@ def find_value_path(reference_map: dict, file_tags: dict) -> list | None:
 
         return None  # No matching subtree found
 
-    if all(reference_map.get(key) == value for key, value in file_tags.items()):  # Check for top-level direct match
-        return list(file_tags.keys())
+    if all(reference_map.get(key) == value for key, value in source_item_data.items()):  # Check for top-level direct match
+        return list(source_item_data.keys())
 
     return recursive_search(reference_map)
