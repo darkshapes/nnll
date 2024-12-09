@@ -27,8 +27,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv .venv
           source .venv/bin/activate
-          pip install llama-cpp-python --index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+          pip install -e .
+          pip install typing-extensions==4.12.2
+          pip install llama-cpp-python==0.2.90 --index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
           pip install numpy torch pytest
+          pip install -e .
       - name: Run tests
         run: pytest
 
