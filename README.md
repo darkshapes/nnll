@@ -3,7 +3,7 @@
 
 ### neural network link library
 
-### Approaching zero-setup, fault-tolerant generative AI. [darkshapes](https://github.com/darkshapes/)
+### Approaching zero-setup, fault-tolerant generative AI inference. [darkshapes](https://github.com/darkshapes/)
 
 ```
 Goals -
@@ -11,7 +11,7 @@ Goals -
 > Modularity   : Independently functioning, tested and ready-made components
 > Simplicity   : Streamline generative process chain creation
 > Rapidity     : Granular and automated hyperparameter and resource optimization
-> Reliably     : Failure-resistant on full-spectrum consumer hardware
+> Reliability  : Failure-resistant on full-spectrum consumer hardware
 
 Features -
 > Auto architecture identification (available, prototyped in sdbx)
@@ -21,8 +21,8 @@ Features -
 > Highly parallel processing (concept stage)
 ```
 
-> `modules` : experiments, prototypes, comparative work, studies. x/dev branch updated **~nightly**.<br>
-> `core` : feature combination examples, curated apex methods from `modules`, stable, **long-term support**.
+> `modules`: experiments, prototypes, comparative work, studies. x/dev branch updated **~nightly**.<br>
+> `core`   : feature combination examples, curated apex methods from `modules`, stable, **long-term support**.
 
 #### modules index :
 <details><summary>

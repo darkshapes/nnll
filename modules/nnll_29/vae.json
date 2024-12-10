@@ -1,0 +1,22 @@
+{
+    "sdxl-base": {
+        "blocks": "encoder.mid_block.resnets.0.conv2.weight",
+        "shapes": [
+            512,
+            512,
+            3,
+            3
+        ],
+        "tensors": 248
+    },
+    "sd3": {
+        "blocks": "encoder.mid_block.resnets.0.conv2.weight",
+        "shapes": [
+            512,
+            512,
+            3,
+            3
+        ],
+        "tensors": 244
+    }
+}

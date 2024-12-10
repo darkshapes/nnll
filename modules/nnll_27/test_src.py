@@ -58,9 +58,9 @@ class TestPrinterMethods(unittest.TestCase):
         }
 
         # Expected output format
-        expected_header = "B     | C     | D     | "
-        expected_horizontal_bar = "  ------------------------------"
-        expected_data = "2     | 3     | 4     | "
+        expected_header = 'category     | A            | B            | C            | D            | '
+        expected_horizontal_bar = '  --------------------------------------------------'
+        expected_data = 'Sample Table | 1            | 2            | 3            | 4            | '
 
         # Call the method under test
         with patch('nnll_27.src.wipe_printer') as mock_wipe_printer:

@@ -22,11 +22,13 @@ def pretty_tabled_output(title: str, aggregate_data: dict) -> dict:
     :param aggregate_data: `dict` A dictionary of values to print
     :return: `dict` A formatted bundle of data ready to print
     """
-    print_values = aggregate_data.copy()
-    if (k := next(iter(print_values), None)) is not None:
-        print_values.pop(k)  # Only pop if a valid key is found
+    print_title = {}
+    print_title.setdefault("category", title)
+    print_values = print_title | aggregate_data.copy()
+    # if (k := next(iter(print_values), None)) is not None:
+    #     print_values.pop(k)  # Only pop if a valid key is found
     key_value_length = len(print_values)  # number of items detected in the scan
-    info_format = "{:<5} | " * key_value_length  # shrink print columns to data width
+    info_format = "{:<12} | " * key_value_length  # shrink print columns to data width
     header_keys = tuple(print_values)  # use to create table
     horizontal_bar = ("  " + "-" * (10 * key_value_length))  # horizontal divider of arbitrary length. could use shutil to dynamically create but eh. already overkill
     formatted_data = tuple(print_values.values())  # data extracted from the scan

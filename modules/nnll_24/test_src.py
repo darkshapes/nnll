@@ -9,22 +9,25 @@ from nnll_24.src import find_value_path
 
 def test_find_value_path():
     reference_map = {
+        'x': {
+            'blocks': 'c1d2',
+            'shape': 256
+        },
         'z': {
-            'a': {
-                'x': {
-                    'b1': {'c': 1, 'd': 2},
-                    'b2': {'c': 2, 'd': 2},
-                },
-                'y': {
-                    'b': {'c': 2, 'd': 1}
-                }
-            }
+            'blocks': "c2d2",
+            'shape': 512
+        },
+        'y': {
+            'blocks': "c.d",
+            'shape': 256
         }
     }
 
     # Test matching path
-    file_tags = {'c': 2, 'd': 1}
-    assert find_value_path(reference_map, file_tags) == ['z', 'a', 'y', 'b']
+    file_tags = { "blocks": 'c.d',
+                  "shape": 256 }
+    print(find_value_path(reference_map, file_tags))
+    assert find_value_path(reference_map, file_tags) == "y"
 
     # Test no match found
     file_tags_no_match = {'e': 3, 'f': 4}
@@ -35,20 +38,23 @@ def test_find_value_path():
         'level1': {
             'level2': {
                 'level3': {
-                    'target': {'c': 2, 'd': 1},
-                    'other': {'e': 5}
+                    'blocks': 'c.d',
+                    'shape': 256
                 }
             },
             'another': {'skip': {}}
         }
     }
-
-    assert find_value_path(reference_map_deeper, file_tags) == ['level1', 'level2', 'level3', 'target']
+    print(find_value_path(reference_map_deeper, file_tags))
+    assert find_value_path(reference_map_deeper, file_tags) == 'level1'
 
     # Test with empty dict
     reference_map_empty = {}
     assert find_value_path(reference_map_empty, file_tags) is None
 
     # Test matching at the top level
-    reference_map_top_level_match = {'c': 2, 'd': 1}
-    assert find_value_path(reference_map_top_level_match, file_tags) == ['c', 'd']
+    reference_map_top_level_match = {"blocks": 'c.d', "shape": 256}
+    assert find_value_path(reference_map_top_level_match, file_tags) == ['blocks', 'shape']
+
+
+test_find_value_path()
