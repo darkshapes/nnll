@@ -11,7 +11,7 @@ class ExtractAndMatchMetadata:
         """
         Extracts shape and key data from the source meta data and put them into id_values\n
         This would extract whatever additional information is needed when a match is found.\n
-        :param source_item_data: `dict` Values from the metadata (specifically state dicts layers)
+        :param layer_element: `dict` Values from the metadata (specifically state dicts layers)
         :param id_values: `dict` Collection of identifiable attributes extracted from the source item
         :return: `dict` Tensor and tensor shape attribute details from the source item
         """
@@ -32,28 +32,30 @@ class ExtractAndMatchMetadata:
             'shape': id_values.get('shape', None)
         }
 
-    def match_pattern_and_regex(self, reference_data: str, source_item_data: str) -> bool:
+    def match_pattern_and_regex(self, block_pattern: str, layer_element: str) -> bool:
         """
         Match a regex pattern to metadata (specifically state dict layers)\n
-        :param reference_data: `str` | `int` Regex patterns, strings, or number from known identifiers
-        :param source_item_data: `str` Values from the metadata (specifically state dicts layers)
+        :param block_pattern: `str` | `int` Regex patterns, strings, or number from known identifiers
+        :param layer_element: `str` Values from the metadata (specifically state dicts layers)
         :return: boolean value of match (or not)\n
         note: prep with conditional `if entry.startswith("r'")`
         """
-        if type(source_item_data) == str and source_item_data.startswith("r'"):
+        if layer_element == "":
+            raise ValueError("The value to compare from the inspected file cannot be an empty string.")
+        elif type(layer_element) == str and layer_element.startswith("r'"):
             # Regex conversion
-            expression = (source_item_data
+            expression = (layer_element
                           .replace("d+", r"\d+")  # Replace 'd+' with '\d+' for digits
                           .replace(".", r"\.")    # Escape literal dots with '\.'
                           .strip("r'")            # Strip the 'r' and quotes from the string
                           )
             print(expression)
             regex_entry = re.compile(expression)
-            return bool(regex_entry.search(reference_data))
-        elif type(source_item_data) == str and type(reference_data) == str and source_item_data != "":
-            return reference_data in source_item_data
-        elif source_item_data is not None and reference_data is not None and source_item_data != "":
-            return source_item_data == reference_data
+            return bool(regex_entry.search(block_pattern))
+        elif type(layer_element) == str and type(block_pattern) == str:
+            return block_pattern in layer_element
+        elif layer_element is not None and block_pattern is not None:
+            return layer_element == block_pattern
         else:
             return False
 
@@ -71,6 +73,3 @@ class ExtractAndMatchMetadata:
         else:
             with open(file_path, 'rb') as f:
                 return hashlib.sha256(f.read()).hexdigest()
-
-    # def search_basic_match(self, reference_data: dict, source_item_data: dict):
-    #     return all(reference_data.get(key) == value for key, value in source_item_data.items())
