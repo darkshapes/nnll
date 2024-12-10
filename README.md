@@ -108,7 +108,7 @@ Features -
 
 ###### install torch (nvidia/cuda device)
 > ```
-> pip install torch==2.3.1+cu121 torchvision torchaudio xformers flash-attn --index-url https://download.pytorch.org/whl/cu121
+> pip install torch==2.3.1+cu121 torchvision==0.18.1 torchaudio==2.3.1 xformers==0.0.27 flash-attn --index-url https://download.pytorch.org/whl/cu121
 > ```
 
 ###### install torch (apple/mps device)
