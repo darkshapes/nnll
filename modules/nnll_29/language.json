@@ -1,0 +1,16 @@
+{
+    "t5-xxl": {
+        "blocks": [
+            "text_encoders.t5xxl.transformer.shared.weight",
+            "encoder.embed_tokens.weight"
+        ],
+        "tensors": [
+            242,
+            220,
+            218
+        ],
+        "shapes": [
+            4096
+        ]
+    }
+}

@@ -77,7 +77,8 @@ class Component:
 
     def __init__(self, model_type, **kwargs):
         self.model_type = model_type
-        self.allowed_keys = {"dtype", "file_size", "library", "component_name", "custom_slot_1", "custom_slot_2"}
+
+        self.allowed_keys = {"dtype", "disk_size", "layer_type", "component_name", "disk_path", "custom_slot_1", "custom_slot_2"}
         for key, value in kwargs.items():
             if key not in self.allowed_keys:
                 raise KeyError(f"Valid attributes can only be one of the following : {print(k for k in self.allowed_keys)}")

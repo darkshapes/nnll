@@ -15,8 +15,8 @@ class TestDomainArchitectureComponent(unittest.TestCase):
         component1 = Component(
             model_type="transformer",
             dtype="float32",
-            file_size=1024,
-            library="huggingface",
+            disk_size=1024,
+            layer_type="huggingface",
             component_name="bert-base-uncased"
         )
 
@@ -24,8 +24,8 @@ class TestDomainArchitectureComponent(unittest.TestCase):
         component2 = Component(
             model_type="resnet50",
             dtype="int8",
-            file_size=512,
-            library="torchvision",
+            disk_size=512,
+            layer_type="torchvision",
             component_name="resnet50-pretrained"
         )
 
@@ -46,18 +46,19 @@ class TestDomainArchitectureComponent(unittest.TestCase):
             "models.nlp.transformer": {
                 "model_type": "transformer",
                 "dtype": "float32",
-                "file_size": 1024,
-                "library": "huggingface",
+                "disk_size": 1024,
+                "layer_type": "huggingface",
                 "component_name": "bert-base-uncased"
             },
             "models.vision.resnet50": {
                 "model_type": "resnet50",
                 "dtype": "int8",
-                "file_size": 512,
-                "library": "torchvision",
+                "disk_size": 512,
+                "layer_type": "torchvision",
                 "component_name": "resnet50-pretrained"
             }
         }
+        self.allowed_keys = {"dtype", "disk_size", "disk_path", "layer_type", "component_name", "custom_slot_1", "custom_slot_2"}
 
         # Convert the domain to a dictionary and assert equality
         actual_dict = domain.to_dict()

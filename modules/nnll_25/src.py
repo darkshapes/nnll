@@ -35,7 +35,7 @@ class ExtractAndMatchMetadata:
     def match_pattern_and_regex(self, reference_data: str, source_item_data: str) -> bool:
         """
         Match a regex pattern to metadata (specifically state dict layers)\n
-        :param reference_data: `str` A regex pattern from known identifiers
+        :param reference_data: `str` | `int` Regex patterns, strings, or number from known identifiers
         :param source_item_data: `str` Values from the metadata (specifically state dicts layers)
         :return: boolean value of match (or not)\n
         note: prep with conditional `if entry.startswith("r'")`
@@ -50,7 +50,9 @@ class ExtractAndMatchMetadata:
             print(expression)
             regex_entry = re.compile(expression)
             return bool(regex_entry.search(reference_data))
-        elif source_item_data != "" and reference_data != "":
+        elif type(source_item_data) == str and type(reference_data) == str and source_item_data != "":
+            return reference_data in source_item_data
+        elif source_item_data is not None and reference_data is not None and source_item_data != "":
             return source_item_data == reference_data
         else:
             return False
