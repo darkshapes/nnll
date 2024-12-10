@@ -61,16 +61,18 @@ class Architecture:
 
 class Component:
     """
-    Specifics of Modalities, contents, techniques, or purposes of an identified model that effect processing.\n
+    Specifics of modalities, contents, techniques, or purposes of an identified model that effect processing.\n
     This enables us to filter, organize, and prepare files, allowing automated workflow construction
-    ***file_size*** : The total size in **bytes** of the file\n
+    ***disk_size*** : The total size in **bytes** of the file\n
+    ***disk_path*** : The full location of the file\n
+    ***file_name*** : The basename of the file\n
+    ***extension*** : The last file extension in the filename\n
     ***dtype*** : The model datatype format (if applicable, to know if and how precision can be lowered)\n
     ***component_name*** : The formal title or technique of the of component
-    ***library*** : The format and compatability of the model structure, including but not limited to\n
+    ***layer_type*** : The format and compatability of the model structure, including but not limited to\n
     - `pytorch`
     - `diffusers`
     - `compvis`
-    ***custom_slot_1***, ***custom_slot_2*** : Empty filters appeneded to the attributes list\n
     (Note: Future functionality should include dynamically adding permament custom attributes)
 
     """
@@ -78,7 +80,7 @@ class Component:
     def __init__(self, model_type, **kwargs):
         self.model_type = model_type
 
-        self.allowed_keys = {"dtype", "disk_size", "layer_type", "component_name", "disk_path", "custom_slot_1", "custom_slot_2"}
+        self.allowed_keys = {"dtype", "disk_size", "layer_type", "component_name", "disk_path", "file_name", "extension"}
         for key, value in kwargs.items():
             if key not in self.allowed_keys:
                 raise KeyError(f"Valid attributes can only be one of the following : {print(k for k in self.allowed_keys)}")
