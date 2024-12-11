@@ -35,3 +35,4 @@ https://download.pytorch.org/whl/cpu/torch-2.5.1-cp312-none-macosx_11_0_arm64.wh
 # flash-attn; platform_system == "Linux"
 
 llama-cpp-python
+pytest
