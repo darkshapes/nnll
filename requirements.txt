@@ -5,5 +5,10 @@ torch==2.5.1
 sentencepiece==0.2.0
 diffusers
 transformers
-xformers
-llama-cpp-python@https://abetlen.github.io/llama-cpp-python/whl/cpu
+torch==2.5.1; platform_machine=='aarch64' or platform_system == 'Darwin'
+torch==2.3.1+cu121; platform_system != 'Darwin' and platform_machine !='aarch64'
+torchvision
+torchaudio
+xformers==0.0.27; platform_system != 'Darwin' and platform_machine !='aarch64'
+-f https://download.pytorch.org/whl/
+llama-cpp-python
