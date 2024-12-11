@@ -1,13 +1,38 @@
+
 numpy
 wheel
 ninja
-torch==2.5.1
 sentencepiece==0.2.0
 diffusers
 transformers
-torch==2.3.1+cu121, 2.5.1;
-torchvision
-torchaudio
-xformers==0.0.27; platform_system != 'Darwin' and platform_machine !='aarch64'
--f https://download.pytorch.org/whl/
+
+#PyTorch Windows
+torch==2.3.1+cu121; platform_system == "Windows"
+https://download.pytorch.org/whl/cu121/torch-2.3.1%2Bcu121-cp310-cp310-win_amd64.whl#sha256=bf1438aeb124fc36ae2d6b4b5c76d751d47a9fc3d7b15291b41f0caa8d5bf27b; platform_system == "Windows" and python_version == "3.10"
+https://download.pytorch.org/whl/cu121/torch-2.3.1%2Bcu121-cp311-cp311-win_amd64.whl#sha256=5a578516d0caf233993b3161d7dce1472bb917c59dd767c51921cd6696c3f3f7; platform_system == "Windows" and python_version == "3.11"
+https://download.pytorch.org/whl/cu121/torch-2.3.1%2Bcu121-cp312-cp312-win_amd64.whl#sha256=065a92a5ea2c89aad2bcd93e54c85c04a65c3e4a91cec2815e22c22706ec5183; platform_system == "Windows" and python_version == "3.12"
+
+#PyTorch Linux
+torch==2.5.1; platform_system == 'Linux' and platform_machine != 'aarch64'
+https://download.pytorch.org/whl/cu124/torch-2.5.1%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=9dde30f399ca22137455cca4d47140dfb7f4176e2d16a9729fc044eebfadb13a; platform_system == 'Linux' and platform_machine != 'aarch64' and python_version == "3.10"
+https://download.pytorch.org/whl/cu124/torch-2.5.1%2Bcu124-cp311-cp311-linux_x86_64.whl#sha256=6b2966ede9affe2fd69e0765691ca723ec870e0c34c7761f4d5b8e318383fdaf; platform_system == 'Linux' and platform_machine != 'aarch64' and python_version == "3.11"
+https://download.pytorch.org/whl/cu124/torch-2.5.1%2Bcu124-cp312-cp312-linux_x86_64.whl#sha256=bf6484bfe5bc4f92a4a1a1bf553041505e19a911f717065330eb061afe0e14d7; platform_system == 'Linux' and platform_machine != 'aarch64' and python_version == "3.12"
+
+#PyTorch ARMLinux
+torch==2.5.1; platform_system == 'Linux' and platform_machine == 'aarch64'
+https://download.pytorch.org/whl/cpu/torch-2.5.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl#sha256=269b10c34430aa8e9643dbe035dc525c4a9b1d671cd3dbc8ecbcaed280ae322d; platform_system == 'Linux' and platform_machine == 'aarch64' and python_version == "3.10"
+https://download.pytorch.org/whl/cpu/torch-2.5.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl#sha256=d5b3203f191bc40783c99488d2e776dcf93ac431a59491d627a1ca5b3ae20b22; platform_system == 'Linux' and platform_machine == 'aarch64' and python_version == "3.11"
+https://download.pytorch.org/whl/cpu/torch-2.5.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl#sha256=36d1be99281b6f602d9639bd0af3ee0006e7aab16f6718d86f709d395b6f262c; platform_system == 'Linux' and platform_machine == 'aarch64' and python_version == "3.12"
+
+#PyTorch MacOS
+torch==2.5.1; platform_system == 'Darwin'
+https://download.pytorch.org/whl/cpu/torch-2.5.1-cp310-none-macosx_11_0_arm64.whl#sha256=23d062bf70776a3d04dbe74db950db2a5245e1ba4f27208a87f0d743b0d06e86; platform_system == 'Darwin' and python_version == "3.10"
+https://download.pytorch.org/whl/cpu/torch-2.5.1-cp311-none-macosx_11_0_arm64.whl#sha256=31f8c39660962f9ae4eeec995e3049b5492eb7360dd4f07377658ef4d728fa4c; platform_system == 'Darwin' and python_version == "3.11"
+https://download.pytorch.org/whl/cpu/torch-2.5.1-cp312-none-macosx_11_0_arm64.whl#sha256=8c712df61101964eb11910a846514011f0b6f5920c55dbf567bff8a34163d5b1; platform_system == 'Darwin' and python_version == "3.12"
+
+xformers==0.0.27; platform_system == "Windows"
+xformers; platform_system == "Linux"
+flash-attn; platform_system == "Linux"
+
 llama-cpp-python
+https://download.pytorch.org/whl/cpu/torch-2.5.1-cp312-none-macosx_11_0_arm64.whl#sha256=8c712df61101964eb11910a846514011f0b6f5920c55dbf567bff8a34163d5b1
