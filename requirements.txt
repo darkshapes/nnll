@@ -35,4 +35,3 @@ xformers; platform_system == "Linux"
 flash-attn; platform_system == "Linux"
 
 llama-cpp-python
-https://download.pytorch.org/whl/cpu/torch-2.5.1-cp312-none-macosx_11_0_arm64.whl#sha256=8c712df61101964eb11910a846514011f0b6f5920c55dbf567bff8a34163d5b1
