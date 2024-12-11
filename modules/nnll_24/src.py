@@ -6,7 +6,7 @@ import sys
 from modules.nnll_25.src import ExtractAndMatchMetadata
 
 
-def compare_values(nested_ref: dict, source_item_data, tensor_count):
+def compare_values(nested_ref: dict, source_item_data: str, tensor_count):
     run_instance_process = ExtractAndMatchMetadata()
     for layer_element, tensor_data in source_item_data.items():
         if (len(nested_ref)) > 1:  # the dicts are shaped to only find one value
@@ -48,6 +48,7 @@ def find_value_path(reference_map: dict, source_item_data: dict, tensor_count: d
         return None  # No matching subtree found
 
     if all(reference_map.get(key) == value for key, value in source_item_data.items()):  # Check for top-level direct match
-        return list(source_item_data.keys())
+        # return list(source_item_data.keys()) #return all keys
+        return list(source_item_data.keys())[-1]
 
     return recursive_search(reference_map)
