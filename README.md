@@ -80,11 +80,16 @@ Features -
 </details>
 
 
-<details><summary>
+<details open><summary>
 
 #### setup
 
 </summary>
+
+###### clone repo
+> ```
+> git clone https://github.com/darkshapes/nnll.git
+> ```
 
 ###### create virtual environment
 > ```
@@ -106,24 +111,9 @@ Features -
 > python -m pip install --upgrade pip
 > ```
 
-###### install torch (nvidia/cuda device)
-> ```
-> pip install torch==2.3.1+cu121 torchvision==0.18.1 torchaudio==2.3.1 xformers==0.0.27 flash-attn --index-url https://download.pytorch.org/whl/cu121
-> ```
-
-###### install torch (apple/mps device)
-> ```
-> pip install torch torchvision torchaudio xformers
-> ```
-
-###### clone repo
-> ```
-> git clone https://github.com/darkshapes/nnll.git
-> ```
-
 ###### install
 > ```
-> pip install -e nnll
+>  pip install -r nnll/requirements.txt
 > ```
 
 ###### add environment variables (windows)
@@ -136,7 +126,7 @@ Features -
 > export HF_HUB_OFFLINE=True && export DISABLE_TELEMETRY=YES && export GIT_LFS_SKIP_SMUDGE=1
 >
 
-##### clone metadata
+##### clone metadata (optional)
 > ```
 > git clone https://huggingface.co/exdysa/metadata nnll/metadata
 > ```
