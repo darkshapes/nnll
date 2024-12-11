@@ -1,10 +1,9 @@
 
-from collections import defaultdict
 import sys
 import os
 from pathlib import Path
 from tqdm.auto import tqdm
-import argparse
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.path[0]))))
 from modules.nnll_04.src import load_safetensors_metadata
@@ -25,7 +24,7 @@ def run(file_path: str) -> None:
         ".pth": load_pickletensor_metadata,
         ".ckpt": load_pickletensor_metadata
     }
-    FILTER = read_json_file(".modules/nnll_29/filter.json")
+    FILTER = read_json_file("modules/nnll_29/filter.json")
 
     # Process file by method indicated by extension, usually struct unpacking, except for pt files which are memmap
     file_name = os.path.basename(file_path)
@@ -36,17 +35,17 @@ def run(file_path: str) -> None:
 
     model_header = method_map[file_extension](file_path)
 
-    try:
+    try:  # Be sure theres something in model_header
         next(iter(model_header))
     except TypeError as errorlog:
         raise TypeError(errorlog)
-    else:
-        tensor_count = len(model_header)
+    else:  # Process and output metadata
+        tensor_count = { "tensors": len(model_header) }
         block_scan = BlockScanner()
-        file_metadata = block_scan.filter_metadata(FILTER, model_header, tensor_count,)
+        file_metadata = block_scan.filter_metadata(FILTER, model_header, tensor_count)
         domain_ml = Domain("ml")  # create the domain only when we know its a model
         arch_found = Architecture(file_metadata.get("model"))
-        comp_inside = Component(file_metadata["category"], disk_size=file_size, disk_path=file_path, layer_type=file_metadata["layer_type"])  # dtype=file_metadata["dtype"],
+        comp_inside = Component(file_metadata["category"], disk_size=file_size, disk_path=file_path, layer_type=file_metadata["layer_type"], file_name=file_name)  # dtype=file_metadata["dtype"],
         arch_found.add_component(comp_inside.model_type, comp_inside)
         domain_ml.add_architecture(arch_found.architecture, arch_found)
         model_index_dict = domain_ml.to_dict()
@@ -55,7 +54,7 @@ def run(file_path: str) -> None:
         except TypeError as errorlog:
             raise TypeError(errorlog)
 
-
+# import argparse
 # def main(re_file: str = None, re_save: str = None) -> None:
 #     # Set up argument parser
 #     parser = argparse.ArgumentParser(description="Analyze model files in a directory and ouptut result to console and json file.")
@@ -89,20 +88,25 @@ def run(file_path: str) -> None:
 #     else:
 #         return
 
-# # file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
 
-    if Path(files).is_dir() == True:
-        path_data = os.listdir(files)
-        print("\n\n\n\n")
-        for each_file in tqdm(path_data, total=len(path_data), position=0, leave=True):
-            file_path = os.path.join(files, each_file)
-            run(file_path, save_location)
-    elif Path(files).exists:
-        main(files, save_location)
+if len(sys.argv) == 1:
+    file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
+    file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
+else:
+    file_path = sys.argv[1]
+
+if Path(file_path).is_dir() == True:
+    path_data = os.listdir(file_path)
+    print("\n\n\n\n")
+    for each_file in tqdm(path_data, total=len(path_data), position=0, leave=True):
+        file_path = os.path.join(file_path, each_file)
+        run(file_path)  # save_location)
+elif Path(file_path).exists:
+    run(file_path)  # save_location)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 # # file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
 # file_path = "/Users/unauthorized/Downloads/models/HunyuanDiT-v1.2-Diffusers/transformer/diffusion_pytorch_model.safetensors"
