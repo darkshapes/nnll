@@ -43,9 +43,12 @@ def run(file_path: str) -> None:
         tensor_count = { "tensors": len(model_header) }
         block_scan = BlockScanner()
         file_metadata = block_scan.filter_metadata(FILTER, model_header, tensor_count)
+        for element in file_metadata:
+            if isinstance(file_metadata[element], list):
+                file_metadata[element] = ' '.join(file_metadata[element])
         domain_ml = Domain("ml")  # create the domain only when we know its a model
         arch_found = Architecture(file_metadata.get("model"))
-        comp_inside = Component(file_metadata["category"], disk_size=file_size, disk_path=file_path, layer_type=file_metadata["layer_type"], file_name=file_name)  # dtype=file_metadata["dtype"],
+        comp_inside = Component(file_metadata["category"], disk_size=file_size, disk_path=file_path, layer_type=file_metadata["layer_type"], file_name=file_name)
         arch_found.add_component(comp_inside.model_type, comp_inside)
         domain_ml.add_architecture(arch_found.architecture, arch_found)
         model_index_dict = domain_ml.to_dict()

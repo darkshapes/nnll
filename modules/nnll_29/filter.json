@@ -51,69 +51,67 @@
             ]
         }
     },
-    "model": {
-        "unet": {
-            "auraflow": {
-                "blocks": "model.double_layers.3.mlpX.c_proj.weight",
-                "shapes": [
-                    3072,
-                    3072
-                ],
-                "tensors": 849
-            },
-            "flux": {
-                "blocks": "double_blocks.12.txt_mod.lin.weight",
-                "shapes": [
-                    18432,
-                    3072
-                ],
-                "tensors": 780
-            },
-            "hunyuan": {
-                "blocks": "model.blocks.39.skip_norm.weight",
-                "shapes": [
-                    2816
-                ],
-                "tensors": 2166
-            }
+    "unet": {
+        "auraflow": {
+            "blocks": "model.double_layers.3.mlpX.c_proj.weight",
+            "shapes": [
+                3072,
+                3072
+            ],
+            "tensors": 849
         },
-        "language": {
-            "t5-xxl": {
-                "blocks": "text_encoders.t5xxl.transformer.shared.weight",
-                "shapes": [
-                    4096
-                ]
-            },
-            "mt5-xl": {
-                "blocks": "text_encoders.mt5xl.transformer.shared.weight",
-                "shapes": [
-                    250112,
-                    2048
-                ]
-            }
+        "flux": {
+            "blocks": "double_blocks.12.txt_mod.lin.weight",
+            "shapes": [
+                18432,
+                3072
+            ],
+            "tensors": 780
         },
-        "vae": {
-            "sdxl-base": {
-                "blocks": "encoder.mid_block.resnets.0.conv2.weight",
-                "shapes": [
-                    512,
-                    512,
-                    3,
-                    3
-                ],
-                "tensors": 248
-            },
-            "sd3": {
-                "blocks": "encoder.mid_block.resnets.0.conv2.weight",
-                "shapes": [
-                    512,
-                    512,
-                    3,
-                    3
-                ],
-                "tensors": 244
-            }
+        "hunyuan": {
+            "blocks": "model.blocks.39.skip_norm.weight",
+            "shapes": [
+                2816
+            ],
+            "tensors": 2166
+        }
+    },
+    "language": {
+        "t5-xxl": {
+            "blocks": "text_encoders.t5xxl.transformer.shared.weight",
+            "shapes": [
+                4096
+            ]
         },
-        "lora": {}
-    }
+        "mt5-xl": {
+            "blocks": "text_encoders.mt5xl.transformer.shared.weight",
+            "shapes": [
+                250112,
+                2048
+            ]
+        }
+    },
+    "vae": {
+        "sdxl-base": {
+            "blocks": "encoder.mid_block.resnets.0.conv2.weight",
+            "shapes": [
+                512,
+                512,
+                3,
+                3
+            ],
+            "tensors": 248
+        },
+        "sd3": {
+            "blocks": "encoder.mid_block.resnets.0.conv2.weight",
+            "shapes": [
+                512,
+                512,
+                3,
+                3
+            ],
+            "tensors": 244
+        }
+    },
+    "lora": {}
 }
