@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.path[0])) ))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.path[0]), "modules") ))
 
 from nnll_29.src import BlockScanner
 
