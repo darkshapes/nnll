@@ -68,6 +68,7 @@ Features -
 
 </summary>
 
+> [nnll xx - civitai model index/download]
 > [nnll xx - token encoder type 3]<br>
 > [nnll xx - prototype token sculptor revisiting nnll 08]<br>
 > [nnll xx - alternate methods of torch.no_grad inference]<br>
