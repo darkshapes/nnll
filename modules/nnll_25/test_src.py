@@ -76,8 +76,6 @@ testdata_03 = [
 ]
 
 testdata_04 = [
-    ("", "", False),  # Empty reference data and source item data
-    ("Hello World", "", False),  # Empty source item data
     ("", "r'\\d+'", False),  # Empty reference data with regex pattern
 ]
 
@@ -85,7 +83,7 @@ testdata_05 = [
     ("Hello World", r"Hello World", False),  # Invalid regex pattern (unescaped quotes)
 ]
 
-combined_testdata = testdata_00 + testdata_01 + testdata_02 + testdata_03 + testdata_04
+combined_testdata = testdata_00 + testdata_01 + testdata_02 + testdata_03
 
 
 class TestRegex:
@@ -95,10 +93,23 @@ class TestRegex:
         result = test_module.match_pattern_and_regex(reference_data, source_item_data)
         assert result == expected
 
+    @classmethod
+    def test_empty_regex(cls):
+        test_module = ExtractAndMatchMetadata()
+        reference_data = ["", "Hello World"]
+        source_item_data = ""
+        expected = ValueError("The value to compare from the inspected file cannot be an empty string.")  # Empty reference data and source item data
+        with pytest.raises(ValueError) as exc_info:
+            for each in reference_data:
+                result = test_module.match_pattern_and_regex(each, source_item_data)
+                assert expected == exc_info
+
 
 testdata_00 = [     # Test basic functionality
     ({"dtype": "float32", "shape": [10, 20]}, {}, {"tensors": 0, "shape": "[10, 20]"}),
     ({"dtype": "int64", "shape": [5, 5]}, {"dtype": "float32"}, {"tensors": 0, "shape": "[5, 5]", "dtype": "float32 int64"}),
+
+
 ]
 
 testdata_01 = [    # Test with existing values in id_values
@@ -131,7 +142,7 @@ combined_testdata = testdata_00 + testdata_01 + testdata_02 + testdata_03 + test
 
 class TensorTest:
 
-    @pytest.mark.parametrize("source_data_item, id_values, expected", )
+    @ pytest.mark.parametrize("source_data_item, id_values, expected", )
     def test_basic_functionality(source_data_item, id_values, expected):
         test_module = ExtractAndMatchMetadata()
         assert test_module.extract_tensor_data(source_data_item, id_values) == expected

@@ -25,17 +25,15 @@ def pretty_tabled_output(title: str, aggregate_data: dict) -> dict:
     print_title = {}
     print_title.setdefault("category", title)
     print_values = print_title | aggregate_data.copy()
-    if (k := "disk_path") is not None:
-        print_values.pop(k)  # Only pop if a valid key is found
-    if (k := "model_type") is not None:
-        print_values.pop(k)
-    if (k := "file_name") is not None:
-        print_values.pop(k)
+    truncate_keys = ["disk path", "model_type", "file_name"]
+    for key in truncate_keys:
+        if print_values.get(key) is not None:
+            print_values.pop(key)  # Only pop if a valid key is found
     key_value_length = len(print_values)  # number of items detected in the scan
     width_top = key_value_length * 1.5
     width = 17
     info_format = '{:^{width}}|' * key_value_length  # shrink print columns to data width
     header_keys = tuple(print_values)  # use to create table
-    horizontal_bar = ("  " + "-" * (width * 1.125) * key_value_length)  # horizontal divider of arbitrary length. could use shutil to dynamically create but eh. already overkill
+    horizontal_bar = ("  " + "-" * (width) * key_value_length)  # horizontal divider of arbitrary length. could use shutil to dynamically create but eh. already overkill
     formatted_data = tuple(print_values.values())  # data extracted from the scan
     wipe_printer(title, info_format.format(*header_keys, width=width), horizontal_bar, info_format.format(*formatted_data, width=width))  # send to print function
