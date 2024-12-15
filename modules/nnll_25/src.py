@@ -34,7 +34,7 @@ class ExtractAndMatchMetadata:
 
     def match_pattern_and_regex(self, block_pattern: str, layer_element: str) -> bool:
         """
-        Match a regex pattern to metadata (specifically state dict layers)\n
+        Match a string, int or regex pattern to metadata (specifically state dict layers)\n
         :param block_pattern: `str` | `int` Regex patterns, strings, or number from known identifiers
         :param layer_element: `str` Values from the metadata (specifically state dicts layers)
         :return: boolean value of match (or not)\n
@@ -52,12 +52,13 @@ class ExtractAndMatchMetadata:
             print(expression)
             regex_entry = re.compile(expression)
             return bool(regex_entry.search(block_pattern))
-        elif type(layer_element) == str and type(block_pattern) == str:
-            return block_pattern in layer_element
-        elif layer_element is not None and block_pattern is not None:
-            return layer_element == block_pattern
         else:
-            return False
+            if type(layer_element) == str and type(block_pattern) == str:
+                return block_pattern.lower() in layer_element.lower()
+            elif layer_element is not None and block_pattern is not None:
+                return layer_element == block_pattern
+            else:
+                return False
 
     def compute_file_hash(self, file_path: str) -> str:
         """

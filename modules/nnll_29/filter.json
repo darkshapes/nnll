@@ -4,20 +4,25 @@
             "blocks": [
                 "input_blocks.",
                 "out_blocks.",
+                "out_layer",
                 "lora_down.weight",
                 "blocks_0_attn1_to_k",
+                "attn_to_k",
                 "mlp.fc1",
-                "out_proj",
-                "wqkv"
+                "wqkv",
+                "vae.decoder.up",
+                "text_encoders.",
+                ".txt_"
             ]
         },
         "diffusers": {
             "blocks": [
+                "out_proj",
                 "down_blocks.",
                 "up_blocks.",
                 "lora.down.weight",
                 "0.attn1.to_k.",
-                "norm1.norm"
+                ".attn.to_k."
             ]
         }
     },
