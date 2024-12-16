@@ -2,34 +2,31 @@
     "layer_type": {
         "compvis": {
             "blocks": [
+                "text_encoders.",
                 "input_blocks.",
-                "out_blocks.",
                 "out_layer",
                 "lora_down.weight",
                 "blocks_0_attn1_to_k",
-                "attn_to_k",
                 "mlp.fc1",
-                "wqkv",
                 "vae.decoder.up",
-                "text_encoders.",
                 ".txt_"
             ]
         },
         "diffusers": {
             "blocks": [
-                "out_proj",
-                "down_blocks.",
-                "up_blocks.",
-                "lora.down.weight",
-                "0.attn1.to_k.",
-                ".attn.to_k."
+                ".attn.to_k.",
+                ".mid_block."
             ]
         }
     },
     "category": {
+        "tae": {
+            "blocks": "decoder.layers"
+        },
         "unet": {
             "blocks": [
                 "diffusion_model",
+                "model.diffusion",
                 "img_",
                 "img.",
                 "mid.",
@@ -38,8 +35,8 @@
         },
         "language": {
             "blocks": [
-                "self_attention",
                 "SelfAttention",
+                "self_attention",
                 "self_attn"
             ]
         },
@@ -52,13 +49,33 @@
         "lora": {
             "blocks": [
                 "lora_down",
-                "lora_up"
+                "lora_up",
+                "_mid_",
+                "lora_",
+                "lora_down.weight",
+                "blocks_0_attn1_to_k"
             ]
         }
     },
     "unet": {
+        "sdxl-refiner": "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'",
+        "lumina-mgpt": {
+            "block_names": "model.embed_tokens.weight"
+        },
+        "playground-25": {
+            "block_names": [
+                "edm_mean",
+                "edm_std"
+            ]
+        },
+        "kolors": {
+            "blocks": "encoder_hid_proj.weight"
+        },
         "auraflow": {
-            "blocks": "model.double_layers.3.mlpX.c_proj.weight",
+            "blocks": [
+                "model.double_layers.3.mlpX.c_proj.weight",
+                "double_layers.0.attn.w1q.weight"
+            ],
             "shapes": [
                 3072,
                 3072
@@ -66,12 +83,21 @@
             "tensors": 849
         },
         "flux": {
-            "blocks": "double_blocks.12.txt_mod.lin.weight",
+            "blocks": [
+                ".img_attn.norm.key_norm.scale",
+                "double_blocks.12.txt_mod.lin.weight"
+            ],
             "shapes": [
                 18432,
                 3072
             ],
             "tensors": 780
+        },
+        "sd35": {
+            "block_names": [
+                "model.diffusion_model.joint_blocks.",
+                "transformer_blocks.0.attn.add_q_proj.weight"
+            ]
         },
         "hunyuan": {
             "blocks": "model.blocks.39.skip_norm.weight",
@@ -79,11 +105,50 @@
                 2816
             ],
             "tensors": 2166
+        },
+        "stable_cascade-b": {
+            "blocks": "0.channelwise.0"
+        },
+        "stable_cascade-c": {
+            "blocks": [
+                "embeddings.patch_embedding.weight",
+                "0.channelwise.0"
+            ]
+        },
+        "pixart-sigma": {
+            "blocks": "blocks.11.ff.net.2.weight"
+        },
+        "sd1": {
+            "blocks": [
+                "model.diffusion_model.output_blocks.9"
+            ]
+        },
+        "sdxl-base": {
+            "blocks": "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight"
         }
     },
     "language": {
+        "bert": {
+            "blocks": "pooler.dense.bias"
+        },
+        "chatglm": {
+            "blocks": ".glm"
+        },
+        "t5-base": {
+            "blocks": "encoder.block.0.layer.1.DenseReluDense.wi.weight"
+        },
+        "umt-5": {
+            "blocks": "encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"
+        },
+        "clip_g": [
+            "text_model.encoder.layers.22.mlp.fc1.weight"
+        ],
+        "clip-vit-l": "embeddings.patch_embedding.weight",
         "t5-xxl": {
-            "blocks": "text_encoders.t5xxl.transformer.shared.weight",
+            "blocks": [
+                "encoder.embed_tokens.weight",
+                "text_encoders.t5xxl.transformer.shared.weight"
+            ],
             "shapes": [
                 4096
             ]
@@ -94,9 +159,18 @@
                 250112,
                 2048
             ]
+        },
+        "clip-l": {
+            "blocks": "text_model.encoder.layers.0.mlp.fc1.weight"
         }
     },
     "vae": {
+        "flux": {
+            "block_names": "encoder.down.3.block.1.norm1.bias"
+        },
+        "stable_cascade-a": {
+            "blocks": "out_block."
+        },
         "sdxl-base": {
             "blocks": "encoder.mid_block.resnets.0.conv2.weight",
             "shapes": [
@@ -116,6 +190,40 @@
                 3
             ],
             "tensors": 244
+        },
+        "sd1": {
+            "blocks": [
+                "model_ema.decay",
+                "loss.perceptual_loss.net.slice5.28.weight"
+            ]
+        }
+    },
+    "tae": {
+        "taesd-sd1": {
+            "block_names": [
+                "r'encoder.layers.d+'"
+            ],
+            "tensors": "134",
+            "file_size": 9793292,
+            "hash": "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
+        },
+        "taesd-sdxl-base": {
+            "block_names": [
+                "r'encoder.layers.d+'"
+            ],
+            "tensors": "134",
+            "file_size": 9793292,
+            "hash": "ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"
+        },
+        "taesd-flux": {
+            "tensors": 248,
+            "file_size": 9848636,
+            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
+        },
+        "tensors": 248,
+        "taesd-sd3": {
+            "file_size": 9848636,
+            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
         }
     },
     "lora": {}

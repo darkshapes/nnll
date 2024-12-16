@@ -3,6 +3,7 @@ import sys
 import os
 from pathlib import Path
 from tqdm.auto import tqdm
+from collections import defaultdict
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.path[0]), "modules") ))
@@ -28,14 +29,15 @@ def get_model_header(file_path: str) -> tuple:
     }
     # Get external file metadata
     file_extension = Path(file_path).suffix.lower()
-    if file_extension == "" or file_extension is None or file_extension not in method_map:  # Skip this file if we cannot possibly know what it is
+    if file_extension == '' or file_extension is None or file_extension not in method_map:  # Skip this file if we cannot possibly know what it is
         return
-    file_name = os.path.basename(file_path)
-    disk_size = os.path.getsize(file_path)
+    else:
+        file_name = os.path.basename(file_path)
+        disk_size = os.path.getsize(file_path)
 
-    # Retrieve header by method indicated by extension, usually struct unpacking, except for pt files which are memmap
-    model_header = method_map[file_extension](file_path)
-    return (model_header, disk_size, file_name, file_extension)
+        # Retrieve header by method indicated by extension, usually struct unpacking, except for pt files which are memmap
+        model_header = method_map[file_extension](file_path)
+        return (model_header, disk_size, file_name, file_extension)
 
 
 def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.json") -> dict:
@@ -70,7 +72,11 @@ def create_model_tag(file_metadata: dict) -> dict:
 
 
 def prepare_tags(disk_path: str) -> None:
-    model_header, disk_size, file_name, file_extension = get_model_header(disk_path)  # save_location)
+    data = get_model_header(disk_path)  # save_location)
+    if data is not None:
+        model_header, disk_size, file_name, file_extension = data
+    else:
+        return
     parse_file = parse_model_header(model_header)
     attribute_dict = {"disk_size": disk_size, "disk_path": disk_path, "file_name": file_name, "file_extension": file_extension}
     file_metadata = parse_file | attribute_dict
@@ -79,6 +85,33 @@ def prepare_tags(disk_path: str) -> None:
         pretty_tabled_output(next(iter(index_tag)), index_tag[next(iter(index_tag))])  # output information
     except TypeError as errorlog:
         raise
+    else:
+        return index_tag
+
+
+file_path = "/Users/unauthorized/Downloads/models/image"
+save_location = "/Users/unauthorized/Downloads/models/metadata"
+index = defaultdict(dict)
+
+if Path(file_path).is_dir() == True:
+    path_data = os.listdir(file_path)
+    print("\n\n\n\n")
+    for each_file in tqdm(path_data, total=len(path_data), position=0, leave=True):
+        file = os.path.join(file_path, each_file)
+        index_tag = prepare_tags(file)
+        if index_tag is not None:
+            index.setdefault(file, index_tag)
+
+elif Path(file_path).exists:
+    index = prepare_tags(file_path)
+
+if index is not None and index != {}:
+    write_json_file(save_location, "index.json", index, 'a')
+
+# if __name__ == "__main__":
+#     main()
+# else:
+#     file_path = sys.argv[1]
     # Send index_tag data to .json file
 
 # import argparse
@@ -114,27 +147,9 @@ def prepare_tags(disk_path: str) -> None:
 
 
 #     else:
-#         return
-if len(sys.argv) == 1:
-    # file_path = "/Users/unauthorized/Downloads/models/image/auraflow.diffusers.1of2.fp16.safetensors"
-    # file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
-    file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
+# #         return
+# if len(sys.argv) == 1:
+#     # file_path = "/Users/unauthorized/Downloads/models/image/auraflow.diffusers.1of2.fp16.safetensors"
+#     # file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
 
-else:
-    file_path = sys.argv[1]
-
-if Path(file_path).is_dir() == True:
-    path_data = os.listdir(file_path)
-    print("\n\n\n\n")
-    for each_file in tqdm(path_data, total=len(path_data), position=0, leave=True):
-        file_path = os.path.join(file_path, each_file)
-        prepare_tags(file_path)
-
-elif Path(file_path).exists:
-    prepare_tags(file_path)
-
- # save_location)
-
-
-# if __name__ == "__main__":
-#     main()
+# file_path = "/Users/unauthorized/Downloads/models/image/hunyuandit1.2.safetensors"
