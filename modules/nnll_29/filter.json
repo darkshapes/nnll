@@ -2,24 +2,34 @@
     "layer_type": {
         "compvis": {
             "blocks": [
-                "text_encoders.",
+                "clip_l",
+                "clip_g",
+                "t5xxl",
+                "mt5",
+                "vae.",
+                ".mid.",
+                ".txt_",
+                "unet_down",
                 "input_blocks.",
-                "out_layer",
-                "lora_down.weight",
-                "blocks_0_attn1_to_k",
-                "mlp.fc1",
-                "vae.decoder.up",
-                ".txt_"
+                "mlp.fc1"
             ]
         },
         "diffusers": {
             "blocks": [
+                "0.resnets.0",
                 ".attn.to_k.",
-                ".mid_block."
+                "mid_",
+                "add_q_proj.weight",
+                "11.ff.net.2.weight"
             ]
         }
     },
     "category": {
+        "lora": {
+            "blocks": [
+                "lora"
+            ]
+        },
         "tae": {
             "blocks": "decoder.layers"
         },
@@ -28,9 +38,7 @@
                 "diffusion_model",
                 "model.diffusion",
                 "img_",
-                "img.",
-                "mid.",
-                "mid_"
+                ".img"
             ]
         },
         "language": {
@@ -42,89 +50,108 @@
         },
         "vae": {
             "blocks": [
-                "decoder.up",
-                "encoder.down"
-            ]
-        },
-        "lora": {
-            "blocks": [
-                "lora_down",
-                "lora_up",
-                "_mid_",
-                "lora_",
-                "lora_down.weight",
-                "blocks_0_attn1_to_k"
+                "decoder.mid_",
+                "decoder.up"
             ]
         }
     },
+    "lora": {},
     "unet": {
-        "sdxl-refiner": "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'",
-        "lumina-mgpt": {
-            "block_names": "model.embed_tokens.weight"
-        },
-        "playground-25": {
-            "block_names": [
-                "edm_mean",
-                "edm_std"
-            ]
-        },
-        "kolors": {
-            "blocks": "encoder_hid_proj.weight"
-        },
-        "auraflow": {
-            "blocks": [
-                "model.double_layers.3.mlpX.c_proj.weight",
-                "double_layers.0.attn.w1q.weight"
-            ],
-            "shapes": [
-                3072,
-                3072
-            ],
-            "tensors": 849
-        },
-        "flux": {
-            "blocks": [
-                ".img_attn.norm.key_norm.scale",
-                "double_blocks.12.txt_mod.lin.weight"
-            ],
-            "shapes": [
-                18432,
-                3072
-            ],
-            "tensors": 780
-        },
-        "sd35": {
-            "block_names": [
-                "model.diffusion_model.joint_blocks.",
-                "transformer_blocks.0.attn.add_q_proj.weight"
-            ]
+        "common-canvas-s": {
+            "blocks": "up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"
         },
         "hunyuan": {
-            "blocks": "model.blocks.39.skip_norm.weight",
-            "shapes": [
-                2816
-            ],
-            "tensors": 2166
-        },
-        "stable_cascade-b": {
-            "blocks": "0.channelwise.0"
-        },
-        "stable_cascade-c": {
             "blocks": [
-                "embeddings.patch_embedding.weight",
-                "0.channelwise.0"
+                "model.blocks",
+                "skip_norm.weight"
             ]
         },
         "pixart-sigma": {
-            "blocks": "blocks.11.ff.net.2.weight"
+            "blocks": "adaln_single.emb.timestep_embedder.linear_1.weight",
+            "shapes": [
+                1152,
+                256
+            ],
+            "tensors": 603
+        },
+        "pixart-alpha": {
+            "blocks": "adaln_single.emb.timestep_embedder.linear_1.weight",
+            "shapes": [
+                1152,
+                256
+            ],
+            "tensors": 612
         },
         "sd1": {
             "blocks": [
                 "model.diffusion_model.output_blocks.9"
             ]
         },
+        "sdxl-refiner": "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'",
+        "lumina-mgpt": {
+            "blocks": "model.embed_tokens.weight"
+        },
+        "playground-25": {
+            "blocks": "edm_mean",
+            "shapes": [
+                1,
+                4,
+                1,
+                1
+            ],
+            "tensors": 2516
+        },
+        "kolors": {
+            "blocks": [
+                ".DenseReluDense.wi.weight",
+                "encoder_hid_proj.weight"
+            ]
+        },
+        "auraflow": {
+            "blocks": [
+                "mlpX.c_fc2.weight"
+            ],
+            "shapes": [
+                8192,
+                3072
+            ],
+            "tensors": 849
+        },
+        "sd35": {
+            "blocks": [
+                "model.diffusion_model.joint_blocks.",
+                "blocks.11.ff.net.2.weight"
+            ]
+        },
+        "flux-1": {
+            "blocks": [
+                "double_blocks.12.txt_mod.lin.weight",
+                "add_q_proj.weight"
+            ]
+        },
+        "stable_cascade-b": {
+            "blocks": [
+                "0.channelwise.0",
+                ".12.self_attn.k_proj.weight"
+            ],
+            "shapes": [
+                1280
+            ],
+            "tensors": 1454
+        },
+        "stable_cascade-c": {
+            "blocks": [
+                "previewer",
+                "backbone",
+                "img_"
+            ]
+        },
         "sdxl-base": {
-            "blocks": "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight"
+            "blocks": [
+                "logit_scale",
+                "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight"
+            ],
+            "tensors": 2515
         }
     },
     "language": {
@@ -140,14 +167,11 @@
         "umt-5": {
             "blocks": "encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"
         },
-        "clip_g": [
-            "text_model.encoder.layers.22.mlp.fc1.weight"
-        ],
-        "clip-vit-l": "embeddings.patch_embedding.weight",
         "t5-xxl": {
             "blocks": [
                 "encoder.embed_tokens.weight",
-                "text_encoders.t5xxl.transformer.shared.weight"
+                "text_encoders.t5xxl.transformer.shared.weight",
+                "t5xxl"
             ],
             "shapes": [
                 4096
@@ -160,16 +184,37 @@
                 2048
             ]
         },
+        "clip_g": [
+            "31.self_attn.k_proj.weight",
+            "text_model.encoder.layers.22.mlp.fc1.weight",
+            "clip-g"
+        ],
+        "clip-vit-l": "embeddings.patch_embedding.weight",
         "clip-l": {
-            "blocks": "text_model.encoder.layers.0.mlp.fc1.weight"
+            "blocks": [
+                "text_model.encoder.layers.0.mlp.fc1.weight",
+                "clip-l"
+            ]
         }
     },
     "vae": {
+        "sd1": {
+            "blocks": "running_mean"
+        },
         "flux": {
-            "block_names": "encoder.down.3.block.1.norm1.bias"
+            "blocks": [
+                "encoder.down.3.block.1.norm1.bias",
+                ".nin_shortcut.bias",
+                "up_blocks.0.resnets.2.norm2"
+            ],
+            "tensors": 244
         },
         "stable_cascade-a": {
-            "blocks": "out_block."
+            "blocks": [
+                "running_mean",
+                "out_block."
+            ],
+            "tensors": 122
         },
         "sdxl-base": {
             "blocks": "encoder.mid_block.resnets.0.conv2.weight",
@@ -191,16 +236,13 @@
             ],
             "tensors": 244
         },
-        "sd1": {
-            "blocks": [
-                "model_ema.decay",
-                "loss.perceptual_loss.net.slice5.28.weight"
-            ]
+        "kolors": {
+            "blocks": "mlp.c_proj"
         }
     },
     "tae": {
         "taesd-sd1": {
-            "block_names": [
+            "blocks": [
                 "r'encoder.layers.d+'"
             ],
             "tensors": "134",
@@ -208,7 +250,7 @@
             "hash": "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
         },
         "taesd-sdxl-base": {
-            "block_names": [
+            "blocks": [
                 "r'encoder.layers.d+'"
             ],
             "tensors": "134",
@@ -225,6 +267,5 @@
             "file_size": 9848636,
             "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
         }
-    },
-    "lora": {}
+    }
 }
