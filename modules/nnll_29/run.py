@@ -6,7 +6,7 @@ from tqdm.auto import tqdm
 from collections import defaultdict
 
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.path[0]), "modules") ))
+sys.path.append(os.path.abspath(os.path.join(os.path.pardir, "nnll", "modules")))
 from nnll_04.src import load_safetensors_metadata
 from nnll_05.src import load_gguf_metadata
 from nnll_28.src import load_pickletensor_metadata
@@ -40,7 +40,7 @@ def get_model_header(file_path: str) -> tuple:
         return (model_header, disk_size, file_name, file_extension)
 
 
-def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.json") -> dict:
+def parse_model_header(model_header: dict, filter_file="/Users/unauthorized/Documents/GitHub/darkshapes/nnll/modules/nnll_29/filter.json") -> dict:
     try:  # Be sure theres something in model_header
         next(iter(model_header))
     except TypeError as errorlog:

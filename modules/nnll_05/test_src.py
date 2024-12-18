@@ -7,7 +7,7 @@ import struct
 import os
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
+sys.path.append(os.path.abspath(os.path.join(os.path.pardir, "nnll", "modules")))
 from nnll_05.src import load_gguf_metadata, read_gguf_header
 
 

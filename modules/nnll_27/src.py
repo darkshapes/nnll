@@ -11,7 +11,8 @@ def wipe_printer(self, *formatted_data: dict) -> None:
     sys.stdout.write("\033[F" * len(formatted_data))  # ANSI escape codes to move the cursor up 3 lines
     for line_data in formatted_data:
         sys.stdout.write(" " * 175 + "\x1b[1K\r")
-        sys.stdout.write(f"{line_data}\r\n")  # Print the lines
+        sys.stdout.write(f"{line_data}\n")  # Print the lines
+
     sys.stdout.flush()              # Empty output buffer to ensure the changes are shown
 
 

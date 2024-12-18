@@ -1,0 +1,53 @@
+
+[project]
+name            = "nnll"
+version         = "0.0.dev0"
+description     = "Experimental ML modules library"
+authors         = [{ name = "darkshapes" }]
+requires-python = ">= 3.10"
+license         = { file = "LICENSE" }
+readme          = "README.md"
+
+dependencies = [
+    #Base Components
+
+    "llama-cpp-python",
+    "numpy",
+    "diffusers",
+    "transformers",
+    "sentencepiece==0.2.0",
+    "gguf",
+    "wheel",
+    "ninja",
+    "xformers",
+
+    #Pytorch Windows
+    "torch==2.3.1+cu121 @ https://download.pytorch.org/whl/cu121 ; platform_system=='Windows' and python_version=='3.10'",
+    "torch==2.3.1+cu121 @ https://download.pytorch.org/whl/cu121/ ; platform_system=='Windows' and python_version=='3.11'",
+    "torch==2.3.1+cu121 @ https://download.pytorch.org/whl/cu121/ ; platform_system=='Windows' and python_version=='3.12'",
+
+    #PyTorch Linux
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cu124/ ; platform_system=='Linux' and platform_machine!='aarch64' and python_version=='3.10'",
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cu124/ ; platform_system=='Linux' and platform_machine!='aarch64' and python_version=='3.11'",
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cu124/ ; platform_system=='Linux' and platform_machine!='aarch64' and python_version=='3.12'",
+
+    #PyTorch ARMLinux
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cpu/nightly ; platform_system=='Linux' and platform_machine == 'aarch64' and python_version=='3.10'",
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cpu/nightly ; platform_system=='Linux' and platform_machine == 'aarch64' and python_version=='3.11'",
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cpu/nightly ; platform_system=='Linux' and platform_machine == 'aarch64' and python_version=='3.12'",
+
+    #PyTorch MacOS
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cpu/nightly/ ; platform_system=='Darwin' and python_version=='3.10'",
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cpu/nightly ; platform_system=='Darwin' and python_version=='3.11'",
+    "torch==2.5.1 @ https://download.pytorch.org/whl/cpu/nightly ; platform_system=='Darwin' and python_version=='3.12'",
+
+    # xformers==0.0.27; platform_system == "Windows"
+    # xformers; platform_system == "Linux"
+    # flash-attn; platform_system == "Linux"
+
+]
+[project.urls]
+homepage = "https://github.com/darkshapes/nnll"
+
+[project.optional-dependencies]
+dev = ["pytest"]

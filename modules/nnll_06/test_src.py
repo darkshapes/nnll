@@ -4,7 +4,7 @@ import pytest
 
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
+sys.path.append(os.path.abspath(os.path.join(os.path.pardir, "nnll", "modules")))
 from nnll_06.src import compare_dicts
 
 
