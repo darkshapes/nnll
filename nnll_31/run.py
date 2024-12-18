@@ -4,7 +4,7 @@ import sys
 import subprocess
 
 sys.path.append(os.path.abspath(os.path.join(os.path.pardir)))
-from nnll_31.src import count_tensors_and_extract_shape
+from src import count_tensors_and_extract_shape
 
 
 def find_files_with_pattern(pattern):

@@ -4,9 +4,8 @@ import sys
 import os
 import json
 
-sys.path.append(os.path.abspath(os.path.join(os.path.pardir, "nnll", "modules", "nnll_30",)))
-sys.path.append(os.path.abspath(os.path.join(os.path.pardir, "nnll", "modules", "nnll_31",)))
-from nnll_30.src import read_json_file
+sys.path.append(os.path.abspath(os.path.pardir))
+from nnll_30_src import read_json_file
 
 
 def count_tensors_and_extract_shape(pattern, file_path):
