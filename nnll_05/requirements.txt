@@ -1,2 +1,0 @@
-"llama-cpp-python@https://abetlen.github.io/llama-cpp-python/whl/cu121; platform_system != 'Darwin' and platform_machine !='aarch64'",
-"llama-cpp-python@https://abetlen.github.io/llama-cpp-python/whl/cpu; platform_machine=='aarch64' or platform_system == 'Darwin'",
