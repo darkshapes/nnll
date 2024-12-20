@@ -1,0 +1,9 @@
+
+numpy
+wheel
+ninja
+torch
+llama-cpp-python
+sentencepiece
+
+

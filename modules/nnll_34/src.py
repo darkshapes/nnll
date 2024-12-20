@@ -27,7 +27,7 @@ def process_files(file_paths: list) -> list:
     for file_path in file_paths:
         part, sep, total = extract_part_and_total(Path(file_path).name)
         if part is not None and total is not None:
-            next_path = file_path.replace((part + sep + total), (total + sep + total))ß
+            next_path = file_path.replace((part + sep + total), (total + sep + total))
             if total not in files_dict:
                 files_dict[total] = {}
             files_dict[total][part] = file_path

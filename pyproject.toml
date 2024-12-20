@@ -14,9 +14,9 @@ readme = "README.md"
 urls = { source = "https://github.com/darkshapes/nnll" }
 dynamic = ["version"]
 
-
 [project.optional-dependencies]
 dev = ["pytest"]
+hf  = ["diffusers", "transformers"]
 
 [project.scripts]
 semver = "main:main"

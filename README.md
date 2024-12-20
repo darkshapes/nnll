@@ -49,12 +49,12 @@ Goals:
 > [nnll_26 - pytorch-specific seed and tensor routines](https://github.com/darkshapes/nnll/blob/main/modules/nnll_26/src.py)<br>
 > [nnll_27 - pretty column-formatted console printer](https://github.com/darkshapes/nnll/blob/main/modules/nnll_27/src.py#L6)<br>
 > [nnll_28 - torch pickletensor loader](https://github.com/darkshapes/nnll/blob/main/modules/nnll_28/src.py#L8)<br>
-> [nnll_29 - model indexer](https://github.com/darkshapes/nnll/blob/main/modules/nnll_29/src.py#L11)<br>
+> [nnll_29 - model indexer(inc)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_29/src.py#L11)<br>
 > [nnll 30 - barebones json read/write](https://github.com/darkshapes/nnll/blob/main/modules/nnll_30/src.py#L5)<br>
 > [nnll 31 - state dict layer equivalence tool](https://github.com/darkshapes/nnll/blob/main/modules/nnll_31/src.py#L18)<br>
 > [nnll 32 - model header operations (nnll_29)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_32/src.py#L7)<br>
 > [nnll 33 - layer and tensor value comparison (nnll_24)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_33/src.py#L4)<br>
-> [nnll 34 - model shard collector](https://github.com/darkshapes/nnll/blob/main/modules/nnll_34/src.py#L4)<br>
+> [nnll 34 - model shard collector (inc)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_34/src.py#L4)<br>
 > [nnll 35 - filename numeric fetch](https://github.com/darkshapes/nnll/blob/main/modules/nnll_35/src.py#L4)<br>
 </details>
 

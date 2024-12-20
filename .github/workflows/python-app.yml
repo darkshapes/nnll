@@ -14,18 +14,6 @@ permissions:
   contents: read
 
 jobs:
-  test-uv:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install uv and test
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | less
-          uv python install 3.13
-          uv venv .venv
-          source .venv/bin/activate
-          uv pip install .[dev]
-          pytest -v
 
   test:
     runs-on: ubuntu-latest
