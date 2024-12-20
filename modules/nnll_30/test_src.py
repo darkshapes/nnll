@@ -3,12 +3,8 @@ import os
 import json
 import unittest
 from tempfile import TemporaryDirectory
-
-import os
-import sys
-
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
-from nnll_30.src import write_json_file, read_json_file
+from unittest.mock import patch
+from modules.nnll_30.src import write_json_file, read_json_file
 
 
 class TestFileOperations(unittest.TestCase):
@@ -38,6 +34,17 @@ class TestFileOperations(unittest.TestCase):
         # Test reading a non-existent file should raise FileNotFoundError
         with self.assertRaises(FileNotFoundError):
             read_json_file("non_existent_file.json")
+
+    # @patch('builtins.print')
+    # def test_invalid_json_format(self, mock_print):
+    #     # Create a mock JSON file with invalid content
+    #     content = '{"tensor_1": {"shape": [2, 3, 4]}/}'
+    #     with open(self.file_path, 'w') as f:
+    #         f.write(content)
+
+    #     read_json_file(self.file_path)
+    #     expected_output = "json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 34 (char 33)"
+    #     mock_print.assert_called_once_with(expected_output)
 
     def tearDown(self):
         # Clean up the temporary directory

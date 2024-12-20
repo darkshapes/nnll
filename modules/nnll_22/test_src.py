@@ -5,8 +5,7 @@ import os
 
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
-from nnll_22.src import AbstractLink, AutoencoderLink, TextEncoderLink, UNetLink
+from modules.nnll_22.src import AbstractLink, AutoencoderLink, TextEncoderLink, UNetLink
 
 
 class ConcreteLink(AbstractLink):

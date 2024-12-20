@@ -1,0 +1,31 @@
+#
+[build-system]
+requires = ["wheel", "setuptools", "setuptools_scm"]
+
+[project]
+name = "nnll"
+description = "Experimental ML modules library"
+authors = [
+    { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
+]
+requires-python = ">= 3.10"
+license = { file = "LICENSE" }
+readme = "README.md"
+urls = { source = "https://github.com/darkshapes/nnll" }
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+hf  = ["diffusers", "transformers"]
+
+[project.scripts]
+semver = "main:main"
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools_scm]
+write_to = "_version.py"
+
+[tool.uv]
+dev-dependencies = ["pytest"]

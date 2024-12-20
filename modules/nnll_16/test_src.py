@@ -5,8 +5,7 @@
 # import torch
 # import os
 # import sys
-# sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
-# from nnll_17.src import Backend, CUDADevice, MPSDevice, XPUDevice
+# from modules.nnll_17.src import Backend, CUDADevice, MPSDevice, XPUDevice
 
 # # Mocking torch module for testing
 # mock_torch = MagicMock()

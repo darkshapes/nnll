@@ -4,9 +4,8 @@ import sys
 import unittest
 from unittest.mock import patch
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(sys.path[0])) ))
-
-from src import BlockScanner
+from modules.nnll_29.src import BlockScanner
+from modules.nnll_24.src import ValuePath
 
 
 class TestBlockScanner(unittest.TestCase):
@@ -14,7 +13,7 @@ class TestBlockScanner(unittest.TestCase):
     def setUp(self):
         self.block_scanner = BlockScanner()
 
-    @patch('nnll_24.src.find_value_path')
+    @patch('modules.nnll_24.src.ValuePath.find_value_path')
     def test_compvis_bundle(self, mock_find_value_path):
         # Mock return values for find_value_path
         mock_find_value_path.side_effect = ['compvis', 'unet']
@@ -35,16 +34,15 @@ class TestBlockScanner(unittest.TestCase):
         model_header = {'value1': 'x', 'value2': 'data'}
         tensor_count = None
 
-        expected_result = {'layer_type': 'compvis', 'category': 'unet', 'model': 'unknown'}
+        expected_result = None
 
-        result = self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count)
-        print(result)
-        self.assertEqual(result, expected_result)
+        with self.assertRaises(KeyError):
+            result = self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count)
 
-    @patch('nnll_24.src.find_value_path')
+    @patch('modules.nnll_24.src.ValuePath.find_value_path')
     def test_diffusers_model(self, mock_find_value_path):
         # Mock return value for find_value_path
-        mock_find_value_path.return_value = 'sdxl-base'
+        mock_find_value_path.side_effect = ['diffusers', 'unet', 'sdxl-base']
 
         filter_cascade = {
             'layer_type': {
@@ -75,14 +73,12 @@ class TestBlockScanner(unittest.TestCase):
 
         expected_result = {'layer_type': 'diffusers', 'category': 'unet', 'model': 'sdxl-base'}
         result = self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count)
-        print(result)
-        print(expected_result)
         self.assertEqual(result, expected_result)
 
-    @patch('nnll_24.src.find_value_path')
+    @patch('modules.nnll_24.src.ValuePath.find_value_path')
     def test_other_criteria(self, mock_find_value_path):
         # Mock return value for find_value_path
-        mock_find_value_path.return_value = 'flux1'
+        mock_find_value_path.side_effect = ['unknown', 'unet', 'flux-1']
 
         filter_cascade = {
             'layer_type': {
@@ -111,15 +107,14 @@ class TestBlockScanner(unittest.TestCase):
         model_header = {'valuez': 'value1', 'valueb': 'value2'}
         tensor_count = {}
 
-        expected_result = {'layer_type': 'unknown', 'category': 'unet', 'model': 'flux1'}
+        expected_result = {'layer_type': 'unknown', 'category': 'unet', 'model': 'flux-1'}
         result = self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count)
-        print(result)
         self.assertEqual(result, expected_result)
 
-    @patch('nnll_24.src.find_value_path')
+    @patch('modules.nnll_24.src.ValuePath.find_value_path')
     def test_empty_bundle_data(self, mock_find_value_path):
         # Mock return value for find_value_path to be None
-        mock_find_value_path.return_value = None
+        mock_find_value_path.side_effect = ['compvis', 'unknown', 'unknown']
 
         filter_cascade = {
             'layer_type': {
@@ -158,10 +153,10 @@ class TestBlockScanner(unittest.TestCase):
         result = self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count)
         self.assertEqual(result, expected_result)
 
-    @patch('nnll_24.src.find_value_path')
+    @patch('modules.nnll_24.src.ValuePath.find_value_path')
     def test_mixed_criteria(self, mock_find_value_path):
         # Mock return values for find_value_path
-        mock_find_value_path.side_effect = [['compvis'], ['unet', 'language'], ['sdxl', 'clip-g']]
+        mock_find_value_path.side_effect = [['compvis'],['unet','language'],['sdxl-base'],['clip-g']]
 
         filter_cascade = {
             'layer_type': {
@@ -191,11 +186,11 @@ class TestBlockScanner(unittest.TestCase):
             }
         }
         model_header = {
-            'valuez': {'shape': [640, 320]},
-            'value1': {'shape': [640, 320]},
-            'valueb': {'shape': [640, 320]},
-            'valuey': {'shape': [640, 320]},
-            'valuea': {'shape': [640, 320]}
+            'valuez': {'shape': [640, 320]}, # no result
+            'value1': {'shape': [640, 320]}, # establish as compvis
+            'valueb': {'shape': [640, 320]}, # establish as unet
+            'valuey': {'shape': [640, 320]}, # establish as sdxl base
+            'valuea': {'shape': [640, 320]}  # clip g
         }
         tensor_count = 300
 
@@ -207,6 +202,7 @@ class TestBlockScanner(unittest.TestCase):
             'model': 'sdxl-base'
         }
         result = self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count)
+        print(result)
         self.assertEqual(result, expected_result)
 
 

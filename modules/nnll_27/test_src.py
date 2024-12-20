@@ -5,8 +5,7 @@ from unittest.mock import patch, MagicMock
 import gc
 import os
 
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
-from nnll_27.src import wipe_printer, pretty_tabled_output
+from modules.nnll_27.src import wipe_printer, pretty_tabled_output
 
 
 class TestPrinterMethods(unittest.TestCase):
@@ -58,14 +57,14 @@ class TestPrinterMethods(unittest.TestCase):
         }
 
         # Expected output format
-        expected_header = 'category     | A            | B            | C            | D            | '
-        expected_horizontal_bar = '  --------------------------------------------------'
-        expected_data = 'Sample Table | 1            | 2            | 3            | 4            | '
+        expected_cols = '    category     |        A        |        B        |        C        |        D        |'
+        expected_horizontal_bar = '  -------------------------------------------------------------------------------------'
+        expected_data = '  Sample Table   |        1        |        2        |        3        |        4        |'
 
         # Call the method under test
-        with patch('nnll_27.src.wipe_printer') as mock_wipe_printer:
+        with patch('modules.nnll_27.src.wipe_printer') as mock_wipe_printer:
             result = pretty_tabled_output(title, aggregate_data)
 
         # Verify the calls to wipe_printer
-        mock_wipe_printer.assert_called_once_with(title, expected_header, expected_horizontal_bar, expected_data)
+        mock_wipe_printer.assert_called_once_with(title, expected_cols, expected_horizontal_bar, expected_data)
         self.assertIsNone(result)  # The method should return None

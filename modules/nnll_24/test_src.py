@@ -2,61 +2,101 @@
 import pytest
 import os
 import sys
+import unittest
 
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
-from nnll_24.src import find_value_path
+from modules.nnll_24.src import ValuePath
 
+class TestCompareValues(unittest.TestCase):
+    def setUp(self):
+        self.handle_values = ValuePath()
+        # Mocking the match_pattern_and_regex method for controlled tests
 
-def test_find_value_path():
-    reference_map = {
-        'x': {
-            'blocks': 'c1d2',
-            'shapes': 256
-        },
-        'z': {
-            'blocks': "c2d2",
-            'shapes': 512
-        },
-        'y': {
-            'blocks': "c.d",
-            'shapes': 256
+    def test_find_value_path(self):
+        nested_filter = {
+            'x': {'blocks': 'c1d2', 'shapes': [256]},
+            'z': {'blocks': "c2d2", 'shapes': [512]},
+            'y': {'blocks': 'c.d', 'shapes': [256]}}
+
+        # Test matching path
+        model_header = {'c.d': {'shape': [256]}}
+        assert self.handle_values.find_value_path(nested_filter, model_header) == ['y']
+
+        # Test no match found
+        model_header_no_match = {'e': 3, 'f': 4}
+        assert self.handle_values.find_value_path(nested_filter, model_header_no_match) is None
+
+        # Test deeper nested structure
+        nested_filter = {
+            'level1': {
+                'level2': {
+                    'level3': {
+                        'blocks': 'c.d',
+                        'shapes': [256]
+                    }
+                },
+                'another': {'skip': {}}
+            }
         }
-    }
+        assert self.handle_values.find_value_path(nested_filter, model_header) == ['level1', 'level2', 'level3']
 
-    # Test matching path
-    file_tags = {
-        'c.d': {
-            "shape": 256 }
-    }
-    print(find_value_path(reference_map, file_tags))
-    assert find_value_path(reference_map, file_tags) == ["y"]
+        # Test with empty dict
+        nested_filter_empty = {}
+        assert self.handle_values.find_value_path(nested_filter_empty, model_header) is None
 
-    # Test no match found
-    file_tags_no_match = {'e': 3, 'f': 4}
-    assert find_value_path(reference_map, file_tags_no_match) is None
+        # Test matching at the top level
+        model_header = {'c.d': {'shape': [256]}}
+        assert self.handle_values.find_value_path(nested_filter, model_header) == ['level1', 'level2', 'level3']
 
-    # Test deeper nested structure
-    reference_map_deeper = {
-        'level1': {
-            'level2': {
-                'level3': {
-                    'blocks': 'c.d',
-                    'shape': 256
-                }
+        # test block, shape, tensor match combined
+        nested_filter = {
+            'w': {
+                'blocks': "c.e",
+                'shapes': [256],
+                'tensors': 244
             },
-            'another': {'skip': {}}
+            'y': {
+                'blocks': "c.d",
+                'shapes': [
+                    256
+                ],
+                'tensors': 244
+            },
+            'z': {
+                'blocks': "c.d",
+                'tensors': 244
+            },
+            'x': {
+                'blocks': 'c.d',
+            }
         }
-    }
-    print(find_value_path(reference_map_deeper, file_tags))
-    assert find_value_path(reference_map_deeper, file_tags) == ['level1', 'level2', 'level3']
+        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=244) == ['y']
 
-    # Test with empty dict
-    reference_map_empty = {}
-    assert find_value_path(reference_map_empty, file_tags) is None
+        # block and shape only
 
-    # Test matching at the top level
-    reference_map_top_level_match = {'c.d': { "shape": 256} }
-    assert find_value_path(reference_map_top_level_match, file_tags) == ['c.d']
+        model_header = {
+            "c.d": {
+                "shape": [
+                    256
+                ]
+            }
+        }
+        assert self.handle_values.find_value_path(nested_filter, model_header) == ['y']
+
+        # empty shape
+        model_header = {
+            "c.d": {
+                "shape": [
+                ]
+            }
+        }
+        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=243) == ['x']
+
+        # no shape, only tensor!
+        model_header = {
+            "c.d": {}
+        }
+        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=244) == ['z']
 
 
-test_find_value_path()
+if __name__ == '__main__':
+    unittest.main()

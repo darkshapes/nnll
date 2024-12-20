@@ -32,3 +32,10 @@ modules/nnll_29/src.py
 .vscode/Docstrings.code-snippets
 __pycache__/test_import.cpython-312-pytest-8.3.3.pyc
 modules/nnll_29/model_forms.json.old
+modules/nnll_30/__pycache__/test_src.cpython-312-pytest-8.3.3.pyc
+scripts/__pycache__/script_nnll_04.cpython-312.pyc
+__pycache__/requirements_to_pyproject.cpython-312.pyc
+modules/nnll_00/__pycache__/test_src.cpython-312-pytest-8.3.3.pyc
+modules/nnll_31/__pycache__/test_src.cpython-312-pytest-8.3.3.pyc
+modules/nnll_32/__pycache__/test_src.cpython-312-pytest-8.3.3.pyc
+modules/nnll_33/__pycache__/test_src.cpython-312-pytest-8.3.3.pyc

@@ -7,13 +7,12 @@ import struct
 import os
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(sys.path[0])))
-from nnll_05.src import load_gguf_metadata, read_gguf_header
+from modules.nnll_05.src import load_gguf_metadata, read_gguf_header
 
 
 class TestLoadGGUFMetadata(unittest.TestCase):
 
-    @patch('nnll_05.src.parse_gguf_model')
+    @patch('modules.nnll_05.src.parse_gguf_model')
     def setUp(self, MockParseModel) -> None:
         # Create a temporary file with known GGUF header data
         self.test_file_name = 'test.gguf'
