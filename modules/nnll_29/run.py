@@ -12,7 +12,7 @@ from modules.nnll_29.src import BlockScanner
 from modules.nnll_30.src import read_json_file, write_json_file
 
 
-def parse_model_header(model_header: dict, filter_file="./filter.json") -> dict:
+def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.json") -> dict:
     try:  # Be sure theres something in model_header
         next(iter(model_header))
     except TypeError as errorlog:
@@ -61,13 +61,13 @@ def prepare_tags(disk_path: str) -> None:
         return index_tag
 
 
-file_path = "/Users/unauthorized/Downloads/models/image"
+file_path = "/Users/unauthorized/Downloads/models/text"
 save_location = "/Users/unauthorized/Downloads/models/metadata"
 index = defaultdict(dict)
 
 if Path(file_path).is_dir() == True:
     path_data = os.listdir(file_path)
-    print("\n\n\n\n")
+    print("\n\n\n")
     for each_file in tqdm(path_data, total=len(path_data), position=0, leave=True):
         file = os.path.join(file_path, each_file)
         index_tag = prepare_tags(file)
@@ -78,7 +78,7 @@ elif Path(file_path).exists:
     index = prepare_tags(file_path)
 
 if index is not None and index != {}:
-    write_json_file(save_location, "index.json", index, 'a')
+    write_json_file(save_location, "index.json", index, 'w')
 
 # if __name__ == "__main__":
 #     main()

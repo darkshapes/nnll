@@ -56,6 +56,34 @@
         }
     },
     "lora": {},
+    "tae": {
+        "taesd-sd1": {
+            "blocks": [
+                "r'encoder.layers.d+'"
+            ],
+            "tensors": 134,
+            "file_size": 9793292,
+            "hash": "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
+        },
+        "taesd-sdxl-base": {
+            "blocks": [
+                "r'encoder.layers.d+'"
+            ],
+            "tensors": 134,
+            "file_size": 9793292,
+            "hash": "ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"
+        },
+        "taesd-flux": {
+            "tensors": 248,
+            "file_size": 9848636,
+            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
+        },
+        "tensors": 248,
+        "taesd-sd3": {
+            "file_size": 9848636,
+            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
+        }
+    },
     "unet": {
         "common-canvas-s": {
             "blocks": "up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"
@@ -238,34 +266,6 @@
         },
         "kolors": {
             "blocks": "mlp.c_proj"
-        }
-    },
-    "tae": {
-        "taesd-sd1": {
-            "blocks": [
-                "r'encoder.layers.d+'"
-            ],
-            "tensors": 134,
-            "file_size": 9793292,
-            "hash": "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
-        },
-        "taesd-sdxl-base": {
-            "blocks": [
-                "r'encoder.layers.d+'"
-            ],
-            "tensors": 134,
-            "file_size": 9793292,
-            "hash": "ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"
-        },
-        "taesd-flux": {
-            "tensors": 248,
-            "file_size": 9848636,
-            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
-        },
-        "tensors": 248,
-        "taesd-sd3": {
-            "file_size": 9848636,
-            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
         }
     }
 }

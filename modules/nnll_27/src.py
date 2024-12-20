@@ -8,7 +8,7 @@ def wipe_printer(self, *formatted_data: dict) -> None:
     :param formatted_data: Output of `pretty_tabled_output()`
     :return: None
     """
-    sys.stdout.write("\033[F" * len(formatted_data))  # ANSI escape codes to move the cursor up 3 lines
+    sys.stdout.write("\033[F\r" * (len(formatted_data)))  # ANSI escape codes to move the cursor up 3 lines
     for line_data in formatted_data:
         sys.stdout.write(" " * 175 + "\x1b[1K\r")
         sys.stdout.write(f"{line_data}\n")  # Print the lines
@@ -31,7 +31,7 @@ def pretty_tabled_output(title: str, aggregate_data: dict) -> dict:
         if print_values.get(key) is not None:
             print_values.pop(key)  # Only pop if a valid key is found
     key_value_length = len(print_values)  # number of items detected in the scan
-    width_top = key_value_length * 1.5
+    # width_top = key_value_length * 1.5
     width = 17
     info_format = '{:^{width}}|' * key_value_length  # shrink print columns to data width
     header_keys = tuple(print_values)  # use to create table
