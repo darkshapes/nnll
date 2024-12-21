@@ -12,7 +12,7 @@ from modules.nnll_30.src import write_json_file
 
 def parse_data(disk_path: str, save_location: str) -> None:
     """
-    Output the state dict from a model's header to the console and a JSON file.\n
+    Output the full state dict from a model's header to the console and a JSON file.\n
     :param disk_path: `str` The location of a model file to read.
     :param save_location: `str` The full path to reserve for output. Must include a `.json` file name.
     :return: `None`

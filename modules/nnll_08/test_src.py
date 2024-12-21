@@ -11,20 +11,19 @@ from modules.nnll_08.src import soft_random, hard_random
 class TestRandom:
 
     def setup_seed(self, seed):
-        # Save the original randbits method
         original_randbits = secrets.randbits
 
-        # Define the mock function
+        # Mock function
         def mock_randbits(bits):
             return int(seed, 16) % (2 ** bits)  # Ensure the result fits within the specified number of bits
 
-        # Replace the original method with the mock
+        # Swap original with mock
         secrets.randbits = mock_randbits
 
         try:
             yield
         finally:
-            # Restore the original method
+            # Restore original method
             secrets.randbits = original_randbits
 
     @pytest.fixture
@@ -34,7 +33,7 @@ class TestRandom:
     def test_soft_random_determinism(setup_seed_fixture):
         """Test deterministic behavior of soft_random with a fixed seed."""
         result = soft_random(0x2540BE3FF)
-        # Since this is mocked, you might need to adjust based on your logic
+        # Might need adjustment..
         assert 0 <= result < 0x2540BE3FF
 
     def test_soft_random_boundaries(self):
@@ -53,5 +52,5 @@ class TestRandom:
     def test_hard_random_uniqueness(self):
         """Test that hard_random generates a diverse set of values."""
         results = [hard_random(4) for _ in range(256)]
-        # Expecting no duplicates; this is statistical and may vary.
+        # Expecting no duplicates; statistically may vary. (sometimes fails check)
         assert len(set(results)) == 256

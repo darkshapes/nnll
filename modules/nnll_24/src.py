@@ -4,7 +4,11 @@ import sys
 from typing import Generator
 
 from modules.nnll_33.src import ValueComparison
+
 class ValuePath:
+    """
+    Class for route tracing nested dictionary keys
+    """
 
     @classmethod
     def find_value_path(cls, filter_cascade: dict, model_header: dict, tensor_count: int | None = None) -> list | None:

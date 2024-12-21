@@ -20,11 +20,6 @@ def capture_sequence_index(file_name: str) -> tuple:
             return part, sep, total
     return None, None, None
 
-def preprocess_files(file_paths: list) -> list:
-    """
-    Evaluate and direct model and sharded model file loading.\n
-
-    """
     # """ indicates a sequence of files
     # Processes a list of file paths in the correct order based on their naming convention.
     # Returns a list of results from get_model_header for each file.
@@ -32,24 +27,35 @@ def preprocess_files(file_paths: list) -> list:
     # # placeholder, rewrite above
     # # Create a dictionary to hold files and their part numbers
 
-    if Path(file_paths).is_dir() == True: #if we are working with a directory
-        for each_file in os.listdir(file_paths):
-            filename = Path(each_file).name
-            part, sep, total = capture_sequence_index(filename)
-            if part is not None and sep is not None and total is not None:
-                high_shard = int(total)
-                current_shard = int(part)
-                shard_list = []
-                for i in range(1,high_shard):
-                    if i == current_shard:
-                        next
-                    else:
-                        numeric_to_replace = str(current_shard)
-                        numeric_to_replace_with = str(high_shard)
-                        new_numeric = total.replace(numeric_to_replace_with, str(i))
 
-                        shard_list.extend(new_numeric.join(filename.rsplit(numeric_to_replace, 1)))
+def preprocess_files(file_paths: list) -> list:
+    """
+    Evaluate and direct model and sharded model file loading.\n
+    """
 
+    #if Path(file_paths).is_dir() == True: #if we are working with a directory
+        #for each_file in os.listdir(file_paths): # collect all the files
+
+    for each_file in file_paths:
+        shard_list = []
+        filename = Path(each_file).name # take one at a time, and only the basename/tail
+        part, sep, total = capture_sequence_index(filename) # split the sequence numbers from the filename string
+        if part is not None and sep is not None and total is not None: # make sure these strings exist
+            high_shard = int(total) # translate strings to numbers
+            current_shard = int(part)
+
+            for i in range(1,high_shard+1): #compare the numbers to get the file names we need
+                if i == current_shard:
+                    next
+                else:
+                    numeric_to_replace = str(current_shard) # the ceiling
+                    new_numeric = part.replace(numeric_to_replace, str(i)) + sep
+                    shard_list.append(new_numeric.join(filename.split(part+sep,1)))
+        print(shard_list)
+
+
+
+        #do processing of the list herehere
 
     #             get_count_from_filename(each_file.name, )
     #             next_path = file_path.replace((part + sep + total), (total + sep + total))
@@ -83,7 +89,7 @@ file_paths = [
     'model_3of3.tar.gz'
 ]
 
-results = process_files(file_paths)
+results = preprocess_files(file_paths)
 for result in results:
     print(result)
     #

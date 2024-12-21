@@ -2,6 +2,9 @@
 from modules.nnll_25.src import ExtractAndMatchMetadata
 
 class ValueComparison:
+    """
+    Loop individual comparisons as situationally required
+    """
 
     @classmethod
     def compare_values(cls, nested_filter: dict, model_header: dict, tensor_count: int | None = None) -> bool:
