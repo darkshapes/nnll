@@ -37,6 +37,7 @@ class TestBlockScanner(unittest.TestCase):
         expected_result = None
 
         with self.assertRaises(KeyError):
+            print(self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count))
             result = self.block_scanner.filter_metadata(filter_cascade, model_header, tensor_count)
 
     @patch('modules.nnll_24.src.ValuePath.find_value_path')

@@ -15,8 +15,24 @@ urls = { source = "https://github.com/darkshapes/nnll" }
 dynamic = ["version"]
 
 [project.optional-dependencies]
-dev = ["pytest"]
-hf  = ["diffusers", "transformers"]
+opt = [
+    "numpy",
+    "torch",
+    "llama-cpp-python",
+    "sentencepiece",
+    "diffusers",
+    "transformers",
+]
+dev = [
+    "pytest",
+    "huggingface_hub",
+    "numpy",
+    "torch",
+    "llama-cpp-python",
+    "sentencepiece",
+    "diffusers",
+    "transformers",
+]
 
 [project.scripts]
 semver = "main:main"

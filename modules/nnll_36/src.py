@@ -2,7 +2,6 @@
 from collections import defaultdict
 
 import os
-import sys
 from pathlib import Path
 import argparse
 
@@ -11,7 +10,13 @@ from modules.nnll_05.src import load_gguf_metadata
 from modules.nnll_30.src import write_json_file
 
 
-def parse_data(disk_path, save_location):
+def parse_data(disk_path: str, save_location: str) -> None:
+    """
+    Output the state dict from a model's header to the console and a JSON file.\n
+    :param disk_path: `str` The location of a model file to read.
+    :param save_location: `str` The full path to reserve for output. Must include a `.json` file name.
+    :return: `None`
+    """
     if disk_path is not None:
         for file_name in os.listdir(disk_path):
             # if file_name
@@ -27,12 +32,11 @@ def parse_data(disk_path, save_location):
                 write_file = os.path.join(save_location)
                 write_json_file(write_file, f"{file_name}.json", virtual_data_00)
 
-
 def main():
 
     # Set up argument parser
     parser = argparse.ArgumentParser(
-        description="Output model file state dict from to console and json file.",
+        description="Output state dict from a model file at [path] to the console, then write to a json file at [save].",
         epilog="Example: python script_modules.nnll_04.py ~/Downloads/models/images ~Downloads/models/metadata"
     )
     parser.add_argument(

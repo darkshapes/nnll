@@ -10,7 +10,7 @@ from modules.nnll_07.src import Domain, Architecture, Component
 from modules.nnll_27.src import pretty_tabled_output
 from modules.nnll_29.src import BlockScanner
 from modules.nnll_30.src import read_json_file, write_json_file
-
+from modules.nnll_34.src import preprocess_files
 
 def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.json") -> dict:
     try:  # Be sure theres something in model_header
@@ -44,41 +44,31 @@ def create_model_tag(file_metadata: dict) -> dict:
 
 
 def prepare_tags(disk_path: str) -> None:
-    data = get_model_header(disk_path)  # save_location)
-    if data is not None:
-        model_header, disk_size, file_name, file_extension = data
-    else:
-        return
-    parse_file = parse_model_header(model_header)
-    attribute_dict = {"disk_size": disk_size, "disk_path": disk_path, "file_name": file_name, "file_extension": file_extension}
-    file_metadata = parse_file | attribute_dict
-    index_tag = create_model_tag(file_metadata)
-    try:
-        pretty_tabled_output(next(iter(index_tag)), index_tag[next(iter(index_tag))])  # output information
-    except TypeError as errorlog:
-        raise
-    else:
-        return index_tag
+    file_list = preprocess_files(disk_path)
+    print("\n\n\n")
+    for each_file in tqdm(file_list, total=len(file_list), position=0, leave=True):
+        data = get_model_header(disk_path)  # save_location)
+        if data is not None:
+            model_header, disk_size, file_name, file_extension = data
+        else:
+            return
+        parse_file = parse_model_header(model_header)
+        attribute_dict = {"disk_size": disk_size, "disk_path": disk_path, "file_name": file_name, "file_extension": file_extension}
+        file_metadata = parse_file | attribute_dict
+        index_tag = create_model_tag(file_metadata)
+        try:
+            pretty_tabled_output(next(iter(index_tag)), index_tag[next(iter(index_tag))])  # output information
+        except TypeError as errorlog:
+            raise
+    return index_tag
 
 
 file_path = "/Users/unauthorized/Downloads/models/text"
 save_location = "/Users/unauthorized/Downloads/models/metadata"
-index = defaultdict(dict)
-
-if Path(file_path).is_dir() == True:
-    path_data = os.listdir(file_path)
-    print("\n\n\n")
-    for each_file in tqdm(path_data, total=len(path_data), position=0, leave=True):
-        file = os.path.join(file_path, each_file)
-        index_tag = prepare_tags(file)
-        if index_tag is not None:
-            index.setdefault(file, index_tag)
-
-elif Path(file_path).exists:
-    index = prepare_tags(file_path)
-
-if index is not None and index != {}:
-    write_json_file(save_location, "index.json", index, 'w')
+index_tags = defaultdict(dict)
+index_tags = prepare_tags(file_path)
+if index_tags is not None:
+    write_json_file(save_location, "index.json", index_tags, 'w')
 
 # if __name__ == "__main__":
 #     main()
