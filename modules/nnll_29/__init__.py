@@ -1,6 +1,0 @@
-"""
-Model Indexer tool
-
-
-
-"""

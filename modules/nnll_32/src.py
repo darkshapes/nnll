@@ -3,20 +3,17 @@ import os
 from pathlib import Path
 import itertools
 
-#from modules.nnll_16.src import Backend
-#class MetaScrape(Backend)
-    # # todo: refine the load methods to work with sharded files
-    # from modules.nnll_30.src import read_json_file, write_json_file
-    # data = read_json_file("modules/modules.nnll_29/filter.json"")
-    # import_map = data["import_map"]
-    # method_map = data["method_map"]
-
 from modules.nnll_04.src import load_safetensors_metadata
 from modules.nnll_05.src import load_gguf_metadata
 from modules.nnll_28.src import load_pickletensor_metadata
 
 def get_model_header(file_path: str) -> tuple:
-
+    """
+    Detect file type and skim metadata from a model file using the appropriate tools\n
+    :param file_path: `str` The full path to the file being analyzed
+    :return: `tuple` Four values constituting the metadata header and external file attributes\n
+    (model_header, disk_size, file_name, file_extension)
+    """
     safetensors_loader = None
     gguf_loader = None
     pickletensor_loader = None

@@ -4,19 +4,53 @@ Identification system for neural network models
 `domain_name`  [ml/info/dev] see `domain class` for details
 `architecture` the family and version (stable diffusion 3.5, lumina next)
 `components`   attributes and process stage (lora, unet)
+
+# Create a domain
+`domain_ml = Domain("ml")`
+
+# Create architectures within the domain
+```
+arch_sdxl_base = Architecture("sdxl-base")
+arch_auraflow = Architecture("auraflow")
+arch_flux = Architecture("flux")
+```
+
+# Create components within architectures
+```
+comp_unet = Component("unet", dtype="float32", disk_size=1024, layer_type="diffusers")
+comp_vae = Component("vae", dtype="float32", disk_size=512, layer_type="diffusers")
+comp_lora = Component("lora", dtype="float32", disk_size=256, layer_type="diffusers")
+```
+
+# Add components to architectures
+```
+arch_sdxl_base.add_component(comp_unet.component_name, comp_unet)
+arch_auraflow.add_component(comp_vae.component_name, comp_vae)
+arch_flux.add_component(comp_lora.component_name, comp_lora)
+```
+
+# Add architectures to domain
+domain_ml.add_architecture(arch_sdxl_base.architecture, arch_sdxl_base)
+domain_ml.add_architecture(arch_auraflow.architecture, arch_auraflow)
+domain_ml.add_architecture(arch_flux.architecture, arch_flux)
+
+# Serialize the domain to a dictionary for storage or transmission
+model_index_dict = domain_ml.to_dict()
+print(model_index_dict)
+
 """
 
 
 class Domain:
     """
     ### Domains:
-    Valid domains can be anything, though our guidelines are \n
+    Valid domains can be anything, though our guidelines follow\n
     ***ml*** : Publicly released machine learning models with an identifier in the database\n
     ***info*** : Metadata with an identifier in the database\n
     ***dev*** : Any pre-release or under evaluation items without an identifier in an expected format\n
-    methods\n
-    - `add_architecture()`,
-    - `to_dict()`
+
+    :method add_architecture: create a sub-class of the domain
+    :method to_dict(): flatten the class structure
     """
 
     def __init__(self, domain_name):
@@ -37,11 +71,10 @@ class Domain:
 class Architecture:
     """
     Known generative and deep learning architectures.\n
-    model_forms.json contains the lengthy key list of supported architectures
-    #### ***Component*** The methodology classifying the file (eg: unet, vae, lora)
-    methods\n
-    - `add_component()`,
-    - `to_dict()`
+    model_forms.json contains the lengthy key list of supported architectures\n
+
+    :method add_component: create a sub-class of the architecture
+    :method to_dict(): flatten the class structure
     """
 
     def __init__(self, architecture):
@@ -62,8 +95,9 @@ class Architecture:
 class Component:
     """
     Specifics of modalities, contents, techniques, or purposes of an identified model that effect processing.\n
-    This enables us to filter, organize, and prepare files, allowing automated workflow construction
-    ***model_type*** : What purpose this model serves as a whole\n
+    This enables us to filter, organize, and prepare files, allowing automated workflow construction\n
+    :param model_type: Classification of the file, what purpose this model serves as a whole,  (eg: unet, vae, lora)\n
+    :param kwargs: Named values from one of the following
     ***disk_size*** : The total size in **bytes** of the file\n
     ***disk_path*** : The full location of the file\n
     ***file_name*** : The basename of the file\n
@@ -76,7 +110,7 @@ class Component:
     - `diffusers`
     - `compvis`
     (Note: Future functionality should include dynamically adding permament custom attributes)
-
+    :method to_dict(): flatten the class structure
     """
 
     def __init__(self, model_type, **kwargs):

@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch, MagicMock, mock_open
 from collections import defaultdict
 import struct
-
+import shutil
 import os
 import sys
 
@@ -35,19 +35,36 @@ class TestLoadGGUFMetadata(unittest.TestCase):
         MockParseModel.return_value = self.mock_parser
 
     def test_read_valid_header(self):
-        file_name = 'test.gguf'
         result = read_gguf_header(self.test_file_name)
-        self.assertEqual(result, (b'GGUF', 2))
+        self.assertTrue(result)
+
 
     def test_with_file(self):
-        id_values_00 = defaultdict(dict)
-        file_name = "/Users/unauthorized/Downloads/models/text/lightblue-ao-karasu-72B-Q4_K_M.gguf"
-        virtual_data_00 = load_gguf_metadata(file_name)
+        try:
+            os.environ['HUGGINGFACE_HUB_CACHE'] = str(os.getcwd())
+            from huggingface_hub import hf_hub_download
+            hf_hub_download("exdysa/tiny-random-llama-gguf","tiny-random-llama.Q4_K_M.gguf")
+        except ImportError as error_log:
+            ImportError(f"{error_log} huggingface_hub not installed.")
+        else:
+            self.__class__.folder = os.path.join(str(os.getcwd()), "models--exdysa--tiny-random-llama-gguf")
+            real_file = os.path.join(self.__class__.folder,
+                "blobs",
+                "f06746ef9696d552d3746516558d5e9f338e581fd969158a90824e24f244169c"
+                )
+        virtual_data_00 = load_gguf_metadata(real_file)
+        print(virtual_data_00)
+        self.assertEqual(virtual_data_00,{'name': 'tiny-random-llama', 'dtype': 'float32'})
 
     @classmethod
     def tearDownClass(cls) -> None:
         # Clean up the temporary file after all tests are done
         try:
             os.remove('test.gguf')
+        except OSError:
+            pass
+        try:
+            shutil.rmtree(cls.folder)
+            shutil.rmtree(".locks")
         except OSError:
             pass

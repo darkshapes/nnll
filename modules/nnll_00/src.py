@@ -1,9 +1,10 @@
 
 
 def get_matching_layer(json_file_dict):
-    """`
-    Test of effectiveness with `map` `lambda` function for nested `dict` traversal
-    `json_file_dict` a dictionary of features from recognized models
+    """
+    Test of effectiveness with `map` `lambda` function for nested `dict` path retrieval\n
+    :param json_file_dict: `dict` The nested dictionary to parse
+    :return: `tuple` The keys leading to the deepest value.
     """
     matching_layer = next(iter(
         map(lambda stored_value: stored_value, json_file_dict.keys())
