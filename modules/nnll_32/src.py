@@ -1,11 +1,13 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 import os
 from pathlib import Path
 import itertools
 
-from modules.nnll_04.src import load_safetensors_metadata
-from modules.nnll_05.src import load_gguf_metadata
-from modules.nnll_28.src import load_pickletensor_metadata
+from modules.nnll_04.src import load_safetensors_metadata_from_model
+from modules.nnll_05.src import load_gguf_metadata_from_model
+from modules.nnll_28.src import load_pickletensor_metadata_from_model
 
 def get_model_header(file_path: str) -> tuple:
     """
@@ -39,11 +41,11 @@ def get_model_header(file_path: str) -> tuple:
         return
     else:
         if file_extension in safetensors_extensions:
-            method_map = load_safetensors_metadata
+            method_map = load_safetensors_metadata_from_model
         elif file_extension in gguf_extensions:
-            method_map = load_gguf_metadata
+            method_map = load_gguf_metadata_from_model
         elif file_extension in pickletensor_extensions:
-            method_map = load_pickletensor_metadata
+            method_map = load_pickletensor_metadata_from_model
 
         file_name = os.path.basename(file_path)
         disk_size = os.path.getsize(file_path)

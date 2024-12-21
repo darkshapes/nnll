@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 """
 Identification system for neural network models
@@ -105,11 +107,11 @@ class Component:
     ***dtype*** : The model datatype format (if applicable, to know if and how precision can be lowered)\n
     ***component_type*** : Sub-components of the model_type as a list
     ***component_name*** : A specific title or technique of a component/model_type
-    ***layer_type*** : The format and compatability of the model structure, including but not limited to\n
+    ***layer_type*** : The format and compatibility of the model structure, including but not limited to\n
     - `pytorch`
     - `diffusers`
     - `compvis`
-    (Note: Future functionality should include dynamically adding permament custom attributes)
+    (Note: Future functionality should include dynamically adding permanent custom attributes)
     :method to_dict(): flatten the class structure
     """
 

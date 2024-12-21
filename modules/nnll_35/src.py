@@ -1,4 +1,6 @@
-#
+##// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
+
 import re
 import os
 
@@ -20,7 +22,7 @@ def get_count_from_filename(file_name: str, search_value: str) -> int:
             crop_num = str(lower_filename[search_index - 2:search_index]) # digits preceding to trim
             crop_num = re.sub(r"^\W+|\W+$", "", crop_num) # any string with, no character, once or more, ending with no character, once or more, must end)
             if crop_num.isdigit():
-                match_number  = int(crop_num) # double digit nummber
+                match_number  = int(crop_num) # double digit number
                 return match_number
             elif crop_num[1:].isdigit():
                 match_number = int(crop_num[1:]) # single digit num

@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 from functools import reduce
 from typing import Callable

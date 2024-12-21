@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 import os
 import sys
@@ -16,7 +18,7 @@ class ValuePath:
         Recurse through `filter_cascade` dictionary, if an entry matches k/v pair details in `model_header`, return the parent key
         :param filter_cascade: `dict` A dictionary of regex patterns and criteria known to identify models
         :param model_header: `dict` Values from the unknown file metadata (specifically state dict layers)
-        :param tensor_count: `dict` Optional numer of model layers in the unknown model file as an integer (None will bypass necessity of a match)
+        :param tensor_count: `dict` Optional number of model layers in the unknown model file as an integer (None will bypass necessity of a match)
         :return: `list` The path of keys through the target `dict` leading to a matching subtree, or None if no match is found.
         """
         compare = ValueComparison

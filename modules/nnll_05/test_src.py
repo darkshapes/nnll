@@ -1,3 +1,6 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
+
 
 import unittest
 from unittest.mock import patch, MagicMock, mock_open
@@ -7,7 +10,7 @@ import shutil
 import os
 import sys
 
-from modules.nnll_05.src import load_gguf_metadata, read_gguf_header
+from modules.nnll_05.src import load_gguf_metadata_from_model, read_gguf_header
 
 
 class TestLoadGGUFMetadata(unittest.TestCase):
@@ -52,7 +55,7 @@ class TestLoadGGUFMetadata(unittest.TestCase):
                 "blobs",
                 "f06746ef9696d552d3746516558d5e9f338e581fd969158a90824e24f244169c"
                 )
-        virtual_data_00 = load_gguf_metadata(real_file)
+        virtual_data_00 = load_gguf_metadata_from_model(real_file)
         print(virtual_data_00)
         self.assertEqual(virtual_data_00,{'name': 'tiny-random-llama', 'dtype': 'float32'})
 
