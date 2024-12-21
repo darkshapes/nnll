@@ -1,7 +1,7 @@
 
 # nnll
-
 ### neural network link library
+
 
 ### Approaching zero-setup, fault-tolerant generative AI inference.
 
@@ -19,7 +19,13 @@ Goals:
 > main branch : stable, devoted to **long-term support**.
 
  #### [[darkshapes](https://github.com/darkshapes/)]
-<hr> <h4>modules index :</h4><details><summary>
+<hr><br>
+
+[![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)
+![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)
+![Discord](https://img.shields.io/discord/1266757128249675867)<hr>
+
+<h4>modules index :</h4><details><summary>
 
 > `  nnll_00-19`</summary>
 
