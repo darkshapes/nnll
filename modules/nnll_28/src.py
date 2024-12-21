@@ -1,10 +1,12 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 
 import mmap
 import pickle
 
 
-def load_pickletensor_metadata(file_path: str) -> dict:
+def load_pickletensor_metadata_from_model(file_path: str) -> dict:
     """
     Collect metadata from a pickletensor file header\n
     :param file_path: `str` the full path to the file being opened

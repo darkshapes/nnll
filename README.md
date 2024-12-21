@@ -9,7 +9,7 @@
 `nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation, multiple iteration, careful study, and loving refinement. They may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
 
 Goals:
-- Compatability: Platform, framework, language agnostic
+- Compatibility: Platform, framework, language agnostic
 - Modularity   : Independently functioning, tested and ready-made components, avoiding dependencies
 - Simplicity   : Streamline generative processing model chains
 - Rapidity     : Granular and automated hyperparameter and resource optimization
@@ -21,11 +21,65 @@ Goals:
  #### [[darkshapes](https://github.com/darkshapes/)]
 <hr><br>
 
-[![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)
-![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)
+[![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
+![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)<br>
 ![Discord](https://img.shields.io/discord/1266757128249675867)<hr>
 
-<h4>modules index :</h4><details><summary>
+## importing to a project
+
+`from nnll import link.function_name`
+
+## link functions
+
+`indexer`<br>
+`symlinker`<br>
+`layer_scan`<br>
+`layer_match`<br>
+<hr>
+
+## development setup
+
+<h5>clone repo</h5>
+
+> ```
+> git clone https://github.com/darkshapes/nnll.git
+> ```
+
+<details> <summary> <a>Next--></a></summary>
+
+#####  create virtual environment
+> ```
+> py -m venv .venv_nnll
+> ```
+
+<details> <summary> <a>Next--></a></summary>
+
+##### 3 activate --> (windows powershell)
+> ```
+> Set-ExecutionPolicy Bypass -Scope Process -Force; .venv_nnll\Scripts\Activate.ps1
+> ```
+
+##### 3 activate --> ( linux | macos)
+> ```
+> .venv_nnll/bin/activate
+> ```
+
+<details> <summary> <a>Next--></a></summary>
+
+##### 4 install
+> ```
+> cd nnll
+> pip install -e .
+> ```
+
+##### Done.
+</details>
+</details>
+</details>
+<br><br><br>
+<hr>
+
+<h2>modules index :</h2><details><summary>
 
 > `  nnll_00-19`</summary>
 
@@ -72,7 +126,7 @@ Goals:
 
 > `   nnll_xx (planned explorations)`</summary>
 
-> [nnll xx - civitai model index/download]
+> [nnll xx - civitai model index/download]<br>
 > [nnll xx - token encoder type 3]<br>
 > [nnll xx - prototype token sculptor revisiting nnll 08]<br>
 > [nnll xx - alternate methods of torch.no_grad inference]<br>
@@ -82,42 +136,4 @@ Goals:
 > [nnll xx - self-embedding hash/snapshots]<br>
 > ...
 
-</details><hr><h4> setup</h4>
-
-<h5>clone repo</h5>
-
-> ```
-> git clone https://github.com/darkshapes/nnll.git
-> ```
-
-<details> <summary> <a>Next--></a></summary>
-
-#####  create virtual environment
-> ```
-> py -m venv .venv_nnll
-> ```
-
-<details> <summary> <a>Next--></a></summary>
-
-##### 3 activate --> (windows powershell)
-> ```
-> Set-ExecutionPolicy Bypass -Scope Process -Force; .venv_nnll\Scripts\Activate.ps1
-> ```
-
-##### 3 activate --> ( linux | macos)
-> ```
-> .venv_nnll/bin/activate
-> ```
-
-<details> <summary> <a>Next--></a></summary>
-
-##### 4 install
-> ```
-> cd nnll
-> pip install -e .
-> ```
-
-##### Done.
-</details>
-</details>
-</details>
+</details><hr>

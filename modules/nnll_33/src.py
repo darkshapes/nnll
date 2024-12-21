@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 from modules.nnll_25.src import ExtractAndMatchMetadata
 
@@ -13,7 +15,7 @@ class ValueComparison:
         If "blocks" is a list, iterate through it, checking both regex and str pattern matches.
         :param nested_filter: `dict` A dictionary of regex patterns and criteria known to identify models
         :param model_header: `dict` Values from the unknown file metadata (specifically state dict layers)
-        :param tensor_count: `dict` Optional numer of model layers in the unknown model file as an integer (None will bypass necessity of a match)
+        :param tensor_count: `dict` Optional number of model layers in the unknown model file as an integer (None will bypass necessity of a match)
         :return: `bool` Whether or not the values from the model header and tensor_count were found inside nested_filter
         """
         extract = ExtractAndMatchMetadata()

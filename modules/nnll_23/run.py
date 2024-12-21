@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 from modules.nnll_23.src import DynamicMethodConstructor
 

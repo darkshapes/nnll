@@ -1,3 +1,6 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
+
 
 import os
 from collections import defaultdict
@@ -46,7 +49,7 @@ def parse_gguf_model(file_path: str) -> dict:
         return parser
 
 
-def load_gguf_metadata(file_path: str) -> dict:
+def load_gguf_metadata_from_model(file_path: str) -> dict:
     """
     Collect metadata from a gguf file header\n
     :param file_path: `str` the full path to the file being opened

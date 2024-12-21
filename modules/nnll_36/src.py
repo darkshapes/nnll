@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 from collections import defaultdict
 
@@ -5,8 +7,8 @@ import os
 from pathlib import Path
 import argparse
 
-from modules.nnll_04.src import load_safetensors_metadata
-from modules.nnll_05.src import load_gguf_metadata
+from modules.nnll_04.src import load_safetensors_metadata_from_model
+from modules.nnll_05.src import load_gguf_metadata_from_model
 from modules.nnll_30.src import write_json_file
 
 
@@ -22,10 +24,10 @@ def parse_data(disk_path: str, save_location: str) -> None:
             # if file_name
             file = os.path.join(disk_path, file_name)
             if Path(file_name).suffix == ".safetensors":
-                virtual_data_00 = load_safetensors_metadata(file)
+                virtual_data_00 = load_safetensors_metadata_from_model(file)
 
             elif Path(file_name).suffix == ".gguf":
-                virtual_data_00 = load_gguf_metadata(file)
+                virtual_data_00 = load_gguf_metadata_from_model(file)
 
             if virtual_data_00 is not None:
                 print(virtual_data_00)

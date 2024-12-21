@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: MIT
+#// d a r k s h a p e s
 
 from collections import defaultdict
 import sys
@@ -17,7 +19,7 @@ class LayerFilter:
         Navigate through a dictionary of known model attributes to determine an unknown model file's identity\n
         :param filter_cascade: `dict` A dictionary of regex patterns and criteria known to identify models
         :param model_header: `dict` Values from the unknown file metadata (specifically state dict layers)
-        :param tensor_count: `dict` Optional numer of model layers in the unknown model file as an integer (None will bypass necessity of a match)
+        :param tensor_count: `dict` Optional number of model layers in the unknown model file as an integer (None will bypass necessity of a match)
         :return: `dict` A mapping of attributes identifying the unknown model file and its constituent parts
         """
         file_metadata = defaultdict(dict)  # A place to store corresponding metadata
