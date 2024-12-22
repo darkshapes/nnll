@@ -1,9 +1,10 @@
-#// SPDX-License-Identifier: MIT
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 import sys
 import os
 from pathlib import Path
+from networkx import connected_components
 from tqdm.auto import tqdm
 from collections import defaultdict
 
@@ -45,30 +46,45 @@ def create_model_tag(file_metadata: dict) -> dict:
 
     return index_tag
 
-def prepare_tags(disk_path: str) -> None: #this is a full path
-    file_paths_shard_linked = preprocess_files(disk_path)
-    print("\n\n\n")
-    for each_file in tqdm(file_paths_shard_linked, total=len(file_paths_shard_linked), position=0, leave=True):
-        data = get_model_header(each_file)  # save_location)
-        if data is not None:
-            model_header, disk_size, file_name, file_extension = data
-        else:
-            return
+def collect_file_headers(disk_path: str) -> None: #this is a full path
+    if not os.path.isdir(disk_path):
+        file_paths_shard_linked = preprocess_files(disk_path)
+        extracted_keys = get_model_header(file_paths_shard_linked)  # save_location)
+    else:
+       for each_file in disk_path:
+            file_paths_shard_linked = preprocess_files(disk_path)
+            print("\n\n\n")
+            for each_file in tqdm(file_paths_shard_linked, total=len(file_paths_shard_linked), position=0, leave=True):
+                extracted_keys = get_model_header(each_file)  # save_location)
+                return data
+
+def create_model_tag(model_header,metadata_dict):
         parse_file = parse_model_header(model_header)
         reconstructed_file_path = os.path.join(disk_path,each_file)
-        attribute_dict = {"disk_size": disk_size, "disk_path": reconstructed_file_path, "file_name": file_name, "file_extension": file_extension}
+        attribute_dict = metadata_dict | {"disk_path": reconstructed_file_path}
         file_metadata = parse_file | attribute_dict
         index_tag = create_model_tag(file_metadata)
         try:
             pretty_tabled_output(next(iter(index_tag)), index_tag[next(iter(index_tag))])  # output information
         except TypeError as errorlog:
             raise
-    return index_tag
+        return index_tag
 
 
 disk_path = "/Users/unauthorized/Downloads/models/text"
 save_location = "/Users/unauthorized/Downloads/models/metadata"
 index_tags = defaultdict(dict)
-index_tags = prepare_tags(disk_path)
+index_tags = collect_file_headers(disk_path)
+  if data is None:
+                    return
+                else:
+                    metadata_dict = defaultdict(dict)
+                    model_header, disk_size, file_name, file_extension = data
+                    metadata_dict = {"disk_size": disk_size, "file_name": file_name, "file_extension": file_extension}
+                    create_model_tag(model_header,disk_size,file_name,file_extension,each_file)
 if index_tags is not None:
     write_json_file(save_location, "index.json", index_tags, 'w')
+
+path components
+path list
+current file

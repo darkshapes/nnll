@@ -1,4 +1,4 @@
-#// SPDX-License-Identifier: MIT
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 from  modules.nnll_37.src import prepare_tags as indexer

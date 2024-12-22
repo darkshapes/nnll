@@ -1,4 +1,4 @@
-#// SPDX-License-Identifier: MIT
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 import re
@@ -9,9 +9,9 @@ from collections import defaultdict
 from modules.nnll_35.src import get_count_from_filename
 from modules.nnll_32.src import get_model_header
 
-def capture_sequence_index(file_name: str) -> tuple:
+def capture_index_sequence(file_name: str) -> tuple:
     """
-    Find a number pair in a file name and return the sequence, including characters between it.\n
+    Check for a number pair in a file name and return the sequence, including characters between it.\n
     :param file_name: `str` The file name to inspect
     :return: `tuple` of `str` The matching sequence separated into individual variables
     """
@@ -22,52 +22,44 @@ def capture_sequence_index(file_name: str) -> tuple:
         if match:
             part, sep, total = map(str, match.groups())
             return part, sep, total
-    return None, None, None
+        else:
+            return None, None, None
 
-    # """ indicates a sequence of files
-    # Processes a list of file paths in the correct order based on their naming convention.
-    # Returns a list of results from get_model_header for each file.
-    # """
-    # # placeholder, rewrite above
-    # # Create a dictionary to hold files and their part numbers
-
-
-def preprocess_files(file_paths: list, file_dir: str) -> list:
+def preprocess_files(file_path: str, file_dir: str) -> list:
     """
-    Evaluate and direct model and sharded model file loading.\n
+    Check for\n
+    :param file_name: `str` The file name to inspect
+    :return: `tuple` of `str` The matching sequence separated into individual variables
     """
-    # As of yet this does not check for whether the file is present.
-    #if Path(file_paths).is_dir() == True: #if we are working with a directory
-        #for each_file in os.listdir(file_paths): # collect all the files
-    shard_files = defaultdict(dict)
-    file_paths_shard_linked = file_paths.copy()
-    for each_file in file_paths:
-        shard_list = []
-        filename = Path(each_file).name # take one at a time, and only the basename/tail
-        part, sep, total = capture_sequence_index(filename) # split the sequence numbers from the filename string
-        if part is not None and sep is not None and total is not None: # make sure these strings exist
-            high_shard = int(total) # translate strings to numbers
-            current_shard = int(part)
-            shard_list.append(filename)
-            for i in range(1,high_shard+1): #compare the numbers to get the file names we need
-                if i == current_shard:
-                    next
+    shard_list = []
+    filename = Path(file_path).name # take one at a time, and only the basename/tail
+    part, sep, total = capture_index_sequence(filename) # split the sequence numbers from the filename string
+    if part is not None and sep is not None and total is not None: # make sure these strings exist
+        high_shard = int(total) # translate strings to numbers
+        current_shard = int(part)
+        shard_list.append(filename)
+        for i in range(1,high_shard+1): #compare the numbers to get the file names we need
+            if i == current_shard:
+                next
+            else:
+                numeric_to_replace = str(current_shard) # the ceiling
+                new_numeric = part.replace(numeric_to_replace, str(i)) + sep
+                new_filename = new_numeric.join(filename.split(part+sep,1))
+                if os.isfile(os.path.join(file_dir,new_filename)):
+                    shard_list.append(new_filename)
+                    file_prefix = next(iter(filename.split(part)))
+                    file_paths_shard_linked = file_paths_shard_linked.remove(new_filename)
                 else:
-                    numeric_to_replace = str(current_shard) # the ceiling
-                    new_numeric = part.replace(numeric_to_replace, str(i)) + sep
-                    new_filename = new_numeric.join(filename.split(part+sep,1))
-                    if os.isfile(os.path.join(file_dir,new_filename)):
-                        shard_list.append(new_filename)
-                        file_prefix = next(iter(filename.split(part)))
-                        file_paths_shard_linked = file_paths_shard_linked.remove(new_filename)
-                    else:
-                        file_paths_shard_linked.remove(filename)
-                        break
+                    file_paths_shard_linked.remove(filename)
+                    break
+    else:
+        return [file_path]
 
     return file_paths_shard_linked
 
 
-
+    #if Path(file_paths).is_dir() == True: #if we are working with a directory
+        #for each_file in os.listdir(file_paths): # collect all the files
 
         #do processing of the list herehere
 
