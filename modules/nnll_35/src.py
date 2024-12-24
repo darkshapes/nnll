@@ -4,7 +4,7 @@
 import re
 import os
 
-def get_count_from_filename(file_name: str, search_value: str) -> int:
+def capture_title_numeral(file_name: str, search_value: str) -> int:
     """
     Retrieve a number from a file name string using the characters that directly follow it\n
     :param filename: `str` The string name of the file (with or without path)

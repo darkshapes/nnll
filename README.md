@@ -6,6 +6,7 @@
 ### Approaching zero-setup, fault-tolerant generative AI inference.
 
 
+
 `nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation, multiple iteration, careful study, and loving refinement. They may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
 
 Goals:
@@ -79,6 +80,7 @@ Goals:
 <br><br><br>
 <hr>
 
+.. inclusion-marker-do-not-remove
 <h2>modules index :</h2><details><summary>
 
 > `  nnll_00-19`</summary>
@@ -118,14 +120,16 @@ Goals:
 > [nnll 35 - filename numeric fetch](https://github.com/darkshapes/nnll/blob/main/modules/nnll_35/src.py#L4)<br>
 > [nnll 36 - state dict collector](https://github.com/darkshapes/nnll/blob/main/modules/nnll_36/src.py#L13)<br>
 > [nnll_37 - model indexer(inc)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_37/src.py#L11)<br>
+> [nnll_38 - tensor_shape)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_38/src.py#L11)<br>
 
 
 </details>
 
 <details><summary>
+<!--
+> `   nnll_xx (planned explorations)`</summary> -->
 
-> `   nnll_xx (planned explorations)`</summary>
-
+<!--
 > [nnll xx - civitai model index/download]<br>
 > [nnll xx - token encoder type 3]<br>
 > [nnll xx - prototype token sculptor revisiting nnll 08]<br>
@@ -134,7 +138,7 @@ Goals:
 > [nnll xx - output image formatting]<br>
 > [nnll xx - metadata encoding method 1/comparison]<br>
 > [nnll xx - self-embedding hash/snapshots]<br>
-> ...
+> ... -->
 
 </details><hr>
 

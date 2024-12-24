@@ -3,13 +3,13 @@
 
 import re
 import os
-from pathlib import Path
+import pathlib as pl
 from collections import defaultdict
 
-from modules.nnll_35.src import get_count_from_filename
+from modules.nnll_35.src import capture_title_numeral
 from modules.nnll_32.src import get_model_header
 
-def capture_index_sequence(file_name: str) -> tuple:
+def detect_index_sequence(file_name: str) -> tuple:
     """
     Check for a number pair in a file name and return the sequence, including characters between it.\n
     :param file_name: `str` The file name to inspect
@@ -25,15 +25,16 @@ def capture_index_sequence(file_name: str) -> tuple:
         else:
             return None, None, None
 
-def preprocess_files(file_path: str, file_dir: str) -> list:
+def gather_sharded_files(file_path: str) -> list:
     """
-    Check for\n
+    Check if a file is sharded, and if so return it\n
     :param file_name: `str` The file name to inspect
     :return: `tuple` of `str` The matching sequence separated into individual variables
     """
     shard_list = []
-    filename = Path(file_path).name # take one at a time, and only the basename/tail
-    part, sep, total = capture_index_sequence(filename) # split the sequence numbers from the filename string
+    file_dir = pl.Path(file_path).parts
+    filename = pl.Path(file_path).name # take one at a time, and only the basename/tail
+    part, sep, total = detect_index_sequence(filename) # split the sequence numbers from the filename string
     if part is not None and sep is not None and total is not None: # make sure these strings exist
         high_shard = int(total) # translate strings to numbers
         current_shard = int(part)
@@ -45,12 +46,14 @@ def preprocess_files(file_path: str, file_dir: str) -> list:
                 numeric_to_replace = str(current_shard) # the ceiling
                 new_numeric = part.replace(numeric_to_replace, str(i)) + sep
                 new_filename = new_numeric.join(filename.split(part+sep,1))
-                if os.isfile(os.path.join(file_dir,new_filename)):
+                s = os.sep
+                file_dir = os.path.normpath(s.join(file_dir))
+                if os.path.exists(os.path.join(file_dir,new_filename)):
                     shard_list.append(new_filename)
                     file_prefix = next(iter(filename.split(part)))
-                    file_paths_shard_linked = file_paths_shard_linked.remove(new_filename)
+                    file_paths_shard_linked = file_path.remove(new_filename)
                 else:
-                    file_paths_shard_linked.remove(filename)
+                    return None
                     break
     else:
         return [file_path]
@@ -63,7 +66,7 @@ def preprocess_files(file_path: str, file_dir: str) -> list:
 
         #do processing of the list herehere
 
-    #             get_count_from_filename(each_file.name, )
+    #             capture_title_numeral(each_file.name, )
     #             next_path = file_path.replace((part + sep + total), (total + sep + total))
     #             if total not in files_dict:
     #                 files_dict[total] = {}
@@ -83,19 +86,4 @@ def preprocess_files(file_path: str, file_dir: str) -> list:
     #             results = result | results.copy()
 
     # return results
-
-file_paths = [
-    'model_00001-of-00003.safetensors',
-    'model_00002-of-00003.safetensors',
-    'model_00003-of-00003.safetensors',
-    'model_00001-of-00002.gzip',
-    'model_00002-of-00002.gzip',
-    'model_1of3.tar.gz',
-    'model_2of3.tar.gz',
-    'model_3of3.tar.gz'
-]
-
-results = preprocess_files(file_paths)
-for result in results:
-    print(result)
     #

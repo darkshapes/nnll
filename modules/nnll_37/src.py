@@ -13,7 +13,7 @@ from modules.nnll_07.src import Domain, Architecture, Component
 from modules.nnll_27.src import pretty_tabled_output
 from modules.nnll_29.src import LayerFilter
 from modules.nnll_30.src import read_json_file, write_json_file
-from modules.nnll_34.src import preprocess_files
+from modules.nnll_34.src import gather_sharded_files
 
 def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.json") -> dict:
     try:  # Be sure theres something in model_header
@@ -26,6 +26,22 @@ def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.j
         block_scan = LayerFilter()
         file_metadata = block_scan.filter_metadata(FILTER, model_header, tensor_count)
         return file_metadata
+
+
+def collect_file_headers_from(target_for_analysis: str) -> dict:
+    """
+    Determine if file or folder path, then extract header metadata at specified location\n
+    :param target_for_analysis: `str` the path to a file or folder to process
+    :return: `dict` metadata from the header(s) at the target
+    """
+
+    if not os.path.isdir(target_for_analysis):
+        files_linked_with_shards = list(gather_sharded_files(target_for_analysis))
+    else:
+        files_linked_with_shards = (gather_sharded_files(file) for file in target_for_analysis)
+    for each_file in tqdm(files_linked_with_shards, total=len(files_linked_with_shards), position=0, leave=True):
+        extracted_keys = get_model_header(each_file)
+        return data
 
 
 def create_model_tag(file_metadata: dict) -> dict:
@@ -46,18 +62,6 @@ def create_model_tag(file_metadata: dict) -> dict:
 
     return index_tag
 
-def collect_file_headers(disk_path: str) -> None: #this is a full path
-    if not os.path.isdir(disk_path):
-        file_paths_shard_linked = preprocess_files(disk_path)
-        extracted_keys = get_model_header(file_paths_shard_linked)  # save_location)
-    else:
-       for each_file in disk_path:
-            file_paths_shard_linked = preprocess_files(disk_path)
-            print("\n\n\n")
-            for each_file in tqdm(file_paths_shard_linked, total=len(file_paths_shard_linked), position=0, leave=True):
-                extracted_keys = get_model_header(each_file)  # save_location)
-                return data
-
 def create_model_tag(model_header,metadata_dict):
         parse_file = parse_model_header(model_header)
         reconstructed_file_path = os.path.join(disk_path,each_file)
@@ -71,20 +75,20 @@ def create_model_tag(model_header,metadata_dict):
         return index_tag
 
 
-disk_path = "/Users/unauthorized/Downloads/models/text"
-save_location = "/Users/unauthorized/Downloads/models/metadata"
+target_for_analysis = "/Users/unauthorized/Downloads/models/text"
+target_save_location = "/Users/unauthorized/Downloads/models/metadata"
 index_tags = defaultdict(dict)
-index_tags = collect_file_headers(disk_path)
-  if data is None:
-                    return
-                else:
-                    metadata_dict = defaultdict(dict)
-                    model_header, disk_size, file_name, file_extension = data
-                    metadata_dict = {"disk_size": disk_size, "file_name": file_name, "file_extension": file_extension}
-                    create_model_tag(model_header,disk_size,file_name,file_extension,each_file)
+index_tags = collect_file_headers_from(target_for_analysis)
+# if index_tags is None:
+#     return
+# else:
+#     metadata_dict = defaultdict(dict)
+#     model_header, disk_size, file_name, file_extension = data
+#     metadata_dict = {"disk_size": disk_size, "file_name": file_name, "file_extension": file_extension}
+#     create_model_tag(model_header,disk_size,file_name,file_extension,each_file)
 if index_tags is not None:
-    write_json_file(save_location, "index.json", index_tags, 'w')
+    write_json_file(target_save_location, "index.json", index_tags, 'w')
 
-path components
-path list
-current file
+# path components
+# path list
+# current file
