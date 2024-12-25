@@ -5,8 +5,6 @@
 
 ### Approaching zero-setup, fault-tolerant generative AI inference.
 
-
-
 `nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation, multiple iteration, careful study, and loving refinement. They may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
 
 Goals:
@@ -32,10 +30,7 @@ Goals:
 
 ## link functions
 
-`indexer`<br>
-`symlinker`<br>
-`layer_scan`<br>
-`layer_match`<br>
+``tbd```
 <hr>
 
 ## development setup
@@ -80,9 +75,10 @@ Goals:
 <br><br><br>
 <hr>
 
-.. inclusion-marker-do-not-remove
 <h2>modules index :</h2><details><summary>
 
+
+: include::
 > `  nnll_00-19`</summary>
 
 > [nnll 00 - lambda-condensed nested dict traversal](https://github.com/darkshapes/nnll/blob/main/modules/nnll_00/src.py#L29)<br>
@@ -125,10 +121,6 @@ Goals:
 
 </details>
 
-<details><summary>
-<!--
-> `   nnll_xx (planned explorations)`</summary> -->
-
 <!--
 > [nnll xx - civitai model index/download]<br>
 > [nnll xx - token encoder type 3]<br>
@@ -139,6 +131,3 @@ Goals:
 > [nnll xx - metadata encoding method 1/comparison]<br>
 > [nnll xx - self-embedding hash/snapshots]<br>
 > ... -->
-
-</details><hr>
-
