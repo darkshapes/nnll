@@ -2,17 +2,7 @@
 # nnll
 ### neural network link library
 
-
-### Approaching zero-setup, fault-tolerant generative AI inference.
-
-`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation, multiple iteration, careful study, and loving refinement. They may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
-
-Goals:
-- Compatibility: Platform, framework, language agnostic
-- Modularity   : Independently functioning, tested and ready-made components, avoiding dependencies
-- Simplicity   : Streamline generative processing model chains
-- Rapidity     : Granular and automated hyperparameter and resource optimization
-- Reliability  : Failure-resistance on full-spectrum consumer hardware
+`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation,  iteration, study, and lovingly refined. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
 
 > x/dev branch: updated **~=nightly**.<br>
 > main branch : stable, devoted to **long-term support**.
@@ -30,7 +20,7 @@ Goals:
 
 ## link functions
 
-``tbd```
+
 <hr>
 
 ## development setup

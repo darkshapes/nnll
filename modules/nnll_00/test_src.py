@@ -1,10 +1,11 @@
+
 #// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 
 import unittest
 
-from modules.nnll_00.src import get_matching_layer
+from modules.nnll_00.src import deepest_key_of
 
 class TestJsonComparison(unittest.TestCase):
 
@@ -25,10 +26,10 @@ class TestJsonComparison(unittest.TestCase):
 
     def test_first_key(self):
         # Test should return the first key ("header")
-        result = get_matching_layer(self.json_data)
+        result = deepest_key_of(self.json_data)
         self.assertEqual(result, "header")
 
     def test_empty_dict(self):
         # Empty dict should return 0
-        result = get_matching_layer({})
+        result = deepest_key_of({})
         self.assertEqual(result, 0)

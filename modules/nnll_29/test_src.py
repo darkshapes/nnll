@@ -1,3 +1,4 @@
+
 #// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
@@ -7,7 +8,7 @@ import unittest
 from unittest.mock import patch
 
 from modules.nnll_29.src import LayerFilter
-from modules.nnll_24.src import ValuePath
+from modules.nnll_24.src import KeyTrail
 
 
 class TestLayerFilter(unittest.TestCase):
@@ -15,10 +16,10 @@ class TestLayerFilter(unittest.TestCase):
     def setUp(self):
         self.layer_filter = LayerFilter()
 
-    @patch('modules.nnll_24.src.ValuePath.find_value_path')
-    def test_compvis_bundle(self, mock_find_value_path):
-        # Mock return values for find_value_path
-        mock_find_value_path.side_effect = ['compvis', 'unet']
+    @patch('modules.nnll_24.src.KeyTrail.pull_keys')
+    def test_compvis_bundle(self, mock_pull_keys):
+        # Mock return values for pull_keys
+        mock_pull_keys.side_effect = ['compvis', 'unet']
 
         filter_cascade = {
             'layer_type': {
@@ -43,10 +44,10 @@ class TestLayerFilter(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
 
-    @patch('modules.nnll_24.src.ValuePath.find_value_path')
-    def test_diffusers_model(self, mock_find_value_path):
-        # Mock return value for find_value_path
-        mock_find_value_path.side_effect = ['diffusers', 'unet', 'sdxl-base']
+    @patch('modules.nnll_24.src.KeyTrail.pull_keys')
+    def test_diffusers_model(self, mock_pull_keys):
+        # Mock return value for pull_keys
+        mock_pull_keys.side_effect = ['diffusers', 'unet', 'sdxl-base']
 
         filter_cascade = {
             'layer_type': {
@@ -79,10 +80,10 @@ class TestLayerFilter(unittest.TestCase):
         result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
         self.assertEqual(result, expected_result)
 
-    @patch('modules.nnll_24.src.ValuePath.find_value_path')
-    def test_other_criteria(self, mock_find_value_path):
-        # Mock return value for find_value_path
-        mock_find_value_path.side_effect = ['unknown', 'unet', 'flux-1']
+    @patch('modules.nnll_24.src.KeyTrail.pull_keys')
+    def test_other_criteria(self, mock_pull_keys):
+        # Mock return value for pull_keys
+        mock_pull_keys.side_effect = ['unknown', 'unet', 'flux-1']
 
         filter_cascade = {
             'layer_type': {
@@ -115,10 +116,10 @@ class TestLayerFilter(unittest.TestCase):
         result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
         self.assertEqual(result, expected_result)
 
-    @patch('modules.nnll_24.src.ValuePath.find_value_path')
-    def test_empty_bundle_data(self, mock_find_value_path):
-        # Mock return value for find_value_path to be None
-        mock_find_value_path.side_effect = ['compvis', 'unknown', 'unknown']
+    @patch('modules.nnll_24.src.KeyTrail.pull_keys')
+    def test_empty_bundle_data(self, mock_pull_keys):
+        # Mock return value for pull_keys to be None
+        mock_pull_keys.side_effect = ['compvis', 'unknown', 'unknown']
 
         filter_cascade = {
             'layer_type': {
@@ -157,10 +158,10 @@ class TestLayerFilter(unittest.TestCase):
         result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
         self.assertEqual(result, expected_result)
 
-    @patch('modules.nnll_24.src.ValuePath.find_value_path')
-    def test_mixed_criteria(self, mock_find_value_path):
-        # Mock return values for find_value_path
-        mock_find_value_path.side_effect = [['compvis'],['unet','language'],['sdxl-base'],['clip-g']]
+    @patch('modules.nnll_24.src.KeyTrail.pull_keys')
+    def test_mixed_criteria(self, mock_pull_keys):
+        # Mock return values for pull_keys
+        mock_pull_keys.side_effect = [['compvis'],['unet','language'],['sdxl-base'],['clip-g']]
 
         filter_cascade = {
             'layer_type': {

@@ -1,3 +1,4 @@
+
 #// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
@@ -10,12 +11,12 @@ import shutil
 import os
 import sys
 
-from modules.nnll_05.src import load_gguf_metadata_from_model, read_gguf_header
+from modules.nnll_05.src import metadata_from_gguf, gguf_check
 
 
 class TestLoadGGUFMetadata(unittest.TestCase):
 
-    @patch('modules.nnll_05.src.parse_gguf_model')
+    @patch('modules.nnll_05.src.create_llama_parser')
     def setUp(self, MockParseModel) -> None:
         # Create a temporary file with known GGUF header data
         self.test_file_name = 'test.gguf'
@@ -38,7 +39,7 @@ class TestLoadGGUFMetadata(unittest.TestCase):
         MockParseModel.return_value = self.mock_parser
 
     def test_read_valid_header(self):
-        result = read_gguf_header(self.test_file_name)
+        result = gguf_check(self.test_file_name)
         self.assertTrue(result)
 
 
@@ -55,7 +56,7 @@ class TestLoadGGUFMetadata(unittest.TestCase):
                 "blobs",
                 "f06746ef9696d552d3746516558d5e9f338e581fd969158a90824e24f244169c"
                 )
-        virtual_data_00 = load_gguf_metadata_from_model(real_file)
+        virtual_data_00 = metadata_from_gguf(real_file)
         print(virtual_data_00)
         self.assertEqual(virtual_data_00,{'name': 'tiny-random-llama', 'dtype': 'float32'})
 

@@ -1,6 +1,8 @@
 #
 [build-system]
-requires = ["wheel", "setuptools", "setuptools_scm"]
+requires      = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
 
 [project]
 name = "nnll"
@@ -14,9 +16,12 @@ license         = { file = "LICENSE" }
 readme          = "README.md"
 urls            = { source = "https://github.com/darkshapes/nnll" }
 dynamic         = ["version"]
+keywords        = ["ML", "AI", "neural network", "library"]
+
 
 [project.optional-dependencies]
 opt = [
+    "wheel",
     "numpy",
     "torch",
     "llama-cpp-python",
@@ -28,7 +33,7 @@ opt = [
 dev = ["nnll[opt]", "pytest", "huggingface_hub"]
 
 [project.scripts]
-semver = "main:main"
+nnll-update = "modules.index:index"
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }

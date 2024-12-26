@@ -1,3 +1,4 @@
+
 #// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
@@ -6,11 +7,11 @@ import os
 import sys
 import unittest
 
-from modules.nnll_24.src import ValuePath
+from modules.nnll_24.src import KeyTrail
 
 class TestCompareValues(unittest.TestCase):
     def setUp(self):
-        self.handle_values = ValuePath()
+        self.key_trail = KeyTrail()
         # Mocking the match_pattern_and_regex method for controlled tests
 
     def test_find_value_path(self):
@@ -21,11 +22,11 @@ class TestCompareValues(unittest.TestCase):
 
         # Test matching path
         model_header = {'c.d': {'shape': [256]}}
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['y']
+        assert self.key_trail.pull_keys(nested_filter, model_header) == ['y']
 
         # Test no match found
         model_header_no_match = {'e': 3, 'f': 4}
-        assert self.handle_values.find_value_path(nested_filter, model_header_no_match) is None
+        assert self.key_trail.pull_keys(nested_filter, model_header_no_match) is None
 
         # Test deeper nested structure
         nested_filter = {
@@ -39,15 +40,15 @@ class TestCompareValues(unittest.TestCase):
                 'another': {'skip': {}}
             }
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['level1', 'level2', 'level3']
+        assert self.key_trail.pull_keys(nested_filter, model_header) == ['level1', 'level2', 'level3']
 
         # Test with empty dict
         nested_filter_empty = {}
-        assert self.handle_values.find_value_path(nested_filter_empty, model_header) is None
+        assert self.key_trail.pull_keys(nested_filter_empty, model_header) is None
 
         # Test matching at the top level
         model_header = {'c.d': {'shape': [256]}}
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['level1', 'level2', 'level3']
+        assert self.key_trail.pull_keys(nested_filter, model_header) == ['level1', 'level2', 'level3']
 
         # test block, shape, tensor match combined
         nested_filter = {
@@ -71,7 +72,7 @@ class TestCompareValues(unittest.TestCase):
                 'blocks': 'c.d',
             }
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=244) == ['y']
+        assert self.key_trail.pull_keys(nested_filter, model_header, tensor_count=244) == ['y']
 
         # block and shape only
 
@@ -82,7 +83,7 @@ class TestCompareValues(unittest.TestCase):
                 ]
             }
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['y']
+        assert self.key_trail.pull_keys(nested_filter, model_header) == ['y']
 
         # empty shape
         model_header = {
@@ -91,13 +92,13 @@ class TestCompareValues(unittest.TestCase):
                 ]
             }
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=243) == ['x']
+        assert self.key_trail.pull_keys(nested_filter, model_header, tensor_count=243) == ['x']
 
         # no shape, only tensor!
         model_header = {
             "c.d": {}
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=244) == ['z']
+        assert self.key_trail.pull_keys(nested_filter, model_header, tensor_count=244) == ['z']
 
 
 if __name__ == '__main__':

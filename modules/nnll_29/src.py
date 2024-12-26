@@ -1,3 +1,4 @@
+
 #// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
@@ -5,14 +6,14 @@ from collections import defaultdict
 import sys
 import os
 
-from modules.nnll_24.src import ValuePath
+from modules.nnll_24.src import KeyTrail
 
 class LayerFilter:
     """
-    Class to direct systematic comparison of model state dicts
+    Class to direct systematic comparison of model state dict layers
     """
 
-    handle_values = ValuePath
+    handle_values = KeyTrail
 
     def filter_metadata(self, filter_cascade: dict, model_header: dict, tensor_count: int) -> dict:
         """
@@ -25,26 +26,26 @@ class LayerFilter:
         file_metadata = defaultdict(dict)  # A place to store corresponding metadata
         bundle_types = [] # A place to store multiple matching elements
 
-        bundle_check = self.handle_values.find_value_path(filter_cascade["layer_type"], model_header, tensor_count) # Try to find layer type
+        bundle_check = self.handle_values.pull_keys(filter_cascade["layer_type"], model_header, tensor_count) # Try to find layer type
 
         if bundle_check is None: # No layer type found
             file_metadata["layer_type"] = "unknown"
-            bundle_types = self.handle_values.find_value_path(filter_cascade["category"], model_header, tensor_count) # Continue anyway
+            bundle_types = self.handle_values.pull_keys(filter_cascade["category"], model_header, tensor_count) # Continue anyway
         else: # When layer type is found
             file_metadata["layer_type"] = bundle_check
             if "compvis" != file_metadata["layer_type"]: # only compvis has bundles
-                bundle_types = self.handle_values.find_value_path(filter_cascade["category"], model_header, tensor_count) # Try to find category
+                bundle_types = self.handle_values.pull_keys(filter_cascade["category"], model_header, tensor_count) # Try to find category
             elif tensor_count is None or tensor_count < 1100: # 1100 measured as lowest tensor count for bundled model files
-                bundle_types = self.handle_values.find_value_path(filter_cascade["category"], model_header, tensor_count) # Try to find category
+                bundle_types = self.handle_values.pull_keys(filter_cascade["category"], model_header, tensor_count) # Try to find category
             else:
                 for category in range(list(filter_cascade["category"].keys())):
-                    bundle_types.extend(self.handle_values.find_value_path(filter_cascade["category"][category], model_header, tensor_count)) # Try to find category
+                    bundle_types.extend(self.handle_values.pull_keys(filter_cascade["category"][category], model_header, tensor_count)) # Try to find category
 
         if bundle_types is None or bundle_types == []: # If we have no category jump to, search every category
             file_metadata["category"] = "unknown"
             categories = list(filter_cascade.keys())
             for category in categories[2:]:
-                file_metadata["model"] = self.handle_values.find_value_path(filter_cascade[category], model_header, tensor_count)
+                file_metadata["model"] = self.handle_values.pull_keys(filter_cascade[category], model_header, tensor_count)
 
         else: # When a category is found
             file_metadata["category"] = bundle_types # Bundle types directs to the relevant categories
@@ -53,9 +54,9 @@ class LayerFilter:
                 bundle_check = [] # Empty variable by reinitialization
                 for category in file_metadata["category"]: # Jump to known values inside
                     if len(bundle_check) >= 1 and len(file_metadata["category"]) > 1: # If we already captured the first model and need more, ignore tensors
-                        bundle_check.extend(self.handle_values.find_value_path(filter_cascade[category], model_header, tensor_count=None))
+                        bundle_check.extend(self.handle_values.pull_keys(filter_cascade[category], model_header, tensor_count=None))
                     else:
-                        bundle_check = (self.handle_values.find_value_path(filter_cascade[category], model_header, tensor_count)) # First model only
+                        bundle_check = (self.handle_values.pull_keys(filter_cascade[category], model_header, tensor_count)) # First model only
 
                 if bundle_check is None: # Nothing matched, assign placeholder
                     file_metadata["model"] = "unknown"
@@ -70,7 +71,7 @@ class LayerFilter:
 
             else: # Category was not a list, only found one
                 try:
-                    file_metadata["model"] = self.handle_values.find_value_path(filter_cascade[file_metadata["category"]], model_header, tensor_count)
+                    file_metadata["model"] = self.handle_values.pull_keys(filter_cascade[file_metadata["category"]], model_header, tensor_count)
                 except KeyError as error_log:
                     #("A reference to a key of the filter dictionary failed to be found.")
                     file_metadata["model"] = "unknown"

@@ -1,4 +1,5 @@
-##// SPDX-License-Identifier: blessing
+#
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 import unittest
@@ -23,12 +24,12 @@ class TestGetModelHeader(unittest.TestCase):
         self.mock_disk_size = 1024
 
     @patch('modules.nnll_32.src.Path')
-    @patch('modules.nnll_32.src.load_safetensors_metadata_from_model')
-    def test_safetensors_file(self, mock_load_safetensors_metadata_from_model, mock_path):
+    @patch('modules.nnll_32.src.metadata_from_safetensors')
+    def test_safetensors_file(self, mock_metadata_from_safetensors, mock_path):
         mock_path.return_value.suffix.lower.return_value = self.safetensors_extension
         with patch('os.path.getsize', return_value=self.mock_disk_size), \
              patch('os.path.basename', return_value='test_file' + self.safetensors_extension):
-            mock_load_safetensors_metadata_from_model.return_value = self.mock_model_header
+            mock_metadata_from_safetensors.return_value = self.mock_model_header
 
             result = get_model_header(self.file_path)
             expected_result = (self.mock_model_header, self.mock_disk_size, 'test_file' + self.safetensors_extension, self.safetensors_extension)
@@ -36,12 +37,12 @@ class TestGetModelHeader(unittest.TestCase):
             self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_32.src.Path')
-    @patch('modules.nnll_32.src.load_gguf_metadata_from_model')
-    def test_gguf_file(self, mock_load_gguf_metadata_from_model, mock_path):
+    @patch('modules.nnll_32.src.metadata_from_gguf')
+    def test_gguf_file(self, mock_metadata_from_gguf, mock_path):
         mock_path.return_value.suffix.lower.return_value = self.gguf_extension
         with patch('os.path.getsize', return_value=self.mock_disk_size), \
              patch('os.path.basename', return_value='test_file' + self.gguf_extension):
-            mock_load_gguf_metadata_from_model.return_value = self.mock_model_header
+            mock_metadata_from_gguf.return_value = self.mock_model_header
 
             result = get_model_header(self.file_path)
             expected_result = (self.mock_model_header, self.mock_disk_size, 'test_file' + self.gguf_extension, self.gguf_extension)
