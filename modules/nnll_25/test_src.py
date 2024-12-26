@@ -89,7 +89,7 @@ class TestRegex:
     @pytest.mark.parametrize("reference_data,source_item_data,expected", combined_testdata)
     def test_valid_regex(self, reference_data, source_item_data, expected):
         test_module = ExtractAndMatchMetadata()
-        result = test_module.match_pattern_and_regex(reference_data, source_item_data)
+        result = test_module.is_pattern_in_layer(reference_data, source_item_data)
         assert result == expected
 
     @classmethod
@@ -97,9 +97,6 @@ class TestRegex:
         test_module = ExtractAndMatchMetadata()
         reference_data = ["", "Hello World"]
         source_item_data = ""
-        expected = ValueError("The value to compare from the inspected file cannot be an empty string.")  # Empty reference data and source item data
-        with pytest.raises(ValueError) as exc_info:
-            for each in reference_data:
-                result = test_module.match_pattern_and_regex(each, source_item_data)
-                assert expected == exc_info
-
+        for each in reference_data:
+            result = test_module.is_pattern_in_layer(each, source_item_data)
+            assert result == False

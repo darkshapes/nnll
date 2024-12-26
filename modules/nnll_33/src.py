@@ -10,46 +10,63 @@ class ValueComparison:
     """
 
     @classmethod
-    def compare_values(cls, nested_attributes: dict, model_header: dict, tensor_count: int | None = None) -> bool:
+    def check_model_identity(cls, pattern_details: dict, unpacked_metadata: dict, tensor_count: int | None = None) -> bool:
         """
-        Iterate through a model metadata in order to compare pattern against model_header.
-        If "blocks" is a list, iterate through it, checking both regex and str pattern matches.\n
-        :param nested_filter: `dict` A dictionary of regex patterns and criteria known to identify models
-        :param model_header: `dict` Values from the unknown file metadata (specifically state dict layers)
+        Iteratively structure unpacked metadata into reference pattern, then feed a equivalence check.\n
+        :param pattern_details: `dict` A dictionary of regex patterns and criteria known to identify models
+        :param unpacked_metadata: `dict` Values from the unknown file metadata
         :param tensor_count: `dict` Optional number of model layers in the unknown model file as an integer (None will bypass necessity of a match)
-        :return: `bool` Whether or not the values from the model header and tensor_count were found inside nested_filter
+        :return: `bool` Whether or not the values from the model header and tensor_count were found inside pattern_details\n
+        The minimum requirement is a **blocks** string value to match, since our shape value is determined by which block is checked
         """
         extract = ExtractAndMatchMetadata()
+        is_identical = False
 
-        if nested_attributes is not None or nested_attributes != {}:
-            # Iterate through the filter, run the scan
-            # Determine what needs to be done with the data, then execute
-            if len(nested_attributes) != 0 and nested_attributes.get("blocks") is not None:
-                for layer, tensor_data in model_header.items():  # repeat for every incoming layer
-                    if isinstance(nested_attributes["blocks"], list) == True:
-                        for pattern in nested_attributes["blocks"]:  # repeat for each list item
-                            cls.match = extract.match_pattern_and_regex(pattern, layer)
-                            if cls.match == True:
-                                break
+        for layer_key, tensor_dimension in unpacked_metadata.items():
+            if pattern_details and 'blocks' in pattern_details:
+                blocks = pattern_details['blocks']
+                if not isinstance(blocks, list):
+                    blocks = [blocks]
 
-                    else:
-                        cls.match = extract.match_pattern_and_regex(nested_attributes["blocks"], layer)
+                for block in blocks:
+                    is_identical = extract.is_pattern_in_layer(block, layer_key)
+                    if is_identical == True:
+                        break
 
-                    if hasattr(cls, "match") :
-                        if cls.match == True:
-                            model_dict = {}
-                            # Fetch any remaining items necessary to compare
-                            if nested_attributes.get("tensors", None) is None and nested_attributes.get("shapes", None) is None:
-                                return True
-                            if nested_attributes.get("shapes", None) is not None:
-                                model_dict.setdefault("shapes", tensor_data.get("shape", 0))
-                            if nested_attributes.get("tensors", None) is not None and tensor_count is not None:
-                                model_dict.setdefault("tensors", tensor_count)
-                            elif tensor_count is None and nested_attributes.get("tensors", None) is not None:
-                                # if 'tensor_count was not supplied, ignore it
-                                nested_attributes.pop("tensors")
+                if is_identical and 'shapes' not in pattern_details and 'tensors' not in pattern_details:
+                    return True
+                elif is_identical and ('shapes' in pattern_details or 'tensors' in pattern_details):
+                    tensor_dimensions = {}
+                    if 'shapes' in pattern_details:
+                        tensor_dimensions['shapes'] = tensor_dimension.get('shape')
+                    if 'tensors' in pattern_details and tensor_count is not None:
+                        tensor_dimensions['tensors'] = tensor_count
+                        if isinstance(pattern_details['tensors'],list):
+                            for count in pattern_details['tensors']:
+                                if tensor_dimensions['tensors'] == count:
+                                    tensor_dimensions.pop('tensors')
+                    is_identical = all(extract.is_pattern_in_layer(pattern_details[k], v) for k, v in tensor_dimensions.items())
+                if is_identical == True:
+                    return is_identical
 
-                            # Do a quick match of all values at once
-                            if all(extract.match_pattern_and_regex(nested_attributes.get(key), value) for key, value in model_dict.items()):
-                                return True
-        return False
+        return is_identical
+
+
+
+        # if "tensors" not in pattern_details and "shapes" not in pattern_details: # Redundant block
+        #         return is_identical
+        # elif "blocks" not in pattern_details or is_identical == True: # <- needed this, so routine became a class
+        #     unpacked_details = {}
+        #     if "shapes" in pattern_details:
+        #         unpacked_details.setdefault("shapes", tensor_dimension.get("shape", 0))
+        #     if "tensors" not in pattern_details:
+        #         return extract.is_pattern_in_layer(pattern_details.get("shapes"), unpacked_details["shapes"])
+        #     if isinstance(pattern_details["tensors"], list) and tensor_count is not None:
+        #         for count in pattern_details["tensors"]:
+        #             unpacked_details.setdefault("tensors", count)
+        #             if all(extract.is_pattern_in_layer(pattern_details.get(label), dimension) for label, dimension in unpacked_details.items()):
+        #                 return True
+        #     elif isinstance(pattern_details["tensors"],int) and tensor_count is not None:
+        #         unpacked_details.setdefault("tensors", tensor_count)
+        #         return all(extract.is_pattern_in_layer(pattern_details.get(label), dimension) for label, dimension in unpacked_details.items())
+        # return False

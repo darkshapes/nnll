@@ -33,7 +33,7 @@ opt = [
 dev = ["nnll[opt]", "pytest", "huggingface_hub"]
 
 [project.scripts]
-nnll-update = "modules.index:index"
+nnll-refresh = "modules.index:index"
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
