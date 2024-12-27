@@ -2,18 +2,7 @@
 # nnll
 ### neural network link library
 
-
-### Approaching zero-setup, fault-tolerant generative AI inference.
-
-
-`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation, multiple iteration, careful study, and loving refinement. They may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
-
-Goals:
-- Compatibility: Platform, framework, language agnostic
-- Modularity   : Independently functioning, tested and ready-made components, avoiding dependencies
-- Simplicity   : Streamline generative processing model chains
-- Rapidity     : Granular and automated hyperparameter and resource optimization
-- Reliability  : Failure-resistance on full-spectrum consumer hardware
+`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation,  iteration and study, all lovingly refined. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
 
 > x/dev branch: updated **~=nightly**.<br>
 > main branch : stable, devoted to **long-term support**.
@@ -31,10 +20,10 @@ Goals:
 
 ## link functions
 
-`indexer`<br>
-`symlinker`<br>
-`layer_scan`<br>
-`layer_match`<br>
+`nnll-refresh` - Recreate the local link index of functions and modules<br>
+`nnll-find`    - Scan models for a pattern within their layer contents<br>
+`nnll-index`   - Identify model types from specific files or folders, then build a registry from the information<br>
+
 <hr>
 
 ## development setup
@@ -81,6 +70,8 @@ Goals:
 
 <h2>modules index :</h2><details><summary>
 
+
+: include::
 > `  nnll_00-19`</summary>
 
 > [nnll 00 - lambda-condensed nested dict traversal](https://github.com/darkshapes/nnll/blob/main/modules/nnll_00/src.py#L29)<br>
@@ -118,14 +109,12 @@ Goals:
 > [nnll 35 - filename numeric fetch](https://github.com/darkshapes/nnll/blob/main/modules/nnll_35/src.py#L4)<br>
 > [nnll 36 - state dict collector](https://github.com/darkshapes/nnll/blob/main/modules/nnll_36/src.py#L13)<br>
 > [nnll_37 - model indexer(inc)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_37/src.py#L11)<br>
+> [nnll_38 - tensor_shape)](https://github.com/darkshapes/nnll/blob/main/modules/nnll_38/src.py#L11)<br>
 
 
 </details>
 
-<details><summary>
-
-> `   nnll_xx (planned explorations)`</summary>
-
+<!--
 > [nnll xx - civitai model index/download]<br>
 > [nnll xx - token encoder type 3]<br>
 > [nnll xx - prototype token sculptor revisiting nnll 08]<br>
@@ -134,6 +123,4 @@ Goals:
 > [nnll xx - output image formatting]<br>
 > [nnll xx - metadata encoding method 1/comparison]<br>
 > [nnll xx - self-embedding hash/snapshots]<br>
-> ...
-
-</details><hr>
+> ... -->

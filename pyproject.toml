@@ -1,6 +1,8 @@
 #
 [build-system]
-requires = ["wheel", "setuptools", "setuptools_scm"]
+requires      = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
 
 [project]
 name = "nnll"
@@ -8,24 +10,18 @@ description = "Experimental ML modules library"
 authors = [
     { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
 ]
+
 requires-python = ">= 3.10"
-license = { file = "LICENSE" }
-readme = "README.md"
-urls = { source = "https://github.com/darkshapes/nnll" }
-dynamic = ["version"]
+license         = { file = "LICENSE" }
+readme          = "README.md"
+urls            = { source = "https://github.com/darkshapes/nnll" }
+dynamic         = ["version"]
+keywords        = ["ML", "AI", "neural network", "library"]
+
 
 [project.optional-dependencies]
 opt = [
-    "numpy",
-    "torch",
-    "llama-cpp-python",
-    "sentencepiece",
-    "diffusers",
-    "transformers",
-]
-dev = [
-    "pytest",
-    "huggingface_hub",
+    "wheel",
     "numpy",
     "torch",
     "llama-cpp-python",
@@ -34,8 +30,12 @@ dev = [
     "transformers",
 ]
 
+dev = ["nnll[opt]", "pytest", "huggingface_hub"]
+
 [project.scripts]
-semver = "main:main"
+nnll-refresh = "modules.index:index"
+nnll-find    = "modules.nnll_31.src:find_entry"
+#nnll-index   = "modules.nnll_37.src:index"
 
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
@@ -44,4 +44,4 @@ dependencies = { file = ["requirements.txt"] }
 write_to = "_version.py"
 
 [tool.uv]
-dev-dependencies = ["pytest"]
+dev-dependencies = ["nnll[opt]", "nnll[dev]"]

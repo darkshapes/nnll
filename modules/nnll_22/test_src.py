@@ -73,8 +73,8 @@ class TestAutoencoderLink(unittest.TestCase):
         link = AutoencoderLink()
 
         # Setup mocks
-        mock_islink.return_value = True  # Simulate an existing symlink to be removed
-        mock_listdir.side_effect = [["old_link"], ["old_shard_01"]] * 2  # List of files in the directory
+        mock_islink.return_value = True
+        mock_listdir.side_effect = [["old_link"], ["old_shard_01"]] * 2
 
         sharded_files = ["/path/to/shard_01.bin", "/path/to/shard_02.bin"]
         result = link.create_symlink("model_type", sharded_files, original_layout=True)
@@ -105,8 +105,8 @@ class TestTextEncoderLink(unittest.TestCase):
         link = TextEncoderLink()
 
         # Setup mocks
-        mock_islink.return_value = True  # Simulate an existing symlink to be removed
-        mock_listdir.return_value = ["old_link"]  # List of files in the directory
+        mock_islink.return_value = True
+        mock_listdir.return_value = ["old_link"]
 
         target_path = "/path/to/single_file.bin"
         result = link.create_symlink("model_type", target_path)
@@ -130,8 +130,8 @@ class TestTextEncoderLink(unittest.TestCase):
         link = TextEncoderLink()
 
         # Setup mocks
-        mock_islink.return_value = True  # Simulate an existing symlink to be removed
-        mock_listdir.side_effect = [["old_link"], ["old_shard_01"]] * 2  # List of files in the directory
+        mock_islink.return_value = True
+        mock_listdir.side_effect = [["old_link"], ["old_shard_01"]] * 2
 
         sharded_files = ["/path/to/shard_01.bin", "/path/to/shard_02.bin"]
         result = link.create_symlink("model_type", sharded_files, original_layout=True)
@@ -162,8 +162,8 @@ class TestUNetLink(unittest.TestCase):
         link = UNetLink()
 
         # Setup mocks
-        mock_islink.return_value = True  # Simulate an existing symlink to be removed
-        mock_listdir.return_value = ["old_link"]  # List of files in the directory
+        mock_islink.return_value = True
+        mock_listdir.return_value = ["old_link"]
 
         target_path = "/path/to/single_file.bin"
         result = link.create_symlink("model_type", target_path)
@@ -187,8 +187,8 @@ class TestUNetLink(unittest.TestCase):
         link = UNetLink()
 
         # Setup mocks
-        mock_islink.return_value = True  # Simulate an existing symlink to be removed
-        mock_listdir.side_effect = [["old_link"], ["old_shard_01"]] * 2  # List of files in the directory
+        mock_islink.return_value = True
+        mock_listdir.side_effect = [["old_link"], ["old_shard_01"]] * 2
 
         sharded_files = ["/path/to/shard_01.bin", "/path/to/shard_02.bin"]
         result = link.create_symlink("model_type", sharded_files, original_layout=True)
@@ -206,3 +206,14 @@ class TestUNetLink(unittest.TestCase):
             mock_symlink.assert_any_call(path, expected_symlink_full_paths[i])
 
         self.assertEqual(result, expected_symlink_full_paths)
+
+if __name__== "__main__":
+    text_link = TextEncoderLink()
+    unet_link = UNetLink()
+    autoencoder_link = AutoencoderLink()
+
+    target_path_text = sys.argv[0]
+    shards_text = ["/Users/unauthorized/Downloads/models/text/t5xxl.flux1-dev.diffusers.1of2safetensors.safetensors", "/Users/unauthorized/Downloads/models/text/t5xxl.flux1-dev.diffusers.2of2safetensors.safetensors"]
+
+    print(text_link.create_symlink(model_type="clip-l", target_path=target_path_text))
+    print(text_link.create_symlink(model_type="t5-xxl", target_path=shards_text))

@@ -1,4 +1,5 @@
-#// SPDX-License-Identifier: MIT
+
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 
@@ -6,6 +7,8 @@ import sys
 import os
 import json
 import subprocess
+from contextlib import suppress
+
 from modules.nnll_30.src import read_json_file
 
 
@@ -36,7 +39,7 @@ def count_tensors_and_extract_shape(pattern, file_path):
 
 def find_files_with_pattern(pattern):
     if not pattern:
-        print(f"Usage: {sys.argv[0]} <pattern>")
+        print(f"Search for layer name metadata in the current folder's models.\n Usage: {sys.argv[0]} <pattern>")
         sys.exit(1)
 
     try:
@@ -52,9 +55,21 @@ def find_files_with_pattern(pattern):
     else:
         print(f"No files containing '{pattern}' were found.")
 
+def find_entry(pattern=(TypeError)):
+    with suppress(TypeError):
+        if len(sys.argv) != 2:
+            print(f"""
+Description: Search layer name metadata in the current folder's models.
+Usage: {sys.argv[0]} <pattern>\n""")
+            return
+
+    pattern = sys.argv[1]
+    find_files_with_pattern(pattern)
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <pattern>")
+        print(f"""
+                Cannot be none.\n Search layer name metadata in the current folder's models. Usage: {sys.argv[0]} <pattern>""")
         sys.exit(1)
 
     pattern = sys.argv[1]

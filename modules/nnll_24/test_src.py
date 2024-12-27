@@ -1,104 +1,133 @@
-#// SPDX-License-Identifier: MIT
+
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
-import pytest
-import os
-import sys
 import unittest
 
-from modules.nnll_24.src import ValuePath
+from modules.nnll_24.src import KeyTrail
 
-class TestCompareValues(unittest.TestCase):
+class TestKeyTrail(unittest.TestCase):
+
     def setUp(self):
-        self.handle_values = ValuePath()
-        # Mocking the match_pattern_and_regex method for controlled tests
+        return KeyTrail()
 
-    def test_find_value_path(self):
-        nested_filter = {
-            'x': {'blocks': 'c1d2', 'shapes': [256]},
-            'z': {'blocks': "c2d2", 'shapes': [512]},
-            'y': {'blocks': 'c.d', 'shapes': [256]}}
-
-        # Test matching path
+    def test_pull_key_names_match(self):
+        key_trail = self.setUp()
+        nested_filter = {'x': {'blocks': 'c1d2', 'shapes': [256]}, 'z': {'blocks': "c2d2", 'shapes': [512]}, 'y': {'blocks': 'c.d', 'shapes': [256]}}
         model_header = {'c.d': {'shape': [256]}}
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['y']
+        output = key_trail.pull_key_names(nested_filter, model_header)
+        self.assertEqual(output, 'y')
 
-        # Test no match found
+    def test_pull_key_names_no_match(self):
+        key_trail = self.setUp()
+        nested_filter = {'x': {'blocks': 'c1d2', 'shapes': [256]}, 'z': {'blocks': "c2d2", 'shapes': [512]}, 'y': {'blocks': 'c.d', 'shapes': [256]}}
         model_header_no_match = {'e': 3, 'f': 4}
-        assert self.handle_values.find_value_path(nested_filter, model_header_no_match) is None
+        self.assertIsNone(key_trail.pull_key_names(nested_filter, model_header_no_match))
 
-        # Test deeper nested structure
+    def test_pull_key_names_deeper_nested(self):
+        key_trail = self.setUp()
         nested_filter = {
             'level1': {
                 'level2': {
-                    'level3': {
-                        'blocks': 'c.d',
-                        'shapes': [256]
-                    }
+                    'level3': {'blocks': 'c.d', 'shapes': [256]}
                 },
                 'another': {'skip': {}}
             }
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['level1', 'level2', 'level3']
-
-        # Test with empty dict
-        nested_filter_empty = {}
-        assert self.handle_values.find_value_path(nested_filter_empty, model_header) is None
-
-        # Test matching at the top level
         model_header = {'c.d': {'shape': [256]}}
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['level1', 'level2', 'level3']
+        output = key_trail.pull_key_names(nested_filter, model_header)
+        self.assertEqual(output, 'level3')
 
-        # test block, shape, tensor match combined
+    def test_pull_key_names_empty_dict(self):
+        key_trail = self.setUp()
+        nested_filter_empty = {}
+        model_header = {'c.d': {'shape': [256]}}
+        output = key_trail.pull_key_names(nested_filter_empty, model_header)
+        self.assertIsNone(output)
+
+    def test_pull_key_names_top_level_match(self):
+        key_trail = self.setUp()
         nested_filter = {
-            'w': {
-                'blocks': "c.e",
-                'shapes': [256],
-                'tensors': 244
-            },
-            'y': {
-                'blocks': "c.d",
-                'shapes': [
-                    256
-                ],
-                'tensors': 244
-            },
-            'z': {
-                'blocks': "c.d",
-                'tensors': 244
-            },
-            'x': {
-                'blocks': 'c.d',
+            'level1': {
+                'level2': {
+                    'level3': {'blocks': 'c.d', 'shapes': [256]}
+                }
             }
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=244) == ['y']
+        model_header = {'c.d': {'shape': [256]}}
+        self.assertEqual(key_trail.pull_key_names(nested_filter, model_header), 'level3')
 
-        # block and shape only
-
-        model_header = {
-            "c.d": {
-                "shape": [
-                    256
-                ]
-            }
+    def test_pull_key_names_combined_match(self):
+        key_trail = self.setUp()
+        nested_filter = {
+            'w': {'blocks': "c.e", 'shapes': [256], 'tensors': 244},
+            'y': {'blocks': "c.d", 'shapes': [256], 'tensors': 244},
+            'z': {'blocks': "c.d", 'tensors': 244},
+            'x': {'blocks': 'c.d'}
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header) == ['y']
+        model_header = {'c.d': {'shape': [256]}}
+        output = key_trail.pull_key_names(nested_filter, model_header, tensor_count=244)
+        self.assertEqual(output, 'y')
 
-        # empty shape
-        model_header = {
-            "c.d": {
-                "shape": [
-                ]
-            }
+    def test_pull_key_names_block_shape_only(self):
+        key_trail = self.setUp()
+        nested_filter = {
+            'w': {'blocks': "c.e", 'shapes': [256], 'tensors': 244},
+            'y': {'blocks': "c.d", 'shapes': [256], 'tensors': 244},
+            'z': {'blocks': "c.d", 'tensors': 244},
+            'x': {'blocks': 'c.d', 'shapes': [256]}
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=243) == ['x']
+        model_header = {'c.d': {'shape': [256]}}
+        output = key_trail.pull_key_names(nested_filter, model_header)
+        self.assertEqual(output, 'y')
 
-        # no shape, only tensor!
-        model_header = {
-            "c.d": {}
+    def test_pull_key_names_empty_shape(self):
+        key_trail = self.setUp()
+        nested_filter = {
+            'w': {'blocks': "c.e", 'shapes': [256], 'tensors': 244},
+            'y': {'blocks': "c.d", 'shapes': [256], 'tensors': 244},
+            'z': {'blocks': "c.d", 'tensors': 244},
+            'x': {'blocks': 'c.d'}, ####
         }
-        assert self.handle_values.find_value_path(nested_filter, model_header, tensor_count=244) == ['z']
+        model_header = {'c.d': {}}
+        output = key_trail.pull_key_names(nested_filter, model_header, tensor_count=244)
+        self.assertEqual(output, 'z')
 
+    def test_pull_key_names_no_shape_only_tensor(self):
+        key_trail = self.setUp()
+        nested_filter = {
+            'w': {'blocks': "c.e", 'shapes': [256], 'tensors': 244},
+            'y': {'blocks': "c.d", 'shapes': [256], 'tensors': 244},
+            'z': {'blocks': "c.d", 'tensors': 244},
+            'x': {'blocks': 'c.d'}
+        }
+        model_header = {'c.d': {}}
+        output = key_trail.pull_key_names(nested_filter, model_header, tensor_count=244)
+        self.assertEqual(output, 'z')
 
+    def test_pull_key_names_combined_match_block_list(self):
+        key_trail = self.setUp()
+        nested_filter = {
+            'x': {'blocks': 'c.e'},
+            'z': {'blocks': "c.e", 'tensors': 244},
+            'y': {'blocks': ["c.l","c.d"],'tensors': 244}, ### because c.d is in it
+            'w': {'blocks': ["c.e","c.d"], 'shapes': [256], 'tensors': 244},
+
+        }
+        model_header = {'c.d': {'shape': [256]}}
+        output = key_trail.pull_key_names(nested_filter, model_header, tensor_count=244)
+        self.assertEqual(output, 'y')
+
+    def test_pull_key_names_combined_match_tensor_list(self):
+        key_trail = self.setUp()
+        nested_filter = {
+            'x': {'blocks': 'c.e'},
+            'y': {'blocks': ["c.l","c.d"],'tensors': [24,4]},
+            'z': {'blocks': "c.d", 'shapes': [25],'tensors': [222,244]},
+            'w': {'blocks': ["c.e","c.d"], 'shapes': [256], 'tensors': [222,244]},
+        } ###
+        model_header = {'c.d': {'shape': [256]}}
+        output = key_trail.pull_key_names(nested_filter, model_header, tensor_count=244)
+        self.assertEqual(output, 'w')
 if __name__ == '__main__':
     unittest.main()

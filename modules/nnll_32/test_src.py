@@ -1,4 +1,5 @@
-##// SPDX-License-Identifier: MIT
+#
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 import unittest
@@ -7,7 +8,10 @@ from pathlib import Path
 import os
 
 # Assuming get_model_header is in a module named model_loader
-from modules.nnll_32.src import get_model_header
+from modules.nnll_04.src import metadata_from_safetensors
+from modules.nnll_05.src import metadata_from_gguf
+from modules.nnll_28.src import metadata_from_pickletensor
+from modules.nnll_32.src import coordinate_header_tools
 
 class TestGetModelHeader(unittest.TestCase):
 
@@ -22,63 +26,42 @@ class TestGetModelHeader(unittest.TestCase):
         self.mock_model_header = {'key': 'value'}
         self.mock_disk_size = 1024
 
-    @patch('modules.nnll_32.src.Path')
-    @patch('modules.nnll_32.src.load_safetensors_metadata_from_model')
-    def test_safetensors_file(self, mock_load_safetensors_metadata_from_model, mock_path):
-        mock_path.return_value.suffix.lower.return_value = self.safetensors_extension
-        with patch('os.path.getsize', return_value=self.mock_disk_size), \
-             patch('os.path.basename', return_value='test_file' + self.safetensors_extension):
-            mock_load_safetensors_metadata_from_model.return_value = self.mock_model_header
+    def test_safetensors_file(self):
+        result = coordinate_header_tools(self.file_path, ".safetensors")
+        expected_result = (metadata_from_safetensors)
 
-            result = get_model_header(self.file_path)
-            expected_result = (self.mock_model_header, self.mock_disk_size, 'test_file' + self.safetensors_extension, self.safetensors_extension)
+        self.assertEqual(result, expected_result)
 
-            self.assertEqual(result, expected_result)
+    def test_gguf_file(self):
+        result = coordinate_header_tools(self.file_path, ".gguf")
+        expected_result = (metadata_from_gguf)
 
-    @patch('modules.nnll_32.src.Path')
-    @patch('modules.nnll_32.src.load_gguf_metadata_from_model')
-    def test_gguf_file(self, mock_load_gguf_metadata_from_model, mock_path):
-        mock_path.return_value.suffix.lower.return_value = self.gguf_extension
-        with patch('os.path.getsize', return_value=self.mock_disk_size), \
-             patch('os.path.basename', return_value='test_file' + self.gguf_extension):
-            mock_load_gguf_metadata_from_model.return_value = self.mock_model_header
+        self.assertEqual(result, expected_result)
 
-            result = get_model_header(self.file_path)
-            expected_result = (self.mock_model_header, self.mock_disk_size, 'test_file' + self.gguf_extension, self.gguf_extension)
+    def test_pickletensor_file(self):
+        result = coordinate_header_tools(self.file_path, ".pt")
+        expected_result = (metadata_from_pickletensor)
 
-            self.assertEqual(result, expected_result)
-
-    @patch('modules.nnll_32.src.Path')
-    @patch('modules.nnll_32.src.load_pickletensor_metadata_from_model')
-    def test_pickletensor_file(self, mock_load_pickletensor_metadata_from_model, mock_path):
-        mock_path.return_value.suffix.lower.return_value = self.pickletensor_extension
-        with patch('os.path.getsize', return_value=self.mock_disk_size), \
-             patch('os.path.basename', return_value='test_file' + self.pickletensor_extension):
-            mock_load_pickletensor_metadata_from_model.return_value = self.mock_model_header
-
-            result = get_model_header(self.file_path)
-            expected_result = (self.mock_model_header, self.mock_disk_size, 'test_file' + self.pickletensor_extension, self.pickletensor_extension)
-
-            self.assertEqual(result, expected_result)
+        self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_32.src.Path')
     def test_invalid_extension(self, mock_path):
         mock_path.return_value.suffix.lower.return_value = self.invalid_extension
 
-        result = get_model_header(self.file_path)
+        result = coordinate_header_tools(self.file_path, self.invalid_extension)
         self.assertIsNone(result)
 
     def test_empty_or_none_extension(self):
         # Test for empty extension
         with patch('modules.nnll_32.src.Path') as mock_path:
             mock_path.return_value.suffix.lower.return_value = ''
-            result = get_model_header(self.file_path)
+            result = coordinate_header_tools(self.file_path, '')
             self.assertIsNone(result)
 
         # Test for None extension
         with patch('modules.nnll_32.src.Path') as mock_path:
             mock_path.return_value.suffix.lower.return_value = None
-            result = get_model_header(self.file_path)
+            result = coordinate_header_tools(self.file_path, None)
             self.assertIsNone(result)
 
 if __name__ == '__main__':

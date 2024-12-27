@@ -1,18 +1,19 @@
-#// SPDX-License-Identifier: MIT
+
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 import os
 from pathlib import Path
 import itertools
 
-from modules.nnll_04.src import load_safetensors_metadata_from_model
-from modules.nnll_05.src import load_gguf_metadata_from_model
-from modules.nnll_28.src import load_pickletensor_metadata_from_model
+from modules.nnll_04.src import metadata_from_safetensors
+from modules.nnll_05.src import metadata_from_gguf
+from modules.nnll_28.src import metadata_from_pickletensor
 
-def get_model_header(file_path: str) -> tuple:
+def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
     """
     Detect file type and skim metadata from a model file using the appropriate tools\n
-    :param file_path: `str` The full path to the file being analyzed
+    :param file_path_named: `str` The full path to the file being analyzed
     :return: `tuple` Four values constituting the metadata header and external file attributes\n
     (model_header, disk_size, file_name, file_extension)
     """
@@ -34,22 +35,20 @@ def get_model_header(file_path: str) -> tuple:
         ".ckpt",
     ]
 
-    extensions_list = itertools.chain(safetensors_extensions, gguf_extensions, pickletensor_extensions)
+    supported_extensions = itertools.chain(safetensors_extensions, gguf_extensions, pickletensor_extensions)
     # Get external file metadata
-    file_extension = Path(file_path).suffix.lower()
-    if file_extension == '' or file_extension is None or file_extension not in list(extensions_list):  # Skip this file if we cannot possibly know what it is
+
+    if file_extension == '' or file_extension is None or file_extension not in list(supported_extensions):  # Skip file if we cannot possibly know what it is
         return
     else:
         if file_extension in safetensors_extensions:
-            method_map = load_safetensors_metadata_from_model
+            open_header_method = metadata_from_safetensors
         elif file_extension in gguf_extensions:
-            method_map = load_gguf_metadata_from_model
+            open_header_method = metadata_from_gguf
         elif file_extension in pickletensor_extensions:
-            method_map = load_pickletensor_metadata_from_model
-
-        file_name = os.path.basename(file_path)
-        disk_size = os.path.getsize(file_path)
+            open_header_method = metadata_from_pickletensor
 
         # Retrieve header by method indicated by extension, usually struct unpacking, except for pt files which are memmap
-        model_header = method_map(file_path)
-        return (model_header, disk_size, file_name, file_extension)
+        #this is where we should collect shards
+        return open_header_method
+

@@ -29,4 +29,5 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install .[dev]
+          nnll-refresh
           pytest -v

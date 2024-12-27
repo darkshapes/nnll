@@ -1,74 +1,72 @@
-#// SPDX-License-Identifier: MIT
+
+#// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
 import sys
 import os
 from pathlib import Path
+from networkx import connected_components
 from tqdm.auto import tqdm
 from collections import defaultdict
+from contextlib import suppress
 
-from modules.nnll_32.src import get_model_header
-from modules.nnll_07.src import Domain, Architecture, Component
-from modules.nnll_27.src import pretty_tabled_output
 from modules.nnll_29.src import LayerFilter
-from modules.nnll_30.src import read_json_file, write_json_file
-from modules.nnll_34.src import preprocess_files
+from modules.nnll_30.src import write_json_file
+from modules.nnll_32.src import coordinate_header_tools
+from modules.nnll_34.src import gather_sharded_files, detect_index_sequence
+from modules.nnll_40.src import create_model_tag
 
-def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.json") -> dict:
-    try:  # Be sure theres something in model_header
-        next(iter(model_header))
-    except TypeError as errorlog:
-        raise  # Fail if header arrives empty, rather than proceed
-    else:  # Process and output metadata
-        FILTER = read_json_file(filter_file)
-        tensor_count = len(model_header)
-        block_scan = LayerFilter()
-        file_metadata = block_scan.filter_metadata(FILTER, model_header, tensor_count)
-        return file_metadata
-
-
-def create_model_tag(file_metadata: dict) -> dict:
-
-    if "unknown" in file_metadata:
-        domain_dev = Domain("dev")  # For unrecognized models,
+def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
+    """
+    Determine if file or folder path, then extract nn model header metadata at specified location\n
+    :param target_file_or_folder: `str` the path to a file or folder to process
+    :return: `dict` metadata from the header(s) at the target
+    """
+    if not os.path.isdir(file_or_folder_path_named):
+        folder_contents = [file_or_folder_path_named]
     else:
-        domain_ml = Domain("ml")  # create the domain only when we know its a model
+        folder_contents = file_or_folder_path_named
 
-    arch_found = Architecture(file_metadata.get("model"))
-    category = file_metadata["category"]
-    file_metadata.pop("model")
-    file_metadata.pop("category")
-    comp_inside = Component(category, **file_metadata)
-    arch_found.add_component(comp_inside.model_type, comp_inside)
-    domain_ml.add_architecture(arch_found.architecture, arch_found)
-    index_tag = domain_ml.to_dict()
-
-    return index_tag
-
-def prepare_tags(disk_path: str) -> None: #this is a full path
-    file_paths_shard_linked = preprocess_files(disk_path)
-    print("\n\n\n")
-    for each_file in tqdm(file_paths_shard_linked, total=len(file_paths_shard_linked), position=0, leave=True):
-        data = get_model_header(each_file)  # save_location)
-        if data is not None:
-            model_header, disk_size, file_name, file_extension = data
+    for current_file in tqdm(folder_contents, total=len(folder_contents), position=0, leave=True):
+        file_extension = Path(current_file).suffix.lower()
+        file_name = os.path.basename(current_file)
+        disk_size = os.path.getsize(current_file)
+        open_header_method = coordinate_header_tools(current_file)
+        indexed_file = detect_index_sequence(os.path_basename(current_file))
+        if isinstance(indexed_file, tuple):
+            gathered_index = gather_sharded_files(current_file, indexed_file)
         else:
-            return
-        parse_file = parse_model_header(model_header)
-        reconstructed_file_path = os.path.join(disk_path,each_file)
-        attribute_dict = {"disk_size": disk_size, "disk_path": reconstructed_file_path, "file_name": file_name, "file_extension": file_extension}
-        file_metadata = parse_file | attribute_dict
-        index_tag = create_model_tag(file_metadata)
-        try:
-            pretty_tabled_output(next(iter(index_tag)), index_tag[next(iter(index_tag))])  # output information
-        except TypeError as errorlog:
-            raise
-    return index_tag
+            gathered_index = [current_file]
+            # Should now be normalized as a list
+        full_model_header = defaultdict(dict)
+        for next_file in gathered_index:
+            next_state_dict = open_header_method(next_file)
+            full_model_header.update(next_state_dict)
 
+        return (full_model_header, disk_size, file_name, file_extension)
 
-disk_path = "/Users/unauthorized/Downloads/models/text"
-save_location = "/Users/unauthorized/Downloads/models/metadata"
-index_tags = defaultdict(dict)
-index_tags = prepare_tags(disk_path)
-if index_tags is not None:
-    write_json_file(save_location, "index.json", index_tags, 'w')
+def index(file_or_folder_path_named, save):
+    with suppress(TypeError):
+        if len(sys.argv) != 3:
+            print(f"""
+Description: Scan specific files or folders for recognized models
+Usage: {sys.argv[0]} <folder_path>\n""")
+    extracted_headers  = collect_file_headers_from(file_or_folder_path_named)
+
+if __name__ == "__main__":
+    file_or_folder_path_named  = "/Users/unauthorized/Downloads/models/text"
+    empty_folder_path_to_save_file   = "/Users/unauthorized/Downloads/models/metadata"
+    extracted_headers      = collect_file_headers_from(file_or_folder_path_named)
+
+    if extracted_headers is not None:
+
+        metadata_dict = defaultdict(dict)
+        model_header, disk_size, file_name, file_extension = extracted_headers
+        metadata_dict = {"disk_size": disk_size, "file_name": file_name, "file_extension": file_extension}
+        index_tags    = create_model_tag(model_header,disk_size,file_name,file_extension,extracted_headers)
+        if index_tags is not None:
+            write_json_file(empty_folder_path_to_save_file, "index.json", index_tags, 'w')
+
+# path components
+# path list
+# current file
