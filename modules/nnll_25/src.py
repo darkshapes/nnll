@@ -41,7 +41,7 @@ class ExtractAndMatchMetadata:
                 return True
         return False
 
-    def compute_file_hash(self, file_path: str) -> str:
+    def compute_file_hash(self, ile_path_named: str) -> str:
         """
         Compute and return the SHA256 hash of a given file.\n
         :param file_path: `str` Valid path to a file
@@ -50,8 +50,8 @@ class ExtractAndMatchMetadata:
         :raises PermissionError: Insufficient permissions to read the file.
         :raises IOError:  I/O related errors during file operations.
         """
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File '{file_path}' does not exist.")
+        if not os.path.exists(ile_path_named):
+            raise FileNotFoundError(f"File '{ile_path_named}' does not exist.")
         else:
-            with open(file_path, 'rb') as f:
+            with open(ile_path_named, 'rb') as f:
                 return hashlib.sha256(f.read()).hexdigest()

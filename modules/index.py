@@ -67,9 +67,11 @@ def write_index_to_file(module_index: dict, index_file_name: str = INDEX_FILE) -
     return
 
 def index():
+    print('Refreshing index...')
     active_directories = trace_catalog_file_structure()
     module_index       = populate_module_index(active_directories)
     write_index_to_file(module_index)
+    print('Done.')
 
 if __name__ == "__main__":
     index()

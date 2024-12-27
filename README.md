@@ -20,6 +20,9 @@
 
 ## link functions
 
+nnll-refresh - Recreate the local link index of functions and modules
+nnll-find    - Scan models for a pattern within their layer contents
+nnll-index   - Identify model types of specific files or folders, then build a registry from the information
 
 <hr>
 

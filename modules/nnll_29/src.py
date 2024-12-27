@@ -3,8 +3,6 @@
 #// d a r k s h a p e s
 
 from collections import defaultdict
-import sys
-import os
 
 from modules.nnll_24.src import KeyTrail
 
