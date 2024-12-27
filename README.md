@@ -2,7 +2,7 @@
 # nnll
 ### neural network link library
 
-`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation,  iteration, study, and lovingly refined. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
+`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation,  iteration and study, all lovingly refined. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
 
 > x/dev branch: updated **~=nightly**.<br>
 > main branch : stable, devoted to **long-term support**.
@@ -20,9 +20,9 @@
 
 ## link functions
 
-nnll-refresh - Recreate the local link index of functions and modules
-nnll-find    - Scan models for a pattern within their layer contents
-nnll-index   - Identify model types of specific files or folders, then build a registry from the information
+`nnll-refresh` - Recreate the local link index of functions and modules<br>
+`nnll-find`    - Scan models for a pattern within their layer contents<br>
+`nnll-index`   - Identify model types from specific files or folders, then build a registry from the information<br>
 
 <hr>
 
