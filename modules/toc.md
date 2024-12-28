@@ -1,0 +1,37 @@
+#// SPDX-License-Identifier: blessing
+#// d a r k s h a p e s
+"""
+## module table of contents
+
+#### [nnll_00 - deepest_key_of](nnll_00)
+#### [nnll_01 - key_trail](nnll_01)
+#### [nnll_04 - metadata_from_safetensors](nnll_04)
+#### [nnll_05 - create_llama_parser, metadata_from_gguf, gguf_check](nnll_05)
+#### [nnll_06 - compare_dicts](nnll_06)
+#### [nnll_07 - structure, add_architecture, Architecture, of, to_dict, Component, add_component](nnll_07)
+#### [nnll_08 - hard_random, soft_random](nnll_08)
+#### [nnll_09 - encode_prompt](nnll_09)
+#### [nnll_13 - SystemCapacity, detect_capacity, optimal_config](nnll_13)
+#### [nnll_16 - variables, Backend, attribute, configure](nnll_16)
+#### [nnll_17 - XPUDevice, DMLDevice, OPENVINODevice, contains, configure, MPSDevice, CUDADevice](nnll_17)
+#### [nnll_18 - get_pipeline_embeds](nnll_18)
+#### [nnll_22 - _add_link, UNetLink, create_symlink, get_filename, get_folder_name, AutoencoderLink, AbstractLink, TextEncoderLink](nnll_22)
+#### [nnll_23 - call_method, DynamicMethodConstructor, load_method](nnll_23)
+#### [nnll_24 - pull_key_names, KeyTrail, sink_into](nnll_24)
+#### [nnll_25 - is_pattern_in_layer, ExtractAndMatchMetadata, compute_file_hash](nnll_25)
+#### [nnll_26 - random_tensor_from_gpu, random_int_from_gpu](nnll_26)
+#### [nnll_27 - pretty_tabled_output, wipe_printer](nnll_27)
+#### [nnll_28 - metadata_from_pickletensor](nnll_28)
+#### [nnll_29 - LayerFilter, filter_metadata](nnll_29)
+#### [nnll_30 - write_json_file, read_json_file](nnll_30)
+#### [nnll_31 - count_tensors_and_extract_shape, find_files_with_pattern, find_entry](nnll_31)
+#### [nnll_32 - coordinate_header_tools](nnll_32)
+#### [nnll_33 - ValueComparison, check_model_identity](nnll_33)
+#### [nnll_34 - detect_index_sequence, gather_sharded_files](nnll_34)
+#### [nnll_35 - capture_title_numeral](nnll_35)
+#### [nnll_36 - parse_data](nnll_36)
+#### [nnll_37 - index, collect_file_headers_from](nnll_37)
+#### [nnll_38 - extract_tensor_data, ExtractValueData](nnll_38)
+#### [nnll_39 - parse_model_header](nnll_39)
+#### [nnll_40 - create_model_tag](nnll_40)
+"""

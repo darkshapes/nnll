@@ -33,8 +33,9 @@ opt = [
 dev = ["nnll[opt]", "pytest", "huggingface_hub"]
 
 [project.scripts]
-nnll-refresh = "modules.index:index"
-nnll-find    = "modules.nnll_31.src:find_entry"
+nnll-contents = "modules.index:main"
+nnll-find     = "modules.nnll_31.src:find_entry"
+nnll-parse    = "modules.nnll_36.src:main"
 #nnll-index   = "modules.nnll_37.src:index"
 
 [tool.setuptools.dynamic]

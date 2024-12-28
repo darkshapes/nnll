@@ -7,7 +7,7 @@ from modules.nnll_07.src import Domain, Architecture, Component
 from modules.nnll_27.src import pretty_tabled_output
 from modules.nnll_39.src import parse_model_header
 
-
+# parse metadata into tag?
 def create_model_tag(file_metadata: dict) -> dict:
 
     if "unknown" in file_metadata:

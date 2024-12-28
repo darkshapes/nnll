@@ -8,8 +8,8 @@ import os
 from pathlib import Path
 import argparse
 
-from modules.nnll_04.src import load_safetensors_metadata_from_model
-from modules.nnll_05.src import load_gguf_metadata_from_model
+from modules.nnll_04.src import metadata_from_safetensors
+from modules.nnll_05.src import metadata_from_gguf
 from modules.nnll_30.src import write_json_file
 
 
@@ -25,10 +25,10 @@ def parse_data(disk_path: str, save_location: str) -> None:
             # if file_name
             file = os.path.join(disk_path, file_name)
             if Path(file_name).suffix == ".safetensors":
-                virtual_data_00 = load_safetensors_metadata_from_model(file)
+                virtual_data_00 = metadata_from_safetensors(file)
 
             elif Path(file_name).suffix == ".gguf":
-                virtual_data_00 = load_gguf_metadata_from_model(file)
+                virtual_data_00 = metadata_from_gguf(file)
 
             if virtual_data_00 is not None:
                 print(virtual_data_00)
@@ -40,7 +40,7 @@ def main():
     # Set up argument parser
     parser = argparse.ArgumentParser(
         description="Output state dict from a model file at [path] to the console, then write to a json file at [save].",
-        epilog="Example: python script_modules.nnll_04.py ~/Downloads/models/images ~Downloads/models/metadata"
+        epilog="Example: nnll-parse ~/Downloads/models/images ~Downloads/models/metadata"
     )
     parser.add_argument(
         "path", help="Path to directory or file to be analyzed. (default .)", default="."

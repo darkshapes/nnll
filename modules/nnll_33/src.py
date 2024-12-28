@@ -50,23 +50,3 @@ class ValueComparison:
                     return is_identical
 
         return is_identical
-
-
-
-        # if "tensors" not in pattern_details and "shapes" not in pattern_details: # Redundant block
-        #         return is_identical
-        # elif "blocks" not in pattern_details or is_identical == True: # <- needed this, so routine became a class
-        #     unpacked_details = {}
-        #     if "shapes" in pattern_details:
-        #         unpacked_details.setdefault("shapes", tensor_dimension.get("shape", 0))
-        #     if "tensors" not in pattern_details:
-        #         return extract.is_pattern_in_layer(pattern_details.get("shapes"), unpacked_details["shapes"])
-        #     if isinstance(pattern_details["tensors"], list) and tensor_count is not None:
-        #         for count in pattern_details["tensors"]:
-        #             unpacked_details.setdefault("tensors", count)
-        #             if all(extract.is_pattern_in_layer(pattern_details.get(label), dimension) for label, dimension in unpacked_details.items()):
-        #                 return True
-        #     elif isinstance(pattern_details["tensors"],int) and tensor_count is not None:
-        #         unpacked_details.setdefault("tensors", tensor_count)
-        #         return all(extract.is_pattern_in_layer(pattern_details.get(label), dimension) for label, dimension in unpacked_details.items())
-        # return False

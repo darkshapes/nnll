@@ -21,7 +21,7 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
     gguf_loader = None
     pickletensor_loader = None
 
-    #move this and import statements to .json file
+    # todo: move this and import statements to .json file
     safetensors_extensions = [
         ".safetensors",
         ".sft"
@@ -36,7 +36,6 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
     ]
 
     supported_extensions = itertools.chain(safetensors_extensions, gguf_extensions, pickletensor_extensions)
-    # Get external file metadata
 
     if file_extension == '' or file_extension is None or file_extension not in list(supported_extensions):  # Skip file if we cannot possibly know what it is
         return
@@ -48,7 +47,5 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
         elif file_extension in pickletensor_extensions:
             open_header_method = metadata_from_pickletensor
 
-        # Retrieve header by method indicated by extension, usually struct unpacking, except for pt files which are memmap
-        #this is where we should collect shards
         return open_header_method
 
