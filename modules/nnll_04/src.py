@@ -22,5 +22,4 @@ def metadata_from_safetensors(file_path_named: str) -> dict:
         if header_contents.get("__metadata__", 0) != 0:
             # it is usually empty on safetensors ._.
             header_contents.pop("__metadata__")
-            #print("__metadata__")
         return header_contents

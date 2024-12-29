@@ -17,7 +17,7 @@ readme          = "README.md"
 urls            = { source = "https://github.com/darkshapes/nnll" }
 dynamic         = ["version"]
 keywords        = ["ML", "AI", "neural network", "library"]
-
+dependencies    = ["tqdm"]
 
 [project.optional-dependencies]
 opt = [
@@ -33,8 +33,9 @@ opt = [
 dev = ["nnll[opt]", "pytest", "huggingface_hub"]
 
 [project.scripts]
-nnll-refresh = "modules.index:index"
-nnll-find    = "modules.nnll_31.src:find_entry"
+nnll-contents = "modules.nnll_43.src:main"
+nnll-find     = "modules.nnll_31.src:find_entry"
+nnll-parse    = "modules.nnll_36.src:main"
 #nnll-index   = "modules.nnll_37.src:index"
 
 [tool.setuptools.dynamic]
