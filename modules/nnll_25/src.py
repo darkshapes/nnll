@@ -4,10 +4,6 @@
 
 from math import isclose
 import re
-import os
-import hashlib
-import sys
-
 
 class ExtractAndMatchMetadata:
 
@@ -40,18 +36,3 @@ class ExtractAndMatchMetadata:
             if block_pattern == layer_element or isclose(block_pattern, layer_element, rel_tol=1e-1):
                 return True
         return False
-
-    def compute_file_hash(self, ile_path_named: str) -> str:
-        """
-        Compute and return the SHA256 hash of a given file.\n
-        :param file_path: `str` Valid path to a file
-        :return: `str` Hexadecimal representation of the SHA256 hash.
-        :raises FileNotFoundError: File does not exist at the specified path.
-        :raises PermissionError: Insufficient permissions to read the file.
-        :raises IOError:  I/O related errors during file operations.
-        """
-        if not os.path.exists(ile_path_named):
-            raise FileNotFoundError(f"File '{ile_path_named}' does not exist.")
-        else:
-            with open(ile_path_named, 'rb') as f:
-                return hashlib.sha256(f.read()).hexdigest()

@@ -5,16 +5,15 @@
 
 import unittest
 from unittest.mock import patch, MagicMock, mock_open
-from collections import defaultdict
 import struct
 import shutil
 import os
-import sys
+from typing import Generator
 
 from modules.nnll_05.src import metadata_from_gguf, gguf_check
+from modules.nnll_45.src import download_hub_file
 
-
-class TestLoadGGUFMetadata(unittest.TestCase):
+class TestLoadMetadataGGUF(unittest.TestCase):
 
     @patch('modules.nnll_05.src.create_llama_parser')
     def setUp(self, MockParseModel) -> None:
@@ -42,23 +41,18 @@ class TestLoadGGUFMetadata(unittest.TestCase):
         result = gguf_check(self.test_file_name)
         self.assertTrue(result)
 
-
-    def test_with_file(self):
-        try:
-            os.environ['HUGGINGFACE_HUB_CACHE'] = str(os.getcwd())
-            from huggingface_hub import hf_hub_download
-            hf_hub_download("exdysa/tiny-random-llama-gguf","tiny-random-llama.Q4_K_M.gguf")
-        except ImportError as error_log:
-            ImportError(f"{error_log} huggingface_hub not installed.")
-        else:
-            self.__class__.folder = os.path.join(str(os.getcwd()), "models--exdysa--tiny-random-llama-gguf")
-            real_file = os.path.join(self.__class__.folder,
-                "blobs",
-                "f06746ef9696d552d3746516558d5e9f338e581fd969158a90824e24f244169c"
-                )
+    def test_metadata_from_gguf(self):
+        self.folder_path_named, folder_contents = download_hub_file(repo_id='exdysa/tiny-random-llama-gguf',filename='tiny-random-llama.Q4_K_M.gguf')
+        real_file = os.path.join(self.folder_path_named, 'blobs', next(iter(folder_contents)))
         virtual_data_00 = metadata_from_gguf(real_file)
-        print(virtual_data_00)
-        self.assertEqual(virtual_data_00,{'name': 'tiny-random-llama', 'dtype': 'float32'})
+        expected_output = {'name': 'tiny-random-llama', 'dtype': 'float32'}
+        assert (virtual_data_00 == expected_output)
+
+        try:
+            shutil.rmtree(self.folder_path_named)
+            shutil.rmtree(".locks")
+        except OSError:
+            pass
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -67,8 +61,6 @@ class TestLoadGGUFMetadata(unittest.TestCase):
             os.remove('test.gguf')
         except OSError:
             pass
-        try:
-            shutil.rmtree(cls.folder)
-            shutil.rmtree(".locks")
-        except OSError:
-            pass
+
+if __name__ == '__main__':
+    unittest.main()

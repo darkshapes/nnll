@@ -38,17 +38,6 @@ class TestFileOperations(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             read_json_file("non_existent_file.json")
 
-    # @patch('builtins.print')
-    # def test_invalid_json_format(self, mock_print):
-    #     # Create a mock JSON file with invalid content
-    #     content = '{"tensor_1": {"shape": [2, 3, 4]}/}'
-    #     with open(self.file_path, 'w') as f:
-    #         f.write(content)
-
-    #     read_json_file(self.file_path)
-    #     expected_output = "json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 34 (char 33)"
-    #     mock_print.assert_called_once_with(expected_output)
-
     def tearDown(self):
         # Clean up the temporary directory
         self.temp_dir.cleanup()

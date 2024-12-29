@@ -1,0 +1,4 @@
+[console_scripts]
+nnll-contents = modules.nnll_43.src:main
+nnll-find = modules.nnll_31.src:find_entry
+nnll-parse = modules.nnll_36.src:main

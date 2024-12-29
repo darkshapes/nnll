@@ -35,7 +35,6 @@ def gguf_check(file_path_named: str) ->tuple:
             return False
 
 
-
 def create_llama_parser(file_path_named: str) -> dict:
     """
     Llama handler for gguf file header\n
@@ -65,10 +64,10 @@ def metadata_from_gguf(file_path_named: str) -> dict:
         parser = create_llama_parser(file_path_named)
         if parser:
             file_metadata = defaultdict(dict)
-            arch          = parser.metadata.get("general.architecture", "")
-            name          = parser.metadata.get("general.name", "")
-            base      = parser.metadata.get("general.basename", "")
-            file_metadata["name"] = name or arch or base
+            file_metadata["name"] = next(
+                (value for key in ["general.basename", "general.base_model.0", "general.name", "general.architecture"]
+                if (value := parser.metadata.get(key)) is not None),
+                None
+            )
             file_metadata["dtype"] = getattr(parser.scores, 'dtype', None) and parser.scores.dtype.name  # e.g., 'float32'
-            #print(file_metadata)
             return file_metadata

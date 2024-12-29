@@ -1,3 +1,35 @@
+Metadata-Version: 2.1
+Name: nnll
+Version: 0.1.dev102+g4a35462.d20241229
+Summary: Experimental ML modules library
+Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
+License: #// SPDX-License-Identifier: blessing
+        The author disclaims copyright to this source code.  In place of
+        a legal notice, here is a blessing:
+        
+          *   May you do good and not evil.
+          *   May you find forgiveness for yourself and forgive others.
+          *   May you share freely, never taking more than you give.
+        
+Project-URL: source, https://github.com/darkshapes/nnll
+Keywords: ML,AI,neural network,library
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: tqdm
+Provides-Extra: opt
+Requires-Dist: wheel; extra == "opt"
+Requires-Dist: numpy; extra == "opt"
+Requires-Dist: torch; extra == "opt"
+Requires-Dist: llama-cpp-python; extra == "opt"
+Requires-Dist: sentencepiece; extra == "opt"
+Requires-Dist: diffusers; extra == "opt"
+Requires-Dist: transformers; extra == "opt"
+Provides-Extra: dev
+Requires-Dist: nnll[opt]; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: huggingface_hub; extra == "dev"
+
 
 # nnll
 ### neural network link library
