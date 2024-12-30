@@ -1,5 +1,10 @@
+
+#// SPDX-License-Identifier: blessing
+#// d a r k s h a p e s
+
 import os
 import argparse
+import pathlib
 
 from modules.nnll_41.src import trace_file_structure
 from modules.nnll_42.src import populate_module_index

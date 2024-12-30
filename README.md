@@ -12,15 +12,19 @@
 
 </div><div style="width: 75%; display: flex;">
 
-`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation,  iteration and study, all lovingly refined. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
+`nnll` (or <em>null</em>) is a collection of versatile tools and components for tensor apps. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
 </div><br>
 
-## features
+## terminal commands
 
-`nnll-contents`- Recreate the modules table of contents, populating preview links for IDEs.<br>
 `nnll-parse`   - Lookup model metadata headers and write out to .json file.<br>
 `nnll-find`    - Scan models for a specific string pattern within their state dict layer contents.<br>
-<br><br><!--## importing modules `from nnll import folder`  -->
+`nnll-index`   - Identify available models within a given path and create a database of their attributes<br>
+`nnll-toc`     - (run from root folder only) Recreate the project table of contents, populating preview and navigation links for IDEs<br>
+<br><br>
+
+## importing modules
+`from nnll import modules.nnll_**.src`
 
 ## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/toc.md)
 

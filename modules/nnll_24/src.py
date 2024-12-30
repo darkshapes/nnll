@@ -34,7 +34,7 @@ class KeyTrail:
 
                 if isinstance(pattern_details, dict):  # Check if we've reached the bottom
                     if compare.check_model_identity(pattern_details, unpacked_metadata, tensor_count) == True:
-                        return flat_key_trail[-1] # Return flat_key_trail with no slice to retrieve all keys
+                        return flat_key_trail[-1] # Return last found key only (as list)
 
                     detected_key = sink_into(pattern_details, flat_key_trail)  # Recurse into deeper levels
                     if detected_key is not None:

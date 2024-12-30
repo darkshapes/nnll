@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nnll"
-description = "Experimental ML modules library"
+description = "Tensor tools library"
 authors = [
     { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
 ]
@@ -33,13 +33,10 @@ opt = [
 dev = ["nnll[opt]", "pytest", "huggingface_hub"]
 
 [project.scripts]
-nnll-contents = "modules.nnll_43.src:main"
-nnll-find     = "modules.nnll_31.src:find_entry"
-nnll-parse    = "modules.nnll_36.src:main"
-#nnll-index   = "modules.nnll_37.src:index"
-
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements.txt"] }
+nnll-toc   = "modules.nnll_43.src:main"
+nnll-find  = "modules.nnll_31.src:find_entry"
+nnll-parse = "modules.nnll_36.src:main"
+nnll-index = "modules.nnll_37.src:index"
 
 [tool.setuptools_scm]
 write_to = "_version.py"

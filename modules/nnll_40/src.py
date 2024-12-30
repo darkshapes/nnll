@@ -5,21 +5,21 @@
 import os
 from modules.nnll_07.src import Domain, Architecture, Component
 from modules.nnll_27.src import pretty_tabled_output
-from modules.nnll_39.src import parse_model_header
+from modules.nnll_39.src import filter_header_keys
 
 # parse metadata into tag?
-def create_model_tag(file_metadata: dict) -> dict:
+def create_model_tag(pulled_keys: dict) -> dict:
 
-    if "unknown" in file_metadata:
+    if "unknown" in pulled_keys:
         domain_dev = Domain("dev")  # For unrecognized models,
     else:
         domain_ml = Domain("ml")  # create the domain only when we know its a model
 
-    arch_found = Architecture(file_metadata.get("model"))
-    category = file_metadata["category"]
-    file_metadata.pop("model")
-    file_metadata.pop("category")
-    comp_inside = Component(category, **file_metadata)
+    arch_found = Architecture(pulled_keys.get("model"))
+    model_type = pulled_keys["model_type"]
+    pulled_keys.pop("architecture")
+    pulled_keys.pop("model_type")
+    comp_inside = Component(model_type, **pulled_keys)
     arch_found.add_component(comp_inside.model_type, comp_inside)
     domain_ml.add_architecture(arch_found.architecture, arch_found)
     index_tag = domain_ml.to_dict()
@@ -32,8 +32,4 @@ def create_model_tag(file_metadata: dict) -> dict:
 #         attribute_dict = metadata_dict | {"disk_path": reconstructed_file_path}
 #         file_metadata = parse_file | attribute_dict
 #         index_tag = create_model_tag(file_metadata)
-#         try:
-#             pretty_tabled_output(next(iter(index_tag)), index_tag[next(iter(index_tag))])  # output information
-#         except TypeError as errorlog:
-#             raise
-#         return index_tag
+#

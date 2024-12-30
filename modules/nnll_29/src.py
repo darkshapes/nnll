@@ -16,37 +16,6 @@ class LayerFilter:
         layer_type = bundle_check if bundle_check else "unknown"
         return layer_type
 
-    # def identify_category_types(self, pattern_reference, unpacked_metadata, tensor_count, layer_type):
-    #     if layer_type == "compvis" and (tensor_count is None or tensor_count < 1100):
-    #         return [self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensor_count)]
-    #     elif layer_type != "unknown":
-    #         bundle_types = []
-    #         for category in pattern_reference["category"].values():
-    #             bundle_types.append(self.handle_values.pull_key_names(category, unpacked_metadata, tensor_count))
-    #         return bundle_types
-    #     return []
-
-    # def identify_models(self, pattern_reference, unpacked_metadata, tensor_count, category_type):
-    #     if not category_type:
-    #         categories = list(pattern_reference.keys())[2:]
-    #         model_type = "unknown"
-    #         for category in categories:
-    #             model_type = self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensor_count)
-    #             if model_type:
-    #                 break
-    #     else:
-    #         model_type = self.identify_bundled_models(pattern_reference, unpacked_metadata, tensor_count, category_type)
-    #     return model_type
-
-    # def identify_bundled_models(self, pattern_reference, unpacked_metadata, tensor_count, category_type):
-    #     model_types = []
-    #     for category in category_type:
-    #         if len(model_types) >= 1 and len(category_type) > 1:
-    #             model_types.append(self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata))
-    #         else:
-    #             model_types = self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensor_count)
-    #     return model_types if model_types else "unknown"
-
     def finalize_metadata(self, file_metadata):
         for key, value in file_metadata.items():
             if isinstance(value, list):
@@ -65,23 +34,8 @@ class LayerFilter:
         self.handle_values = KeyTrail
         file_metadata["layer_type"] = self.identify_layer_type(pattern_reference, unpacked_metadata, tensor_count)
         bundle_check = file_metadata["layer_type"]
-
-        # file_metadata["category_type"] = self.identify_category_types(pattern_reference, unpacked_metadata, tensor_count, file_metadata["layer_type"])
-        # file_metadata["model_type"] = self.identify_models(pattern_reference['category'], unpacked_metadata, tensor_count, file_metadata["category_type"])
-
-
-        # file_metadata['component_type'] = str(
-        #     file_metadata["category_type"] if isinstance(file_metadata["category_type"], str)
-        #     else ' '.join(map(str, file_metadata["category_type"]))
-        #     )
-
-        # file_metadata['component_name'] = file_metadata["model_type"]
-
-        # return self.finalize_metadata(file_metadata)
-        file_metadata = defaultdict(dict)  # A place to store corresponding metadata
         bundle_types = [] # A place to store multiple matching elements
 
-        # bundle_check = self.handle_values.pull_key_names(pattern_reference["layer_type"], unpacked_metadata, tensor_count) # Try to find layer type
 
         if file_metadata.get("layer_type") == "unknown": # No layer type found
             bundle_types = self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensor_count) # Continue anyway
@@ -131,4 +85,3 @@ class LayerFilter:
                     file_metadata["model"] = "unknown"
 
         return self.finalize_metadata(file_metadata)
-

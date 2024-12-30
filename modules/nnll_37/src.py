@@ -10,10 +10,10 @@ from tqdm.auto import tqdm
 from collections import defaultdict
 from contextlib import suppress
 
-from modules.nnll_29.src import LayerFilter
 from modules.nnll_30.src import write_json_file
 from modules.nnll_32.src import coordinate_header_tools
 from modules.nnll_34.src import gather_sharded_files, detect_index_sequence
+from modules.nnll_39.src import filter_header_keys
 from modules.nnll_40.src import create_model_tag
 
 def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
@@ -27,10 +27,14 @@ def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
     else:
         folder_contents = file_or_folder_path_named
 
-    for current_file in tqdm(folder_contents, total=len(folder_contents), position=0, leave=True):
-        file_extension = Path(current_file).suffix.lower()
-        file_name = os.path.basename(current_file)
-        disk_size = os.path.getsize(current_file)
+    model_index = defaultdict(dict)
+    #for current_file in tqdm(folder_contents, total=len(folder_contents), position=0, leave=True):
+    for current_file in folder_contents:
+        file_extension    = Path(current_file).suffix.lower()
+        folder_path_named = os.path.dirname(current_file)
+        file_name         = os.path.basename(current_file)
+        disk_size         = os.path.getsize(current_file)
+        disk_path         = os.path.join(folder_path_named,file_name)
         open_header_method = coordinate_header_tools(current_file)
         indexed_file = detect_index_sequence(os.path_basename(current_file))
         if isinstance(indexed_file, tuple):
@@ -43,7 +47,14 @@ def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
             next_state_dict = open_header_method(next_file)
             full_model_header.update(next_state_dict)
 
-        return (full_model_header, disk_size, file_name, file_extension)
+        if full_model_header is not None:
+            pulled_keys = filter_header_keys(full_model_header)
+        id_metadata = {"disk_size": disk_size, "disk_path": folder_path_named, "file_extension": file_extension}
+        id_metadata.update(pulled_keys)
+        index_tag    = create_model_tag(id_metadata)
+        model_index.setdefault(disk_path, {index_tag: id_metadata})
+
+    return model_index
 
 def index(file_or_folder_path_named, save):
     with suppress(TypeError):
@@ -56,17 +67,6 @@ Usage: {sys.argv[0]} <folder_path>\n""")
 if __name__ == "__main__":
     file_or_folder_path_named  = "/Users/unauthorized/Downloads/models/text"
     empty_folder_path_to_save_file   = "/Users/unauthorized/Downloads/models/metadata"
-    extracted_headers      = collect_file_headers_from(file_or_folder_path_named)
-
-    if extracted_headers is not None:
-
-        metadata_dict = defaultdict(dict)
-        model_header, disk_size, file_name, file_extension = extracted_headers
-        metadata_dict = {"disk_size": disk_size, "file_name": file_name, "file_extension": file_extension}
-        index_tags    = create_model_tag(model_header,disk_size,file_name,file_extension,extracted_headers)
-        if index_tags is not None:
-            write_json_file(empty_folder_path_to_save_file, "index.json", index_tags, 'w')
-
-# path components
-# path list
-# current file
+    model_index  = collect_file_headers_from(file_or_folder_path_named)
+    if model_index is not None:
+        write_json_file(empty_folder_path_to_save_file, "index.json", model_index, 'w')
