@@ -1,40 +1,39 @@
 
-# nnll
-### neural network link library
 
-`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation,  iteration and study, all lovingly refined. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
+<h1 style="border: 0;">nnll</h1>
 
-> x/dev branch: updated **~=nightly**.<br>
-> main branch : stable, devoted to **long-term support**.
+## neural network link library
 
- #### [[darkshapes](https://github.com/darkshapes/)]
-<hr><br>
+<div style="float: right; padding:10px; display: flex;">
 
 [![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
 ![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)<br>
-![Discord](https://img.shields.io/discord/1266757128249675867)<hr>
+![Discord](https://img.shields.io/discord/1266757128249675867)<br>
 
-## terminal commands
+</div><div style="width: 75%; display: flex;">
 
-> [!NOTE] these commands you will want to run from the root folder<br>
+`nnll` (or <em>null</em>) is a collection of versatile tools and components for generative AI applications. The routines are part of a process of rigorous experimentation,  iteration and study, all lovingly refined. The modular routines may appeal to other AI developers, researchers and tinkerers, and are designed to individually import or effortlessly fold into the work of others' projects.
+</div><br>
+
+## features
+
 `nnll-contents`- Recreate the modules table of contents, populating preview links for IDEs.<br>
 `nnll-parse`   - Lookup model metadata headers and write out to .json file.<br>
 `nnll-find`    - Scan models for a specific string pattern within their state dict layer contents.<br>
-<!--/`nnll-tag`- Manually construct a tag for a model
-`nnll-index`- Identify models from specific files or folders and build an index of their tags and metadata.
- --> <br>
-##
+<br><br><!--## importing modules `from nnll import folder`  -->
 
-## importing modules
+## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/toc.md)
 
-<!-- `from nnll import folder`  -->
-<h2>[modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/toc.md)</h2><details><summary>
 
-<hr>
+> [!NOTE]
+> x/dev branch: updated **~=nightly**.<br>
+> main branch : stable, devoted to **long-term support**.
+<br><br>
 
 ## development setup
 
-<h5>clone repo</h5>
+
+##### clone repo
 
 > ```
 > git clone https://github.com/darkshapes/nnll.git

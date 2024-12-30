@@ -3,8 +3,7 @@ import os
 import shutil
 from modules.nnll_36.src import read_state_dict_headers
 from modules.nnll_45.src import download_hub_file
-from modules.nnll_04.src import metadata_from_safetensors
-from modules.nnll_05.src import metadata_from_gguf
+
 
 class TestReadStateDictHeaders(unittest.TestCase):
 

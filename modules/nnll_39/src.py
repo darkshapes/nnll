@@ -14,5 +14,5 @@ def parse_model_header(model_header: dict, filter_file="modules/nnll_29/filter.j
         FILTER = read_json_file(filter_file)
         tensor_count = len(model_header)
         block_scan = LayerFilter()
-        file_metadata = block_scan.filter_metadata(FILTER, model_header, tensor_count)
+        file_metadata = block_scan.reference_walk_conductor(FILTER, model_header, tensor_count)
         return file_metadata

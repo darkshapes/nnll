@@ -8,7 +8,6 @@ from unittest.mock import patch, MagicMock, mock_open
 import struct
 import shutil
 import os
-from typing import Generator
 
 from modules.nnll_05.src import metadata_from_gguf, gguf_check
 from modules.nnll_45.src import download_hub_file

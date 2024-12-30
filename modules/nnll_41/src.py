@@ -4,7 +4,6 @@
 
 import os
 
-
 def trace_file_structure(walk_path: str, indicator:str) -> list:
     """
     Find all module based on local file structure\n

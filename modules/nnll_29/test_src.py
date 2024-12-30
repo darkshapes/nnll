@@ -39,7 +39,7 @@ class TestLayerFilter(unittest.TestCase):
 
         expected_result = {'layer_type': 'compvis', 'category': 'unet', 'model': 'unknown'}
 
-        result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
         print(result)
         self.assertEqual(result, expected_result)
 
@@ -77,7 +77,7 @@ class TestLayerFilter(unittest.TestCase):
         tensor_count = None
 
         expected_result = {'layer_type': 'diffusers', 'category': 'unet', 'model': 'sdxl-base'}
-        result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
         self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_24.src.KeyTrail.pull_key_names')
@@ -113,7 +113,7 @@ class TestLayerFilter(unittest.TestCase):
         tensor_count = None
 
         expected_result = {'layer_type': 'unknown', 'category': 'unet', 'model': 'flux-1'}
-        result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
         self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_24.src.KeyTrail.pull_key_names')
@@ -155,7 +155,7 @@ class TestLayerFilter(unittest.TestCase):
             "model": "unknown"
         }
 
-        result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
         self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_24.src.KeyTrail.pull_key_names')
@@ -206,7 +206,7 @@ class TestLayerFilter(unittest.TestCase):
             'component_type': 'unet language',
             'model': 'sdxl-base'
         }
-        result = self.layer_filter.filter_metadata(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
         print(result)
         self.assertEqual(result, expected_result)
 
