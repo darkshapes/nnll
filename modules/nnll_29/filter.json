@@ -37,8 +37,11 @@
             "blocks": [
                 "diffusion_model",
                 "model.diffusion",
+                "model.diffusion_model",
                 "img_",
-                ".img"
+                ".img",
+                "context_embedder.weight",
+                "time_embedding."
             ]
         },
         "language": {
@@ -88,6 +91,16 @@
         "common-canvas-s": {
             "blocks": "up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"
         },
+        "auraflow": {
+            "blocks": [
+                "mlpX.c_fc2.weight",
+                "joint_transformer_blocks.2.ff_context.linear_2.weight"
+            ],
+            "shapes": [
+                8192,
+                3072
+            ]
+        },
         "hunyuan": {
             "blocks": [
                 "model.blocks",
@@ -119,6 +132,12 @@
         "lumina-mgpt": {
             "blocks": "model.embed_tokens.weight"
         },
+        "kolors": {
+            "blocks": [
+                ".DenseReluDense.wi.weight",
+                "encoder_hid_proj.weight"
+            ]
+        },
         "playground-25": {
             "blocks": "edm_mean",
             "shapes": [
@@ -129,32 +148,17 @@
             ],
             "tensors": 2516
         },
-        "kolors": {
+        "flux-1": {
             "blocks": [
-                ".DenseReluDense.wi.weight",
-                "encoder_hid_proj.weight"
+                "double_blocks.12.txt_mod.lin.weight",
+                "add_q_proj.weight",
+                "single_transformer_blocks.9.norm.linear.weight"
             ]
-        },
-        "auraflow": {
-            "blocks": [
-                "mlpX.c_fc2.weight"
-            ],
-            "shapes": [
-                8192,
-                3072
-            ],
-            "tensors": 849
         },
         "sd35": {
             "blocks": [
                 "model.diffusion_model.joint_blocks.",
                 "blocks.11.ff.net.2.weight"
-            ]
-        },
-        "flux-1": {
-            "blocks": [
-                "double_blocks.12.txt_mod.lin.weight",
-                "add_q_proj.weight"
             ]
         },
         "stable_cascade-b": {

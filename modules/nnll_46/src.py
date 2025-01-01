@@ -42,7 +42,7 @@ class IdConductor:
         """
         key_trail = KeyTrail()
         self.category_keys = []
-        self.category_keys = key_trail.pull_key_names(pattern_reference["category"], unpacked_metadata, tensor_count)
+        self.category_keys.append(key_trail.pull_key_names(pattern_reference["category"], unpacked_metadata, tensor_count))
 
         if layer_keys['layer_type'] == 'compvis' and tensor_count > 1100: # Compvis UNet model attributes
             for category in list(pattern_reference["category"])[3:]: # Ignore TAESD, LoRA (irrelevant) and UNet (already been checked)

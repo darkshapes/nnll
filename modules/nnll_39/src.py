@@ -14,11 +14,11 @@ def filter_header_keys(unpacked_metadata: dict, pattern_reference_path_named="mo
     except TypeError as error_log:  # Fail if header arrives empty, rather than proceed
         raise error_log
     else:  # Process and output metadata
-        pattern_reference = read_json_file(pattern_reference_path_named)
+        pattern_reference  = read_json_file(pattern_reference_path_named)
         conductor_instance = IdConductor()
-        layer_keys = conductor_instance.identify_layer_type(pattern_reference, unpacked_metadata, tensor_count)
-        category_type = conductor_instance.identify_category_type(layer_keys, pattern_reference, unpacked_metadata, tensor_count)
-        model_type = conductor_instance.identify_model(category_type, pattern_reference, unpacked_metadata, tensor_count)
-        pulled_keys = parse_pulled_keys(layer_keys, category_type, model_type)
+        layer_keys         = conductor_instance.identify_layer_type(pattern_reference, unpacked_metadata, tensor_count)
+        category_type      = conductor_instance.identify_category_type(layer_keys, pattern_reference, unpacked_metadata, tensor_count)
+        model_type         = conductor_instance.identify_model(category_type, pattern_reference, unpacked_metadata, tensor_count)
+        pulled_keys        = parse_pulled_keys(layer_keys, category_type, model_type)
 
         return pulled_keys

@@ -21,7 +21,7 @@ class KeyTrail:
         :param tensor_count: `dict` Optional number of model layers in the unknown model file as an integer (None will bypass necessity of a match)
         :return: `list` The path of keys through the target `dict` leading to a matching subtree, or None if no match is found.
         """
-        compare = ValueComparison
+        compare = ValueComparison()
         def sink_into(next_pattern_reference: dict, flat_key_trail: list = []) -> list | None:
             """
             Recurse through dictionary and return parent keys on boolean condition\n
