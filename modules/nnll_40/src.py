@@ -15,7 +15,7 @@ def create_model_tag(pulled_keys: dict) -> dict:
     else:
         domain_ml = Domain("ml")  # create the domain only when we know its a model
 
-    arch_found = Architecture(pulled_keys.get("model"))
+    arch_found = Architecture(pulled_keys.get("architecture"))
     model_type = pulled_keys["model_type"]
     pulled_keys.pop("architecture")
     pulled_keys.pop("model_type")

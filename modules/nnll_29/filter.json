@@ -11,7 +11,9 @@
                 ".txt_",
                 "unet_down",
                 "input_blocks.",
-                "mlp.fc1"
+                "mlp.fc1",
+                "diffusion_model",
+                "down_blocks"
             ]
         },
         "diffusers": {
@@ -20,7 +22,8 @@
                 ".attn.to_k.",
                 "mid_",
                 "add_q_proj.weight",
-                "11.ff.net.2.weight"
+                "11.ff.net.2.weight",
+                "linear_2.weight"
             ]
         }
     },
@@ -36,12 +39,17 @@
         "unet": {
             "blocks": [
                 "diffusion_model",
-                "model.diffusion",
                 "model.diffusion_model",
+                "clf.1.weight",
                 "img_",
                 ".img",
                 "context_embedder.weight",
-                "time_embedding."
+                "time_embedding.",
+                "adaln_single",
+                "ffnet",
+                "layers.21.norm1",
+                "extra_embedder",
+                "blocks.26.attn1.to_v.weight"
             ]
         },
         "language": {
@@ -58,7 +66,10 @@
             ]
         }
     },
-    "lora": {},
+    "lora": {
+        "flash": "base_model.model.",
+        "hyper-sd3": "21.norm1_context"
+    },
     "tae": {
         "taesd-sd1": {
             "blocks": [
@@ -103,25 +114,45 @@
         },
         "hunyuan": {
             "blocks": [
+                "extra_embedder",
                 "model.blocks",
                 "skip_norm.weight"
             ]
         },
-        "pixart-sigma": {
-            "blocks": "adaln_single.emb.timestep_embedder.linear_1.weight",
-            "shapes": [
-                1152,
-                256
-            ],
-            "tensors": 603
+        "lumina-next": {
+            "blocks": [
+                "time_caption",
+                "feed_forward"
+            ]
         },
         "pixart-alpha": {
-            "blocks": "adaln_single.emb.timestep_embedder.linear_1.weight",
-            "shapes": [
-                1152,
-                256
-            ],
-            "tensors": 612
+            "blocks": [
+                "aspect_ratio",
+                "y_embedding",
+                "caption_prjection",
+                "emb.resolution",
+                ".transformer_blocks.27.ff.net.0.proj"
+            ]
+        },
+        "pixart-sigma": {
+            "blocks": [
+                "adaln_single",
+                "scale_shift_table"
+            ]
+        },
+        "stable_cascade-c": {
+            "blocks": [
+                "down_blocks.0.2.kv_mapper",
+                "previewer",
+                "backbone"
+            ]
+        },
+        "stable_cascade-b": {
+            "blocks": [
+                "0.2.channelwise",
+                "clip_mapper.bias",
+                ".12.self_attn.k_proj.weight"
+            ]
         },
         "sd1": {
             "blocks": [
@@ -159,23 +190,6 @@
             "blocks": [
                 "model.diffusion_model.joint_blocks.",
                 "blocks.11.ff.net.2.weight"
-            ]
-        },
-        "stable_cascade-b": {
-            "blocks": [
-                "0.channelwise.0",
-                ".12.self_attn.k_proj.weight"
-            ],
-            "shapes": [
-                1280
-            ],
-            "tensors": 1454
-        },
-        "stable_cascade-c": {
-            "blocks": [
-                "previewer",
-                "backbone",
-                "img_"
             ]
         },
         "sdxl-base": {
@@ -244,7 +258,8 @@
         "stable_cascade-a": {
             "blocks": [
                 "running_mean",
-                "out_block."
+                "out_block.",
+                "channelwise.0"
             ],
             "tensors": 122
         },

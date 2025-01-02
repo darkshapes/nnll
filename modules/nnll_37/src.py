@@ -32,6 +32,7 @@ def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
         folder_path_named = file_or_folder_path_named
 
     model_index = defaultdict(dict)
+    print('\n\n\n\n')
     for current_file in tqdm(folder_contents, total=len(folder_contents), position=0, leave=True):
     # for current_file in folder_contents:
         file_extension     = Path(current_file).suffix.lower()
@@ -54,12 +55,12 @@ def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
             full_model_header.update(next_state_dict)
 
         if full_model_header is not None:
-            pulled_keys = filter_header_keys(full_model_header)
-            id_metadata = {"disk_size": disk_size, "disk_path": folder_path_named, "file_extension": file_extension}
-            id_metadata.update(pulled_keys)
-            index_tag    = create_model_tag(id_metadata)
-            pretty_tabled_output(current_file,id_metadata)
-            model_index.setdefault(file_path_named, [index_tag.keys(), index_tag.values()])
+            pulled_keys = filter_header_keys(current_file, full_model_header)
+            id_metadata = {"disk_size": disk_size, "file_extension": file_extension, "disk_path": folder_path_named, }
+            pulled_keys.update(id_metadata)
+            index_tag    = create_model_tag(pulled_keys)
+            pretty_tabled_output(current_file,pulled_keys)
+            model_index.setdefault(file_path_named, index_tag)
 
     return model_index
 

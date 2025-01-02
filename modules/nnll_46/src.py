@@ -5,8 +5,9 @@
 from modules.nnll_24.src import KeyTrail
 from collections import defaultdict
 
-class IdConductor:
+class IdConductor():
     """Navigate through a dictionary of known model attributes to determine an unknown model file's identity\n"""
+    current_file = ""
 
     def identify_model(self, category_type, pattern_reference, unpacked_metadata, tensor_count=None):
         """
@@ -46,7 +47,10 @@ class IdConductor:
 
         if layer_keys['layer_type'] == 'compvis' and tensor_count > 1100: # Compvis UNet model attributes
             for category in list(pattern_reference["category"])[3:]: # Ignore TAESD, LoRA (irrelevant) and UNet (already been checked)
-                self.category_keys.append(key_trail.pull_key_names(pattern_reference["category"][category], unpacked_metadata))
+                identified_category = key_trail.pull_key_names(pattern_reference["category"][category], unpacked_metadata)
+                if identified_category is not None:
+                    self.category_keys.append(identified_category)
+
         return self.category_keys
 
     def identify_layer_type(self, pattern_reference, unpacked_metadata, tensor_count=None):
