@@ -13,12 +13,12 @@ class KeyTrail:
     """
 
     @classmethod
-    def pull_key_names(cls, pattern_reference: dict, unpacked_metadata: dict, tensor_count: int | None = None) -> list | None:
+    def pull_key_names(cls, pattern_reference: dict, unpacked_metadata: dict, attributes: int | None = None) -> list | None:
         """
         Instantiate comparison function and run a quick check on top-level criteria, otherwise run recursion function\n
         :param pattern_reference: `dict` A dictionary of regex patterns and criteria
         :param unpacked_metadata: `dict` Values from the unknown file metadata (created for state dict layers)
-        :param tensor_count: `dict` Optional number of model layers in the unknown model file as an integer (None will bypass necessity of a match)
+        :param attributes: `dict` Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
         :return: `list` The path of keys through the target `dict` leading to a matching subtree, or None if no match is found.
         """
         compare = ValueComparison()
@@ -33,7 +33,7 @@ class KeyTrail:
                 flat_key_trail.append(current_key)
 
                 if isinstance(pattern_details, dict):  # Check if we've reached the bottom
-                    if compare.check_model_identity(pattern_details, unpacked_metadata, tensor_count) == True:
+                    if compare.check_model_identity(pattern_details, unpacked_metadata, attributes) == True:
                         return flat_key_trail[-1] # Return last found key only (as list)
 
                     detected_key = sink_into(pattern_details, flat_key_trail)  # Recurse into deeper levels

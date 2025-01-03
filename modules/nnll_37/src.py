@@ -15,7 +15,7 @@ import argparse
 from modules.nnll_30.src import write_json_file
 from modules.nnll_32.src import coordinate_header_tools
 from modules.nnll_34.src import gather_sharded_files, detect_index_sequence
-from modules.nnll_39.src import filter_header_keys
+from modules.nnll_39.src import gather_metadata, route_metadata
 from modules.nnll_40.src import create_model_tag
 from modules.nnll_27.src import pretty_tabled_output
 
@@ -40,7 +40,7 @@ def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
         if file_extension == '' or file_extension not in valid_extensions:
             continue
         file_path_named    = os.path.join(folder_path_named,current_file)
-        disk_size          = os.path.getsize(file_path_named)
+        file_size          = os.path.getsize(file_path_named)
         open_header_method = coordinate_header_tools(file_path_named, file_extension)
         indexed_file       = detect_index_sequence(file_path_named)
         if isinstance(indexed_file, tuple):
@@ -48,17 +48,22 @@ def collect_file_headers_from(file_or_folder_path_named: str) -> dict:
         else:
             gathered_index = [file_path_named]
             # Should now be normalized as a list
-        full_model_header = {}
+        unpacked_metadata = {}
+        attributes = {}
         for next_file in gathered_index:
 
             next_state_dict = open_header_method(next_file)
-            full_model_header.update(next_state_dict)
+            unpacked_metadata.update(next_state_dict)
 
-        if full_model_header is not None:
-            pulled_keys = filter_header_keys(current_file, full_model_header)
-            id_metadata = {"disk_size": disk_size, "file_extension": file_extension, "disk_path": folder_path_named, }
+        if unpacked_metadata is not None:
+            attributes["file_size"] = file_size
+            attributes["file_path_named"] = file_path_named
+            attributes["tensors"] = len(unpacked_metadata)
+            pattern_reference       = gather_metadata()
+            pulled_keys             = route_metadata(unpacked_metadata, pattern_reference, attributes)
+            id_metadata             = {"file_size": file_size, "file_extension": file_extension, "disk_path": folder_path_named, }
             pulled_keys.update(id_metadata)
-            index_tag    = create_model_tag(pulled_keys)
+            index_tag = create_model_tag(pulled_keys)
             pretty_tabled_output(current_file,pulled_keys)
             model_index.setdefault(file_path_named, index_tag)
 

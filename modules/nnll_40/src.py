@@ -5,7 +5,7 @@
 import os
 from modules.nnll_07.src import Domain, Architecture, Component
 from modules.nnll_27.src import pretty_tabled_output
-from modules.nnll_39.src import filter_header_keys
+from modules.nnll_39.src import route_metadata
 
 # parse metadata into tag?
 def create_model_tag(pulled_keys: dict) -> dict:

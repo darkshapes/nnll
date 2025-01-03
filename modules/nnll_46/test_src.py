@@ -28,15 +28,16 @@ class TestIDConductor(unittest.TestCase):
                 "vae": {"blocks": ["decoder.mid_", "decoder.up"]}
             }
         }
+        self.attributes = {}
         self.unpacked_metadata = {"diffusion_model": "{'shape': [1024]}", "self_attention": "{'shape': [2048]}"}
 
     def test_process_file_metadata_compvis(self):
         with patch('modules.nnll_24.src.KeyTrail.pull_key_names') as mock_pull_key_names:
-            tensor_count = 1105
+            self.attributes["tensors"] = 1105
 
-            self.pulled_keys = self.processor.identify_category_type(self.compvis_layer, self.pattern_reference, self.unpacked_metadata, tensor_count)
+            self.pulled_keys = self.processor.identify_category_type(self.compvis_layer, self.pattern_reference, self.unpacked_metadata, self.attributes)
 
-            mock_pull_key_names.assert_any_call(self.pattern_reference['category'],self.unpacked_metadata, tensor_count)
+            mock_pull_key_names.assert_any_call(self.pattern_reference['category'],self.unpacked_metadata, self.attributes)
             for category in list(self.pattern_reference["category"])[3:]:
                 mock_pull_key_names.assert_any_call(
                     self.pattern_reference['category'][category],self.unpacked_metadata
@@ -44,11 +45,11 @@ class TestIDConductor(unittest.TestCase):
 
     def test_file_metadata_not_compvis(self):
         with patch('modules.nnll_24.src.KeyTrail.pull_key_names') as mock_pull_key_names:
-            tensor_count = 1105
-            self.pulled_keys = self.processor.identify_category_type(self.non_compvis_layer, self.pattern_reference, self.unpacked_metadata, tensor_count)
+            self.attributes["tensors"] = 1105
+            self.pulled_keys = self.processor.identify_category_type(self.non_compvis_layer, self.pattern_reference, self.unpacked_metadata, self.attributes)
 
             mock_pull_key_names.assert_called_once_with(
-                self.pattern_reference["category"], self.unpacked_metadata, tensor_count
+                self.pattern_reference["category"], self.unpacked_metadata, self.attributes
             )
 
     def test_identify_layer_type(self):
@@ -69,9 +70,10 @@ class TestIDConductor(unittest.TestCase):
         with patch('modules.nnll_24.src.KeyTrail.pull_key_names') as mock_pull_key_names:
             # Test with a single model type and tensor count.
             mock_pull_key_names.return_value = "key1"
-            result = self.processor.identify_model("type1", self.pattern_reference, self.unpacked_metadata, tensor_count=5)
+            self.attributes["tensors"]=5
+            result = self.processor.identify_model("type1", self.pattern_reference, self.unpacked_metadata, self.attributes)
             self.assertEqual(result, ["key1"])
-            mock_pull_key_names.assert_called_once_with("pattern1", {"metadata_key": "metadata_value"}, 5)
+            mock_pull_key_names.assert_called_once_with("pattern1", {"metadata_key": "metadata_value"}, {"tensors": 5})
 
     def test_multiple_model_types(self):
         self.pattern_reference = {
@@ -81,10 +83,11 @@ class TestIDConductor(unittest.TestCase):
         self.unpacked_metadata = {"metadata_key": "metadata_value"}
         with patch('modules.nnll_24.src.KeyTrail.pull_key_names') as mock_pull_key_names:
             mock_pull_key_names.side_effect = ["key1" ,"key2"]
-            result = self.processor.identify_model(["type1", "type2"], self.pattern_reference, self.unpacked_metadata, 5)
+            self.attributes["tensors"]=5
+            result = self.processor.identify_model(["type1", "type2"], self.pattern_reference, self.unpacked_metadata, self.attributes)
             self.assertEqual(result, ['key1', 'key2'])
             calls = [
-                (("pattern1", {"metadata_key": "metadata_value"}, 5), {}),
+                (("pattern1", {"metadata_key": "metadata_value"}, {"tensors": 5}), {}),
                 (("pattern2", {"metadata_key": "metadata_value"}), {})
             ]
             mock_pull_key_names.assert_has_calls(calls)
@@ -100,7 +103,7 @@ class TestIDConductor(unittest.TestCase):
             self.assertEqual(result, [])
             mock_pull_key_names.assert_not_called()
 
-    def test_none_tensor_count(self):
+    def test_none_attributes(self):
         self.pattern_reference = {
             "type1": "pattern1",
             "type2": "pattern2"

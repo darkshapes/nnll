@@ -20,21 +20,19 @@
             "blocks": [
                 "0.resnets.0",
                 ".attn.to_k.",
-                "mid_",
+                "attentions.1.",
                 "add_q_proj.weight",
                 "11.ff.net.2.weight",
-                "linear_2.weight"
+                "linear_2.weight",
+                "norm_out.linear.weight",
+                "resnets"
             ]
         }
     },
     "category": {
-        "lora": {
-            "blocks": [
-                "lora"
-            ]
-        },
         "tae": {
-            "blocks": "decoder.layers"
+            "blocks": "decoder.layers",
+            "tensors": 134
         },
         "unet": {
             "blocks": [
@@ -64,35 +62,35 @@
                 "decoder.mid_",
                 "decoder.up"
             ]
+        },
+        "lora": {
+            "blocks": [
+                "lora"
+            ]
         }
     },
     "lora": {
         "flash": "base_model.model.",
-        "hyper-sd3": "21.norm1_context"
+        "hyper-sd3": "21.norm1_context",
+        "pcm": "mid_"
     },
     "tae": {
         "taesd-sd1": {
-            "blocks": [
-                "r'encoder.layers.d+'"
-            ],
-            "tensors": 134,
             "file_size": 9793292,
             "hash": "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
         },
         "taesd-sdxl-base": {
             "blocks": [
-                "r'encoder.layers.d+'"
+                " decoder.layers"
             ],
-            "tensors": 134,
             "file_size": 9793292,
             "hash": "ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"
         },
         "taesd-flux": {
-            "tensors": 248,
             "file_size": 9848636,
-            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
+            "hash": "927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"
         },
-        "tensors": 248,
+        "tensors": 134,
         "taesd-sd3": {
             "file_size": 9848636,
             "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
@@ -189,15 +187,17 @@
         "sd35": {
             "blocks": [
                 "model.diffusion_model.joint_blocks.",
-                "blocks.11.ff.net.2.weight"
+                "blocks.11.ff.net.2.weight",
+                "transformer_blocks.21.norm1_context.linear.weight",
+                "transformer_blocks.31.norm1_context.linear.weight"
             ]
         },
         "sdxl-base": {
             "blocks": [
                 "logit_scale",
-                "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight"
-            ],
-            "tensors": 2515
+                "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight",
+                "add_embedding.linear_2.bias"
+            ]
         }
     },
     "language": {

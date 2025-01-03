@@ -21,7 +21,7 @@
 <br>
 
 ## imports
-`from nnll import modules.nnll_**.src`
+`import nnll_**.src`
 <br><br>
 
 ## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/toc.md)

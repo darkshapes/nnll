@@ -35,11 +35,11 @@ class TestLayerFilter(unittest.TestCase):
         }
 
         model_header = {'value1': 'x', 'value2': 'data'}
-        tensor_count = None
+        tensors = None
 
         expected_result = {'layer_type': 'compvis', 'category': 'unet', 'model': 'unknown'}
 
-        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensors)
         print(result)
         self.assertEqual(result, expected_result)
 
@@ -74,10 +74,10 @@ class TestLayerFilter(unittest.TestCase):
         }
 
         model_header = {'valueb': 'value1', 'value2': 'valuea', 'valuey': 'valuez' }
-        tensor_count = None
+        tensors = None
 
         expected_result = {'layer_type': 'diffusers', 'category': 'unet', 'model': 'sdxl-base'}
-        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensors)
         self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_24.src.KeyTrail.pull_key_names')
@@ -110,10 +110,10 @@ class TestLayerFilter(unittest.TestCase):
         }
 
         model_header = {'valuez': 'value1', 'valueb': 'value2'}
-        tensor_count = None
+        tensors = None
 
         expected_result = {'layer_type': 'unknown', 'category': 'unet', 'model': 'flux-1'}
-        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensors)
         self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_24.src.KeyTrail.pull_key_names')
@@ -146,7 +146,7 @@ class TestLayerFilter(unittest.TestCase):
         }
 
         model_header = {'value1': 'foo', 'key2': 'value2', 'bar': 'baz'}
-        tensor_count = None
+        tensors = None
 
         expected_result = {
 
@@ -155,7 +155,7 @@ class TestLayerFilter(unittest.TestCase):
             "model": "unknown"
         }
 
-        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensors)
         self.assertEqual(result, expected_result)
 
     @patch('modules.nnll_24.src.KeyTrail.pull_key_names')
@@ -197,7 +197,7 @@ class TestLayerFilter(unittest.TestCase):
             'valuey': {'shape': [640, 320]}, # establish as sdxl base
             'valuea': {'shape': [640, 320]}  # clip g
         }
-        tensor_count = 300
+        tensors = 300
 
         expected_result = {
             'layer_type': 'compvis',
@@ -206,7 +206,7 @@ class TestLayerFilter(unittest.TestCase):
             'component_type': 'unet language',
             'model': 'sdxl-base'
         }
-        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensor_count)
+        result = self.layer_filter.reference_walk_conductor(filter_cascade, model_header, tensors)
         print(result)
         self.assertEqual(result, expected_result)
 
