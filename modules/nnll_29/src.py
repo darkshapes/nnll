@@ -1,10 +1,10 @@
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+# // SPDX-License-Identifier: blessing
+# // d a r k s h a p e s
 
 from collections import defaultdict
 
 from modules.nnll_24.src import KeyTrail
+
 
 class LayerFilter:
     """
@@ -19,7 +19,7 @@ class LayerFilter:
     def finalize_metadata(self, file_metadata):
         for key, value in file_metadata.items():
             if isinstance(value, list):
-                file_metadata[key] = ' '.join(map(str, value))
+                file_metadata[key] = " ".join(map(str, value))
         return file_metadata
 
     def reference_walk_conductor(self, pattern_reference: dict, unpacked_metadata: dict, tensors: int) -> dict:
@@ -34,54 +34,52 @@ class LayerFilter:
         self.handle_values = KeyTrail
         file_metadata["layer_type"] = self.identify_layer_type(pattern_reference, unpacked_metadata, tensors)
         bundle_check = file_metadata["layer_type"]
-        bundle_types = [] # A place to store multiple matching elements
+        bundle_types = []  # A place to store multiple matching elements
 
-
-        if file_metadata.get("layer_type") == "unknown": # No layer type found
-            bundle_types = self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensors) # Continue anyway
-        else: # When layer type is found
+        if file_metadata.get("layer_type") == "unknown":  # No layer type found
+            bundle_types = self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensors)  # Continue anyway
+        else:  # When layer type is found
             file_metadata["layer_type"] = bundle_check
-            if "compvis" != file_metadata["layer_type"]: # only compvis has bundles
-                bundle_types = self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensors) # Try to find category
-            elif tensors is None or tensors < 1100: # 1100 measured as lowest tensor count for bundled model files
-                bundle_types = self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensors) # Try to find category
+            if "modelspec" != file_metadata["layer_type"]:  # only modelspec has bundles
+                bundle_types = self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensors)  # Try to find category
+            elif tensors is None or tensors < 1100:  # 1100 measured as lowest tensor count for bundled model files
+                bundle_types = self.handle_values.pull_key_names(pattern_reference["category"], unpacked_metadata, tensors)  # Try to find category
             else:
                 for category in range(list(pattern_reference["category"].keys())):
-                    bundle_types.extend(self.handle_values.pull_key_names(pattern_reference["category"][category], unpacked_metadata, tensors)) # Try to find category
+                    bundle_types.extend(self.handle_values.pull_key_names(pattern_reference["category"][category], unpacked_metadata, tensors))  # Try to find category
 
-        if bundle_types is None or bundle_types == []: # If we have no category jump to, search every category
+        if bundle_types is None or bundle_types == []:  # If we have no category jump to, search every category
             file_metadata["category"] = "unknown"
             categories = list(pattern_reference.keys())
             for category in categories[2:]:
                 file_metadata["model"] = self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensors)
 
-        else: # When a category is found
-            file_metadata["category"] = bundle_types # Bundle types directs to the relevant categories
+        else:  # When a category is found
+            file_metadata["category"] = bundle_types  # Bundle types directs to the relevant categories
 
-            if isinstance(file_metadata["category"], list): # When more than one value has been found in category
-                bundle_check = [] # Empty variable by reinitialization
-                for category in file_metadata["category"]: # Jump to known values inside
-                    if len(bundle_check) >= 1 and len(file_metadata["category"]) > 1: # If we already captured the first model and need more, ignore tensors
+            if isinstance(file_metadata["category"], list):  # When more than one value has been found in category
+                bundle_check = []  # Empty variable by reinitialization
+                for category in file_metadata["category"]:  # Jump to known values inside
+                    if len(bundle_check) >= 1 and len(file_metadata["category"]) > 1:  # If we already captured the first model and need more, ignore tensors
                         bundle_check.extend(self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensors=None))
                     else:
-                        bundle_check = (self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensors)) # First model only
+                        bundle_check = self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensors)  # First model only
 
-                if bundle_check is None: # Nothing matched, assign placeholder
+                if bundle_check is None:  # Nothing matched, assign placeholder
                     file_metadata["model"] = "unknown"
 
-                elif len(bundle_check) > 0 and isinstance(bundle_check,list): # One or More matches
+                elif len(bundle_check) > 0 and isinstance(bundle_check, list):  # One or More matches
                     if len(bundle_check) > 1:
                         file_metadata["component_type"] = file_metadata["category"]
                         file_metadata["category"] = "bundle"
                         file_metadata["component_name"] = bundle_check
-                    file_metadata["model"] = bundle_check[0] # Apply the first bundle_check result to model field
+                    file_metadata["model"] = bundle_check[0]  # Apply the first bundle_check result to model field
 
-
-            else: # Category was not a list, only found one
+            else:  # Category was not a list, only found one
                 try:
                     file_metadata["model"] = self.handle_values.pull_key_names(pattern_reference[file_metadata["category"]], unpacked_metadata, tensors)
                 except KeyError as error_log:
-                    #("A reference to a key of the filter dictionary failed to be found.")
+                    # ("A reference to a key of the filter dictionary failed to be found.")
                     file_metadata["model"] = "unknown"
 
         return self.finalize_metadata(file_metadata)

@@ -1,11 +1,10 @@
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+# // SPDX-License-Identifier: blessing
+# // d a r k s h a p e s
 
 import sys
 
 
-def wipe_printer(self, *formatted_data: dict) -> None:
+def wipe_printer(*formatted_data: dict) -> None:
     """
     Print data sp that it replaces itself in the console buffer\n
     :param formatted_data: Output of `pretty_tabled_output()`
@@ -16,7 +15,7 @@ def wipe_printer(self, *formatted_data: dict) -> None:
         sys.stdout.write(" " * 175 + "\x1b[1K\r")
         sys.stdout.write(f"{line_data}\n")  # Print the lines
 
-    sys.stdout.flush()              # Empty output buffer to ensure the changes are shown
+    sys.stdout.flush()  # Empty output buffer to ensure the changes are shown
 
 
 def pretty_tabled_output(title: str, aggregate_data: dict) -> dict:
@@ -36,8 +35,8 @@ def pretty_tabled_output(title: str, aggregate_data: dict) -> dict:
     key_value_length = len(print_values)  # number of items detected in the scan
     # width_top = key_value_length * 1.5
     width = 18
-    info_format = '{:^{width}}|' * key_value_length  # shrink print columns to data width
+    info_format = "{:^{width}}|" * key_value_length  # shrink print columns to data width
     header_keys = tuple(print_values)  # use to create table
-    horizontal_bar = ("  " + "-" * (width-1) * key_value_length)  # horizontal divider of arbitrary length. could use shutil to dynamically create but eh. already overkill
+    horizontal_bar = "  " + "-" * (width - 1) * key_value_length  # horizontal divider of arbitrary length. could use shutil to dynamically create but eh. already overkill
     formatted_data = tuple(print_values.values())  # data extracted from the scan
     wipe_printer(title, info_format.format(*header_keys, width=width), horizontal_bar, info_format.format(*formatted_data, width=width))  # send to print function

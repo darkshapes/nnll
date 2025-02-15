@@ -1,6 +1,5 @@
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+# // SPDX-License-Identifier: blessing
+# // d a r k s h a p e s
 
 """
 Identification system for neural network models
@@ -111,7 +110,7 @@ class Component:
     ***layer_type*** : The format and compatibility of the model structure, including but not limited to\n
     - `pytorch`
     - `diffusers`
-    - `compvis`
+    - `modelspec`
     (Note: Future functionality should include dynamically adding permanent custom attributes)
     :method to_dict(): flatten the class structure
     """
@@ -119,7 +118,16 @@ class Component:
     def __init__(self, model_type, **kwargs):
         self.model_type = model_type
 
-        self.allowed_keys = {"dtype", "file_size", "layer_type", "component_type", "component_name", "file_extension", "file_name", "disk_path", }
+        self.allowed_keys = {
+            "dtype",
+            "file_size",
+            "layer_type",
+            "component_type",
+            "component_name",
+            "file_extension",
+            "file_name",
+            "disk_path",
+        }
         for key, value in kwargs.items():
             if key not in self.allowed_keys:
                 raise KeyError(f"Valid attributes can only be one of the following : {(k for k in self.allowed_keys)}")
