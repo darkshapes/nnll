@@ -29,8 +29,8 @@ class ExtractAndMatchMetadata:
                 in_parsed_layer = re.compile(expression_pattern)
                 return bool(in_parsed_layer.search(block_pattern))
             else:
-                return block_pattern.lower() in layer_element.lower()
-        elif isinstance(block_pattern, list) and isinstance(layer_element, list):
+                return block_pattern in layer_element
+        elif isinstance(block_pattern, list) and isinstance(layer_element, list): # This will never be from 'blocks'
             return block_pattern == layer_element
         elif isinstance(block_pattern, int) and isinstance(layer_element, int):
             if block_pattern == layer_element or isclose(block_pattern, layer_element, rel_tol=1e-1):

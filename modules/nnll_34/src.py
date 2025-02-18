@@ -24,8 +24,7 @@ def detect_index_sequence(file_name: str) -> tuple:
         if match:
             part, sep, total = map(str, match.groups())
             return part, sep, total
-        else:
-            return file_name
+    return file_name
 
 def gather_sharded_files(file_path_named, index_segments: str) -> list:
     """
@@ -44,22 +43,24 @@ def gather_sharded_files(file_path_named, index_segments: str) -> list:
     else:
         high_shard = int(total) # translate strings to numbers
         current_shard = int(part)
-        shard_list.append(filename)
+        shard_list.append(file_path_named)
+        file_dir = os.sep.join(file_dir[:-1]) # Combine .parts Path minus file
+        file_dir = os.path.normpath(file_dir[1:]) # Remove leading slash)
         for i in range(1,high_shard+1): #compare the numbers to get the file names we need
             if i == current_shard:
                 next
             else:
                 numeric_to_replace = str(current_shard)
                 new_numeric = part.replace(numeric_to_replace, str(i)) + sep
-                new_filename = new_numeric.join(filename.split(part+sep,1))
-                s = os.sep
-                file_dir = os.path.normpath(s.join(file_dir))
-                if os.path.exists(os.path.join(file_dir,new_filename)):
-                    shard_list.append(new_filename)
-                    file_prefix = next(iter(filename.split(part)))
-                    file_paths_shard_linked = file_path_named.remove(new_filename)
+                new_file_name = new_numeric.join(filename.split(part+sep,1))
+
+                new_file_path_named = os.path.join(file_dir,new_file_name)
+                if os.path.exists(new_file_path_named):
+                    shard_list.append(new_file_path_named)
+                    # file_prefix = next(iter(filename.split(part)))
+                    # file_paths_shard_linked = file_path_named.remove(new_filename)
                 else:
                     raise FileNotFoundError(f"Shard for {file_path_named} not found")
 
-    return file_paths_shard_linked
+    return shard_list
 

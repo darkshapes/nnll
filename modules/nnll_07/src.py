@@ -1,6 +1,5 @@
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+# // SPDX-License-Identifier: blessing
+# // d a r k s h a p e s
 
 """
 Identification system for neural network models
@@ -20,9 +19,9 @@ arch_flux = Architecture("flux")
 
 # Create components within architectures
 ```
-comp_unet = Component("unet", dtype="float32", disk_size=1024, layer_type="diffusers")
-comp_vae = Component("vae", dtype="float32", disk_size=512, layer_type="diffusers")
-comp_lora = Component("lora", dtype="float32", disk_size=256, layer_type="diffusers")
+comp_unet = Component("unet", dtype="float32", file_size=1024, layer_type="diffusers")
+comp_vae = Component("vae", dtype="float32", file_size=512, layer_type="diffusers")
+comp_lora = Component("lora", dtype="float32", file_size=256, layer_type="diffusers")
 ```
 
 # Add components to architectures
@@ -101,7 +100,7 @@ class Component:
     This enables us to filter, organize, and prepare files, allowing automated workflow construction\n
     :param model_type: Classification of the file, what purpose this model serves as a whole,  (eg: unet, vae, lora)\n
     :param kwargs: Named values from one of the following
-    ***disk_size*** : The total size in **bytes** of the file\n
+    ***file_size*** : The total size in **bytes** of the file\n
     ***disk_path*** : The full location of the file\n
     ***file_name*** : The basename of the file\n
     ***extension*** : The last file extension in the filename\n
@@ -111,7 +110,7 @@ class Component:
     ***layer_type*** : The format and compatibility of the model structure, including but not limited to\n
     - `pytorch`
     - `diffusers`
-    - `compvis`
+    - `modelspec`
     (Note: Future functionality should include dynamically adding permanent custom attributes)
     :method to_dict(): flatten the class structure
     """
@@ -119,7 +118,16 @@ class Component:
     def __init__(self, model_type, **kwargs):
         self.model_type = model_type
 
-        self.allowed_keys = {"dtype", "disk_size", "layer_type", "component_type", "component_name", "file_extension", "file_name", "disk_path", }
+        self.allowed_keys = {
+            "dtype",
+            "file_size",
+            "layer_type",
+            "component_type",
+            "component_name",
+            "file_extension",
+            "file_name",
+            "disk_path",
+        }
         for key, value in kwargs.items():
             if key not in self.allowed_keys:
                 raise KeyError(f"Valid attributes can only be one of the following : {(k for k in self.allowed_keys)}")

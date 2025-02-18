@@ -20,7 +20,7 @@ def count_tensors_and_extract_shape(pattern, file_path):
         match_line = next((line for line in content if pattern in line), None)
 
         if match_line:
-            file_location = os.path.join(os.path.dirname("."), match_line)
+            file_location = os.path.join(os.path.dirname(os.path.abspath(__file__)), match_line)
             count = len(content)
             try:
                 # Attempt to parse the line as JSON

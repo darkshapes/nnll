@@ -58,11 +58,10 @@ class TestPrinterMethods(unittest.TestCase):
             'C': 3,
             'D': 4
         }
-
         # Expected output format
-        expected_cols = '    category     |        A        |        B        |        C        |        D        |'
+        expected_cols = '     category     |        A         |        B         |        C         |        D         |'
         expected_horizontal_bar = '  -------------------------------------------------------------------------------------'
-        expected_data = '  Sample Table   |        1        |        2        |        3        |        4        |'
+        expected_data = '   Sample Table   |        1         |        2         |        3         |        4         |'
 
         # Call the method under test
         with patch('modules.nnll_27.src.wipe_printer') as mock_wipe_printer:

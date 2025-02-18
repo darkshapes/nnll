@@ -3,7 +3,6 @@
 #// SPDX-License-Identifier: blessing
 #// d a r k s h a p e s
 
-
 import os
 from unittest import TestCase, mock
 import pytest

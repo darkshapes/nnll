@@ -1,3 +1,5 @@
+#// SPDX-License-Identifier: blessing
+#// d a r k s h a p e s
 
 import pytest
 from modules.nnll_38.src import ExtractValueData

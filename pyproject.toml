@@ -6,40 +6,37 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nnll"
-description = "Experimental ML modules library"
+description = "Tensor tools library"
 authors = [
     { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
 ]
 
 requires-python = ">= 3.10"
-license         = { file = "LICENSE" }
-readme          = "README.md"
-urls            = { source = "https://github.com/darkshapes/nnll" }
-dynamic         = ["version"]
-keywords        = ["ML", "AI", "neural network", "library"]
-dependencies    = ["tqdm"]
-
-[project.optional-dependencies]
-opt = [
+license = { file = "LICENSE" }
+readme = "README.md"
+urls = { source = "https://github.com/darkshapes/nnll" }
+dynamic = ["version"]
+keywords = ["ML", "AI", "neural network", "library"]
+dependencies = [
+    "tqdm",
     "wheel",
     "numpy",
     "torch",
     "llama-cpp-python",
+    "gguf",
     "sentencepiece",
     "diffusers",
     "transformers",
 ]
 
+[project.optional-dependencies]
 dev = ["nnll[opt]", "pytest", "huggingface_hub"]
 
 [project.scripts]
-nnll-contents = "modules.nnll_43.src:main"
-nnll-find     = "modules.nnll_31.src:find_entry"
-nnll-parse    = "modules.nnll_36.src:main"
-#nnll-index   = "modules.nnll_37.src:index"
-
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements.txt"] }
+nnll-toc   = "modules.nnll_43.src:main"
+nnll-find  = "modules.nnll_31.src:find_entry"
+nnll-parse = "modules.nnll_36.src:main"
+nnll-index = "modules.nnll_37.src:index"
 
 [tool.setuptools_scm]
 write_to = "_version.py"

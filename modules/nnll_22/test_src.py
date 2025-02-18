@@ -1,4 +1,7 @@
 
+#// SPDX-License-Identifier: blessing
+#// d a r k s h a p e s
+
 import unittest
 from unittest.mock import patch, MagicMock
 import os
