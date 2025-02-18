@@ -9,6 +9,7 @@ import shutil
 import os
 
 from modules.nnll_05.src import metadata_from_gguf, gguf_check
+from modules.nnll_30.src import read_json_file
 from modules.nnll_45.src import download_hub_file
 
 
@@ -35,17 +36,19 @@ class TestLoadMetadataGGUF(unittest.TestCase):
         self.assertTrue(result)
 
     def test_metadata_from_gguf(self):
-        self.local_folder = os.path.dirname(os.path.abspath(__file__))
-        self.local_folder_test = os.path.join(self.local_folder, "test_folder")
-        self.folder_path_named, folder_contents = download_hub_file(repo_id="exdysa/tiny-random-llama-gguf", filename="tiny-random-llama.Q4_K_M.gguf", local_dir=self.local_folder_test)
-        real_file = os.path.join(self.folder_path_named, next(iter(folder_contents)))
+        local_folder = os.path.dirname(os.path.abspath(__file__))
+        local_folder_test = os.path.join(local_folder, "test_folder")
+        file_name = "TinyStories-LLaMA2-20M-256h-4l-colab.IQ3_XS.gguf"
+        folder_path_named, folder_contents = download_hub_file(repo_id="exdysa/tinystories-llama-20m-gguf", filename=file_name, local_dir=local_folder_test)
+        real_file = os.path.join(folder_path_named, file_name)
         virtual_data_00 = metadata_from_gguf(real_file)
-        safetensors_state_dict = os.path.join(self.local_folder_test, "expected_output.json")
-        expected_output = {"name": "tiny-random-llama", "dtype": "float32"}
-        assert virtual_data_00 == expected_output
+        gguf_state_dict = os.path.join(local_folder, "expected_output.json")
+        expected_output_part_1 = {"architecture_name": "llama", "general_name": ("TinyStories LLaMA2 20M 256h 4l Colab",)}
+        expected_output_part_2 = read_json_file(gguf_state_dict)
+        assert virtual_data_00 == (expected_output_part_1, expected_output_part_2)
         try:
-            shutil.rmtree(self.local_folder_test)
-            shutil.rmtree(os.path.join(self.local_folder, ".cache"))
+            shutil.rmtree(local_folder_test)
+            shutil.rmtree(os.path.join(local_folder, ".cache"))
         except OSError:
             pass
 
