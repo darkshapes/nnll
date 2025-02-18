@@ -11,8 +11,8 @@ from modules.nnll_45.src import download_hub_file
 class TestReadStateDictHeaders(unittest.TestCase):
     def test_read_state_dict_headers(self):
         # Mock Path objects for each file with correct suffixes
-        safetensors_folder_path_named, safetensors_file = download_hub_file(repo_id="exdysa/tiny-random-gpt2-safetensors", filename="model.safetensors", local_dir="./test_folder")
-        gguf_folder__path_named, gguf_file = download_hub_file(repo_id="exdysa/tiny-random-llama-gguf", filename="tiny-random-llama.Q4_K_M.gguf", local_dir="./test_folder")
+        safetensors_folder_path_named, safetensors_file = download_hub_file(repo_id="exdysa/tiny-random-gpt2-bfloat16", filename="model.safetensors", local_dir="./test_folder")
+        gguf_folder__path_named, gguf_file = download_hub_file(repo_id="exdysa/tinystories-llama-20m-gguf", filename="TinyStories-LLaMA2-20M-256h-4l-colab.Q2_K.gguf", local_dir="./test_folder")
 
         # Call the function under test
         read_state_dict_headers("test_folder", "test_folder")
