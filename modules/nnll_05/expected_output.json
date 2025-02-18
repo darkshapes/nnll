@@ -11,11 +11,11 @@
     },
     "token_embd.weight": {
         "shape": "[  256 32000]",
-        "dtype": "IQ3_S"
+        "dtype": "Q2_K"
     },
     "blk.0.attn_k.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.0.attn_norm.weight": {
         "shape": "[256]",
@@ -23,23 +23,23 @@
     },
     "blk.0.attn_output.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.0.attn_q.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.0.attn_v.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.0.ffn_down.weight": {
         "shape": "[768 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.0.ffn_gate.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.0.ffn_norm.weight": {
         "shape": "[256]",
@@ -47,11 +47,11 @@
     },
     "blk.0.ffn_up.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.1.attn_k.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.1.attn_norm.weight": {
         "shape": "[256]",
@@ -59,23 +59,23 @@
     },
     "blk.1.attn_output.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.1.attn_q.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.1.attn_v.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.1.ffn_down.weight": {
         "shape": "[768 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.1.ffn_gate.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.1.ffn_norm.weight": {
         "shape": "[256]",
@@ -83,11 +83,11 @@
     },
     "blk.1.ffn_up.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.2.attn_k.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.2.attn_norm.weight": {
         "shape": "[256]",
@@ -95,23 +95,23 @@
     },
     "blk.2.attn_output.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.2.attn_q.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.2.attn_v.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.2.ffn_down.weight": {
         "shape": "[768 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.2.ffn_gate.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.2.ffn_norm.weight": {
         "shape": "[256]",
@@ -119,11 +119,11 @@
     },
     "blk.2.ffn_up.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.3.attn_k.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.3.attn_norm.weight": {
         "shape": "[256]",
@@ -131,23 +131,23 @@
     },
     "blk.3.attn_output.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.3.attn_q.weight": {
         "shape": "[256 256]",
-        "dtype": "IQ3_XXS"
+        "dtype": "Q2_K"
     },
     "blk.3.attn_v.weight": {
         "shape": "[256 128]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.3.ffn_down.weight": {
         "shape": "[768 256]",
-        "dtype": "IQ3_S"
+        "dtype": "Q3_K"
     },
     "blk.3.ffn_gate.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_S"
+        "dtype": "Q2_K"
     },
     "blk.3.ffn_norm.weight": {
         "shape": "[256]",
@@ -155,6 +155,6 @@
     },
     "blk.3.ffn_up.weight": {
         "shape": "[256 768]",
-        "dtype": "IQ3_S"
+        "dtype": "Q2_K"
     }
 }

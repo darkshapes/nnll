@@ -38,7 +38,7 @@ class TestLoadMetadataGGUF(unittest.TestCase):
     def test_metadata_from_gguf(self):
         local_folder = os.path.dirname(os.path.abspath(__file__))
         local_folder_test = os.path.join(local_folder, "test_folder")
-        file_name = "TinyStories-LLaMA2-20M-256h-4l-colab.IQ3_XS.gguf"
+        file_name = "TinyStories-LLaMA2-20M-256h-4l-colab.Q2_K.gguf"
         folder_path_named, folder_contents = download_hub_file(repo_id="exdysa/tinystories-llama-20m-gguf", filename=file_name, local_dir=local_folder_test)
         real_file = os.path.join(folder_path_named, file_name)
         virtual_data_00 = metadata_from_gguf(real_file)
