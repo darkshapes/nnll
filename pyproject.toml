@@ -29,7 +29,6 @@ opt = [
     "diffusers",
     "transformers",
 ]
-
 dev = ["nnll[opt]", "pytest", "huggingface_hub"]
 
 [project.scripts]
