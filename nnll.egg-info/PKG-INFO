@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: nnll
-Version: 0.1.dev112+g8cdbe48.d20250218
+Version: 0.1.dev132+gb03b278.d20250224
 Summary: Tensor tools library
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -17,18 +17,19 @@ Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: tqdm
-Provides-Extra: opt
-Requires-Dist: wheel; extra == "opt"
-Requires-Dist: numpy; extra == "opt"
-Requires-Dist: torch; extra == "opt"
-Requires-Dist: llama-cpp-python; extra == "opt"
-Requires-Dist: sentencepiece; extra == "opt"
-Requires-Dist: diffusers; extra == "opt"
-Requires-Dist: transformers; extra == "opt"
+Requires-Dist: wheel
+Requires-Dist: numpy
+Requires-Dist: torch
+Requires-Dist: llama-cpp-python
+Requires-Dist: gguf
+Requires-Dist: sentencepiece
+Requires-Dist: diffusers
+Requires-Dist: transformers
+Requires-Dist: huggingface-hub
+Requires-Dist: hidiffusion>=0.1.10
 Provides-Extra: dev
 Requires-Dist: nnll[opt]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
-Requires-Dist: huggingface_hub; extra == "dev"
 
 
 
@@ -56,7 +57,7 @@ Requires-Dist: huggingface_hub; extra == "dev"
 `import nnll_**.src`
 <br><br>
 
-## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/toc.md)
+## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/README.md)
 
 > [!NOTE]
 > x/dev branch: updated **~=nightly**.<br>

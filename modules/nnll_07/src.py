@@ -110,7 +110,7 @@ class Component:
     ***layer_type*** : The format and compatibility of the model structure, including but not limited to\n
     - `pytorch`
     - `diffusers`
-    - `modelspec`
+    - `compvis`
     (Note: Future functionality should include dynamically adding permanent custom attributes)
     :method to_dict(): flatten the class structure
     """

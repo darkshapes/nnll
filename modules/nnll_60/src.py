@@ -5,22 +5,26 @@ import os
 import json
 from functools import wraps
 
+CONFIG_PATH_NAMED = os.path.join(os.getcwd(), "modules", "nnll_60", "config", "config.json")
+CHAIN_PATH_NAMED = os.path.join(os.getcwd(), "modules", "nnll_60", "config", "hyperchain.json")
+
 
 class JSONCache:
-    """Cache operations for .json files. Example:
-    ```
-    cache_manager = JSONCache("path/to/file.json")
-
-    @cache_manager.decorator`
-    def my_function(data):
-        print(data)
-    ```
-    Force save:
-    `cache_manager.update({"new_key": "new_value"})`
-    """
+    """Manage input/output disk/mem for json files"""
 
     def __init__(self, file_or_path: str):
-        """Begin with empty cache"""
+        """Cache operations for .json files. Example:
+        ```
+        cache_manager = JSONCache("path/to/file.json")
+
+        @cache_manager.decorator`
+        def my_function(data):
+            print(data)
+        ```
+        Force save:
+        `cache_manager.update({"new_key": "new_value"})`
+        """
+
         self.file = file_or_path
         self._cache = None
 
@@ -33,7 +37,7 @@ class JSONCache:
                 except FileNotFoundError:
                     self._cache = {}
                 except json.JSONDecodeError:
-                    print("Error decoding JSON. Using an empty cache.")
+                    # print("Error decoding JSON. Using an empty cache.")
                     self._cache = {}
 
     def _save_cache(self):
@@ -50,7 +54,7 @@ class JSONCache:
         """External trigger for manual cache retrieval"""
         self._load_cache()
 
-    def update(self, new_data: dict):
+    def update_cache(self, new_data: dict):
         """Save changes if the data actually changed"""
         self._load_cache()  # Ensure cache loaded / 確保快取載入
 
@@ -67,7 +71,7 @@ class JSONCache:
         def wrapper(*args, **kwargs):
             """
             Triggers cache read when called, feeds it to calling function.
-            When data is different than cache copy, trigger save automatically.
+            Not yet implemented: trigger save automatically with data discrepancy
             """
             self._load_cache()
 

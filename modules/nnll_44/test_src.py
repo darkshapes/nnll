@@ -1,42 +1,40 @@
-
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+# // SPDX-License-Identifier: blessing
+# // d a r k s h a p e s
 
 import os
 from unittest import TestCase, mock
 import pytest
 import hashlib
 
-from modules.nnll_44.src import compute_file_hash
+from modules.nnll_44.src import compute_hash_for
+
 
 class TestExtractAndMatchMetadata(TestCase):
-
     @classmethod
     def setUpClass(cls) -> None:
         # Create a temporary test file for permission and I/O error tests
         cls.test_file_name = "test.txt"
-        with open(cls.test_file_name, 'wb') as f:
+        with open(cls.test_file_name, "wb") as f:
             f.write(b"Hello, World!")
 
-    def test_valid_file(cls):
+    def test_valid_file(self):
         expected_hash = hashlib.sha256(b"Hello, World!").hexdigest()
-        assert compute_file_hash(cls.test_file_name) == expected_hash
+        assert compute_hash_for(self.test_file_name) == expected_hash
 
-    def test_nonexistent_file(cls):
+    def test_nonexistent_file(self):
         with pytest.raises(FileNotFoundError):
-            compute_file_hash('nonexistent_file.txt')
+            compute_hash_for("nonexistent_file.txt")
 
-    @mock.patch('builtins.open', side_effect=PermissionError)
-    def test_permission_error(cls, mock_open):
+    @mock.patch("builtins.open", side_effect=PermissionError)
+    def test_permission_error(self, mock_open):
         with pytest.raises(PermissionError) as exc_info:
-            compute_file_hash(cls.test_file_name)
-        cls.assertEqual(type(exc_info.value), PermissionError)
+            compute_hash_for(self.test_file_name)
+        self.assertEqual(type(exc_info.value), PermissionError)
 
-    @mock.patch('builtins.open', side_effect=IOError)
-    def test_io_error(cls, mock_open):
+    @mock.patch("builtins.open", side_effect=IOError)
+    def test_io_error(self, mock_open):
         with pytest.raises(OSError) as exc_info:
-            compute_file_hash("n.txt")
+            compute_hash_for("n.txt")
         assert "File 'n.txt' does not exist." in str(exc_info.value)
 
     @classmethod
