@@ -27,10 +27,12 @@ dependencies = [
     "sentencepiece",
     "diffusers",
     "transformers",
+    "huggingface-hub",
+    "hidiffusion>=0.1.10",
 ]
 
 [project.optional-dependencies]
-dev = ["nnll[opt]", "pytest", "huggingface_hub"]
+dev = ["nnll[opt]", "pytest"]
 
 [project.scripts]
 nnll-toc   = "modules.nnll_43.src:main"

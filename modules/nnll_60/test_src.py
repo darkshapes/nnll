@@ -1,3 +1,8 @@
+# // SPDX-License-Identifier: blessing
+# // d a r k s h a p e s
+
+# pylint:disable=protected-access
+
 import unittest
 import json
 import os
@@ -35,7 +40,7 @@ class TestJSONCache(unittest.TestCase):
     def test_update_cache(self):
         """Verify cache updates and writes to file."""
         new_data = {"new_key": "new_value"}
-        self.cache.update(new_data)
+        self.cache.update_cache(new_data)
         self.cache.refresh()
         self.assertIn("new_key", self.cache._cache)
         self.assertEqual(self.cache._cache["new_key"], "new_value")
@@ -67,7 +72,7 @@ class TestJSONCache(unittest.TestCase):
 
     def test_decorator_functionality(self):
         """Check that the decorator loads cache and updates properly."""
-        self.cache.update({"test_key": "test_value"})
+        self.cache.update_cache({"test_key": "test_value"})
 
         @self.cache.decorator
         def sample_function(data=None):

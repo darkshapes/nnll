@@ -24,7 +24,7 @@
 `import nnll_**.src`
 <br><br>
 
-## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/toc.md)
+## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/README.md)
 
 > [!NOTE]
 > x/dev branch: updated **~=nightly**.<br>
