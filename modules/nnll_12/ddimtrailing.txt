@@ -1,0 +1,17 @@
+```
+# ddim trailing
+def tcd_scheduler(model_sampling, steps):
+    import numpy as np
+    train_steps = model_sampling.num_timesteps
+    step_ratio = train_steps / steps
+    # creates integer timesteps by multiplying by ratio
+    # casting to int to avoid issues when num_inference_step is power of 3
+    timesteps = torch.FloatTensor(np.round(np.arange(train_steps, 0, -step_ratio)).astype(np.int64))
+    timesteps -= 1
+    sigs = []
+    for x in range(len(timesteps)):
+        sigs.append(model_sampling.sigma(timesteps[x]))
+    sigs += [0.0]
+    return torch.FloatTensor(sigs)
+
+
