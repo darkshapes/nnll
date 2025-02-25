@@ -2,8 +2,9 @@
 
 # nnll
 
-## neural network link library
-`nnll` (or <em>null</em>) is a set of tensor packaging utilities and computer vision experiments. The modules may appeal to other AI developers, researchers and tinkerers, and are designed to effortlessly fold into others' projects.
+`nnll` (or <em>null</em>) is a comprehensive AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working individual experiments or in the general field of large-scale machine learning model deployment.
+
+We currently support 🧨Diffusers, 🤗Transformers, 🦙Llama inference, and refined methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of generative AI preparations.
 <br>
 <br>
 
