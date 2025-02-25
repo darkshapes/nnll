@@ -1,15 +1,15 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import os
 from modules.nnll_07.src import Domain, Architecture, Component
 from modules.nnll_27.src import pretty_tabled_output
 from modules.nnll_39.src import route_metadata
 
+
 # parse metadata into tag?
 def create_model_tag(pulled_keys: dict) -> dict:
-
     if "unknown" in pulled_keys:
         domain_dev = Domain("dev")  # For unrecognized models,
     else:
@@ -25,6 +25,7 @@ def create_model_tag(pulled_keys: dict) -> dict:
     index_tag = domain_ml.to_dict()
 
     return index_tag
+
 
 # def create_model_tag(model_header,metadata_dict):
 #         parse_file = parse_model_header(model_header)

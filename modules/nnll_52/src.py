@@ -1,21 +1,22 @@
-# // SPDX-License-Identifier: blessing
-# // d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-import os
-import torch
-from diffusers.utils import load_image
+
+"""Inferencing"""
+
 from PIL import PngImagePlugin
 
-import modules.solvers
-import modules.memory as mem
-import modules.lookup as look
-import modules.pipelines as pipelines
-import modules.techniques as techniques
-import modules.disk_op as disk_op
-import modules.autoencoder as autoencoder
+from modules.nnll_08.src import soft_random, seed_planter
+import modules.nnll_53.src as mem
+from modules.nnll_62.src import ConstructPipeline
+import modules.nnll_56.src as techniques
+import modules.nnll_57.src as disk_op
+# import modules.autoencoder as autoencoder
 
-noise_seed = techniques.soft_random()
-noise_seed_plot = techniques.seed_planter(noise_seed)
+pipelines = ConstructPipeline()
+
+noise_seed = soft_random()
+noise_seed_plot = seed_planter(noise_seed)
 user_set = {
     "output_type": "pil",
     "noise_seed": noise_seed,
@@ -27,24 +28,24 @@ user_set = {
     "height": 1344,
     "safety_checker": False,
 }
-model = look.sdxl_base_local
-vae_file = look.sdxl_base_vae
+model = ""
+vae_file = ""
 lora_file = None
 active_gpu = "mps"
 
 prompt = "sunken ship, ocean divers"
 negative_prompt = ""
-
+architecture = "stable-diffusion-xl-base"
 # model 1
-pipe, kwargs = pipelines.sdxl_base_single_pipe(model=model)
+pipe, model, kwargs = pipelines.create_pipeline(architecture)
 
 # model 2
-vae_model = autoencoder.add_vae()
-pipe.vae = vae_model
+# vae_model = autoencoder.add_vae()
+# pipe.vae = vae_model
 
 # model 3
-pipe, kwargs = techniques.add_ays(pipe, kwargs)
-pipe, kwargs = techniques.add_slam(pipe, kwargs)
+pipe, lora, kwargs = pipelines.add_lora("spo", architecture, pipe, kwargs)
+# pipe, kwargs = techniques.add_slam(pipe, kwargs)
 
 # model 4
 # pipe, kwargs = solvers.euler_a(pipe, kwargs)
@@ -57,7 +58,7 @@ pipe = techniques.add_generator(pipe, noise_seed=user_set.get("noise_seed", 0)) 
 
 # generator
 kwargs.update(user_set)
-mem.add_to_undo(kwargs)
+mem.add_to_undo(**kwargs)
 gen_data = mem.add_to_metadata(pipe, model, prompt, kwargs)
 image = pipe(
     prompt=prompt,

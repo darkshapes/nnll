@@ -1,5 +1,6 @@
-# // SPDX-License-Identifier: blessing
-# // d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 #
 from modules.nnll_24.src import KeyTrail
 from collections import defaultdict

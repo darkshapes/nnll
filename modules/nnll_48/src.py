@@ -1,7 +1,8 @@
-# // SPDX-License-Identifier: CC0-1.0
-# // --<{ Ktiseos Nyx }>--
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-"""Wrap I/O"""
+
+"""Wrap Image/Model Metadata I/O"""
 
 from pathlib import Path
 import os
@@ -10,9 +11,10 @@ import toml
 
 from PIL import Image, UnidentifiedImageError, ExifTags
 
-from dataset_tools.logger import debug_monitor
-from dataset_tools.logger import info_monitor as nfo
-from dataset_tools.correct_types import ExtensionType as Ext
+from modules.nnll_01.src import debug_message, debug_monitor
+from modules.nnll_01.src import info_monitor as nfo
+from modules.nnll_47.src import EmptyField, ExtensionType as Ext, DownField, UpField
+from modules.nnll_54.src import ModelTool
 
 
 class MetadataFileReader:
@@ -30,7 +32,7 @@ class MetadataFileReader:
         """
 
         img = Image.open(file_path_named)
-        exif_tags = {ExifTags.TAGS[key]: val for key, val in img.getexif().items() if key in ExifTags.TAGS}
+        exif_tags = {ExifTags.TAGS[key]: val for key, val in img._getexif().items() if key in ExifTags.TAGS}  # pylint: disable=protected-access, line-too-long
         return exif_tags
 
     @debug_monitor
@@ -49,15 +51,34 @@ class MetadataFileReader:
             nfo("Failed to read image at:", file_path_named, error_log)
             return None
 
-    def read_text_file_contents(self, file_path_named):
+    def read_txt_contents(self, file_path_named):
         """
         Open plaintext files\n
         :param file_path_named: The path and file name of the text file
         :return: Generator element containing content
         """
-        with open(file_path_named, "r", encoding="utf_8") as open_file:
-            contents = open_file.read()
-            return {"Content": contents}  # Reads text file into string
+        try:
+            with open(file_path_named, "r", encoding="utf_8") as open_file:
+                file_contents = open_file.read()
+                metadata = {
+                    UpField.TEXT_DATA: file_contents,
+                    EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
+                }
+                return metadata  # Reads text file into string
+        except UnicodeDecodeError as error_log:
+            nfo("File did not match expected unicode format %s", file_path_named)
+            debug_message(error_log)
+        try:
+            with open(file_path_named, "r", encoding="utf_16-be") as open_file:
+                file_contents = open_file.read()
+                metadata = {
+                    UpField.TEXT_DATA: file_contents,
+                    EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
+                }
+                return metadata  # Reads text file into string
+        except UnicodeDecodeError as error_log:
+            nfo("File did not match expected unicode format %s", file_path_named)
+            debug_message(error_log)
 
     def read_schema_file(self, file_path_named: str, mode="r"):
         """
@@ -65,14 +86,25 @@ class MetadataFileReader:
         :param file_path_named: The path and file name of the json file
         :return: Generator element containing content
         """
+        header_field = DownField.RAW_DATA
         _, ext = os.path.splitext(file_path_named)
-        loader, mode = (toml.load, "rb") if ext == Ext.TOML else (json.load, "r")
-        with open(file_path_named, mode) as open_file:
+        if ext == Ext.TOML:
+            loader, mode = (toml.load, "rb")
+            header_field = DownField.JSON_DATA
+        else:
+            loader, mode = (json.load, "r")
+            header_field = DownField.JSON_DATA
+        with open(file_path_named, mode, encoding="utf_8") as open_file:
             try:
                 file_contents = loader(open_file)
-            except (toml.TomlDecodeError, json.decoder.JSONDecodeError) as errorlog:
-                raise SyntaxError(f"Couldn't read file {file_path_named}") from errorlog
-        return file_contents
+            except (toml.TomlDecodeError, json.decoder.JSONDecodeError) as error_log:
+                raise SyntaxError(f"Couldn't read file {file_path_named}") from error_log
+            else:
+                metadata = {
+                    EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
+                    header_field: file_contents,
+                }
+        return metadata
 
     @debug_monitor
     def read_header(self, file_path_named: str) -> dict:
@@ -81,15 +113,22 @@ class MetadataFileReader:
         :param file_path_named: Location of file with file name and path
         :return: A mapping of information contained within it
         """
-        header = None
         ext = Path(file_path_named).suffix.lower()
-        if ext in Ext.EXIF:
-            header = self.read_jpg_header
-        elif ext in Ext.PNG_:
-            header = self.read_png_header
-        elif ext in Ext.PLAIN:
-            header = self.read_text_file_contents
-        elif ext in Ext.SCHEMA:
-            header = self.read_text_file_contents
-        if header:
-            return header(file_path_named)
+        if ext in Ext.JPEG:
+            return self.read_jpg_header(file_path_named)
+        if ext in Ext.PNG_:
+            return self.read_png_header(file_path_named)
+        for file_types in Ext.SCHEMA:
+            if ext in file_types:
+                return self.read_txt_contents(file_path_named)
+        for file_types in Ext.PLAIN:
+            if ext in file_types:
+                return self.read_txt_contents(file_path_named)
+
+        for file_types in Ext.MODEL:
+            if ext in file_types:
+                model_tool = ModelTool()
+                return model_tool.read_metadata_from(file_path_named)
+
+        # if header:
+        #     return header(file_path_named)

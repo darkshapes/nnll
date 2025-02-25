@@ -1,6 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import os
 from pathlib import Path
@@ -9,6 +9,7 @@ import itertools
 from modules.nnll_04.src import metadata_from_safetensors
 from modules.nnll_05.src import metadata_from_gguf
 from modules.nnll_28.src import metadata_from_pickletensor
+
 
 def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
     """
@@ -22,12 +23,9 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
     pickletensor_loader = None
 
     # todo: move this and import statements to .json file
-    safetensors_extensions = [
-        ".safetensors",
-        ".sft"
-        ]
+    safetensors_extensions = [".safetensors", ".sft"]
 
-    gguf_extensions =  [".gguf"]
+    gguf_extensions = [".gguf"]
 
     pickletensor_extensions = [
         ".pt",
@@ -37,7 +35,7 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
 
     supported_extensions = itertools.chain(safetensors_extensions, gguf_extensions, pickletensor_extensions)
 
-    if file_extension == '' or file_extension is None or file_extension not in list(supported_extensions):  # Skip file if we cannot possibly know what it is
+    if file_extension == "" or file_extension is None or file_extension not in list(supported_extensions):  # Skip file if we cannot possibly know what it is
         return
     else:
         if file_extension in safetensors_extensions:
@@ -48,4 +46,3 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
             open_header_method = metadata_from_pickletensor
 
         return open_header_method
-

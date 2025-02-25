@@ -1,6 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import os
 import json
@@ -11,7 +11,6 @@ from modules.nnll_30.src import write_json_file, read_json_file
 
 
 class TestFileOperations(unittest.TestCase):
-
     def setUp(self):
         # Create a temporary directory to store the test files
         self.temp_dir = TemporaryDirectory()

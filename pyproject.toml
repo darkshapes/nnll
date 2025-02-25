@@ -29,6 +29,11 @@ dependencies = [
     "transformers",
     "huggingface-hub",
     "hidiffusion>=0.1.10",
+    "pydantic>=2.10.6",
+    "pydantic-core>=2.27.2",
+    "rich>=13.9.4",
+    "toml>=0.10.2",
+    "pillow>=11.1.0",
 ]
 
 [project.optional-dependencies]
@@ -38,7 +43,7 @@ dev = ["nnll[opt]", "pytest"]
 nnll-toc   = "modules.nnll_43.src:main"
 nnll-find  = "modules.nnll_31.src:find_entry"
 nnll-parse = "modules.nnll_36.src:main"
-nnll-index = "modules.nnll_37.src:index"
+# nnll-index = "modules.nnll_37.src:index"
 
 [tool.setuptools_scm]
 write_to = "_version.py"

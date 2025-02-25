@@ -1,14 +1,14 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import unittest
 import re
 
 from modules.nnll_35.src import capture_title_numeral
 
-class TestGetLastNumFromFilename(unittest.TestCase):
 
+class TestGetLastNumFromFilename(unittest.TestCase):
     def test_basic_match(self):
         filename = "model_02of03.safetensors"
         search_value = "of"
@@ -34,7 +34,7 @@ class TestGetLastNumFromFilename(unittest.TestCase):
     def test_multiple_digits(self):
         filename = "model_100of100.safetensors"
         search_value = "of"
-        self.assertEqual(capture_title_numeral(filename, search_value),00)  # Current implementation only supports up to 2 digits
+        self.assertEqual(capture_title_numeral(filename, search_value), 00)  # Current implementation only supports up to 2 digits
 
     def test_no_digits_before_search_value(self):
         filename = "modelof3.safetensors"
@@ -62,5 +62,6 @@ class TestGetLastNumFromFilename(unittest.TestCase):
         search_value = ".safetensors"
         self.assertEqual(capture_title_numeral(filename, search_value), 2)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

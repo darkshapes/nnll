@@ -1,3 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 """test"""
 
 # pylint:disable=line-too-long

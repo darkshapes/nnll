@@ -1,6 +1,5 @@
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
 
 import sys
@@ -10,12 +9,12 @@ import subprocess
 from contextlib import suppress
 
 from modules.nnll_30.src import read_json_file
+from modules.nnll_01.src import info_monitor as nfo
 
 
 def count_tensors_and_extract_shape(pattern, file_path):
     try:
         content = read_json_file(file_path)  # Split into lines for easier processing
-
         # Find the line containing the pattern
         match_line = next((line for line in content if pattern in line), None)
 
@@ -32,10 +31,11 @@ def count_tensors_and_extract_shape(pattern, file_path):
             else:
                 print(file_path, table_entries)  # output information
 
-       # else:
-            # print(f"No line containing '{pattern}' found in {file_path}.")
+    # else:
+    # print(f"No line containing '{pattern}' found in {file_path}.")
     except IOError as e:
         print(f"Error reading file {file_path}: {e}")
+
 
 def find_files_with_pattern(pattern):
     if not pattern:
@@ -43,7 +43,7 @@ def find_files_with_pattern(pattern):
         sys.exit(1)
 
     try:
-        result = subprocess.run(['grep', '-Rl', pattern], capture_output=True, text=True)
+        result = subprocess.run(["grep", "-Rl", pattern], capture_output=True, text=True)
         files_with_pattern = result.stdout.splitlines()
     except FileNotFoundError:
         print("Error: 'grep' command not found. Make sure it is installed.")
@@ -55,6 +55,7 @@ def find_files_with_pattern(pattern):
     else:
         print(f"No files containing '{pattern}' were found.")
 
+
 def find_entry(pattern=(TypeError)):
     with suppress(TypeError):
         if len(sys.argv) != 2:
@@ -65,6 +66,7 @@ Usage: {sys.argv[0]} <pattern>\n""")
 
     pattern = sys.argv[1]
     find_files_with_pattern(pattern)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

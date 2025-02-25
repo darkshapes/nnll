@@ -1,12 +1,12 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 from math import isclose
 import re
 
-class ExtractAndMatchMetadata:
 
+class ExtractAndMatchMetadata:
     def is_pattern_in_layer(self, block_pattern: list | str, layer_element: list) -> bool:
         """
         Match a string, int or regex pattern to metadata (specifically state dict layers)\n
@@ -20,17 +20,17 @@ class ExtractAndMatchMetadata:
         if isinstance(layer_element, str):
             if layer_element.startswith("r'"):
                 # Regex conversion
-                expression_pattern = (layer_element
-                            .replace("d+", r"\d+")  # Replace 'd+' with '\d+' for digits
-                            .replace(".", r"\.")    # Escape literal dots with '\.'
-                            .strip("r'")            # Strip the 'r' and quotes from the string
-                            )
-                #print(expression)
+                expression_pattern = (
+                    layer_element.replace("d+", r"\d+")  # Replace 'd+' with '\d+' for digits
+                    .replace(".", r"\.")  # Escape literal dots with '\.'
+                    .strip("r'")  # Strip the 'r' and quotes from the string
+                )
+                # print(expression)
                 in_parsed_layer = re.compile(expression_pattern)
                 return bool(in_parsed_layer.search(block_pattern))
             else:
                 return block_pattern in layer_element
-        elif isinstance(block_pattern, list) and isinstance(layer_element, list): # This will never be from 'blocks'
+        elif isinstance(block_pattern, list) and isinstance(layer_element, list):  # This will never be from 'blocks'
             return block_pattern == layer_element
         elif isinstance(block_pattern, int) and isinstance(layer_element, int):
             if block_pattern == layer_element or isclose(block_pattern, layer_element, rel_tol=1e-1):

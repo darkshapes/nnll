@@ -1,3 +1,7 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
+
 # pylint: disable=import-outside-toplevel
 # pylint:disable=line-too-long
 import torch
@@ -6,43 +10,45 @@ import random
 from inspect import currentframe
 
 
+def ddim(pipe, kwargs, timestep="trailing", zero_snr=False):
+    from diffusers import DDIMScheduler
+
+    scheduler = DDIMScheduler(
+        timestep_spacing=timestep,  # compatibility for certain techniques
+        subfolder="scheduler",
+        rescale_betas_zero_snr=zero_snr,  # brighter and darker
+    )
+    pipe.scheduler = scheduler
+
+    return pipe, kwargs
+
+
+def dpmpp(pipe, kwargs, algorithm="dpmsolver++", order=2):
+    from diffusers import DPMSolverMultistepScheduler
+
+    scheduler = DPMSolverMultistepScheduler(
+        algorithm_type=algorithm,
+        solver_order=order,
+    )
+    pipe.scheduler = scheduler
+
+    return pipe, kwargs
+
+
+def euler_a(pipe, kwargs):
+    from diffusers import EulerAncestralDiscreteScheduler
+
+    scheduler = EulerAncestralDiscreteScheduler()
+
+    pipe.scheduler = scheduler
+
+    return pipe, kwargs
+
+
 def add_generator(pipe, noise_seed: int = 0):
     """Create a generator object ready to receive seeds"""
     pipe.generator = torch.Generator(pipe.device).manual_seed(noise_seed)
     return pipe
-
-
-def soft_random(size: int = 0x2540BE3FF) -> int:
-    """
-    Generate a deterministic random number using philox\n
-    :params size: `int` RNG ceiling in hex format
-    :returns: `int` a random number of the specified length\n
-    pair with `random.seed()` for best effect
-    """
-    try:
-        from numpy.random import SeedSequence, Generator, Philox
-    except ImportError as error_log:
-        print(f"{error_log} numpy not installed.")
-    else:
-        entropy = f"0x{secrets.randbits(128):x}"  # good entropy
-        rndmc = Generator(Philox(SeedSequence(int(entropy, 16))))
-    return int(rndmc.integers(0, size))
-
-
-def seed_planter(seed, deterministic=True):
-    """Drop seed into all possible locations"""
-    torch.manual_seed(seed)
-    random.seed(seed)
-    if torch.cuda.is_available() is True:
-        if deterministic is True:
-            torch.backends.cudnn.deterministic = True
-            torch.backends.cudnn.benchmark = False
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
-    elif torch.backends.mps.is_available() is True:
-        torch.mps.manual_seed(seed)
-    elif torch.xpu.is_available() is True:
-        torch.xpu.manual_seed(seed)
 
 
 def get_func_name():
@@ -68,7 +74,7 @@ def add_hi_diffusion(pipe, kwargs):
     (SD1, SD2, XL, Playground, Ghibli, I2I, ControlNet, Inpaint)"""
     from hidiffusion import apply_hidiffusion  # , remove_hidiffusion
 
-    # pipe, kwargs = solvers.ddim(pipe, kwargs)
+    pipe, kwargs = ddim(pipe, kwargs)
     apply_hidiffusion(pipe)
     kwargs.update({"height": 2048, "width": 2048, "eta": 1.0, "guidance_scale": 7.5})
     return pipe, kwargs
@@ -79,7 +85,7 @@ def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
 
     from diffusers.schedulers.scheduling_utils import AysSchedules
 
-    # pipe, kwargs = solvers.dpmpp(pipe, kwargs, order=2)
+    pipe, kwargs = dpmpp(pipe, kwargs, order=2)
 
     ays = AysSchedules[ays_type]
     kwargs.update(
