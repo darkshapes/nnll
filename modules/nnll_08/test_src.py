@@ -1,6 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import pytest
 import secrets
@@ -12,13 +12,12 @@ from modules.nnll_08.src import soft_random, hard_random
 
 
 class TestRandom:
-
     def setup_seed(self, seed):
         original_randbits = secrets.randbits
 
         # Mock function
         def mock_randbits(bits):
-            return int(seed, 16) % (2 ** bits)  # Ensure the result fits within the specified number of bits
+            return int(seed, 16) % (2**bits)  # Ensure the result fits within the specified number of bits
 
         # Swap original with mock
         secrets.randbits = mock_randbits

@@ -1,5 +1,6 @@
-# // SPDX-License-Identifier: blessing
-# // d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 
 import os
 import json
@@ -18,7 +19,7 @@ class JSONCache:
         cache_manager = JSONCache("path/to/file.json")
 
         @cache_manager.decorator`
-        def my_function(data):
+        #def docstring_demo_func(data):
             print(data)
         ```
         Force save:

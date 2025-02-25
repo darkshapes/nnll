@@ -1,3 +1,7 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
+
 import os
 from unittest.mock import patch, MagicMock
 import modules.nnll_57.src as main
@@ -8,9 +12,8 @@ mock_path = os.path.join(os.getcwd(), "modules", "nnll_57")
 
 def test_save_element():
     with patch("os.path.isdir", return_value=True):
-        with patch.object(main.look, "save_folder_name_and_path", new=mock_path):
-            path = main.save_element(".png")
-            assert path == os.path.join(mock_path, "Combo_000000.png")
+        path = main.save_element(".png")
+        assert path == os.path.join(mock_path, "Combo_000000.png")
 
 
 def test_write_to_disk():

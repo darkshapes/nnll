@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: nnll
-Version: 0.1.dev132+gb03b278.d20250224
+Version: 0.1.dev133+ge298c73.d20250224
 Summary: Tensor tools library
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -27,6 +27,11 @@ Requires-Dist: diffusers
 Requires-Dist: transformers
 Requires-Dist: huggingface-hub
 Requires-Dist: hidiffusion>=0.1.10
+Requires-Dist: pydantic>=2.10.6
+Requires-Dist: pydantic-core>=2.27.2
+Requires-Dist: rich>=13.9.4
+Requires-Dist: toml>=0.10.2
+Requires-Dist: pillow>=11.1.0
 Provides-Extra: dev
 Requires-Dist: nnll[opt]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
@@ -49,7 +54,7 @@ Requires-Dist: pytest; extra == "dev"
 
 `nnll-parse`   - Lookup model metadata headers and write out to .json file.<br>
 `nnll-find`    - Scan .json files from `-parse` for a specific string pattern within layer contents.<br>
-`nnll-index`   - Identify available models within a given path and create a database of their attributes<br>
+<!-- `nnll-index`   - Identify available models within a given path and create a database of their attributes<br> -->
 `nnll-toc`     - (run from root folder only) Recreate the project table of contents, populating preview and navigation links for IDEs<br>
 <br>
 

@@ -1,5 +1,6 @@
-# // SPDX-License-Identifier: blessing
-# // d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 
 import os
 import argparse
@@ -12,7 +13,7 @@ from modules.nnll_42.src import populate_module_index
 def write_toc_to_file(module_index: dict, index_file_name: str = "__init__.py", walk_path="modules") -> None:
     write_path = os.path.join(walk_path, index_file_name)
     with open(write_path, "w") as f:  # No +, don't need to read from file
-        f.write('#// SPDX-License-Identifier: blessing\n#// d a r k s h a p e s\n"""\n## module table of contents\n\n')
+        f.write('### <!-- // /*  SPDX-License-Identifier: blessing) */ -->\n### <!-- // /*  d a r k s h a p e s */ -->\n## module table of contents\n\n"""\n')
         for resource, link in module_index.items():
             if ".md" in index_file_name:
                 link = f"({resource[1:8]})"  # todo : replace with regex

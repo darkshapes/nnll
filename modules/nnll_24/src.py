@@ -1,11 +1,12 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import os
 import sys
 
 from modules.nnll_33.src import ValueComparison
+
 
 class KeyTrail:
     """
@@ -22,6 +23,7 @@ class KeyTrail:
         :return: `list` The path of keys through the target `dict` leading to a matching subtree, or None if no match is found.
         """
         compare = ValueComparison()
+
         def sink_into(next_pattern_reference: dict, flat_key_trail: list = []) -> list | None:
             """
             Recurse through dictionary and return parent keys on boolean condition\n
@@ -34,7 +36,7 @@ class KeyTrail:
 
                 if isinstance(pattern_details, dict):  # Check if we've reached the bottom
                     if compare.check_model_identity(pattern_details, unpacked_metadata, attributes) == True:
-                        return flat_key_trail[-1] # Return last found key only (as list)
+                        return flat_key_trail[-1]  # Return last found key only (as list)
 
                     detected_key = sink_into(pattern_details, flat_key_trail)  # Recurse into deeper levels
                     if detected_key is not None:
@@ -44,4 +46,4 @@ class KeyTrail:
 
             return None  # No matching subtree found
 
-        return sink_into(pattern_reference) # Begin recursion loop
+        return sink_into(pattern_reference)  # Begin recursion loop

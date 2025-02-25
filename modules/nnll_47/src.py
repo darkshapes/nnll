@@ -1,424 +1,257 @@
-# # // SPDX-License-Identifier: CC0-1.0
-# # // --<{ Ktiseos Nyx }>--
-
-# """為使用者介面清理和安排元資料"""
-
-# # pylint: disable=line-too-long
-
-# import re
-# import json
-# from json import JSONDecodeError
-# from typing import Tuple, List
-# from pydantic import ValidationError
-
-# from dataset_tools.logger import debug_monitor  # , debug_message
-# from dataset_tools.logger import info_monitor as nfo
-# from dataset_tools.access_disk import MetadataFileReader
-# from dataset_tools.correct_types import (
-#     IsThisNode,
-#     NodeWorkflow,
-#     BracketedDict,
-#     ListOfDelineatedStr,
-#     UpField,
-#     DownField,
-#     NodeNames,
-# )
-
-
-# # /______________________________________________________________________________________________________________________ ComfyUI format
-
-
-# # @debug_monitor
-# def clean_with_json(prestructured_data: dict, first_key: str) -> dict:
-#     """
-#     Use json loads to arrange half-formatted dict into valid dict\n
-#     :param prestructured_data: A dict with a single working key
-#     :param key_name: The single working key name
-#     :return: The previous data newly formatted as a dictionary, but one key deeper
-#     """
-#     try:
-#         cleaned_data = json.loads(prestructured_data[first_key])
-#     except JSONDecodeError as error_log:
-#         nfo("Attempted to parse invalid formatting on", prestructured_data, error_log)
-#         return None
-#     return cleaned_data
-
-
-# @debug_monitor
-# def validate_typical(nested_map: dict, key_name: str) -> dict | None:
-#     """
-#     Check metadata structure and ensure it meets expectations\n
-#     :param nested_map: metadata structure
-#     :type nested_map: dict
-#     :return: The original node map one key beneath initial entry point, if valid, or None
-#     """
-
-#     is_this_node = IsThisNode()
-#     if next(iter(nested_map[key_name])) in NodeWorkflow.__annotations__.keys():
-#         try:
-#             is_this_node.workflow.validate_python(nested_map)
-#         except ValidationError as error_log:  #
-#             nfo("%s", f"Node workflow not found, returning NoneType {key_name}", error_log)
-#         else:
-#             return nested_map[key_name]
-#     else:
-#         try:
-#             is_this_node.data.validate_python(nested_map[key_name])  # Be sure we have the right data
-#         except ValidationError as error_log:
-#             nfo("%s", "Node data not found", error_log)
-#         else:
-#             return nested_map[key_name]
-
-#     nfo("%s", f"Node workflow not found {key_name}")
-#     raise KeyError(f"Unknown format for dictionary {key_name} in {nested_map}")
-
-
-# @debug_monitor
-# def search_for_prompt_in(this_node, extracted_prompt_data, name_column) -> dict:
-#     """Check for prompt data in"""
-#     extracted_data = {}
-#     data_column_title = NodeNames.DATA_KEYS[name_column]
-#     prompt_column = this_node[data_column_title]
-#     for node_field, node_input in prompt_column.items():
-#         if node_field not in NodeNames.IGNORE_KEYS:
-#             new_label = node_field
-#             label_count = str(extracted_prompt_data.keys()).count(node_field)
-#             if label_count > 0:
-#                 new_label = f"{node_field}_{label_count}"
-
-#             if not isinstance(node_input, list) and node_input:
-#                 if isinstance(node_input, str):
-#                     node_input = node_input.strip()
-#                 extracted_data.setdefault(new_label, node_input)
-#     return extracted_data
-
-
-# @debug_monitor
-# def search_for_gen_data_in(this_node: dict, extracted_gen_data: dict) -> dict:
-#     """Check for generative data settings within in a dict structure\n
-#     Filter based on dict value data type and reference names
-#     :param this_node: The dict structure to scan
-#     :param type: `dict`
-#     :param extracted_gen_data: Collected data from previous scans
-#     :param type: `dict`
-#     return: A dict of collected values
-#     """
-#     gen_data = {}
-#     for node_field, node_input in this_node["inputs"].items():
-#         if node_field not in NodeNames.IGNORE_KEYS:
-#             new_label = node_field
-#             label_count = str(extracted_gen_data.keys()).count(node_field)
-#             if label_count > 0:
-#                 new_label = f"{node_field}_{label_count}"
-#             if not isinstance(node_input, list):
-#                 if isinstance(node_input, str):
-#                     node_input = node_input.strip()
-#                 gen_data.setdefault(new_label, node_input)
-#     return gen_data
-
-
-# @debug_monitor
-# def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
-#     """
-#     Validate a dictionary structure then scan it based on info type\n
-#     :param normalized_clean_data: Data prevalidated as correct json dict structure
-#     :type dict: type
-#     :return: A pair of data sets corresponding to prompt and generative settings
-#     """
-#     extracted_prompt_data = {}
-#     extracted_gen_data = {}
-#     for node_number in normalized_clean_data:
-#         this_node = validate_typical(normalized_clean_data, node_number)  # Returns dictionary of node number
-#         for name_column_title in NodeNames.DATA_KEYS:
-#             if this_node and this_node.get(name_column_title, False):
-#                 name_column = name_column_title
-#                 break
-#             raise KeyError("Metadata validated but expected keys were not found.")
-#         node_name = this_node[name_column]
-#         if node_name in NodeNames.ENCODERS:
-#             extracted_prompt_data.update(search_for_prompt_in(this_node, extracted_prompt_data, name_column))
-#         else:
-#             extracted_gen_data.update(search_for_gen_data_in(this_node, extracted_gen_data))
-#     return extracted_prompt_data, extracted_gen_data
-
-
-# @debug_monitor
-# def redivide_nodeui_data_in(header: str, first_key: str) -> Tuple[dict]:
-#     """
-#     Orchestrate tasks to recreate dictionary structure and extract relevant keys within\n
-#     :param header: Embedded dictionary structure
-#     :type variable: str
-#     :param section_titles: Key names for relevant data segments
-#     :type variable: list
-#     :return: Metadata dict, or empty dicts if not found
-#     """
-#     sorted_header_prompt = {}
-#     sorted_header_data = {}
-#     try:
-#         jsonified_header = clean_with_json(header, first_key)
-#     except KeyError as error_log:
-#         nfo("%s", "No key found.", error_log)
-#         return {"": UpField.PLACEHOLDER, " ": UpField.PLACEHOLDER}
-#     else:
-#         if first_key == "workflow":
-#             normalized_clean_data = {"1": jsonified_header}  # To match normalized_prompt_structure format
-#         else:
-#             normalized_clean_data = jsonified_header
-#         sorted_header_prompt, sorted_header_data = filter_keys_of(normalized_clean_data)
-
-#         return sorted_header_prompt, sorted_header_data
-
-
-# def arrange_nodeui_metadata(header_data: dict) -> dict:
-#     """
-#     Using the header from a file, run formatting and parsing processes \n
-#     Return format : {"Prompts": , "Settings": , "System": } \n
-#     :param header_data: Header data from a file
-#     :return: Metadata in a standardized format
-#     """
-
-#     extracted_prompt_pairs, generation_data_pairs = redivide_nodeui_data_in(header_data, "prompt")
-#     if extracted_prompt_pairs == {}:
-#         gen_pairs_copy = generation_data_pairs.copy()
-#         extracted_prompt_pairs, second_gen_map = redivide_nodeui_data_in(header_data, "workflow")
-#         generation_data_pairs = second_gen_map | gen_pairs_copy
-#     return {UpField.PROMPT: extracted_prompt_pairs or {"": UpField.PLACEHOLDER}, DownField.GENERATION_DATA: generation_data_pairs}
-
-
-# # /______________________________________________________________________________________________________________________ A4 format
-
-
-# @debug_monitor
-# def delineate_by_esc_codes(text_chunks: dict, extra_delineation: str = "'Negative prompt'") -> list:
-#     """
-#     Format text from header file by escape-code delineations\n
-#     :param text_chunk: Data from a file header
-#     :return: text data in a dict structure
-#     """
-
-#     segments = []
-#     replace_strings = ["\xe2\x80\x8b", "\x00", "\u200b", "\n", extra_delineation]
-#     dirty_string = text_chunks.get("parameters", text_chunks.get("exif", False))  # Try parameters, then "exif"
-#     if not dirty_string:
-#         return []  # If still None, then just return an empty list
-
-#     if isinstance(dirty_string, bytes):  # Check if it is bytes
-#         try:
-#             dirty_string = dirty_string.decode("utf-8")  # If it is, decode into utf-8 format
-#         except UnicodeDecodeError as error_log:  # Catch exceptions if they fail to decode
-#             nfo("Failed to decode", dirty_string, error_log)
-#             return []  # Return nothing if decoding fails
-
-#     segments = [dirty_string]  # All string operations after this should be safe
-
-#     for buffer in replace_strings:
-#         new_segments = []
-#         for delination in segments:  # Split segments and all sub-segments of this string
-#             split_segs = delination.split(buffer)
-#             new_segments.extend(s for s in split_segs if s)  # Skip empty strings
-#         segments = new_segments
-
-#     clean_segments = segments
-#     return clean_segments
-
-
-# @debug_monitor
-# def extract_prompts(clean_segments: list) -> Tuple[dict, str]:
-#     """
-#     Split string by pre-delineated tag information\n
-#     :param cleaned_text: Text without escape codes
-#     :type cleaned_text: list
-#     :return: A dictionary of prompts and a str of metadata
-#     """
-
-#     if len(clean_segments) <= 2:
-#         prompt_metadata = {
-#             "Positive prompt": clean_segments[0],
-#             "Negative prompt": "",
-#         }
-#         deprompted_text = " ".join(clean_segments[1:])
-#     elif len(clean_segments) > 2:
-#         prompt_metadata = {
-#             "Positive prompt": clean_segments[0],
-#             "Negative prompt": clean_segments[1].strip("Negative prompt':"),
-#         }
-#         deprompted_text = " ".join(clean_segments[2:])
-#     else:
-#         return None
-#     return prompt_metadata, deprompted_text
-
-
-# @debug_monitor
-# def validate_mapping_bracket_pair_structure_of(possibly_invalid: str) -> str:
-#     """
-#     Take a string and prepare it for a conversion to a dict map\n
-#     :param possibly_invalid: The string to prepare
-#     :type possibly_invalid: `str`
-#     :return: A correctly formatted string ready for json.loads/dict conversion operations
-#     """
-
-#     _, bracketed_kv_pairs = possibly_invalid
-#     bracketed_kv_pairs = BracketedDict(brackets=bracketed_kv_pairs)
-
-#     # There may also need to be a check for quotes here
-
-#     valid_kv_pairs = BracketedDict.model_validate(bracketed_kv_pairs)
-
-#     pair_string_checked = getattr(valid_kv_pairs, next(iter(valid_kv_pairs.model_fields)))  # Removes pydantic annotations
-#     pair_string = str(pair_string_checked).replace("'", '"')
-#     return pair_string
-
-
-# @debug_monitor
-# def extract_dict_by_delineation(deprompted_text: str) -> Tuple[dict, list]:
-#     """
-#     Split a string with partial dictionary delineations into a dict\n
-#     :param cleaned_text: Text without escape codes
-#     :return: A freeform string and a partially-organized list of metadata
-#     """
-
-#     def repair_flat_dict(traces_of_pairs: List[str]) -> dict:
-#         """
-#         Convert a list with the first element as a key into a string with delinations \n
-#         :param traces_of_kv_pairs: that has a string with dictionary delineations as its second value\n
-#         Examples - List[str]`['Key', '{Key, Value}'] , ['Key:', ' "Key": "Value" '] `\n
-#         NOT `"[Key, Key, Value]"` or other improper dicts\n
-#         :type traces_of_kv_pairs: `list`
-#         :return: A corrected dictionary structure from the kv pairs
-#         """
-
-#         delineated_str = ListOfDelineatedStr(convert=traces_of_pairs)
-#         key, _ = next(iter(traces_of_pairs))
-#         reformed_sub_dict = getattr(delineated_str, next(iter(delineated_str.model_fields)))
-#         validated_string = validate_mapping_bracket_pair_structure_of(reformed_sub_dict)
-#         repaired_sub_dict[key] = validated_string
-#         return repaired_sub_dict
-
-#     key_value_trace_patterns = [
-#         # r"\s*([^:,]+):\s*([^,]+)",
-#         r" (\w*): ([{].*[}]),",
-#         r' (\w*\s*\w+): (["].*["]),',
-#     ]
-#     repaired_sub_dict = {}
-#     remaining_text = deprompted_text
-
-#     # Main loop, run through regex patterns
-#     for pattern in key_value_trace_patterns:  # if this is a dictionary
-#         traces_of_pairs = re.findall(pattern, remaining_text)  # Search matching text in the original string
-#         if traces_of_pairs:
-#             repair_flat_dict(traces_of_pairs)
-#             remaining_text = re.sub(pattern, "", remaining_text, 1)  # Remove matching text in the original string
-#         # Handle for no match on generation as well
-
-#         else:  # Safely assume this is not a dictionary
-#             return {}, remaining_text
-#     return repaired_sub_dict, remaining_text
-
-
-# @debug_monitor
-# def make_paired_str_dict(text_to_convert: str) -> dict:
-#     """
-#     Convert an unstructured metadata string into a dictionary\n
-#     :param dehashed_data: Metadata tags with quote and bracket delineated features removed
-#     :return: A valid dictionary structure with identical information
-#     """
-
-#     segmented = text_to_convert.split(", ")
-#     delineated = [item.split(": ") for item in segmented if isinstance(item, str) and ": " in item]
-#     try:
-#         converted_text = {el[0]: el[1] for el in delineated if len(el) == 2}
-#     except IndexError as error_log:
-#         nfo("Index position for prompt input out of range", text_to_convert, "at", delineated, error_log)
-#         converted_text = None
-#     return converted_text
-
-
-# @debug_monitor
-# def arrange_webui_metadata(header_data: str) -> dict:
-#     """
-#     Using the header from a file, send to multiple formatting, cleaning, and parsing, processes \n
-#     Return format : {"Prompts": , "Settings": , "System": }\n
-#     :param header_data: Header data from a file
-#     :return: Metadata in a standardized format
-#     """
-
-#     cleaned_text = delineate_by_esc_codes(header_data)
-#     prompt_map, deprompted_text = extract_prompts(cleaned_text)
-#     system_map, generation_text = extract_dict_by_delineation(deprompted_text)
-#     generation_map = make_paired_str_dict(generation_text)
-#     return {
-#         UpField.PROMPT: prompt_map,
-#         DownField.GENERATION_DATA: generation_map,
-#         DownField.SYSTEM: system_map,
-#     }
-
-
-# # /______________________________________________________________________________________________________________________ EXIF Tags
-
-
-# @debug_monitor
-# def arrange_exif_metadata(header_data: dict) -> dict:
-#     """Arrange EXIF data into correct format"""
-#     metadata = {
-#         UpField.TAGS: {UpField.EXIF: {key: value} for key, value in header_data.items() if (key != "icc_profile" or key != "exif")},
-#         DownField.ICC: {DownField.DATA: header_data.get("icc_profile")},
-#         DownField.EXIF: {DownField.DATA: header_data.get("exif")},
-#     }
-#     return metadata
-
-
-# # /______________________________________________________________________________________________________________________ Module Interface
-
-
-# @debug_monitor
-# def coordinate_metadata_ops(header_data: dict | str, metadata: dict = None) -> dict:
-#     """
-#     Process data based on identifying contents\n
-#     :param header_data: Metadata extracted from file
-#     :type header_data: dict
-#     :param datatype: The kind of variable storing the metadata
-#     :type datatype: str
-#     :param metadata: The filtered output extracted from header data
-#     :type metadata: dict
-#     :return: A dict of the metadata inside header data
-#     """
-
-#     has_prompt = isinstance(header_data, dict) and header_data.get("prompt")
-#     has_params = isinstance(header_data, dict) and header_data.get("parameters")
-#     has_tags = isinstance(header_data, dict) and ("icc_profile" in header_data or "exif" in header_data)
-
-#     if has_prompt:
-#         metadata = arrange_nodeui_metadata(header_data)
-#     elif has_params:
-#         metadata = arrange_webui_metadata(header_data)
-#     elif has_tags:
-#         metadata = arrange_exif_metadata(header_data)
-#     elif isinstance(header_data, dict):
-#         try:
-#             metadata = {UpField.JSON_DATA: json.loads(f"{header_data}")}
-#         except JSONDecodeError as error_log:
-#             nfo("JSON Decode failed %s", error_log)
-#     if not metadata and isinstance(header_data, str):
-#         metadata = {UpField.DATA: header_data}
-#     elif not metadata:
-#         metadata = {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}}
-
-#     return metadata
-
-
-# @debug_monitor
-# def parse_metadata(file_path_named: str) -> dict:
-#     """
-#     Extract the metadata from the header of an image file\n
-#     :param file_path_named: The file to open
-#     :return: The metadata from the header of the file
-#     """
-
-#     reader = MetadataFileReader()
-#     metadata = None
-#     header_data = reader.read_header(file_path_named)
-#     if header_data is not None:
-#         metadata = coordinate_metadata_ops(header_data)
-#         if metadata == {UpField.PLACEHOLDER: {"": UpField.PLACEHOLDER}} or not isinstance(metadata, dict):
-#             nfo("Unexpected format", file_path_named)
-#     return metadata
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
+
+"""確認 Data Type Validation"""
+
+from platform import python_version_tuple
+
+from ast import Constant
+
+from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator
+from pydantic_core import ValidationError
+
+from modules.nnll_01.src import LOG_LEVEL
+
+if float(python_version_tuple()[0]) == 3.0 and float(python_version_tuple()[1]) <= 12.0:
+    from typing_extensions import TypedDict, Annotated, List, Union, Set
+
+else:
+    from typing import TypedDict, Annotated, List, Union, Set
+
+
+class EmptyField:
+    "When no data is available"
+
+    PLACEHOLDER: str = "No Data"
+    EMPTY: str = "Empty"
+    LABELS: List[Constant] = [PLACEHOLDER, EMPTY]
+
+
+class UpField:
+    """Upper display area for ui\n
+    Tags in Up or Down arrange data layout for UI
+    Ensure ALL field tags are included in LABELS
+    """
+
+    METADATA: str = "Metadata"
+    PROMPT: str = "Prompt Data"
+    TAGS: str = "Tags"
+    TEXT_DATA: str = "TEXT Data"
+    DATA: str = "DATA"
+    LABELS: List[Constant] = [
+        METADATA,
+        PROMPT,
+        TAGS,
+        TEXT_DATA,
+        DATA,
+    ]
+
+
+class DownField:
+    """Lower display area for ui\n
+    Tags in Up or Down arrange data layout for UI
+    Ensure ALL field tags are included in LABELS
+
+    """
+
+    GENERATION_DATA: str = "Generation Data"
+    SYSTEM: str = "System"
+    ICC: str = "ICC Profile"
+    EXIF: str = "EXIF"
+    RAW_DATA: str = "Text Data"
+    LAYER_DATA: str = "Layer Data"
+    JSON_DATA: str = "JSON Data"
+    TOML_DATA: str = "TOML Data"
+    LABELS: List[Constant] = [
+        GENERATION_DATA,
+        SYSTEM,
+        ICC,
+        EXIF,
+        RAW_DATA,
+        LAYER_DATA,
+        TOML_DATA,
+        JSON_DATA,
+    ]
+
+
+class ExtensionType:
+    """Valid file formats for metadata reading\n"""
+
+    PNG_: Set[str] = {".png"}
+    JPEG: Set[str] = {".jpg", ".jpeg"}
+    WEBP: Set[str] = {".webp"}
+    JSON: Set[str] = {".json"}
+    TOML: Set[str] = {".toml"}
+    TEXT: Set[str] = {".txt", ".text"}
+    HTML: Set[str] = {".html", ".htm"}
+    XML_: Set[str] = {".xml"}
+    GGUF: Set[str] = {".gguf"}
+    SAFE: Set[str] = {".safetensors", ".sft"}
+    PICK: Set[str] = {".pt", ".pth", ".ckpt", ".pickletensor"}
+
+    IMAGE: List[Set[str]] = [JPEG, WEBP, PNG_]
+    EXIF: List[Set[str]] = [JPEG, WEBP]
+    SCHEMA: List[Set[str]] = [JSON, TOML]
+    PLAIN: List[Set[str]] = [TEXT, XML_, HTML]
+    MODEL: List[Set[str]] = [SAFE, GGUF, PICK]
+
+    IGNORE: List[Constant] = [
+        "Thumbs.db",
+        "desktop.ini",
+        ".fseventsd",
+        ".DS_Store",
+    ]
+
+
+class NodeNames:
+    """Node names that carry prompts inside"""
+
+    ENCODERS = {
+        "CLIPTextEncodeFlux",
+        "CLIPTextEncodeSD3",
+        "CLIPTextEncodeSDXL",
+        "CLIPTextEncodeHunyuanDiT",
+        "CLIPTextEncodePixArtAlpha",
+        "CLIPTextEncodeSDXLRefiner",
+        "ImpactWildcardEncodeCLIPTextEncode",
+        "BNK_CLIPTextEncodeAdvanced",
+        "BNK_CLIPTextEncodeSDXLAdvanced",
+        "WildcardEncode //Inspire",
+        "TSC_EfficientLoader",
+        "TSC_EfficientLoaderSDXL",
+        "RgthreePowerPrompt",
+        "RgthreePowerPromptSimple",
+        "RgthreeSDXLPowerPromptPositive",
+        "RgthreeSDXLPowerPromptSimple",
+        "AdvancedCLIPTextEncode",
+        "AdvancedCLIPTextEncodeWithBreak",
+        "Text2Prompt",
+        "smZ CLIPTextEncode",
+        "CLIPTextEncode",
+    }
+    STRING_INPUT = {
+        "RecourseStrings",
+        "StringSelector",
+        "ImpactWildcardProcessor",
+        "CText",
+        "CTextML",
+        "CListString",
+        "CSwitchString",
+        "CR_PromptText",
+        "StringLiteral",
+        "CR_CombinePromptSDParameterGenerator",
+        "WidgetToString",
+        "Show Text 🐍",
+    }
+    PROMPT_LABELS = ["Positive prompt", "Negative prompt", "Prompt"]
+
+    IGNORE_KEYS = [
+        "type",
+        "link",
+        "shape",
+        "id",
+        "pos",
+        "size",
+        "node_id",
+        "empty_padding",
+    ]
+
+    DATA_KEYS = {
+        "class_type": "inputs",
+        "nodes": "widget_values",
+    }
+    PROMPT_NODE_FIELDS = {
+        "text",
+        "t5xxl",
+        "clip-l",
+        "clip-g",
+        "mt5",
+        "mt5xl",
+        "bert",
+        "clip-h",
+        "wildcard",
+        "string",
+        "positive",
+        "negative",
+        "text_g",
+        "text_l",
+        "wildcard_text",
+        "populated_text",
+    }
+
+
+EXC_INFO: bool = LOG_LEVEL != "i"
+
+
+def bracket_check(maybe_brackets: str | dict):
+    """
+    Check and correct brackets in a kv pair format string\n
+    :param maybe_brackets: The data that may or may not have brackets
+    :type maybe_brackets: `str` | `dict`
+    :return: the corrected string, or a dict
+    """
+    if isinstance(maybe_brackets, dict):
+        pass
+    elif isinstance(maybe_brackets, str):
+        if next(iter(maybe_brackets)) != "{":
+            maybe_brackets = "{" + maybe_brackets
+        if maybe_brackets[-1:] != "}":
+            maybe_brackets += "}"
+    else:
+        raise ValidationError("Check input must be str or dict")
+    return maybe_brackets
+
+
+class NodeDataMap(TypedDict):
+    """Valid nodeui json prompt structure"""
+
+    class_type: str
+    inputs: Union[dict, float]
+
+
+class NodeWorkflow(TypedDict):
+    """Valid nodeui json workflow structure"""
+
+    last_node_id: int
+    last_link_id: Union[int, dict]
+    nodes: list
+    links: list
+    groups: list
+    config: dict
+    extra: dict
+    version: float
+
+
+class BracketedDict(BaseModel):
+    """
+    Ensure a string value is formatted correctly for a dictionary\n
+    :param node_data: k/v pairs with or without brackets
+    :type node_data: `str`, required
+    """
+
+    brackets: Annotated[str, Field(init=False), AfterValidator(bracket_check)]
+
+
+class IsThisNode:
+    """
+    Confirm the data input of a ComfyUI dict\n
+    :param node_data: The data to verify
+    :type node_data: `str | dict`
+    """
+
+    data = TypeAdapter(NodeDataMap)
+    workflow = TypeAdapter(NodeWorkflow)
+
+
+class ListOfDelineatedStr(BaseModel):
+    """Ensure list conversion into delineated string\n"""
+
+    convert: list
+
+    @field_validator("convert")
+    @classmethod
+    def drop_tuple(cls, regex_match: list):
+        """Remove tuple elements from validation"""
+        regex_match = list(next(iter(regex_match), None))
+        return regex_match

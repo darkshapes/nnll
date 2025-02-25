@@ -1,6 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import unittest
 from unittest.mock import patch, MagicMock
@@ -24,7 +24,6 @@ class ConcreteLink(AbstractLink):
 
 
 class TestAbstractLink(unittest.TestCase):
-
     def test_get_filename_abstract_method(self):
         with self.assertRaises(TypeError):
             abstract_link_instance = AbstractLink()
@@ -33,7 +32,7 @@ class TestAbstractLink(unittest.TestCase):
         with self.assertRaises(TypeError):
             abstract_link_instance = AbstractLink()
 
-    @patch('os.path.normpath')
+    @patch("os.path.normpath")
     def test_initialization(self, mock_normpath):
         mock_normpath.return_value = "/Users/unauthorized/Downloads/models/metadata"
         link = ConcreteLink("/Users/unauthorized/Downloads/models/metadata")
@@ -41,12 +40,11 @@ class TestAbstractLink(unittest.TestCase):
 
 
 class TestAutoencoderLink(unittest.TestCase):
-
-    @patch('os.makedirs')
-    @patch('os.listdir')
-    @patch('os.remove')
-    @patch('os.symlink')
-    @patch('os.path.islink')
+    @patch("os.makedirs")
+    @patch("os.listdir")
+    @patch("os.remove")
+    @patch("os.symlink")
+    @patch("os.path.islink")
     def test_create_symlink_single_file(self, mock_islink, mock_symlink, mock_remove, mock_listdir, mock_makedirs):
         link = AutoencoderLink()
 
@@ -67,11 +65,11 @@ class TestAutoencoderLink(unittest.TestCase):
         mock_symlink.assert_called_with(target_path, expected_symlink_full_path)
         self.assertEqual(result, expected_symlink_full_path)
 
-    @patch('os.makedirs')
-    @patch('os.listdir')
-    @patch('os.remove')
-    @patch('os.symlink')
-    @patch('os.path.islink')
+    @patch("os.makedirs")
+    @patch("os.listdir")
+    @patch("os.remove")
+    @patch("os.symlink")
+    @patch("os.path.islink")
     def test_create_symlink_sharded_files(self, mock_islink, mock_symlink, mock_remove, mock_listdir, mock_makedirs):
         link = AutoencoderLink()
 
@@ -98,12 +96,11 @@ class TestAutoencoderLink(unittest.TestCase):
 
 
 class TestTextEncoderLink(unittest.TestCase):
-
-    @patch('os.makedirs')
-    @patch('os.listdir')
-    @patch('os.remove')
-    @patch('os.symlink')
-    @patch('os.path.islink')
+    @patch("os.makedirs")
+    @patch("os.listdir")
+    @patch("os.remove")
+    @patch("os.symlink")
+    @patch("os.path.islink")
     def test_create_symlink_single_file(self, mock_islink, mock_symlink, mock_remove, mock_listdir, mock_makedirs):
         link = TextEncoderLink()
 
@@ -124,11 +121,11 @@ class TestTextEncoderLink(unittest.TestCase):
         mock_symlink.assert_called_with(target_path, expected_symlink_full_path)
         self.assertEqual(result, expected_symlink_full_path)
 
-    @patch('os.makedirs')
-    @patch('os.listdir')
-    @patch('os.remove')
-    @patch('os.symlink')
-    @patch('os.path.islink')
+    @patch("os.makedirs")
+    @patch("os.listdir")
+    @patch("os.remove")
+    @patch("os.symlink")
+    @patch("os.path.islink")
     def test_create_symlink_sharded_files(self, mock_islink, mock_symlink, mock_remove, mock_listdir, mock_makedirs):
         link = TextEncoderLink()
 
@@ -155,12 +152,11 @@ class TestTextEncoderLink(unittest.TestCase):
 
 
 class TestUNetLink(unittest.TestCase):
-
-    @patch('os.makedirs')
-    @patch('os.listdir')
-    @patch('os.remove')
-    @patch('os.symlink')
-    @patch('os.path.islink')
+    @patch("os.makedirs")
+    @patch("os.listdir")
+    @patch("os.remove")
+    @patch("os.symlink")
+    @patch("os.path.islink")
     def test_create_symlink_single_file(self, mock_islink, mock_symlink, mock_remove, mock_listdir, mock_makedirs):
         link = UNetLink()
 
@@ -181,11 +177,11 @@ class TestUNetLink(unittest.TestCase):
         mock_symlink.assert_called_with(target_path, expected_symlink_full_path)
         self.assertEqual(result, expected_symlink_full_path)
 
-    @patch('os.makedirs')
-    @patch('os.listdir')
-    @patch('os.remove')
-    @patch('os.symlink')
-    @patch('os.path.islink')
+    @patch("os.makedirs")
+    @patch("os.listdir")
+    @patch("os.remove")
+    @patch("os.symlink")
+    @patch("os.path.islink")
     def test_create_symlink_sharded_files(self, mock_islink, mock_symlink, mock_remove, mock_listdir, mock_makedirs):
         link = UNetLink()
 
@@ -210,7 +206,8 @@ class TestUNetLink(unittest.TestCase):
 
         self.assertEqual(result, expected_symlink_full_paths)
 
-if __name__== "__main__":
+
+if __name__ == "__main__":
     text_link = TextEncoderLink()
     unet_link = UNetLink()
     autoencoder_link = AutoencoderLink()

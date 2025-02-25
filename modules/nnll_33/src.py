@@ -1,5 +1,6 @@
-# // SPDX-License-Identifier: blessing
-# // d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 
 from re import L
 from modules.nnll_25.src import ExtractAndMatchMetadata

@@ -1,6 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import unittest
 
@@ -24,5 +24,5 @@ import unittest
 
 #     #raise #dont forget to fill this file
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

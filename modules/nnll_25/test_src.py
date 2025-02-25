@@ -1,6 +1,5 @@
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
 
 import os
@@ -15,7 +14,7 @@ testdata_00 = [
     ("Hello 123 World", "r'd+'", True),
     ("Example.com", "r'.com'", True),
     ("Test Data 456", "r'Test d+ata'", False),  # This should be False because 'd+' is not replaced correctly
-    ("123.456", "r'123.d+'", True)
+    ("123.456", "r'123.d+'", True),
 ]
 
 testdata_01 = [

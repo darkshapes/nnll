@@ -1,3 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 import sqlite3
 import os
 from contextlib import closing
@@ -7,7 +10,7 @@ from modules.nnll_51.src import managed_connection, create_table, insert_into_db
 
 
 class TestDatabaseOperations(unittest.TestCase):
-    DATABASE_NAME = "test_combo_history.db"
+    DATABASE_NAME = os.path.join(os.getcwd(), "modules", "nnll_51", "test_combo_history.db")
 
     def setUp(self):
         self.test_db = "test_db.db"

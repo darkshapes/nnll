@@ -16,7 +16,7 @@
 
 `nnll-parse`   - Lookup model metadata headers and write out to .json file.<br>
 `nnll-find`    - Scan .json files from `-parse` for a specific string pattern within layer contents.<br>
-`nnll-index`   - Identify available models within a given path and create a database of their attributes<br>
+<!-- `nnll-index`   - Identify available models within a given path and create a database of their attributes<br> -->
 `nnll-toc`     - (run from root folder only) Recreate the project table of contents, populating preview and navigation links for IDEs<br>
 <br>
 

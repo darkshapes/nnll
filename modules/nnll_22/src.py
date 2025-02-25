@@ -1,6 +1,5 @@
-
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
 import os
 from abc import ABC, abstractmethod
@@ -26,9 +25,7 @@ class AbstractLink(ABC):
     def get_folder_name(self, index: int) -> str:
         pass
 
-    def create_symlink( self, model_type: str, target_path: str | List[str] = None,
-                        original_layout: bool = False, variant_suffix: str = "safetensors"
-                        ) -> str | List[str]:
+    def create_symlink(self, model_type: str, target_path: str | List[str] = None, original_layout: bool = False, variant_suffix: str = "safetensors") -> str | List[str]:
         """
         #### Create a symlink from a file in a model database
         #### `model_type`: Id code of model
@@ -48,7 +45,7 @@ class AbstractLink(ABC):
             #### OUTPUT: A path to a symlink
             """
             symlink_full_path = os.path.join(self.metadata_folder, folder_name, filename)
-            os.makedirs(os.path.dirname(symlink_full_path), exist_ok=True)   # Ensure the target directory exists
+            os.makedirs(os.path.dirname(symlink_full_path), exist_ok=True)  # Ensure the target directory exists
             for file_name in os.listdir(os.path.dirname(symlink_full_path)):  # Remove any existing symlink or file at the destination path
                 if os.path.islink(os.path.join(os.path.dirname(symlink_full_path), file_name)):
                     os.remove(os.path.join(os.path.dirname(symlink_full_path), file_name))
@@ -74,6 +71,7 @@ class AbstractLink(ABC):
                 raise ValueError("Either 'target_path' or 'sharded_files' must be provided.")
 
         raise ValueError("Either target_path or sharded_files must be provided")
+
 
 # Specific link classes
 

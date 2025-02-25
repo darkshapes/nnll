@@ -1,13 +1,16 @@
-# // SPDX-License-Identifier: blessing
-# // d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 
 import os
-import modules.nnll_57.look as look
-from PIL import Image
 from typing import LiteralString
 
+from PIL import Image
 
-def save_element(extension=".png", save_folder_name_and_path=look.save_folder_name_and_path):
+save_folder_name_and_path = os.path.join(os.getcwd(), "modules", "nnll_57")
+
+
+def save_element(extension=".png", save_folder_name_and_path=save_folder_name_and_path):
     print(save_folder_name_and_path)
     if not os.path.isdir(save_folder_name_and_path):
         raise FileNotFoundError("Invalid folder location. {error_log}")

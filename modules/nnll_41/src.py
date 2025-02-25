@@ -1,10 +1,11 @@
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
-#// SPDX-License-Identifier: blessing
-#// d a r k s h a p e s
 
 import os
 
-def trace_file_structure(walk_path: str, indicator:str) -> list:
+
+def trace_file_structure(walk_path: str, indicator: str) -> list:
     """
     Find all module based on local file structure\n
     :param indicator: `str` Name or suffix type of relevant module files
@@ -15,5 +16,4 @@ def trace_file_structure(walk_path: str, indicator:str) -> list:
         if indicator in file_names:
             active_directories.append(root_folder)
     active_directories.sort()
-    return active_directories # Organize by numerical order
-
+    return active_directories  # Organize by numerical order

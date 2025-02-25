@@ -1,5 +1,6 @@
-# // SPDX-License-Identifier: blessing
-# // d a r k s h a p e s
+### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 # pylint:disable=line-too-long
 
 
@@ -15,7 +16,7 @@ class TestBlock(unittest.TestCase):
     """Test blocks objects"""
 
     test_file = os.path.join("modules", "nnll_61", "test.json")
-    file_name = os.path.join(os.getcwd(), "test.json")
+    file_name = os.path.join("modules", "nnll_61", "test.json")
 
     def setUp(self):
         """Create block and save existing parameters"""
