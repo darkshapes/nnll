@@ -32,6 +32,6 @@ else:
 
 
 try:
-    __version__ = metadata.version("dataset-tools")
+    __version__ = metadata.version("nnll")
 except metadata.PackageNotFoundError as error_log:
     print(f"dataset-tools package is not installed. Did you run `pip install .`? {error_log}")
