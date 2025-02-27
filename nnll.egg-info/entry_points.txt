@@ -1,4 +1,4 @@
 [console_scripts]
-nnll-find = modules.nnll_31.src:find_entry
-nnll-parse = modules.nnll_36.src:main
-nnll-toc = modules.nnll_43.src:main
+nnll-find = nnll_31:find_entry
+nnll-parse = nnll_36:main
+nnll-toc = nnll_43:main

@@ -3,9 +3,9 @@
 # nnll
 
 ## neural network link library
-`nnll` (or <em>null</em>) is a comprehensive AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working individual experiments or in the general field of large-scale machine learning model deployment.
+`nnll` (or <em>null</em>) is a comprehensive AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
 
-We currently support 🧨Diffusers, 🤗Transformers, 🦙Llama inference, and refined methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of generative AI preparations.
+Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Llama, 🍏MLX, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
 <br>
 
 [![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
@@ -14,18 +14,24 @@ We currently support 🧨Diffusers, 🤗Transformers, 🦙Llama inference, and r
 <br>
 
 ## use
+Some modules are full scripts and can be run from command line. These are written here:
 
 `nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
 `nnll-find`    - Scan .json files from `-parse` for string patterns within tensor layer metadata and output matches to console.<br>
-<!-- `nnll-index`   - Identify available models within a given path and create a .json database file of their attributes.<br> -->
-`nnll-toc`     - (run from /nnll folder) Recreate the project table of contents, updating function names and populating navigation links for IDEs and GitHub<br>
 <br>
 
-## imports
-`import nnll_**.src`
-<br><br>
+## specifics
 
-## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/README.md)
+Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project.
+
+- *Recommended* : Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
+- Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
+- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
+- Basic clone or fork of the project
+
+`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want static hard copy, you are welcome to copy and paste folders or code wherever you please.
+
+<br><br>
 
 ## setup
 

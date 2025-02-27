@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nnll"
-description = "Tensor tools library"
+description = "Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes."
 authors = [
     { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
 ]
@@ -21,49 +21,115 @@ dependencies = [
     "tqdm",
     "wheel",
     "numpy",
-    "torch",
-    "llama-cpp-python",
     "gguf",
     "sentencepiece",
     "diffusers",
     "transformers",
     "huggingface-hub",
-    "hidiffusion>=0.1.10",
-    "pydantic>=2.10.6",
-    "pydantic-core>=2.27.2",
-    "rich>=13.9.4",
-    "toml>=0.10.2",
-    "pillow>=11.1.0",
+    "pydantic",
+    "pydantic-core",
+    "rich",
+    "toml",
+    "pillow",
+    "aiofiles",
+    "aiohttp",
 ]
 
 [project.optional-dependencies]
-dev = ["nnll[opt]", "pytest", "ruff"]
+opt = ["hidiffusion"]
+torch = ["torch", "torchvision", "torchaudio"]
+dev = [
+    "nnll[opt]",
+    "pytest",
+    "ruff",
+    "aioresponses",
+    "anyio",
+    "pytest-asyncio",
+    "pytest-tornasync",
+    "pytest-trio",
+]
 
 [project.scripts]
-nnll-toc   = "modules.nnll_43.src:main"
-nnll-find  = "modules.nnll_31.src:find_entry"
-nnll-parse = "modules.nnll_36.src:main"
-# nnll-index = "modules.nnll_37.src:index"
+nnll-find  = "nnll_31:find_entry"
+nnll-parse = "nnll_36:main"
+
+[tool.setuptools]
+packages = [
+    "nnll_01",
+    "nnll_02",
+    "nnll_03",
+    "nnll_04",
+    "nnll_05",
+    "nnll_07",
+    "nnll_08",
+    "nnll_09",
+    "nnll_18",
+    "nnll_22",
+    "nnll_24",
+    "nnll_25",
+    "nnll_26",
+    "nnll_27",
+    "nnll_28",
+    "nnll_29",
+    "nnll_30",
+    "nnll_31",
+    "nnll_32",
+    "nnll_33",
+    "nnll_34",
+    "nnll_35",
+    "nnll_36",
+    "nnll_37",
+    "nnll_39",
+    "nnll_40",
+    "nnll_41",
+    "nnll_42",
+    "nnll_43",
+    "nnll_44",
+    "nnll_45",
+    "nnll_46",
+    "nnll_47",
+    "nnll_48",
+    "nnll_49",
+    "nnll_51",
+    "nnll_52",
+    "nnll_53",
+    "nnll_54",
+    "nnll_56",
+    "nnll_57",
+    "nnll_59",
+    "nnll_60",
+    "nnll_61",
+    "nnll_62",
+    "nnll_63",
+    "nnll_64",
+]
 
 [tool.setuptools_scm]
+
 write_to = "_version.py"
 
 [tool.uv]
 dev-dependencies = ["nnll[opt]", "nnll[dev]"]
 
 [tool.ruff]
-line-length    = 120
+line-length    = 140
 include        = ["*.py"]
 extend-exclude = ["^tests/.*$", "test.*$"]
 
 [tool.pylint]
-ignore-paths = ["^tests/.*$", "test_.*$"]
+max-line-length = 140
+ignore-paths    = ["^tests/.*$", "test_.*$"]
 
 [tool.ruff.format]
 
 [tool.ruff.lint.pycodestyle]
-max-line-length               = 120
+max-line-length               = 140
 ignore-overlong-task-comments = true
 
 [tool.typos]
 files.extend-exclude = ["^tests/.*$", "test.*$"]
+name = "nnll"
+description = "Tensor tools library"
+authors = [
+    { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
+]
