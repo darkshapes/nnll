@@ -40,7 +40,7 @@ dependencies = [
     "aiohttp",
     "torch; platform_machine == 'aarch64'",
     "torch; platform_machine == 'arm64'",
-    "torch==2.7.0+cu126; platform_machine == 'x86_64'",
+    "torch==2.6.0+cu124; platform_machine == 'x86_64'",
     "torchvision",
     "torchaudio",
 

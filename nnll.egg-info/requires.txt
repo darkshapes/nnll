@@ -28,7 +28,7 @@ torch
 torch
 
 [:platform_machine == "x86_64"]
-torch==2.7.0+cu126
+torch==2.6.0+cu124
 
 [dev]
 nnll[opt]
