@@ -4,10 +4,11 @@
 
 import os
 from unittest.mock import patch, MagicMock
+import nnll_57
 from nnll_57 import save_element, write_to_disk
 from PIL import Image
 
-mock_path = os.path.dirname(__file__)
+mock_path = os.path.dirname(nnll_57.__file__)
 
 
 def test_save_element():
