@@ -23,7 +23,6 @@ anyio
 pytest-asyncio
 pytest-tornasync
 pytest-trio
-pytest-twisted
 
 [opt]
 hidiffusion

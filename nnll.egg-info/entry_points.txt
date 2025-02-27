@@ -1,4 +1,3 @@
 [console_scripts]
 nnll-find = nnll_31:find_entry
 nnll-parse = nnll_36:main
-nnll-toc = nnll_43:main
