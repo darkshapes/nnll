@@ -40,7 +40,7 @@ async def test_prepare_download():
     assert save_file_path_absolute == expected_return_local
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_save_file_async():
     save_file_path_absolute = "/fake/path/to/file.pdb"
     file_content = b"mock content"
@@ -60,7 +60,7 @@ async def test_save_file_async():
             mock_file.write.assert_not_awaited()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_concurrent_download_success():
     """simulate aiohttp.ClientSession
     Use aioresponses to intercept the HTTP request
@@ -82,7 +82,7 @@ async def test_concurrent_download_success():
         assert result == mock_content
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_concurrent_download_failure():
     # intercept HTTP request, Mock 404
     # build session, simulate failure
@@ -95,7 +95,7 @@ async def test_concurrent_download_failure():
                 await concurrent_download(session, remote_file_path)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_concurrent_download_read_awaits():
     """Mock get"""
     remote_file_path = "https://example.com/file.pdb"
@@ -109,7 +109,7 @@ async def test_concurrent_download_read_awaits():
             assert result == mock_content
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_retry_success_after_three_attempts():
     """Mock operation that fails twice and then succeeds
     Patch asyncio.sleep to avoid delay"""
@@ -124,7 +124,7 @@ async def test_retry_success_after_three_attempts():
         assert mock_operation.call_count == 3
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_retry_fails_after_max_retries():
     """Mock 100% failure"""
     mock_operation = AsyncMock(side_effect=[Exception("Error")] * 4)
@@ -137,7 +137,7 @@ async def test_retry_fails_after_max_retries():
         assert mock_operation.call_count == 4
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_retry_first_attempt_success():
     """Mock success on the first try"""
     mock_operation = AsyncMock(return_value="Success")
@@ -150,7 +150,7 @@ async def test_retry_first_attempt_success():
         mock_operation.assert_called_once()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_retry_custom_exception():
     """Mock custom exception (e.g., ValueError)"""
     mock_operation = AsyncMock(side_effect=[ValueError("Custom Error")] * 3)
@@ -162,7 +162,7 @@ async def test_retry_custom_exception():
         assert mock_operation.call_count == 3  # Max retries + 1 attempt
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio(loop_scope="session")
 async def test_retry_no_retries():
     # Always fails, 0 Retries (PERMADEATH MODE)
     mock_operation = AsyncMock(side_effect=Exception("No retries allowed"))
