@@ -31,23 +31,24 @@ dependencies = [
     "rich",
     "toml",
     "pillow",
-    "aiofiles",
-    "aiohttp",
-]
-
-[project.optional-dependencies]
-opt = ["hidiffusion"]
-torch = ["torch", "torchvision", "torchaudio"]
-dev = [
-    "nnll[opt]",
-    "pytest",
-    "ruff",
     "aioresponses",
     "anyio",
     "pytest-asyncio",
     "pytest-tornasync",
     "pytest-trio",
+    "aiofiles",
+    "aiohttp",
+    "torch; platform_machine == 'aarch64'",
+    "torch; platform_machine == 'arm64'",
+    "torch==2.7.0+cu126; platform_machine == 'x86_64'",
+    "torchvision",
+    "torchaudio",
+
 ]
+
+[project.optional-dependencies]
+opt = ["hidiffusion"]
+dev = ["nnll[opt]", "pytest", "ruff"]
 
 [project.scripts]
 nnll-find  = "nnll_31:find_entry"

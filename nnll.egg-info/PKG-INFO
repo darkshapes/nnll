@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: nnll
-Version: 0.1.dev143+g77daa09.d20250227
+Version: 0.1.dev144+gd803839.d20250227
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -29,23 +29,24 @@ Requires-Dist: pydantic-core
 Requires-Dist: rich
 Requires-Dist: toml
 Requires-Dist: pillow
+Requires-Dist: aioresponses
+Requires-Dist: anyio
+Requires-Dist: pytest-asyncio
+Requires-Dist: pytest-tornasync
+Requires-Dist: pytest-trio
 Requires-Dist: aiofiles
 Requires-Dist: aiohttp
+Requires-Dist: torch; platform_machine == "aarch64"
+Requires-Dist: torch; platform_machine == "arm64"
+Requires-Dist: torch==2.7.0+cu126; platform_machine == "x86_64"
+Requires-Dist: torchvision
+Requires-Dist: torchaudio
 Provides-Extra: opt
 Requires-Dist: hidiffusion; extra == "opt"
-Provides-Extra: torch
-Requires-Dist: torch; extra == "torch"
-Requires-Dist: torchvision; extra == "torch"
-Requires-Dist: torchaudio; extra == "torch"
 Provides-Extra: dev
 Requires-Dist: nnll[opt]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: ruff; extra == "dev"
-Requires-Dist: aioresponses; extra == "dev"
-Requires-Dist: anyio; extra == "dev"
-Requires-Dist: pytest-asyncio; extra == "dev"
-Requires-Dist: pytest-tornasync; extra == "dev"
-Requires-Dist: pytest-trio; extra == "dev"
 
 
 

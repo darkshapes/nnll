@@ -11,23 +11,29 @@ pydantic-core
 rich
 toml
 pillow
-aiofiles
-aiohttp
-
-[dev]
-nnll[opt]
-pytest
-ruff
 aioresponses
 anyio
 pytest-asyncio
 pytest-tornasync
 pytest-trio
+aiofiles
+aiohttp
+torchvision
+torchaudio
+
+[:platform_machine == "aarch64"]
+torch
+
+[:platform_machine == "arm64"]
+torch
+
+[:platform_machine == "x86_64"]
+torch==2.7.0+cu126
+
+[dev]
+nnll[opt]
+pytest
+ruff
 
 [opt]
 hidiffusion
-
-[torch]
-torch
-torchvision
-torchaudio
