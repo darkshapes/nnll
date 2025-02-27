@@ -1,0 +1,15 @@
+{
+    "import_map": {
+        ".safetensors": "load_safetensors_metadata_from_model",
+        ".sft": "load_safetensors_metadata_from_model",
+        ".gguf": "load_gguf_metadata_from_model",
+        ".pt": "load_pickletensor_metadata_from_model",
+        ".pth": "load_pickletensor_metadata_from_model",
+        ".ckpt": "load_pickletensor_metadata_from_model"
+    },
+    "method_map": {
+        "load_safetensors_metadata_from_model": "nnll_04",
+        "load_gguf_metadata_from_model": "nnll_05",
+        "load_pickletensor_metadata_from_model": "nnll_28"
+    }
+}

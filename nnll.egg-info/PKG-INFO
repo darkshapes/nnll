@@ -1,7 +1,7 @@
 Metadata-Version: 2.2
 Name: nnll
-Version: 0.1.dev133+ge298c73.d20250224
-Summary: Tensor tools library
+Version: 0.1.dev148+g185ef17.d20250227
+Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
         The author disclaims copyright to this source code.  In place of
@@ -12,37 +12,62 @@ License: #// SPDX-License-Identifier: blessing
           *   May you share freely, never taking more than you give.
         
 Project-URL: source, https://github.com/darkshapes/nnll
-Keywords: ML,AI,neural network,library
+Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: tqdm
 Requires-Dist: wheel
 Requires-Dist: numpy
-Requires-Dist: torch
-Requires-Dist: llama-cpp-python
 Requires-Dist: gguf
 Requires-Dist: sentencepiece
 Requires-Dist: diffusers
 Requires-Dist: transformers
 Requires-Dist: huggingface-hub
-Requires-Dist: hidiffusion>=0.1.10
-Requires-Dist: pydantic>=2.10.6
-Requires-Dist: pydantic-core>=2.27.2
-Requires-Dist: rich>=13.9.4
-Requires-Dist: toml>=0.10.2
-Requires-Dist: pillow>=11.1.0
+Requires-Dist: pydantic
+Requires-Dist: pydantic-core
+Requires-Dist: rich
+Requires-Dist: toml
+Requires-Dist: pillow
+Requires-Dist: aioresponses
+Requires-Dist: anyio
+Requires-Dist: pytest-asyncio
+Requires-Dist: pytest-tornasync
+Requires-Dist: pytest-trio
+Requires-Dist: aiofiles
+Requires-Dist: aiohttp
+Requires-Dist: llama-cpp-python
+Requires-Dist: torch
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp310-none-macosx_11_0_arm64.whl ; python_version == "3.10" and platform_machine == "arm64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp311-none-macosx_11_0_arm64.whl ; python_version == "3.11" and platform_machine == "arm64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp312-none-macosx_11_0_arm64.whl ; python_version == "3.12" and platform_machine == "arm64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp313-none-macosx_11_0_arm64.whl ; python_version == "3.13" and platform_machine == "arm64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp310-cp310-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp311-cp311-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp313-cp313t-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-win_amd64.whl#sha256=7cc45c5b39d74875cfafe908b7f55c544147cc16b01e795feb2fe766583efe78 ; platform_system == "windows" and python_version == "3.10" and platform_machine != "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-win_amd64.whl#sha256=6a1fb2714e9323f11edb6e8abf7aad5f79e45ad25c081cde87681a18d99c29eb ; platform_system == "windows" and python_version == "3.11" and platform_machine != "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl#sha256=3313061c1fec4c7310cf47944e84513dcd27b6173b72a349bb7ca68d0ee6e9c0 ; platform_system == "windows" and python_version == "3.12" and platform_machine != "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp313-cp313-win_amd64.whl#sha256=519330eef09534acad8110b6f423d2fe58c1d8e9ada999ed077a637a0021f908 ; platform_system == "windows" and python_version == "3.13" and platform_machine != "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=7f2ba7f7c0459320a521696f6b5bccc187f59890b23c9dfb6c49b0b87c6bfc97 ; platform_system == "linux" and python_version == "3.10" and platform_machine != "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-linux_x86_64.whl#sha256=d4c3e9a8d31a7c0fcbb9da17c31a1917e1fac26c566a4cfbd8c9568ad7cade79 ; platform_system == "linux" and python_version == "3.11" and platform_machine != "aarch64"
+Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-linux_x86_64.whl#sha256=a393b506844035c0dac2f30ea8478c343b8e95a429f06f3b3cadfc7f53adb597 ; platform_system == "linux" and python_version == "3.12" and platform_machine != "aarch64"
+Provides-Extra: opt
+Requires-Dist: hidiffusion; extra == "opt"
 Provides-Extra: dev
 Requires-Dist: nnll[opt]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
 
 
 
 # nnll
 
 ## neural network link library
-`nnll` (or <em>null</em>) is a set of tensor packaging utilities and computer vision experiments. The modules may appeal to other AI developers, researchers and tinkerers, and are designed to effortlessly fold into others' projects.
-<br>
+`nnll` (or <em>null</em>) is a comprehensive AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
+
+Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Llama, 🍏MLX, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
 <br>
 
 [![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
@@ -51,26 +76,26 @@ Requires-Dist: pytest; extra == "dev"
 <br>
 
 ## use
+Some modules are full scripts and can be run from command line. These are written here:
 
-`nnll-parse`   - Lookup model metadata headers and write out to .json file.<br>
-`nnll-find`    - Scan .json files from `-parse` for a specific string pattern within layer contents.<br>
-<!-- `nnll-index`   - Identify available models within a given path and create a database of their attributes<br> -->
-`nnll-toc`     - (run from root folder only) Recreate the project table of contents, populating preview and navigation links for IDEs<br>
+`nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
+`nnll-find`    - Scan .json files from `-parse` for string patterns within tensor layer metadata and output matches to console.<br>
 <br>
 
-## imports
-`import nnll_**.src`
+## specifics
+
+Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project.
+
+- *Recommended* : Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
+- Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
+- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
+- Basic clone or fork of the project
+
+`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want static hard copy, you are welcome to copy and paste folders or code wherever you please.
+
 <br><br>
 
-## [modules table of contents](https://github.com/darkshapes/nnll/blob/main/modules/README.md)
-
-> [!NOTE]
-> x/dev branch: updated **~=nightly**.<br>
-> main branch : stable, devoted to **long-term support**.
-<br><br>
-
-## development setup
-
+## setup
 
 ##### clone repo
 
@@ -82,28 +107,31 @@ Requires-Dist: pytest; extra == "dev"
 
 #####  create virtual environment
 > ```
-> py -m venv .venv_nnll
+> python3 -m venv .venv_nnll
 > ```
 
 <details> <summary> <a>Next--></a></summary>
 
-##### 3 activate --> (windows powershell)
+##### 3 (windows powershell) activate
 > ```
 > Set-ExecutionPolicy Bypass -Scope Process -Force; .venv_nnll\Scripts\Activate.ps1
 > ```
 
-##### 3 activate --> ( linux | macos)
+##### 3 ( linux | macos) activate
 > ```
-> .venv_nnll/bin/activate
+> source .venv_nnll/bin/activate
 > ```
 
 <details> <summary> <a>Next--></a></summary>
 
 ##### 4 install
 > ```
-> cd nnll
-> pip install -e .
+> pip install -e nnll
 > ```
+or
+>
+> pip install -e 'nnll\[dev\]'
+>
 
 ##### Done.
 </details>
