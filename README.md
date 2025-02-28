@@ -22,14 +22,15 @@ Some modules are full scripts and can be run from command line. These are writte
 
 ## specifics
 
-Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project.
+Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
 
-- *Recommended* : Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
-- Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
-- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
+- *Recommended* : Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
 - Basic clone or fork of the project
+-  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
+- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
 
-`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want static hard copy, you are welcome to copy and paste folders or code wherever you please.
+
+`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want a static hard copy, you are welcome to copy and paste folders or code wherever you please.
 
 <br><br>
 
