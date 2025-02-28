@@ -1,36 +1,32 @@
 import asyncio
-import sys
 from unittest import mock
-from unittest.mock import call
-import aiohttp
 import pytest
-import requests
-
+import pytest_asyncio
 from nnll_03 import async_download_session
 
 
-@pytest.fixture
+@pytest_asyncio.fixture(loop_scope="session")
 def mock_session():
     # Mock aiohttp.ClientSession properly
     with mock.patch("aiohttp.ClientSession", new_callable=mock.AsyncMock) as session_mock:
         yield session_mock
 
 
-@pytest.fixture
+@pytest_asyncio.fixture(loop_scope="session")
 def mock_async_remote_transfer():
     # Correctly mock async_remote_transfer as an AsyncMock
     with mock.patch("nnll_03.async_remote_transfer", new=mock.AsyncMock()) as mocked:
         yield mocked
 
 
-@pytest.fixture
+@pytest_asyncio.fixture(loop_scope="session")
 def mock_async_save_file():
     # Ensure async_save_file is correctly mocked as an AsyncMock
     with mock.patch("nnll_03.async_save_file", new=mock.AsyncMock()) as mocked:
         yield mocked
 
 
-@pytest.fixture
+@pytest_asyncio.fixture(loop_scope="session")
 def mock_retry():
     # Mock retry function properly so it returns an awaitable
     async def mock_retry_func(*args, **kwargs):
@@ -42,6 +38,7 @@ def mock_retry():
         yield mocked
 
 
+@pytest.mark.asyncio(loop_scope="session")
 async def test_async_download_session_os_error(mock_retry, mock_async_save_file):
     # Arrange: Simulate an OSError during file saving
     # Mock download task (this will be successful)
