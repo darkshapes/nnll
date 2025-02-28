@@ -5,10 +5,9 @@ import aiohttp
 import pytest
 import asyncio
 
-from aiofiles import open as async_open
 from aioresponses import aioresponses
 
-from nnll_03 import concurrent_download, prepare_download, retry, save_file
+from nnll_03 import async_remote_transfer, prepare_download, retry, async_save_file
 
 local_folder = os.path.join(os.path.dirname(__file__), "test", "download")
 file_name = "test_dl.txt"
@@ -49,7 +48,7 @@ async def test_save_file_async():
         mock_file = AsyncMock()
         mock_open.return_value.__aenter__.return_value = mock_file
 
-        await save_file(save_file_path_absolute, file_content)
+        await async_save_file(save_file_path_absolute, file_content)
 
         # Assert file was opened with the correct mode
         mock_open.assert_awaited_once_with(save_file_path_absolute, "wb")
@@ -61,7 +60,7 @@ async def test_save_file_async():
 
 
 @pytest.mark.asyncio(loop_scope="session")
-async def test_concurrent_download_success():
+async def test_async_remote_transfer_success():
     """simulate aiohttp.ClientSession
     Use aioresponses to intercept the HTTP request
     Mock GET request using aioresponse
@@ -76,14 +75,14 @@ async def test_concurrent_download_success():
 
         # Create an actual aiohttp.ClientSession (aioresponses will intercept it)
         async with aiohttp.ClientSession() as session:
-            result = await concurrent_download(session, remote_file_path)
+            result = await async_remote_transfer(session, remote_file_path)
 
         # Ensure we got back the expected content
         assert result == mock_content
 
 
 @pytest.mark.asyncio(loop_scope="session")
-async def test_concurrent_download_failure():
+async def test_async_remote_transfer_failure():
     # intercept HTTP request, Mock 404
     # build session, simulate failure
 
@@ -92,11 +91,11 @@ async def test_concurrent_download_failure():
         mock_response.get(remote_file_path, status=404)
         async with aiohttp.ClientSession() as session:
             with pytest.raises(aiohttp.ClientResponseError):
-                await concurrent_download(session, remote_file_path)
+                await async_remote_transfer(session, remote_file_path)
 
 
 @pytest.mark.asyncio(loop_scope="session")
-async def test_concurrent_download_read_awaits():
+async def test_async_remote_transfer_read_awaits():
     """Mock get"""
     remote_file_path = "https://example.com/file.pdb"
     mock_content = b"mocked pdb content"
@@ -104,7 +103,7 @@ async def test_concurrent_download_read_awaits():
     with aioresponses() as mock_response:
         mock_response.get(remote_file_path, status=200, body=mock_content)
         async with aiohttp.ClientSession() as session:
-            result = await concurrent_download(session, remote_file_path)
+            result = await async_remote_transfer(session, remote_file_path)
 
             assert result == mock_content
 

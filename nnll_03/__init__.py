@@ -22,7 +22,7 @@ async def retry(max_retries: int, delay_seconds: int, operation: Callable, excep
                 raise
 
 
-async def concurrent_download(session, remote_file_path: str):
+async def async_remote_transfer(session, remote_file_path: str):
     """Request .pdb file from AlphaFold server.
     Ensure the download folder exists (will be rewritten)."""
 
@@ -38,8 +38,8 @@ async def concurrent_download(session, remote_file_path: str):
         print(f"Failed to download, Session Error: {error_log}")
 
 
-async def save_file(save_file_path_absolute, file_content):
-    print(f"Saving PDB file to: {save_file_path_absolute}")
+async def async_save_file(save_file_path_absolute, file_content):
+    print(f"Saving file: {save_file_path_absolute}")
     mode = "wb" if isinstance(file_content, bytes) else "w"
     async with await async_open(save_file_path_absolute, mode) as open_file:
         await open_file.write(file_content)
@@ -61,26 +61,24 @@ async def gather_text_lines_from(file_path_absolute: str) -> list:
     return text_lines
 
 
-async def async_download(remote_url, save_file_path_absolute):
+async def async_download_session(remote_url, save_file_path_absolute):
     """
     Create an async task for heavy downloading procedures
+    Await and use lambda to give retry something callable
     """
     tasks = []
 
     async with aiohttp.ClientSession() as session:
         try:
-            download_task = asyncio.create_task(retry(3, 10, concurrent_download(session, remote_url), requests.HTTPError))
-            tasks.append(download_task)
+            file_content = await retry(3, 10, lambda: async_remote_transfer(session, remote_url), requests.HTTPError)
+
+            save_task = asyncio.create_task(retry(3, 1, async_save_file(save_file_path_absolute, file_content), OSError))
+            tasks.append(save_task)
+
         except aiohttp.ClientError as error_log:
             print(f"Error occurred during request: {error_log}")
         else:
-
-            async def save_task(file_content):
-                await retry(3, 1, save_file(save_file_path_absolute, file_content), OSError)
-
-            tasks.append(asyncio.create_task(download_task.then(save_task)))
-
-        await asyncio.gather(*tasks)
+            await asyncio.gather(*tasks)
 
 
 async def bulk_download(
@@ -99,7 +97,7 @@ async def bulk_download(
     url_segments = gather_text_lines_from(remote_files)
     for file_prefix in url_segments:
         remote_url, save_file_path_absolute = await prepare_download(file_prefix, file_suffix, remote_url, local_download_folder)
-        await async_download(remote_url, save_file_path_absolute)
+        await async_download_session(remote_url, save_file_path_absolute)
 
 
 if __name__ == "__main__":
