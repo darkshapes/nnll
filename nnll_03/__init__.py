@@ -8,8 +8,16 @@ from aiofiles import open as async_open
 
 
 async def retry(max_retries: int, delay_seconds: int, operation: Callable, exception_type: Exception) -> Callable:
-    retries = 0
-    while retries <= max_retries:
+    """
+    Loop from 0 to `max_retries`\n
+    :param max_retries: The amount of times to attempt the operation
+    :param delay_seconds: The delay between attempts
+    :param operation: The function/method to attempt
+    :param exception_type: The most likely exception that will be encountered
+    :return: The awaited result of operation()
+    """
+
+    for retries in range(max_retries + 1):
         try:
             return await operation()
         except exception_type as error_log:
@@ -72,7 +80,7 @@ async def async_download_session(remote_url, save_file_path_absolute):
         try:
             file_content = await retry(3, 10, lambda: async_remote_transfer(session, remote_url), requests.HTTPError)
 
-            save_task = asyncio.create_task(retry(3, 1, async_save_file(save_file_path_absolute, file_content), OSError))
+            save_task = asyncio.create_task(retry(3, 1, await async_save_file(save_file_path_absolute, file_content), OSError))
             tasks.append(save_task)
 
         except aiohttp.ClientError as error_log:
@@ -94,7 +102,7 @@ async def bulk_download(
     :param file_suffix: Extension for the files
     :return: None
     """
-    url_segments = gather_text_lines_from(remote_files)
+    url_segments = await gather_text_lines_from(remote_files)
     for file_prefix in url_segments:
         remote_url, save_file_path_absolute = await prepare_download(file_prefix, file_suffix, remote_url, local_download_folder)
         await async_download_session(remote_url, save_file_path_absolute)
