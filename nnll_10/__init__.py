@@ -13,12 +13,6 @@ import asyncio
 import ollama
 from ollama import generate
 
-async def main():
-    client = ollama.AsyncClient()
-    for part in await client.generate('llama3.2', 'Why is the sky blue?', stream=True):
-        print(part['response'], end='', flush=True)
-
-
 
 TEXT = """\
 Write here
@@ -71,14 +65,17 @@ def loop_first_last(values: Iterable[T]) -> Iterable[tuple[bool, bool, T]]:
 
 '''
 
+
 class SideMargins(Static):
     CSS_PATH = "side_margins.tcss"
+
 
 class MidPad(Static):
     DEFAULT_CSS = """
     Mid {
     }
     """
+
 
 class MainContainer(Static):
     DEFAULT_CSS = """
@@ -90,8 +87,10 @@ class MainContainer(Static):
     }
     """
 
+
 class Combo(App):
     """A Textual app."""
+
     CSS_PATH = "combo.tcss"
 
     def compose(self) -> ComposeResult:
@@ -133,18 +132,17 @@ class Combo(App):
 #   except KeyboardInterrupt:
 #     print('\nGoodbye!')
 
-    # def on_key(self, event: events.Key) -> None:
-    #     """Write Key events to log."""
-    #     text_log = self.query_one(RichLog)
-    #     text_log.write(event)
+# def on_key(self, event: events.Key) -> None:
+#     """Write Key events to log."""
+#     text_log = self.query_one(RichLog)
+#     text_log.write(event)
 
 
-    #nord, gruvbox, catpuccin-mocha, dracula, flexoki,
+# nord, gruvbox, catpuccin-mocha, dracula, flexoki,
 
-    # monokai = TextAreaTheme.get_builtin_theme("monokai")
+# monokai = TextAreaTheme.get_builtin_theme("monokai")
 
 
 if __name__ == "__main__":
     app = Combo()
     app.run()
-
