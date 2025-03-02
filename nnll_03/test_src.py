@@ -1,9 +1,9 @@
 import os
 from unittest.mock import AsyncMock, patch
-
 import aiohttp
 import pytest
 import asyncio
+import pytest_asyncio
 
 from aioresponses import aioresponses
 
@@ -24,7 +24,7 @@ async def test_prepare_download():
     # Act: Call the code that uses prepare_storage
     file_prefix = "prefix"
     file_suffix = ".suffix"
-    remote_url = "http://example.com/file"
+    remote_url = "http://example.com/file/"
     local_download_folder = local_folder
 
     remote_file_name, save_file_path_absolute = await prepare_download(
@@ -38,15 +38,25 @@ async def test_prepare_download():
     assert remote_file_name == expected_return_remote
     assert save_file_path_absolute == expected_return_local
 
+class AsyncContextManager:
 
-@pytest.mark.asyncio(loop_scope="session")
+    def __init__(self, obj):
+        self._obj = obj
+
+    async def __aenter__(self):
+        return self._obj
+
+    async def __aexit__(self, *args):
+        pass
+
+@pytest_asyncio.fixture
 async def test_save_file_async():
     save_file_path_absolute = "/fake/path/to/file.pdb"
     file_content = b"mock content"
 
     with patch("nnll_03.async_open", new_callable=AsyncMock) as mock_open:
-        mock_file = AsyncMock()
-        mock_open.return_value.__aenter__.return_value = mock_file
+        mock_file = AsyncMock()  # Mock the async file object.
+        mock_open.return_value = AsyncContextManager(mock_file)  # Ensure it's used as an async context manager.
 
         await async_save_file(save_file_path_absolute, file_content)
 
@@ -54,7 +64,7 @@ async def test_save_file_async():
         mock_open.assert_awaited_once_with(save_file_path_absolute, "wb")
 
         # Assert file content was written
-        mock_file.write.assert_called_once_with(file_content)
+        mock_open.write.assert_called_once_with(file_content)
         with pytest.raises(AssertionError):
             mock_file.write.assert_not_awaited()
 

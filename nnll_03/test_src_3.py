@@ -39,7 +39,7 @@ async def test_bulk_download_success(mock_async_download_session, mock_prepare_d
     mock_prepare_download.side_effect = [("https://example.com/file1.pdb", "/local/path/file1.pdb"), ("https://example.com/file2.pdb", "/local/path/file2.pdb")]
 
     # Act: Call the bulk_download function
-    await bulk_download()
+    await bulk_download(remote_file_segments="test_dl.txt", remote_url="https://alphafold.ebi.ac.uk/files/")
 
     # Assert: Ensure gather_text_lines_from was called with correct parameter
     mock_gather_text_lines_from.assert_called_once_with("test_dl.txt")
@@ -56,7 +56,7 @@ async def test_bulk_download_success(mock_async_download_session, mock_prepare_d
 @pytest.mark.asyncio(loop_scope="session")
 async def test_bulk_download_no_files(mock_async_download_session, mock_prepare_download, mock_gather_empty):
     # Act: Call the bulk_download function with no files
-    await bulk_download()
+    await bulk_download(remote_file_segments="test_dl.txt", remote_url="https://alphafold.ebi.ac.uk/files/")
 
     # Assert: Ensure gather_text_lines_from was called
     mock_gather_empty.assert_called_once_with("test_dl.txt")
@@ -79,7 +79,7 @@ async def test_bulk_download_file_error(mock_async_download_session, mock_prepar
     Note that there is no global retry in the tested function"""
 
     with pytest.raises(Exception):
-        await bulk_download()
+        await bulk_download(remote_file_segments="test_dl.txt", remote_url="https://alphafold.ebi.ac.uk/files/")
 
     mock_prepare_download.assert_not_awaited()
     mock_async_download_session.assert_not_awaited()

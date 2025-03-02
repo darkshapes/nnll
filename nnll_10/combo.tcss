@@ -1,0 +1,24 @@
+
+Screen {
+    content-align: center middle;
+    layout: grid;
+    grid-size: 3;
+    grid-columns: 12fr 76fr 12fr;
+    grid-rows: 100fr 49fr 1fr 49fr 100fr;
+    grid-gutter: 1;
+    background: #000000;
+}
+TextArea, RichLog {
+    display: block;
+    width: 100%;
+    border: none;
+    height: 48fr;
+}
+TextArea {
+    margin-top: 0;
+}
+RichLog {
+    hatch: left #000000;
+    margin-bottom: 0;
+
+}

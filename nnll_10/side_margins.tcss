@@ -1,0 +1,11 @@
+SidebarLeft, Right {
+    display: block;
+    width: 13fr;
+    height: 100fr;
+}
+SidebarLeft{
+    dock: left;
+}
+SidebarRight {
+    dock: right;
+}

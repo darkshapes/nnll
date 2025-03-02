@@ -37,40 +37,49 @@ def mock_retry():
     with mock.patch("nnll_03.retry", new=mock.AsyncMock(side_effect=mock_retry_func)) as mocked:
         yield mocked
 
+class AsyncContextManager:
+    def __init__(self, obj):
+        self._obj = obj
+
+    @pytest_asyncio.fixture(loop_scope="session")
+    async def __aenter__(self):
+        return self._obj
+
+    @pytest_asyncio.fixture(loop_scope="session")
+    async def __aexit__(self, *args):
+        pass
 
 @pytest.mark.asyncio(loop_scope="session")
 async def test_async_download_session_os_error(mock_retry, mock_async_save_file):
     # Arrange: Simulate an OSError during file saving
-    # Mock download task (this will be successful)
-    # Mock save task (this will fail with OSError)
-    # Set side effects for the mock_retry to return both tasks
-    # Act: Run the async function under test
-    # Assert that no client error print occurred (i.e., no aiohttp.ClientError)
-    # Ensure the save function was called with correct arguments
-    # The key here is to resolve the future and pass its result explicitly.
+
     remote_url = "https://example.com/file"
-    file_path = "/tmp/saved_file"
+    local_path = "/tmp/saved_file"
     expected_content = b"file content"
-    expected_error = OSError("Disk error")
+    simulated_error = OSError("Disk error")
 
     async def fake_fail():
-        raise expected_error  # Simulate disk failure
+        print("Simulating fail")  # This will now actually print to console
+        raise simulated_error
 
     async def fake_successful_dl():
+        print("Simulating successful download")  # This will now print to console
         return expected_content
 
-    mock_retry.side_effect = [
-        lambda *args, **kwargs: fake_fail(),  # First call: Fail
-        lambda *args, **kwargs: fake_successful_dl(),  # Second call: Succeed
-    ]
-    future_content = asyncio.Future()
-    future_content.set_result(expected_content)
-    with mock.patch("builtins.print") as mock_print:
-        await async_download_session(remote_url, file_path)
+    # Set up side effects for mock_retry: first fail, then succeed
+    mock_retry.side_effect = [fake_fail(), fake_successful_dl()]
 
-        mock_print.assert_not_called()
+    with mock.patch("nnll_03.async_open", new_callable=mock.AsyncMock) as mock_open:
+        mock_file = mock.AsyncMock()
+        mock_open.return_value = AsyncContextManager(mock_file)
 
-        mock_async_save_file.assert_called_once()
+        # Act: Perform the async download session
+        await async_download_session(remote_url, local_path)
 
-        resolved_content = await future_content  # This will give you `expected_content` as bytes.
-        assert resolved_content == expected_content
+        # Assert that file was opened in binary write mode
+        mock_open.assert_awaited_once_with(local_path, "wb")
+
+        # Assert that content was written to the file
+        mock_file.write.assert_called_once_with(expected_content)
+
+

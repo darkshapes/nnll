@@ -8,6 +8,8 @@
 Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Llama, 🍏MLX, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
 <br>
 
+# :shipit:
+
 [![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
 ![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)<br>
 ![Discord](https://img.shields.io/discord/1266757128249675867)<br>
