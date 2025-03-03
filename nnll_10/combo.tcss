@@ -4,63 +4,53 @@ Screen {
     layout: grid;
     grid-size: 3;
     grid-columns: 12vw 76vw 12vw;
-    grid-rows: 100vh 49vh 1vh 49vh 100vh;
+    grid-rows: 99vh 49vh 1vh 49vh 99vh;
     background: #000000;
 }
-
-CentralContainer {
-    width: 100%;
-    height: 100%;
-}
-TextBox, RichPortal {
-    width: 100%; # percent, fill container size, flexible
-    border: none;
-    height: 48vh; # view height, fixed size
-}
-
-TextBox {
-    margin-top: 0; # send to top
-}
-RichLog {
-    hatch: left #000000;
-}
-TextArea, RichLog {
+TextEntry, TextArea, Log {
     border: round $background;
     display: block;
     &:focus {
-        border: round $accent;
+        border: round $accent; # $accent
     }
 }
-RichLog{
-    &:focus {
-        border: round $accent;
-    }
+TextEntry, TextArea, Prompts {
+    margin-top: 0; # send to top
 }
-RichPortal {
+Log {
+    hatch: left #000000;
+    scrollbar-background: $surface;
     margin-bottom: 0; # send to bottom
+    layer: below;
 }
 
+Link,SystemStatus {
+    background: $surface;
+    # align: center middle;
+    margin: 1 3;
+    width: auto;
+    height: 1;
+    layer: above;
+    color: magenta;
+}
+DisplayBar {
+    display:block;
+    background: #00000001;
+    height: 1;
+
+}
 TokenCounter {
     # align: center middle;
     # background: 0%;
     width: 120;
-    padding: 0;
+    padding: 1;
+    height: auto;
 }
-
-# ModelSelect {
-    # layer: above;
-    # margin: 25
-# }
-
-# SubContainer {
-#     width: 75vh;
-#     height: 49vh;
-# }
 
 SidebarLeft, SidebarRight {
     display: block;
     width: 13vw;
-    height: 100vh;
+    height: 100%;
     layer: below;
 }
 SidebarLeft{
@@ -68,4 +58,35 @@ SidebarLeft{
 }
 SidebarRight {
     dock: right;
+    text-style: none;
+    link-color: white;
 }
+# ModelSelect {
+    # layer: above;
+    # margin: 25
+# }
+
+SubContainer {
+    width: 75vh;
+    height: 49vh;
+}
+
+# Ticker {
+#     height: 1;
+#     width: 1;
+# }
+
+# CentralContainer {
+#     width: 50vw;
+#     height: 100vh;
+# }
+# TextEntry, RichPortal {
+#     width: 75vw; # percent, fill container size, flexible
+#     border: none;
+#     height: 48vh; # view height, fixed size
+# }
+
+
+# RichPortal {
+
+# }
