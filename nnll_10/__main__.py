@@ -1,9 +1,13 @@
+from itertools import count
+from numpy import mean
+from sympy import sequence
+from textual import work, events
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Static, TextArea, RichLog
-from textual.reactive import reactive
+from textual.widgets import Footer, Static, TextArea, RichLog, Sparkline
+from textual.reactive import reactive, var
 from textual.containers import Container
-
-from nnll_11.__main__ import chat
+import tiktoken
+from nnll_11.__main__ import chat_machine
 
 
 TEXT = """\
@@ -11,62 +15,78 @@ Prompt
 """
 
 
-class SideMargins(Static):
-    CSS_PATH = "side_margins.tcss"
-
-
-class MidPad(Static):
-    DEFAULT_CSS = """
-    Mid {
-    width: 100%;
-    }
-    """
-
-
-class MainContainer(Container):
-    CSS_PATH = "combo.tcss"
+class SubContainer(Container):
+    pass
 
 
 class Combo(App):
     """A Textual app."""
 
-    CSS_PATH = "combo.tcss"
-    BINDINGS = [("`", "send_message", "Send Message")]
-
     scribe: reactive[str] = reactive("", recompose=True)
+    tokens: reactive[list] = reactive([1, 1])
     model: str = "ollama_chat/hf.co/xwen-team/Xwen-72B-Chat-GGUF:Q4_K_M"
+    count = var(0)
+
+    EVENT_KEYS = ["space", ".", ","]
+    CSS_PATH = "combo.tcss"
+    BINDINGS = [("`", "post_message", "Send Message"), ("escape", "cancel_worker", "Cancel Processing")]
+    header = f"""{model}"""
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
         # yield Header()
         yield Footer()
-        yield SideMargins(id="SidebarLeft")
-        with MainContainer():
+        yield Static(id="SidebarLeft")
+        with Container(id="FullScreen"):
             yield TextArea(TEXT, id="prompts", language="python", theme="vscode_dark", max_checkpoints=100)
-            yield MidPad(id="Mid")
+            yield Sparkline(self.tokens, summary_function=mean)
             yield RichLog(markup=True)
-        yield SideMargins(id="SidebarRight")
-
-    def watch_scribe(self) -> None:
-        self.query_one(RichLog).write(f"{self.scribe}")
+        yield Static(id="SidebarRight")
 
     def on_ready(self) -> None:
         # self.scroll_sensitivity_y = 0.01
         text_log = self.query_one(RichLog)
-
-        text_log.write(f"[bold magenta] {self.model}:")
+        text_log.write(f"[bold magenta] Ready : {self.header}")
         text_log.auto_scroll = True
 
-    async def action_send_message(self) -> None:
+        def watch_tokens(self) -> None:
+            self.query_one(Sparkline).data = [self.tokens]
+
+    async def action_post_message(self) -> None:
         content = self.query_one(TextArea)
-        model = "ollama_chat/hf.co/xwen-team/Xwen-72B-Chat-GGUF:Q4_K_M"
+        self.transmit_message(content)
+
+    @work(exclusive=True, exit_on_error=False)
+    async def transmit_message(self, content):
         message = content.text
         if message.lower() == "quit" or message.lower() == "exit":
             self.app.exit()
-        response = []
-        async for chunk in chat(model, message):
-            response.append(chunk)
-            self.query_one(RichLog).write(response)
+        async for chunk in chat_machine(self.model, message):
+            self.query_one(RichLog).write(chunk)
+
+    async def on_key(self, event: events.Key):
+        if event.key in self.EVENT_KEYS:
+            event.prevent_default()
+            content = self.query_one(TextArea)
+            content.insert(event.key)
+            content.move_cursor_relative(columns=-1)
+            self.count += 1
+            encoding = tiktoken.get_encoding("cl100k_base")
+            message = content.text  # get_text_range(position, line_length)
+            token_count = [len(encoding.encode(message))]
+            self.tokens.extend(token_count)
+            self.query_one(RichLog).write(self.tokens)
+            token_counter = self.query_one(Sparkline)
+
+            token_counter.data = [count for count in range(len(self.tokens) - self.count, len(self.tokens))]
+
+        # offset = self.count * 120
+        # self.tokens.e
+        # offset = self.count
+        # for x in self.tokens:
+        #     data_test = range(0 + offset, len(self.tokens), x)
+        # stream = [x for x in self.tokens[]]
+        # self.query_one(Sparkline).data = [self.tokens]
 
 
 if __name__ == "__main__":

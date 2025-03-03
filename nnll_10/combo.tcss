@@ -3,28 +3,69 @@ Screen {
     content-align: center middle;
     layout: grid;
     grid-size: 3;
-    grid-columns: 12fr 76fr 12fr;
-    grid-rows: 100fr 49fr 1fr 49fr 100fr;
+    grid-columns: 12vw 76vw 12vw;
+    grid-rows: 100vh 49vh 1vh 49vh 100vh;
     background: #000000;
 }
-TextArea, RichLog {
-    display: block;
-    width: 100%;
-    border: none;
-    height: 48fr;
-    text-wrap: wrap;
-}
-TextArea {
-    margin-top: 0;
-}
-RichLog {
-    width:110%;
-    hatch: left #000000;
-    margin-bottom: 0;
 
-}
-Container {
+CentralContainer {
     width: 100%;
     height: 100%;
-    # padding: 2;
+}
+TextBox, RichPortal {
+    width: 100%; # percent, fill container size, flexible
+    border: none;
+    height: 48vh; # view height, fixed size
+}
+
+TextBox {
+    margin-top: 0; # send to top
+}
+RichLog {
+    hatch: left #000000;
+}
+TextArea, RichLog {
+    border: round $background;
+    display: block;
+    &:focus {
+        border: round $accent;
+    }
+}
+RichLog{
+    &:focus {
+        border: round $accent;
+    }
+}
+RichPortal {
+    margin-bottom: 0; # send to bottom
+}
+
+TokenCounter {
+    # align: center middle;
+    # background: 0%;
+    width: 120;
+    padding: 0;
+}
+
+# ModelSelect {
+    # layer: above;
+    # margin: 25
+# }
+
+# SubContainer {
+#     width: 75vh;
+#     height: 49vh;
+# }
+
+SidebarLeft, SidebarRight {
+    display: block;
+    width: 13vw;
+    height: 100vh;
+    layer: below;
+}
+SidebarLeft{
+    dock: left;
+}
+SidebarRight {
+    dock: right;
 }
