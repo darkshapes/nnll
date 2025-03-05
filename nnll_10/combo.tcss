@@ -1,32 +1,60 @@
+#  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+#  # # <!-- // /*  d a r k s h a p e s */ -->
 
-Screen {
+
+DisplayArea { # x dimension
     content-align: center middle;
     layout: grid;
     grid-size: 3;
     grid-columns: 12vw 76vw 12vw;
-    grid-rows: 99vh 49vh 1vh 49vh 99vh;
+    width: 100%;
+    height: 100%;
     background: #000000;
 }
-TextEntry, TextArea, Log {
+
+CentreFold { # y dimension
+    width: 100%;
+
+}
+# ResponsiveDisplay { # inside centrefold
+#     width: 100%;
+#     height: 49vh;
+# }
+
+SidebarLeft, SidebarRight {
+    display: block;
+    width: 13vw;
+    height: 100%;
+    layer: below;
+    background: #000000;
+}
+SidebarLeft{
+    dock: left;
+}
+SidebarRight {
+    dock: right;
+    text-style: none;
+    link-color: white;
+}
+
+EntryField, ReadOut {
+    width: 75%; # always use percentage for this
     border: round $background;
     display: block;
     &:focus {
         border: round $accent; # $accent
     }
 }
-TextEntry, TextArea, Prompts {
-    margin-top: 0; # send to top
+EntryField {
+    margin-top: 0; # send to peak of screen
 }
-Log {
+ReadOut {
     hatch: left #000000;
     scrollbar-background: $surface;
     margin-bottom: 0; # send to bottom
-    layer: below;
 }
-
-Link,SystemStatus {
+TagLine {
     background: $surface;
-    # align: center middle;
     margin: 1 3;
     width: auto;
     height: 1;
@@ -37,39 +65,19 @@ DisplayBar {
     display:block;
     background: #00000001;
     height: 1;
-
-}
-TokenCounter {
-    # align: center middle;
-    # background: 0%;
-    width: 120;
-    padding: 1;
-    height: auto;
+    width: 75%;
+    padding: 0;
+    &:hover {
+        color: #888888;
+    }
 }
 
-SidebarLeft, SidebarRight {
-    display: block;
-    width: 13vw;
-    height: 100%;
-    layer: below;
-}
-SidebarLeft{
-    dock: left;
-}
-SidebarRight {
-    dock: right;
-    text-style: none;
-    link-color: white;
-}
+
 # ModelSelect {
     # layer: above;
     # margin: 25
 # }
 
-SubContainer {
-    width: 75vh;
-    height: 49vh;
-}
 
 # Ticker {
 #     height: 1;
