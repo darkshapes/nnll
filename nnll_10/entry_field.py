@@ -1,7 +1,7 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
-from textual import work, on
+from textual import work, on, events
 
 # from textual.app import ComposeResult
 from textual.widgets import TextArea
@@ -15,6 +15,13 @@ class EntryField(TextArea):  # machine input
         """Return all the text in the widget"""
         message = self.text
         return message
+
+    @work(exit_on_error=False)
+    async def _on_key(self, event: events.Key):
+        """Window for triggering key bindings"""
+        if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
+            event.prevent_default()
+            self.read_text_field()
 
     @on(TextArea.Changed)
     async def update_tokens(self):

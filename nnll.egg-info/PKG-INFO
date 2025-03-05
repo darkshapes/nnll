@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: nnll
-Version: 0.1.dev148+g185ef17.d20250227
+Version: 0.1.dev161+ge04c8de.d20250305
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -37,22 +37,6 @@ Requires-Dist: pytest-trio
 Requires-Dist: aiofiles
 Requires-Dist: aiohttp
 Requires-Dist: llama-cpp-python
-Requires-Dist: torch
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp310-none-macosx_11_0_arm64.whl ; python_version == "3.10" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp311-none-macosx_11_0_arm64.whl ; python_version == "3.11" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp312-none-macosx_11_0_arm64.whl ; python_version == "3.12" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp313-none-macosx_11_0_arm64.whl ; python_version == "3.13" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp310-cp310-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp311-cp311-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp313-cp313t-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-win_amd64.whl#sha256=7cc45c5b39d74875cfafe908b7f55c544147cc16b01e795feb2fe766583efe78 ; platform_system == "windows" and python_version == "3.10" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-win_amd64.whl#sha256=6a1fb2714e9323f11edb6e8abf7aad5f79e45ad25c081cde87681a18d99c29eb ; platform_system == "windows" and python_version == "3.11" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl#sha256=3313061c1fec4c7310cf47944e84513dcd27b6173b72a349bb7ca68d0ee6e9c0 ; platform_system == "windows" and python_version == "3.12" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp313-cp313-win_amd64.whl#sha256=519330eef09534acad8110b6f423d2fe58c1d8e9ada999ed077a637a0021f908 ; platform_system == "windows" and python_version == "3.13" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=7f2ba7f7c0459320a521696f6b5bccc187f59890b23c9dfb6c49b0b87c6bfc97 ; platform_system == "linux" and python_version == "3.10" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-linux_x86_64.whl#sha256=d4c3e9a8d31a7c0fcbb9da17c31a1917e1fac26c566a4cfbd8c9568ad7cade79 ; platform_system == "linux" and python_version == "3.11" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-linux_x86_64.whl#sha256=a393b506844035c0dac2f30ea8478c343b8e95a429f06f3b3cadfc7f53adb597 ; platform_system == "linux" and python_version == "3.12" and platform_machine != "aarch64"
 Provides-Extra: opt
 Requires-Dist: hidiffusion; extra == "opt"
 Provides-Extra: dev
@@ -70,6 +54,8 @@ Requires-Dist: ruff; extra == "dev"
 Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Llama, 🍏MLX, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
 <br>
 
+# :shipit:
+
 [![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
 ![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)<br>
 ![Discord](https://img.shields.io/discord/1266757128249675867)<br>
@@ -84,14 +70,15 @@ Some modules are full scripts and can be run from command line. These are writte
 
 ## specifics
 
-Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project.
+Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
 
-- *Recommended* : Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
-- Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
-- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
+- *Recommended* : Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
 - Basic clone or fork of the project
+-  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
+- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
 
-`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want static hard copy, you are welcome to copy and paste folders or code wherever you please.
+
+`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want a static hard copy, you are welcome to copy and paste folders or code wherever you please.
 
 <br><br>
 

@@ -1,100 +1,79 @@
-#  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
-#  # # <!-- // /*  d a r k s h a p e s */ -->
+# #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+# #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 
-DisplayArea { # x dimension
-    content-align: center middle;
+#app-grid-vertical { # mobile layout
     layout: grid;
-    grid-size: 3;
-    grid-columns: 12vw 76vw 12vw;
+    grid-size: 1 3;
+    grid-rows: 1fr 5fr 1fr;
+    grid-columns: 1fr;
+}
+
+#app-grid-horiziontal { # laptop layout
+    layout: grid;
+    grid-size: 3 1;
+    grid-columns: 1fr 3fr 1fr;
+    grid-rows: 1fr;
+}
+
+#left-frame {
+    border: dodgerblue;
+}
+
+#right-frame {
+    border: mediumvioletred;
+}
+
+#centre-frame, #right-frame, #left-frame {
+    background: $boost;
+}
+
+#top-frame > Static {
+    background: $boost;
+    height: 100%
+}
+#bottom-frame > Static  {
+    background: $boost;
+    height: 100%
+}
+#centre-frame > Static {
+    background: $boost;
+    height: 100%
+}
+#left-frame > Static {
+    background: $boost;
+    height: 100%
+}
+#right-frame > Static  {
+    background: $boost;
+    height: 100%
+}
+
+#top-frame, #bottom-frame {
     width: 100%;
     height: 100%;
-    background: #000000;
+    # layout: grid;
+    # grid-size: 1 5;
+    # grid-gutter: 1;
+    background: $panel;
 }
 
-CentreFold { # y dimension
+#left-frame, #right-frame {
     width: 100%;
-
-}
-# ResponsiveDisplay { # inside centrefold
-#     width: 100%;
-#     height: 49vh;
-# }
-
-SidebarLeft, SidebarRight {
-    display: block;
-    width: 13vw;
     height: 100%;
-    layer: below;
-    background: #000000;
-}
-SidebarLeft{
-    dock: left;
-}
-SidebarRight {
-    dock: right;
-    text-style: none;
-    link-color: white;
+    # layout: grid;
+    # grid-size: 1 5;
+    # grid-gutter: 1;
+    background: $panel;
 }
 
-EntryField, ReadOut {
-    width: 75%; # always use percentage for this
-    border: round $background;
-    display: block;
-    &:focus {
-        border: round $accent; # $accent
-    }
-}
-EntryField {
-    margin-top: 0; # send to peak of screen
-}
-ReadOut {
-    hatch: left #000000;
-    scrollbar-background: $surface;
-    margin-bottom: 0; # send to bottom
-}
-TagLine {
-    background: $surface;
-    margin: 1 3;
-    width: auto;
-    height: 1;
-    layer: above;
-    color: magenta;
-}
-DisplayBar {
-    display:block;
-    background: #00000001;
-    height: 1;
-    width: 75%;
-    padding: 0;
-    &:hover {
-        color: #888888;
-    }
+#centre-frame {
+    height: 100%;
+    layout: grid;
+    grid-size: 1 3;
+    grid-rows: 3fr 1 3fr;
+    grid-gutter: 1;
+    background: $panel;
+    border: greenyellow;
 }
 
-
-# ModelSelect {
-    # layer: above;
-    # margin: 25
-# }
-
-
-# Ticker {
-#     height: 1;
-#     width: 1;
-# }
-
-# CentralContainer {
-#     width: 50vw;
-#     height: 100vh;
-# }
-# TextEntry, RichPortal {
-#     width: 75vw; # percent, fill container size, flexible
-#     border: none;
-#     height: 48vh; # view height, fixed size
-# }
-
-
-# RichPortal {
-
-# }
