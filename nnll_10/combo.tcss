@@ -5,22 +5,22 @@
 #app-grid-vertical { # mobile layout
     layout: grid;
     grid-size: 1 3;
-    grid-rows: 1fr 5fr 1fr;
+    grid-rows: 1fr 4fr 1fr;
     grid-columns: 1fr;
 }
 
 #app-grid-horiziontal { # laptop layout
     layout: grid;
     grid-size: 3 1;
-    grid-columns: 1fr 3fr 1fr;
+    grid-columns: 1fr 4fr 1fr;
     grid-rows: 1fr;
 }
 
-#left-frame {
+#left-frame, #top-frame {
     border: dodgerblue;
 }
 
-#right-frame {
+#right-frame, #bottom-frame {
     border: mediumvioletred;
 }
 
@@ -30,41 +30,42 @@
 
 #top-frame > Static {
     background: $boost;
-    height: 100%
+    height: 100%;
 }
 #bottom-frame > Static  {
     background: $boost;
-    height: 100%
+    height: 100%;
 }
 #centre-frame > Static {
     background: $boost;
-    height: 100%
+    height: 100%;
 }
 #left-frame > Static {
     background: $boost;
-    height: 100%
+    height: 100%;
 }
 #right-frame > Static  {
     background: $boost;
-    height: 100%
+    height: 100%;
 }
 
 #top-frame, #bottom-frame {
     width: 100%;
     height: 100%;
+    background: $panel;
     # layout: grid;
     # grid-size: 1 5;
     # grid-gutter: 1;
-    background: $panel;
+
 }
 
 #left-frame, #right-frame {
     width: 100%;
     height: 100%;
+    background: $panel;
     # layout: grid;
     # grid-size: 1 5;
     # grid-gutter: 1;
-    background: $panel;
 }
 
 #centre-frame {

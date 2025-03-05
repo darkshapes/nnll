@@ -3,11 +3,11 @@ from textual import work, events
 from textual.app import App
 from textual.binding import Binding
 from textual.reactive import reactive
-from .full_screen import WideScreen, TallScreen
+from .main_screen import WideScreen, TallScreen
 
 
 class Combo(App):
-    """A Textual app."""
+    """Machine Accelerated Intelligent N"""
 
     SCREENS = {"widescreen": WideScreen, "tallscreen": TallScreen}
     BINDINGS = [
