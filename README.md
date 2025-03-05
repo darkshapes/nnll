@@ -3,7 +3,7 @@
 # nnll
 
 ## neural network link library
-`nnll` (or <em>null</em>) is a comprehensive incubator and toolkit for managing Diffusion and Large Language Model (LLMs) tools. The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning. The library focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
+`nnll` (or <em>null</em>) is a comprehensive incubator and toolkit for Diffusion and Large Language Model (LLMs) applications. The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning. The library focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
 <br>
 
 [![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
