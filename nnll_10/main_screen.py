@@ -7,7 +7,8 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, Horizontal, Container
 from textual.screen import Screen
 from textual.widgets import Footer, Static
-from .centre_fold import CentreFold
+
+from centre_fold import CentreFold
 
 
 class WideScreen(Screen):

@@ -3,7 +3,7 @@ from textual import work, events
 from textual.app import App
 from textual.binding import Binding
 from textual.reactive import reactive
-from .main_screen import WideScreen, TallScreen
+from main_screen import WideScreen, TallScreen
 
 
 class Combo(App):
