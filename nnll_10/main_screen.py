@@ -8,7 +8,7 @@ from textual.containers import Vertical, Horizontal, Container
 from textual.screen import Screen
 from textual.widgets import Footer, Static
 
-from centre_fold import CentreFold
+from fold import Fold  # pylint: disable=import-error
 
 
 class WideScreen(Screen):
@@ -19,7 +19,7 @@ class WideScreen(Screen):
         yield Footer(id="footer")
         with Horizontal(id="app-grid-horiziontal"):
             yield ResponsiveLeftTop(id="left-frame")
-            yield CentreFold(id="centre-frame")
+            yield Fold(id="centre-frame")
             yield ResponsiveRightBottom(id="right-frame")
 
 
@@ -31,7 +31,7 @@ class TallScreen(Screen):
         yield Footer()
         with Vertical(id="app-grid-vertical"):
             yield ResponsiveLeftTop(id="top-frame")
-            yield CentreFold(id="centre-frame")
+            yield Fold(id="centre-frame")
             yield ResponsiveRightBottom(id="bottom-frame")
 
 
