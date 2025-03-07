@@ -11,6 +11,10 @@ from .__main__ import Combo
 #     """Test that the initial state of the app is correct."""
 #     app = Combo()
 
+# Focus validation check
+# panel_focus = self.query_one("#response_panel")  # check response panel focus
+# display_focus = self.query_one("#responsive_display").has_focus_within  # check container focus
+
 
 @pytest.mark.asyncio(loop_scope="session")
 async def test_reactive_screen(mock_exit):

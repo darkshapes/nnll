@@ -20,6 +20,8 @@ class Combo(App):
     def on_mount(self) -> None:
         """Draw screen"""
         self.push_screen("tallscreen")
+        self.scroll_sensitivity_y = 1
+        self.supports_smooth_scrolling = True
 
     @work(exit_on_error=False)
     async def on_resize(self, event: events.Resize):
