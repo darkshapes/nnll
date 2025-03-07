@@ -12,8 +12,8 @@ from textual.widgets import TextArea, DataTable
 from textual.containers import Container
 from textual.reactive import reactive
 import tiktoken
-from fetch_models import from_ollama_cache  # pylint: disable=import-error
-from chat_machine import chat_machine  # pylint: disable=import-error
+from .fetch_models import from_ollama_cache  # pylint: disable=import-error
+from .chat_machine import chat_machine  # pylint: disable=import-error
 
 
 class MessagePanel(TextArea):
@@ -45,40 +45,38 @@ class Fold(Container):
         yield MessagePanel(self.TEXT, id="message_panel", max_checkpoints=100, theme="vscode_dark", language="python")
         yield DataTable(id="display_bar", show_header=False, show_row_labels=False, cursor_type=None)
         with Container(id="responsive_display"):
-            yield TextArea("", id="response_panel", language="markdown", read_only=True)
+            yield TextArea("\n", id="response_panel", language="markdown", read_only=True, soft_wrap=True)
             # yield SpinBox([model for model in from_ollama_cache()], id="tag_line")  # Show system state floating object
-            yield DataTable(id="tag_line", show_header=False)
+            yield DataTable(id="tag_line", show_header=False, cursor_type="cell")
 
     def on_mount(self) -> None:
         """Class method, initialize"""
-        message_panel = self.query_one("#message_panel")
-        message_panel.border_subtitle = "Prompt"
-        message_panel.styles.border_subtitle_color = "mediumturquoise"
+        self.query_one("#message_panel").border_subtitle = "Prompt"
         display_bar = self.query_one("#display_bar")
         display_bar.add_columns(*self.rows[0])
         display_bar.add_rows(self.rows[1:])
-        response_panel = self.query_one("#response_panel")
-        response_panel.soft_wrap = True
-        response_panel.insert("\n")
+        display_bar.styles.scrollbar_size_horizontal = 0
         tag_line = self.query_one("#tag_line")
         self.available_models = from_ollama_cache()
         tag_line.add_columns(("0", "1"))
         tag_line.add_rows([row.strip()] for row in self.available_models)
-        tag_line.styles.text_overflow = "ellipsis"
-        tag_line.cursor_type = "cell"
 
     @work(exclusive=True)
     async def _on_key(self, event: events.Key) -> Callable:
         """Class method, window for triggering key bindings"""
-        if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
+
+        message_panel = self.query_one("#message_panel")
+        run_key = hasattr(event, "character") and event.character == "`"
+        if run_key or event.key == "grave_accent":
+            if message_panel.has_focus:
+                message_panel.blur()
             event.prevent_default()
             self.generate_response()
 
     @work(group="chat")
     async def generate_response(self):
         """Fill display with generated content"""
-        message_panel = self.query_one(MessagePanel)
-        message = message_panel.text
+        message = self.query_one(MessagePanel).text
         response_panel = self.query_one("#response_panel")
         response_panel.insert("---\n")
         response_panel.move_cursor(response_panel.document.end)
@@ -88,13 +86,12 @@ class Fold(Container):
             response_panel.insert(chunk)
         self.update_status()
 
-    @on(TextArea.Changed)
+    @on(TextArea.Changed, "#message_panel")
     @work(exclusive=True, group="token")
     async def calculate_tokens(self) -> None:
         """Called when message input area is manipulated.
         Live display of tokens and characters"""
-        message_panel = self.query_one("#message_panel")
-        message = message_panel.text
+        message = self.query_one("#message_panel").text
         encoding = tiktoken.get_encoding("cl100k_base")
         token_count = len(encoding.encode(message))
         character_count = len(message)
@@ -107,7 +104,8 @@ class Fold(Container):
         """Provide visual status update of processing"""
         tag_line = self.query_one("#tag_line")
         style = tag_line.get_visual_style(partial=True)
-        tag_line.styles.color = "magenta" if style.foreground == "darkorange" else "darkorange"
+        tag_line.styles.color = "magenta" if style.foreground != "magenta" else "darkorange"
+        tag_line.styles.link_color = "magenta" if style.foreground != "darkorange" else "darkorange"
 
     def _on_mouse_scroll_down(self, event: events.MouseScrollUp) -> None:
         if self.query_one("#responsive_display").has_focus_within != self.query_one("#response_panel").has_focus:

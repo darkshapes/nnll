@@ -22,11 +22,13 @@ def from_ollama_cache() -> dict:
     map_models = {}
     for model in response.models:  # pylint: disable=no-member
         if "/" in str(model.model):
-            short_name = os.path.basename(str(model.model))
+            short_name = os.path.basename(str(model.model)).strip("[@]")
         else:
-            short_name = str(model.model)
-        map_models.setdefault(f"{short_name} - {legible_size(model.size.real)}  ⭥", f"ollama_chat/{model.model}")
-        # available_models.append(tuple([f"{model.model} - {(model.size.real / 1024 / 1024):.2f} MB", f"ollama_chat/{model.model}"]))
+            short_name = str(model.model).strip("[@]")
+        model_size_legible = legible_size(model.size.real)
+        model_desc = f"[magenta]{short_name} - {model_size_legible}[magenta]"
+        model_path = f"ollama_chat/{model.model}"
+        map_models.setdefault(model_desc, model_path)
     return map_models
 
     # consider export HF_HUB_OFFLINE=True

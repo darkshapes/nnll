@@ -16,18 +16,18 @@ from .__main__ import Combo
 # display_focus = self.query_one("#responsive_display").has_focus_within  # check container focus
 
 
-@pytest.mark.asyncio(loop_scope="session")
-async def test_reactive_screen(mock_exit):
-    """Screen rotation function"""
-    app = Combo()
-    async with app.run_test() as pilot:
-        # this should make the screen be WideScreen
-        await pilot.resize_terminal(40, 20)
-        assert app.screen == app.get_screen("widescreen")
+# @pytest.mark.asyncio(loop_scope="session")
+# async def test_reactive_screen(mock_exit):
+#     """Screen rotation function"""
+#     app = Combo()
+#     async with app.run_test() as pilot:
+#         # this should make the screen be WideScreen
+#         await pilot.resize_terminal(40, 20)
+#         assert app.screen == app.get_screen("widescreen")
 
-        # this should make the screen be TallScreen
-        await pilot.resize_terminal(39, 20)
-        assert app.screen == app.get_screen("tallscreen")
+#         # this should make the screen be TallScreen
+#         await pilot.resize_terminal(39, 20)
+#         assert app.screen == app.get_screen("tallscreen")
 
 
 app = Combo()

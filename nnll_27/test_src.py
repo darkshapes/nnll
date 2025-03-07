@@ -51,14 +51,14 @@ class TestPrinterMethods(unittest.TestCase):
         title = "Sample Table"
         aggregate_data = {"A": 1, "B": 2, "C": 3, "D": 4}
         # Expected output format
-        expected_cols = "     category     |        A         |        B         |        C         |        D         |"
-        expected_horizontal_bar = "  -------------------------------------------------------------------------------------"
-        expected_data = "   Sample Table   |        1         |        2         |        3         |        4         |"
+        expected_cols = "        A         |        B         |        C         |        D         |"
+        expected_line = "  ------------------------------------------------------------------------"
+        expected_data = "        1         |        2         |        3         |        4         |"
 
         # Call the method under test
         with patch("nnll_27.wipe_printer") as mock_wipe_printer:
             result = pretty_tabled_output(title, aggregate_data)
 
         # Verify the calls to wipe_printer
-        mock_wipe_printer.assert_called_once_with(title, expected_cols, expected_horizontal_bar, expected_data)
+        mock_wipe_printer.assert_called_once_with(title, expected_cols, expected_line, expected_data)
         self.assertIsNone(result)  # The method should return None

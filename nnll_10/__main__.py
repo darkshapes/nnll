@@ -1,15 +1,17 @@
 # pylint: disable=missing-module-docstring, disable=missing-class-docstring
+from turtle import Screen
 from textual import work, events
 from textual.app import App
 from textual.binding import Binding
 from textual.reactive import reactive
-from main_screen import WideScreen, TallScreen  # pylint: disable=import-error
+from textual.containers import Horizontal
+from .main_screen import MainScreen  # pylint: disable=import-error
 
 
 class Combo(App):
-    """Machine Accelerated Intelligent N"""
+    """Machine Accelerated Intelligent Network"""
 
-    SCREENS = {"widescreen": WideScreen, "tallscreen": TallScreen}
+    SCREENS = {"main_on": MainScreen}
     BINDINGS = [
         Binding("escape", "exit_now()", "(x2) Exit App", priority=True),  # Quit out
     ]
@@ -19,18 +21,9 @@ class Combo(App):
 
     def on_mount(self) -> None:
         """Draw screen"""
-        self.push_screen("tallscreen")
+        self.push_screen("main_on")
         self.scroll_sensitivity_y = 1
         self.supports_smooth_scrolling = True
-
-    @work(exit_on_error=False)
-    async def on_resize(self, event: events.Resize):
-        width = event.container_size.width
-        height = event.container_size.height
-        if width / 2 >= height:
-            self.push_screen("widescreen")
-        elif width / 2 < height:
-            self.push_screen("tallscreen")
 
     @work(exit_on_error=False)
     async def _on_key(self, event: events.Key):
@@ -44,9 +37,9 @@ class Combo(App):
                 event.prevent_default()
                 self.exit_now()
 
-    @work(exit_on_error=True)
-    async def action_switch_screen(self, screen):
-        return await super().action_switch_screen(screen)
+    # @work(exit_on_error=True)
+    # async def action_switch_screen(self, screen):
+    #     return await super().action_switch_screen(screen)
 
     @work(exit_on_error=True)
     async def exit_now(self) -> None:

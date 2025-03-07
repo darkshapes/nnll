@@ -29,11 +29,12 @@ def pretty_tabled_output(table_title: str, aggregate_data: dict, width: int = 18
     :param aggregate_data: `dict` A dictionary of values to print
     :return: `dict` A formatted bundle of data ready to print
     """
-    table_contents = table_title | aggregate_data.copy()
+    table_contents = aggregate_data
     key_value_length = len(table_contents)
     # width_top = key_value_length * 1.5
     info_format = "{:^{width}}|" * key_value_length
     header_keys = tuple(table_contents)
     horizontal_bar = "  " + "-" * (width - 1) * key_value_length
+    horizontal_bar += "----"
     formatted_data = tuple(table_contents.values())
     wipe_printer(table_title, info_format.format(*header_keys, width=width), horizontal_bar, info_format.format(*formatted_data, width=width))
