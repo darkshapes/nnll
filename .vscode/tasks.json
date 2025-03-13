@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "prompt",
+            "type": "promptString",
+            "description": "Send Selected Code To LLM [Prompt]:"
+        }
+    ],
+    "tasks": [
+        {
+            "label": "sendToLLM",
+            "type": "shell",
+            "command": "echo \"\"\"${input:prompt}\n```\n${selectedText}\n```\n\"\"\"",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ]
+}
