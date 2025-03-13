@@ -34,24 +34,20 @@ class ChainOfThought(dspy.Signature):
     # ChainOfThought("question -> answer")
 
 
-async def stream(message, streaminator):
-    async for chunk in streaminator(question=message, stream=True):
-        if isinstance(chunk, dspy.Prediction):
-            yield str(chunk)
-        else:
-            yield chunk["choices"][0]["delta"]["content"]
-
-
 async def main(model, message):
     local_llama = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
     dspy.settings.configure(lm=local_llama, async_max_workers=4)
     generator = dspy.asyncify(dspy.Predict(BasicQA))
     streaminator = dspy.streamify(generator)
 
-    async for chunk in stream(message, streaminator):
-        if chunk is not None:
-            if not isinstance(chunk, dspy.Prediction):  # If we want the final answer all at once, it should be done here
-                yield chunk
+    async for chunk in streaminator(question=message, stream=True):
+        if isinstance(chunk, dspy.Prediction):
+            if str(chunk) is not None:
+                yield ""  # str(chunk)
+        else:
+            chnk = chunk["choices"][0]["delta"]["content"]
+            if chnk is not None:
+                yield chnk
 
 
 async def chat_machine(model, message):

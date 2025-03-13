@@ -19,6 +19,7 @@ pytest-trio
 aiofiles
 aiohttp
 llama-cpp-python
+textual[syntax]>=2.1.2
 
 [dev]
 nnll[opt]

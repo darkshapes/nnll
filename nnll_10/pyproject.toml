@@ -1,0 +1,53 @@
+[build-system]
+requires      = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name            = "nnll-10"
+dynamic         = ["version"]
+description     = "Add your description here"
+readme          = "README.md"
+requires-python = ">=3.10"
+keywords        = ["LLM", "diffusion", "ML", "AI", "neural network"]
+
+dependencies = [
+    "dspy>=2.6.10",
+    "ollama>=0.4.7",
+    "rich>=13.9.4",
+    "sounddevice>=0.5.1",
+    "soundfile>=0.13.1",
+    "textual[syntax]>=2.1.2",
+    "tiktoken>=0.9.0",
+]
+
+[dependency-groups]
+dev = [
+    "pylint>=3.3.4",
+    "pytest-asyncio>=0.25.3",
+    "pytest>=8.3.5",
+    "ruff>=0.9.10",
+    "textual-dev>=1.7.0",
+    "typos>=1.30.1",
+    "uv>=0.6.5",
+]
+
+[tool.setuptools_scm]
+write_to = "_version.py"
+
+[tool.ruff]
+line-length    = 140
+include        = ["*.py"]
+extend-exclude = ["^tests/.*$", "test.*$"]
+
+[tool.ruff.format]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length               = 140
+ignore-overlong-task-comments = true
+
+[tool.pylint]
+max-line-length = 140
+ignore-paths    = ["^tests/.*$", "test_.*$"]
+
+[tool.typos]
+files.extend-exclude = ["^tests/.*$", "test.*$"]

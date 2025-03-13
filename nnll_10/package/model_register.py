@@ -3,9 +3,6 @@
 
 import os
 import ollama
-# import huggingface_hub
-
-from huggingface_hub import scan_cache_dir
 
 
 def legible_size(num, suffix="B"):
@@ -26,16 +23,36 @@ def from_ollama_cache() -> dict:
         else:
             short_name = str(model.model).strip("[@]")
         model_size_legible = legible_size(model.size.real)
-        model_desc = f"[magenta]{short_name} - {model_size_legible}[magenta]"
-        model_path = f"ollama_chat/{model.model}"
-        map_models.setdefault(model_desc, model_path)
+        model_desc = f"{short_name} - {model_size_legible}"
+        map_models.setdefault(model_desc, model.model)
     return map_models
 
-    # consider export HF_HUB_OFFLINE=True
-    # export DISABLE_TELEMETRY=YES
-    # set DISABLE_TELEMETRY=YES
-    # HF_HOME
-    # HUGGINFACE_HUB_CACHE
+    # build graph
+    # ollama reference -
+
+    # print("  Family:", model.details.family) <--
+    # print("  Parameter Size:", model.details.parameter_size)
+    # # print("  Quantization Level:", model.details.quantization_level)
+
+    # hf reference
+    # from huggingface_hub import scan_cache_dir
+
+    # cached_repos = list(scan_cache_dir().repos)
+    # repo_name = next(iter(cached_repos)).repo_id
+    # meta = repocard.RepoCard.load(repo_name)
+    # meta.data.tags (pipeline info)
+
+    # models = api.list_models(model_name=repo_name)
+    # type = next(iter(list(model_info))).pipeline_tag
+
+    # models = api.list_models(pipeline_tag="text-to-image", library="diffusers")
+
+    # encoding = tiktoken.get_encoding("cl100k_base")
+    # token_count = len(encoding.encode(message))
+
+    #  # import huggingface_hub
+
+    # from huggingface_hub import scan_cache_dir
 
     # def from_hf_cache_() -> dict:
     #     cached_repos = list(scan_cache_dir().repos)
@@ -47,15 +64,13 @@ def from_ollama_cache() -> dict:
     # repo.last_accessed_str,
     # repo.last_modified_str,
     # str(repo.repo_path),
-    """Retrieve models from huggingface hub cache server"""
-    available_models = {}
+    # """Retrieve models from huggingface hub cache server"""
+    # available_models = {}
     # response: ollama.ListResponse = ollama.list()
     # for model in response.models:
     #     available_models.setdefault(f"{model.model}-{(model.size.real / 1024 / 1024):.2f} MB", model.model)
     # return available_models
     # if model.details:
     #     print("  Format:", model.details.format)
-    #     print("  Family:", model.details.family)
-    #     print("  Parameter Size:", model.details.parameter_size)
-    #     print("  Quantization Level:", model.details.quantization_level)
+
     # print("\n")

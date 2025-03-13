@@ -5,28 +5,30 @@
 
 from textual import work, events
 from textual.app import ComposeResult
+from textual.binding import Binding
 from textual.containers import Horizontal, Container
 from textual.screen import Screen
 from textual.widgets import Footer, Static
 
-from .fold import Fold  # pylint: disable=import-error
+from package.fold import Fold  # pylint: disable=import-error
 
 
-# class WideScreen(Screen):
 class MainScreen(Screen):
     """Orienting display Horizontal"""
 
-    # Laptop layout."""
+    DEFAULT_CSS = """
+    Screen {
+        min-height: 5;
+    }
+    """
 
     def compose(self) -> ComposeResult:
+        """Create widgets"""
         yield Footer(id="footer")
-        with Horizontal(id="app-grid"):
+        with Horizontal(id="app-grid", classes="app-grid-horizontal"):
             yield ResponsiveLeftTop(id="left-frame")
             yield Fold(id="centre-frame")
             yield ResponsiveRightBottom(id="right-frame")
-
-    def on_mount(self):
-        self.query_one("#app-grid").set_classes("app-grid-horizontal")
 
     @work(exit_on_error=False)
     async def on_resize(self, event=events.Resize):
@@ -38,18 +40,6 @@ class MainScreen(Screen):
             display.set_classes("app-grid-horizontal")
         elif width / 2 < height:  # Screen is tall
             display.set_classes("app-grid-vertical")
-
-
-# class TallScreen(Screen):
-#     """Orienting display Vertical
-#     Phone layout."""
-
-#     def compose(self) -> ComposeResult:
-#         yield Footer()
-#         with Vertical(id="app-grid-vertical"):
-#             yield ResponsiveLeftTop(id="top-frame")
-#             yield Fold(id="centre-frame")
-#             yield ResponsiveRightBottom(id="bottom-frame")
 
 
 class ResponsiveLeftTop(Container):
