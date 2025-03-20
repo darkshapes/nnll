@@ -26,7 +26,6 @@ keywords = [
     "torch",
 ]
 
-dependencies = ["sentencepiece", "diffusers"]
 [project.optional-dependencies]
 01 = []
 02 = ["nnll[01]", "rich"]
@@ -35,8 +34,20 @@ dependencies = ["sentencepiece", "diffusers"]
 05 = ["llama-cpp-python", "gguf", "wheel"]
 07 = []
 08 = ["numpy", "torch"]
-09 = ["transformers", "torch"]
-13 = ["outetts"]
+09 = ["transformers", "torch", "sentencepiece"]
+10 = [
+    "textual",
+    "textual-plotext",
+    "huggingface_hub",
+    "ollama",
+    'sounddevice',
+    "rich",
+    "litellm",
+]
+11 = ["dspy", "pydantic"]
+14 = ["networkx", "nnll[15]"]
+15 = ["pydantic"]
+16 = ["torch"]
 18 = ["torch"]
 22 = []
 24 = ["nnll[33]"]
@@ -71,9 +82,10 @@ dependencies = ["sentencepiece", "diffusers"]
 60 = []
 61 = []
 62 = ["nnll[60]"]
-63 = ["torch", "diffusers", "hidiffusion"]
+63 = ["torch", "diffusers", "hidiffusion", "sentencepiece"]
 64 = ["nnll[59]", "nnll[61]", "nnll[62]", "nnll[63]", "nnll[08]", "pillow"]
-full = [
+opt = ["ollama", "huggingface_hub", "outetts", "llvmlite", "numba", "librosa"]
+main = [
     "nnll[01]",
     "nnll[02]",
     "nnll[03]",
@@ -82,6 +94,13 @@ full = [
     "nnll[07]",
     "nnll[08]",
     "nnll[09]",
+    "nnll[10]",
+    "nnll[11]",
+    "nnll[12]",
+    "nnll[13]",
+    "nnll[14]",
+    "nnll[15]",
+    "nnll[16]",
     "nnll[18]",
     "nnll[22]",
     "nnll[24]",
@@ -120,13 +139,15 @@ full = [
     "nnll[64]",
 ]
 dev = [
-    "nnll[full]",
+    "nnll[main]",
+    "nnll[opt]",
     "pytest",
     "ruff",
     "pytest-asyncio",
     "pytest-asyncio",
     "pytest-tornasync",
     "pytest-trio",
+    "textual-dev",
 ]
 
 [project.scripts]

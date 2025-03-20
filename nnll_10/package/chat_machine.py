@@ -35,7 +35,8 @@ class ChainOfThought(dspy.Signature):
 
 
 async def main(model, message):
-    dspy.settings.configure(lm=model, async_max_workers=4)
+    local_llama = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
+    dspy.settings.configure(lm=local_llama, async_max_workers=4)
     generator = dspy.asyncify(dspy.Predict(BasicQA))
     streaminator = dspy.streamify(generator)
 
@@ -56,5 +57,3 @@ async def chat_machine(model, message):
 
 # ["choices"][0]["delta"]["content"]  # Process chunks as they arrive
 # yield chunk if chunk is not none # Forward chunks for real-time streaming
-
-# List all models available locally/ # List LLMs only # # List embeddings only

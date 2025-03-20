@@ -1,5 +1,5 @@
-<div align="center"> 
-  
+<div align="center">
+
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
 # nnll
 
@@ -28,6 +28,7 @@ Some modules are full scripts and can be run from command line. These are writte
 Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
 
 - *Recommended* : Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
+- Install the entire project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
 - Basic clone or fork of the project
 -  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
 - [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own

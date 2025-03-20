@@ -29,4 +29,5 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install ".[dev]"
-          pytest -v
+          cd tests
+          pytest -rPvv *.py

@@ -1,5 +1,3 @@
-sentencepiece
-diffusers
 
 [01]
 
@@ -31,9 +29,21 @@ torch
 [09]
 transformers
 torch
+sentencepiece
 
-[13]
-outetts
+[11]
+dspy
+pydantic
+
+[14]
+networkx
+nnll[15]
+
+[15]
+pydantic
+
+[16]
+torch
 
 [18]
 torch
@@ -149,6 +159,7 @@ nnll[60]
 torch
 diffusers
 hidiffusion
+sentencepiece
 
 [64]
 nnll[59]
@@ -159,14 +170,15 @@ nnll[08]
 pillow
 
 [dev]
-nnll[full]
+nnll[main]
+nnll[opt]
 pytest
 ruff
 pytest-asyncio
 pytest-tornasync
 pytest-trio
 
-[full]
+[main]
 nnll[01]
 nnll[02]
 nnll[03]
@@ -175,6 +187,12 @@ nnll[05]
 nnll[07]
 nnll[08]
 nnll[09]
+nnll[11]
+nnll[12]
+nnll[13]
+nnll[14]
+nnll[15]
+nnll[16]
 nnll[18]
 nnll[22]
 nnll[24]
@@ -211,3 +229,11 @@ nnll[61]
 nnll[62]
 nnll[63]
 nnll[64]
+
+[opt]
+ollama
+huggingface_hub
+outetts
+llvmlite
+numba
+librosa
