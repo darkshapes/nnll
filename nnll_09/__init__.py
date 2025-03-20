@@ -1,11 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import os
-import sys
-import torch
-from transformers import CLIPTokenizer, CLIPTextModel, CLIPTextModelWithProjection
+# pylint: disable=import-outside-toplevel
 
 
 def encode_prompt(device, prompts, tokenizers, text_encoders):
@@ -15,6 +11,11 @@ def encode_prompt(device, prompts, tokenizers, text_encoders):
     #### `tokenizers`: tokenizer models
     #### OUTPUT: a set of encodings formatted to feed into `pipe`
     """
+    import os
+    import sys
+    import torch
+    from transformers import CLIPTokenizer, CLIPTextModel, CLIPTextModelWithProjection
+
     embeddings_list = []
     for prompt, tokenizer, text_encoder in zip(prompts, tokenizers, text_encoders):
         cond_input = tokenizer(

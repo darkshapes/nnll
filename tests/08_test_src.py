@@ -32,7 +32,7 @@ class TestRandom:
     def setup_seed_fixture(self):
         yield from self.setup_seed("0x123456789abcdef")
 
-    def test_soft_random_determinism(setup_seed_fixture):
+    def test_soft_random_determinism(self, setup_seed_fixture):
         """Test deterministic behavior of soft_random with a fixed seed."""
         result = soft_random(0x2540BE3FF)
         # Might need adjustment..

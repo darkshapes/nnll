@@ -2,12 +2,14 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
-from sqlite3 import connect
 from contextlib import contextmanager
+# pylint: disable=import-outside-toplevel
 
 
 @contextmanager
 def managed_connection(db_name):
+    from sqlite3 import connect
+
     active_conn = connect(db_name)
     try:
         yield active_conn

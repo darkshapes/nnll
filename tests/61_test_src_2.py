@@ -5,7 +5,6 @@
 
 
 import hashlib
-import os
 import json
 import unittest
 from dataclasses import FrozenInstanceError, asdict
@@ -15,8 +14,8 @@ from nnll_61 import Block
 class TestBlock(unittest.TestCase):
     """Test blocks objects"""
 
-    test_file = os.path.join("nnll_61", "test.json")
-    file_name = os.path.join("nnll_61", "test.json")
+    test_file = ".test.json"
+    file_name = ".test.json"
 
     def setUp(self):
         """Create block and save existing parameters"""

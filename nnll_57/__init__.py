@@ -1,16 +1,17 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
+# pylint: disable=import-outside-toplevel
 
-import os
 from typing import LiteralString
-
-from PIL import Image
+import os
 
 save_folder_name_and_path = os.path.dirname(__file__)
 
 
 def save_element(extension=".png", save_folder_name_and_path=save_folder_name_and_path):
+    from PIL import Image
+
     print(save_folder_name_and_path)
     if not os.path.isdir(save_folder_name_and_path):
         raise FileNotFoundError("Invalid folder location.")

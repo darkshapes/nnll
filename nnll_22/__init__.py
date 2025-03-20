@@ -3,7 +3,7 @@
 
 import os
 from abc import ABC, abstractmethod
-from typing import Union, List
+from typing import List
 
 
 class AbstractLink(ABC):

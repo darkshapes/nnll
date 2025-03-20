@@ -6,7 +6,7 @@ import unittest
 import os
 from tempfile import TemporaryDirectory
 
-from . import trace_file_structure
+from nnll_41 import trace_file_structure
 
 
 class TestTraceFileStructure(unittest.TestCase):

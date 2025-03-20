@@ -1,8 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import sys
+# pylint: disable=import-outside-toplevel
 
 
 def wipe_printer(*formatted_data: dict) -> None:
@@ -11,12 +10,14 @@ def wipe_printer(*formatted_data: dict) -> None:
     :param formatted_data: Output of `pretty_tabled_output()`
     :return: None
     """
-    sys.stdout.write("\033[F\r" * (len(formatted_data)))  # ANSI escape codes to move the cursor up 3 lines
-    for line_data in formatted_data:
-        sys.stdout.write(" " * 175 + "\x1b[1K\r")
-        sys.stdout.write(f"{line_data}\n")  # Print the lines
+    from sys import stdout
 
-    sys.stdout.flush()  # Empty output buffer to ensure the changes are shown
+    stdout.write("\033[F\r" * (len(formatted_data)))  # ANSI escape codes to move the cursor up 3 lines
+    for line_data in formatted_data:
+        stdout.write(" " * 175 + "\x1b[1K\r")
+        stdout.write(f"{line_data}\n")  # Print the lines
+
+    stdout.flush()  # Empty output buffer to ensure the changes are shown
 
 
 def pretty_tabled_output(table_title: str, aggregate_data: dict, width: int = 18) -> None:

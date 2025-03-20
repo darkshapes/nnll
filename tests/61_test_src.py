@@ -4,23 +4,24 @@
 """test"""
 
 # pylint:disable=line-too-long
-import os
 import unittest
 from unittest.mock import MagicMock, patch
 import hashlib
 from nnll_61 import HyperChain
 from nnll_60 import JSONCache
-
-
-test_file = os.path.join("nnll_61", "test.json")
+import json
 
 
 class TestHyperChain(unittest.TestCase):
     """blockchain test"""
 
+    test_file = ".test.json"
+
     @classmethod
     def setUpClass(cls):
-        cls.patcher = patch.object(HyperChain, "chain_file", new=JSONCache(test_file))
+        with open(cls.test_file, "w", encoding="UTF-8") as doc:
+            json.dump({}, doc)
+        cls.patcher = patch.object(HyperChain, "chain_file", new=JSONCache(cls.test_file))
         cls.patcher.start()
         cls.hyperchain = HyperChain()
 
@@ -52,9 +53,13 @@ class TestHyperChain(unittest.TestCase):
 class TestHyperChainValidation(unittest.TestCase):
     """validation tester"""
 
+    test_file = ".test.json"
+
     @classmethod
     def setUpClass(cls):
-        cls.patcher = patch.object(HyperChain, "chain_file", new=JSONCache(test_file))
+        with open(cls.test_file, "w", encoding="UTF-8") as doc:
+            json.dump({}, doc)
+        cls.patcher = patch.object(HyperChain, "chain_file", new=JSONCache(cls.test_file))
         cls.patcher.start()
         cls.hyperchain = HyperChain()
         cls.genesis_block = MagicMock(

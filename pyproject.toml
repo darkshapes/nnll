@@ -26,50 +26,108 @@ keywords = [
     "torch",
 ]
 
-
-dependencies = [
-    "tqdm",
-    "wheel",
-    "numpy",
-    "gguf",
-    "sentencepiece",
-    "diffusers",
-    "transformers",
-    "huggingface-hub",
-    "pydantic",
-    "pydantic-core",
-    "rich",
-    "toml",
-    "pillow",
-    "aioresponses",
-    "anyio",
+dependencies = ["sentencepiece", "diffusers"]
+[project.optional-dependencies]
+01 = []
+02 = ["nnll[01]", "rich"]
+03 = ["nnll[27]", "tqdm", "aioresponses", "anyio", "aiofiles", "aiohttp"]
+04 = []
+05 = ["llama-cpp-python", "gguf", "wheel"]
+07 = []
+08 = ["numpy", "torch"]
+09 = ["transformers", "torch"]
+13 = ["outetts"]
+18 = ["torch"]
+22 = []
+24 = ["nnll[33]"]
+25 = []
+26 = ["torch"]
+27 = []
+28 = []
+29 = ["nnll[24]"]
+30 = []
+31 = ["nnll[30]"]
+32 = ["nnll[04]", "nnll[05]", "nnll[28]"]
+33 = ["nnll[25]", "nnll[44]"]
+34 = []
+35 = []
+36 = ["nnll[30]", "nnll[32]"]
+37 = []
+39 = ["nnll[30]", "nnll[46]", "nnll[47]"]
+40 = ["nnll[07]", "nnll[27]", "nnll[39]"]
+41 = []
+44 = ["huggingface_hub"]
+45 = ["huggingface_hub"]
+46 = ["nnll[24]"]
+47 = ["pydantic", "pydantic-core", "nnll[01]"]
+48 = ["pillow", "toml", "nnll[02]", "nnll[47]", "nnll[54]"]
+49 = ["nnll[47]", "nnll[48]", "nnll[02]", "pydantic"]
+51 = []
+53 = []
+54 = ["nnll[02]", "nnll[04]", "nnll[05]", "nnll[28]"]
+56 = ["torch", "hidiffusion"]
+57 = ["pillow"]
+59 = ["nnll[60]"]
+60 = []
+61 = []
+62 = ["nnll[60]"]
+63 = ["torch", "diffusers", "hidiffusion"]
+64 = ["nnll[59]", "nnll[61]", "nnll[62]", "nnll[63]", "nnll[08]", "pillow"]
+full = [
+    "nnll[01]",
+    "nnll[02]",
+    "nnll[03]",
+    "nnll[04]",
+    "nnll[05]",
+    "nnll[07]",
+    "nnll[08]",
+    "nnll[09]",
+    "nnll[18]",
+    "nnll[22]",
+    "nnll[24]",
+    "nnll[25]",
+    "nnll[26]",
+    "nnll[27]",
+    "nnll[28]",
+    "nnll[29]",
+    "nnll[30]",
+    "nnll[31]",
+    "nnll[32]",
+    "nnll[33]",
+    "nnll[34]",
+    "nnll[35]",
+    "nnll[36]",
+    "nnll[37]",
+    "nnll[39]",
+    "nnll[40]",
+    "nnll[41]",
+    "nnll[44]",
+    "nnll[45]",
+    "nnll[46]",
+    "nnll[47]",
+    "nnll[48]",
+    "nnll[49]",
+    "nnll[51]",
+    "nnll[53]",
+    "nnll[54]",
+    "nnll[56]",
+    "nnll[57]",
+    "nnll[59]",
+    "nnll[60]",
+    "nnll[61]",
+    "nnll[62]",
+    "nnll[63]",
+    "nnll[64]",
+]
+dev = [
+    "nnll[full]",
+    "pytest",
+    "ruff",
+    "pytest-asyncio",
     "pytest-asyncio",
     "pytest-tornasync",
     "pytest-trio",
-    "aiofiles",
-    "aiohttp",
-    "llama-cpp-python",
-    # "torch",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp310-none-macosx_11_0_arm64.whl ;python_version=='3.10' and platform_machine=='arm64'",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp311-none-macosx_11_0_arm64.whl ;python_version=='3.11' and platform_machine=='arm64'",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp312-none-macosx_11_0_arm64.whl ;python_version=='3.12' and platform_machine=='arm64'",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp313-none-macosx_11_0_arm64.whl ;python_version=='3.13' and platform_machine=='arm64'",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp310-cp310-manylinux_2_28_aarch64.whl ;python_version=='3.13' and platform_machine=='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp311-cp311-manylinux_2_28_aarch64.whl ;python_version=='3.13' and platform_machine=='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl ;python_version=='3.13' and platform_machine=='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp313-cp313t-manylinux_2_28_aarch64.whl ;python_version=='3.13' and platform_machine=='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-win_amd64.whl#sha256=7cc45c5b39d74875cfafe908b7f55c544147cc16b01e795feb2fe766583efe78 ;platform_system=='windows' and python_version=='3.10' and platform_machine!='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-win_amd64.whl#sha256=6a1fb2714e9323f11edb6e8abf7aad5f79e45ad25c081cde87681a18d99c29eb ;platform_system=='windows' and python_version=='3.11' and platform_machine!='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl#sha256=3313061c1fec4c7310cf47944e84513dcd27b6173b72a349bb7ca68d0ee6e9c0 ;platform_system=='windows' and python_version=='3.12' and platform_machine!='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp313-cp313-win_amd64.whl#sha256=519330eef09534acad8110b6f423d2fe58c1d8e9ada999ed077a637a0021f908 ;platform_system=='windows' and python_version=='3.13' and platform_machine!='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=7f2ba7f7c0459320a521696f6b5bccc187f59890b23c9dfb6c49b0b87c6bfc97 ;platform_system=='linux' and python_version=='3.10' and platform_machine!='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-linux_x86_64.whl#sha256=d4c3e9a8d31a7c0fcbb9da17c31a1917e1fac26c566a4cfbd8c9568ad7cade79 ;platform_system=='linux' and python_version=='3.11' and platform_machine!='aarch64'",
-    # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-linux_x86_64.whl#sha256=a393b506844035c0dac2f30ea8478c343b8e95a429f06f3b3cadfc7f53adb597 ;platform_system=='linux' and python_version=='3.12' and platform_machine!='aarch64'",
-    # # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp313-cp313-linux_x86_64.whl#sha256=0f3bc53c988ce9568cd876a2a5316761e84a8704135ec8068f5f81b4417979cb ;platform_system=='linux' and python_version=='3.13' and platform_machine!='aarch64'",
 ]
-[project.optional-dependencies]
-opt = ["hidiffusion"]
-dev = ["nnll[opt]", "pytest", "ruff"]
 
 [project.scripts]
 nnll-find  = "nnll_31:find_entry"
@@ -111,7 +169,6 @@ packages = [
     "nnll_48",
     "nnll_49",
     "nnll_51",
-    "nnll_52",
     "nnll_53",
     "nnll_54",
     "nnll_56",

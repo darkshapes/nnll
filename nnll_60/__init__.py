@@ -3,8 +3,6 @@
 
 
 import os
-import json
-from functools import wraps
 
 CONFIG_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "config.json")
 CHAIN_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "hyperchain.json")
@@ -31,6 +29,8 @@ class JSONCache:
 
     def _load_cache(self):
         """Populate cache with file data if not already populated"""
+        import json
+
         if not self._cache:
             with open(self.file, "r", encoding="UTF-8") as f:
                 try:
@@ -46,6 +46,8 @@ class JSONCache:
         Write data to a temporary file to minimize data corruption.
         Replace the original file with the updated cache.
         """
+        import json
+
         temp_file = self.file + ".tmp"
         with open(temp_file, "w", encoding="UTF-8") as doc:
             json.dump(self._cache, doc, ensure_ascii=False, indent=4)
@@ -67,6 +69,7 @@ class JSONCache:
 
     def decorator(self, func):
         """Add cache file copies to functions"""
+        from functools import wraps
 
         @wraps(func)
         def wrapper(*args, **kwargs):

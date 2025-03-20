@@ -5,12 +5,12 @@
 """建立控制檯日誌 logging"""
 
 import sys
-import logging as pylog
+import logging as py_logging
 from logging import StreamHandler, Formatter
 
 from rich import theme
 from rich import console
-from rich import logging
+from rich import logging as rich_logging
 from rich import style
 from typing import Callable
 from functools import wraps
@@ -40,7 +40,7 @@ NOUVEAU = theme.Theme(
 )
 console_out = console.Console(stderr=True, theme=NOUVEAU)
 
-log_handler = logging.RichHandler(console=console_out)
+log_handler = rich_logging.RichHandler(console=console_out)
 
 if log_handler is None:
     log_handler = StreamHandler(sys.stderr)
@@ -51,16 +51,16 @@ formatter = Formatter(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 log_handler.setFormatter(formatter)
-pylog.root.setLevel(LOG_LEVEL)
-pylog.root.addHandler(log_handler)
+py_logging.root.setLevel(LOG_LEVEL)
+py_logging.root.addHandler(log_handler)
 
 
 if msg_init is not None:
-    logger = pylog.getLogger(__name__)
+    logger = py_logging.getLogger(__name__)
     logger.info(msg_init)
 
-log_level = getattr(pylog, LOG_LEVEL)
-logger = pylog.getLogger(__name__)
+log_level = getattr(py_logging, LOG_LEVEL)
+logger = py_logging.getLogger(__name__)
 
 
 def debug_monitor(func):
@@ -122,12 +122,12 @@ def capture_io(func):
         # Restore original stdout, stderr, exception hook
         original_stdout = sys.stdout
         original_stderr = sys.stderr
+        original_excepthook = sys.excepthook
 
         try:
             sys.stdout = CaptureStdOut(info_monitor)
-            sys.stderr = CaptureStdOut(info_monitor, level=logging.ERROR)
+            sys.stderr = CaptureStdOut(info_monitor, level=py_logging.ERROR)
 
-            original_excepthook = sys.excepthook
             sys.excepthook = handle_exception
 
             return func(*args, **kwargs)

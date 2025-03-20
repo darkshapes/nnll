@@ -2,12 +2,7 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
-# pylint: disable=import-outside-toplevel
-# pylint:disable=line-too-long
-import torch
-import secrets
-import random
-from inspect import currentframe
+# pylint: disable=import-outside-toplevel, line-too-long
 
 
 def ddim(pipe, kwargs, timestep="trailing", zero_snr=False):
@@ -47,17 +42,23 @@ def euler_a(pipe, kwargs):
 
 def add_generator(pipe, noise_seed: int = 0):
     """Create a generator object ready to receive seeds"""
+    import torch
+
     pipe.generator = torch.Generator(pipe.device).manual_seed(noise_seed)
     return pipe
 
 
 def get_func_name():
     """Return the name of the calling function for self-identification or diagnostic purposes"""
+    from inspect import currentframe
+
     return currentframe().f_back.f_code.co_name
 
 
 def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False):
     """Compile components for speed"""
+    import torch
+
     if transformer:
         pipe.transformer = torch.compile(pipe.transformer, mode="reduce-overhead", fullgraph=True)
     if unet:

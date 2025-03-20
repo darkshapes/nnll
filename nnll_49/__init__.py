@@ -4,17 +4,10 @@
 
 """為使用者介面清理和安排元資料 Clean and arrange metadata"""
 
-# pylint: disable=line-too-long
+# pylint: disable=line-too-long, import-outside-toplevel
 
-import json
-import re
-from json import JSONDecodeError
 from typing import List, Tuple
-
-from nnll_48 import MetadataFileReader
-from nnll_02 import debug_message, debug_monitor
-from pydantic import ValidationError
-
+from nnll_02 import debug_monitor, debug_message
 from nnll_02 import info_monitor as nfo
 from nnll_47 import (
     BracketedDict,
@@ -26,6 +19,8 @@ from nnll_47 import (
     NodeWorkflow,
     UpField,
 )
+from nnll_48 import MetadataFileReader
+
 
 # /______________________________________________________________________________________________________________________ ComfyUI format
 
@@ -38,6 +33,9 @@ def clean_with_json(prestructured_data: dict, first_key: str) -> dict:
     :param key_name: The single working key name
     :return: The previous data newly formatted as a dictionary, but one key deeper
     """
+    import json
+    from json import JSONDecodeError
+
     try:
         cleaned_data = json.loads(prestructured_data[first_key])
     except JSONDecodeError as error_log:
@@ -54,6 +52,7 @@ def validate_typical(nested_map: dict, key_name: str) -> dict | None:
     :type nested_map: dict
     :return: The original node map one key beneath initial entry point, if valid, or None
     """
+    from pydantic import ValidationError
 
     is_search_data = IsThisNode()
     if next(iter(nested_map[key_name])) in NodeWorkflow.__annotations__.keys():
@@ -158,6 +157,7 @@ def redivide_nodeui_data_in(header: str, first_key: str) -> Tuple[dict]:
     :type variable: list
     :return: Metadata dict, or empty dicts if not found
     """
+
     sorted_header_prompt = {}
     sorted_header_data = {}
     try:
@@ -285,6 +285,8 @@ def extract_dict_by_delineation(deprompted_text: str) -> Tuple[dict, list]:
     :param cleaned_text: Text without escape codes
     :return: A freeform string and a partially-organized list of metadata
     """
+
+    import re
 
     def repair_flat_dict(traces_of_pairs: List[str]) -> dict:
         """
@@ -462,6 +464,7 @@ def coordinate_metadata_operations(header_data: dict | str, metadata: dict = Non
     :type metadata: dict
     :return: A dict of the metadata inside header data
     """
+
     if isinstance(header_data, dict):
         metadata = arrange_dict_metadata(header_data)
     elif isinstance(header_data, str):
@@ -514,6 +517,8 @@ def arrange_str_metadata(header_data: str) -> dict:
     :type header_data: str
     :return: A dictionary formatted for display
     """
+    from json import JSONDecodeError
+
     metadata = {}
     try:
         metadata = dict(header_data)

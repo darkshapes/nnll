@@ -1,11 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import secrets
-from numpy import random
-from numpy.random import SeedSequence, Generator, Philox
-import torch
+# pylint: disable=import-outside-toplevel
 
 
 def soft_random(size: int = 0x2540BE3FF) -> int:
@@ -16,12 +12,18 @@ def soft_random(size: int = 0x2540BE3FF) -> int:
     pair with `random.seed()` for best effect
     """
 
+    import secrets
+    from numpy.random import SeedSequence, Generator, Philox
+
     entropy = f"0x{secrets.randbits(128):x}"  # good entropy
     rndmc = Generator(Philox(SeedSequence(int(entropy, 16))))
     return int(rndmc.integers(0, size))
 
 
 def seed_planter(seed, deterministic=True):
+    from numpy import random
+    import torch
+
     torch.manual_seed(seed)
     random.seed(seed)
     if torch.cuda.is_available() is True:
@@ -40,4 +42,6 @@ def hard_random(hardness: int = 5) -> int:
     :param hardness: `int` byte length of generated number
     :returns: `int` Non-prng random number
     """
+    import secrets
+
     return int(secrets.token_hex(hardness), 16)  # make hex secret be int

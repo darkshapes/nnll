@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev161+ge04c8de.d20250305
+Version: 0.1.dev167+g6fa8a16.d20250320
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -16,33 +16,174 @@ Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: tqdm
-Requires-Dist: wheel
-Requires-Dist: numpy
-Requires-Dist: gguf
 Requires-Dist: sentencepiece
 Requires-Dist: diffusers
-Requires-Dist: transformers
-Requires-Dist: huggingface-hub
-Requires-Dist: pydantic
-Requires-Dist: pydantic-core
-Requires-Dist: rich
-Requires-Dist: toml
-Requires-Dist: pillow
-Requires-Dist: aioresponses
-Requires-Dist: anyio
-Requires-Dist: pytest-asyncio
-Requires-Dist: pytest-tornasync
-Requires-Dist: pytest-trio
-Requires-Dist: aiofiles
-Requires-Dist: aiohttp
-Requires-Dist: llama-cpp-python
-Provides-Extra: opt
-Requires-Dist: hidiffusion; extra == "opt"
+Provides-Extra: 01
+Provides-Extra: 02
+Requires-Dist: nnll[01]; extra == "02"
+Requires-Dist: rich; extra == "02"
+Provides-Extra: 03
+Requires-Dist: nnll[27]; extra == "03"
+Requires-Dist: tqdm; extra == "03"
+Requires-Dist: aioresponses; extra == "03"
+Requires-Dist: anyio; extra == "03"
+Requires-Dist: aiofiles; extra == "03"
+Requires-Dist: aiohttp; extra == "03"
+Provides-Extra: 04
+Provides-Extra: 05
+Requires-Dist: llama-cpp-python; extra == "05"
+Requires-Dist: gguf; extra == "05"
+Requires-Dist: wheel; extra == "05"
+Provides-Extra: 07
+Provides-Extra: 08
+Requires-Dist: numpy; extra == "08"
+Requires-Dist: torch; extra == "08"
+Provides-Extra: 09
+Requires-Dist: transformers; extra == "09"
+Requires-Dist: torch; extra == "09"
+Provides-Extra: 13
+Requires-Dist: outetts; extra == "13"
+Provides-Extra: 18
+Requires-Dist: torch; extra == "18"
+Provides-Extra: 22
+Provides-Extra: 24
+Requires-Dist: nnll[33]; extra == "24"
+Provides-Extra: 25
+Provides-Extra: 26
+Requires-Dist: torch; extra == "26"
+Provides-Extra: 27
+Provides-Extra: 28
+Provides-Extra: 29
+Requires-Dist: nnll[24]; extra == "29"
+Provides-Extra: 30
+Provides-Extra: 31
+Requires-Dist: nnll[30]; extra == "31"
+Provides-Extra: 32
+Requires-Dist: nnll[04]; extra == "32"
+Requires-Dist: nnll[05]; extra == "32"
+Requires-Dist: nnll[28]; extra == "32"
+Provides-Extra: 33
+Requires-Dist: nnll[25]; extra == "33"
+Requires-Dist: nnll[44]; extra == "33"
+Provides-Extra: 34
+Provides-Extra: 35
+Provides-Extra: 36
+Requires-Dist: nnll[30]; extra == "36"
+Requires-Dist: nnll[32]; extra == "36"
+Provides-Extra: 37
+Provides-Extra: 39
+Requires-Dist: nnll[30]; extra == "39"
+Requires-Dist: nnll[46]; extra == "39"
+Requires-Dist: nnll[47]; extra == "39"
+Provides-Extra: 40
+Requires-Dist: nnll[07]; extra == "40"
+Requires-Dist: nnll[27]; extra == "40"
+Requires-Dist: nnll[39]; extra == "40"
+Provides-Extra: 41
+Provides-Extra: 44
+Requires-Dist: huggingface_hub; extra == "44"
+Provides-Extra: 45
+Requires-Dist: huggingface_hub; extra == "45"
+Provides-Extra: 46
+Requires-Dist: nnll[24]; extra == "46"
+Provides-Extra: 47
+Requires-Dist: pydantic; extra == "47"
+Requires-Dist: pydantic-core; extra == "47"
+Requires-Dist: nnll[01]; extra == "47"
+Provides-Extra: 48
+Requires-Dist: pillow; extra == "48"
+Requires-Dist: toml; extra == "48"
+Requires-Dist: nnll[02]; extra == "48"
+Requires-Dist: nnll[47]; extra == "48"
+Requires-Dist: nnll[54]; extra == "48"
+Provides-Extra: 49
+Requires-Dist: nnll[47]; extra == "49"
+Requires-Dist: nnll[48]; extra == "49"
+Requires-Dist: nnll[02]; extra == "49"
+Requires-Dist: pydantic; extra == "49"
+Provides-Extra: 51
+Provides-Extra: 53
+Provides-Extra: 54
+Requires-Dist: nnll[02]; extra == "54"
+Requires-Dist: nnll[04]; extra == "54"
+Requires-Dist: nnll[05]; extra == "54"
+Requires-Dist: nnll[28]; extra == "54"
+Provides-Extra: 56
+Requires-Dist: torch; extra == "56"
+Requires-Dist: hidiffusion; extra == "56"
+Provides-Extra: 57
+Requires-Dist: pillow; extra == "57"
+Provides-Extra: 59
+Requires-Dist: nnll[60]; extra == "59"
+Provides-Extra: 60
+Provides-Extra: 61
+Provides-Extra: 62
+Requires-Dist: nnll[60]; extra == "62"
+Provides-Extra: 63
+Requires-Dist: torch; extra == "63"
+Requires-Dist: diffusers; extra == "63"
+Requires-Dist: hidiffusion; extra == "63"
+Provides-Extra: 64
+Requires-Dist: nnll[59]; extra == "64"
+Requires-Dist: nnll[61]; extra == "64"
+Requires-Dist: nnll[62]; extra == "64"
+Requires-Dist: nnll[63]; extra == "64"
+Requires-Dist: nnll[08]; extra == "64"
+Requires-Dist: pillow; extra == "64"
+Provides-Extra: full
+Requires-Dist: nnll[01]; extra == "full"
+Requires-Dist: nnll[02]; extra == "full"
+Requires-Dist: nnll[03]; extra == "full"
+Requires-Dist: nnll[04]; extra == "full"
+Requires-Dist: nnll[05]; extra == "full"
+Requires-Dist: nnll[07]; extra == "full"
+Requires-Dist: nnll[08]; extra == "full"
+Requires-Dist: nnll[09]; extra == "full"
+Requires-Dist: nnll[18]; extra == "full"
+Requires-Dist: nnll[22]; extra == "full"
+Requires-Dist: nnll[24]; extra == "full"
+Requires-Dist: nnll[25]; extra == "full"
+Requires-Dist: nnll[26]; extra == "full"
+Requires-Dist: nnll[27]; extra == "full"
+Requires-Dist: nnll[28]; extra == "full"
+Requires-Dist: nnll[29]; extra == "full"
+Requires-Dist: nnll[30]; extra == "full"
+Requires-Dist: nnll[31]; extra == "full"
+Requires-Dist: nnll[32]; extra == "full"
+Requires-Dist: nnll[33]; extra == "full"
+Requires-Dist: nnll[34]; extra == "full"
+Requires-Dist: nnll[35]; extra == "full"
+Requires-Dist: nnll[36]; extra == "full"
+Requires-Dist: nnll[37]; extra == "full"
+Requires-Dist: nnll[39]; extra == "full"
+Requires-Dist: nnll[40]; extra == "full"
+Requires-Dist: nnll[41]; extra == "full"
+Requires-Dist: nnll[44]; extra == "full"
+Requires-Dist: nnll[45]; extra == "full"
+Requires-Dist: nnll[46]; extra == "full"
+Requires-Dist: nnll[47]; extra == "full"
+Requires-Dist: nnll[48]; extra == "full"
+Requires-Dist: nnll[49]; extra == "full"
+Requires-Dist: nnll[51]; extra == "full"
+Requires-Dist: nnll[53]; extra == "full"
+Requires-Dist: nnll[54]; extra == "full"
+Requires-Dist: nnll[56]; extra == "full"
+Requires-Dist: nnll[57]; extra == "full"
+Requires-Dist: nnll[59]; extra == "full"
+Requires-Dist: nnll[60]; extra == "full"
+Requires-Dist: nnll[61]; extra == "full"
+Requires-Dist: nnll[62]; extra == "full"
+Requires-Dist: nnll[63]; extra == "full"
+Requires-Dist: nnll[64]; extra == "full"
 Provides-Extra: dev
-Requires-Dist: nnll[opt]; extra == "dev"
+Requires-Dist: nnll[full]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: ruff; extra == "dev"
+Requires-Dist: pytest-asyncio; extra == "dev"
+Requires-Dist: pytest-asyncio; extra == "dev"
+Requires-Dist: pytest-tornasync; extra == "dev"
+Requires-Dist: pytest-trio; extra == "dev"
+Dynamic: license-file
 
 
 

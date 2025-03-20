@@ -1,63 +1,65 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
 """Wrap Image/Model Metadata I/O"""
 
-from pathlib import Path
-import os
-import json
-import toml
+# pylint: disable=import-outside-toplevel
 
-from PIL import Image, UnidentifiedImageError, ExifTags
-
-from nnll_02 import debug_message, debug_monitor
-
-from nnll_02 import info_monitor as nfo
-from nnll_47 import EmptyField, ExtensionType as Ext, DownField, UpField
-from nnll_54 import ModelTool
+from nnll_02 import debug_monitor
 
 
 class MetadataFileReader:
     """Interface for metadata and text read operations"""
 
     def __init__(self):
-        self.show_content = None  # Example placeholder for UI interaction
+        self.show_content = None
+        import nnll_02
+
+        self.nfo = nnll_02.info_monitor
+        self.debug_message = nnll_02.debug_message
+        # debug_monitor = nnll_02.debug_monitor
 
     @debug_monitor
-    def read_jpg_header(self, file_path_named):
+    def read_jpg_header(self, file_path_named: str) -> dict | None:
         """
         Open jpg format files\n
         :param file_path_named: The path and file name of the jpg file
         :return: Generator element containing header tags
         """
+        from PIL import Image, ExifTags
 
         img = Image.open(file_path_named)
         exif_tags = {ExifTags.TAGS[key]: val for key, val in img._getexif().items() if key in ExifTags.TAGS}  # pylint: disable=protected-access, line-too-long
         return exif_tags
 
     @debug_monitor
-    def read_png_header(self, file_path_named):
+    def read_png_header(self, file_path_named: str) -> dict | None:
         """
         Open png format files\n
         :param file_path_named: The path and file name of the png file
         :return: Generator element containing header tags
         """
+
+        from PIL import Image, UnidentifiedImageError
+
         try:
             img = Image.open(file_path_named)
             if img is None:  # We dont need to load completely unless totally necessary
                 img.load()  # This is the case when we have no choice but to load (slower)
             return img.info  # PNG info directly used here
         except UnidentifiedImageError as error_log:
-            nfo("Failed to read image at:", file_path_named, error_log)
+            self.nfo("Failed to read image at:", file_path_named, error_log)
             return None
 
-    def read_txt_contents(self, file_path_named):
+    def read_txt_contents(self, file_path_named: str) -> dict | None:
         """
         Open plaintext files\n
         :param file_path_named: The path and file name of the text file
         :return: Generator element containing content
         """
+
+        from nnll_47 import UpField, EmptyField
+
         try:
             with open(file_path_named, "r", encoding="utf_8") as open_file:
                 file_contents = open_file.read()
@@ -67,8 +69,9 @@ class MetadataFileReader:
                 }
                 return metadata  # Reads text file into string
         except UnicodeDecodeError as error_log:
-            nfo("File did not match expected unicode format %s", file_path_named)
-            debug_message(error_log)
+            self.nfo("File did not match expected unicode format %s", file_path_named)
+            self.debug_message(error_log)
+            return None
         try:
             with open(file_path_named, "r", encoding="utf_16-be") as open_file:
                 file_contents = open_file.read()
@@ -78,15 +81,22 @@ class MetadataFileReader:
                 }
                 return metadata  # Reads text file into string
         except UnicodeDecodeError as error_log:
-            nfo("File did not match expected unicode format %s", file_path_named)
-            debug_message(error_log)
+            self.nfo("File did not match expected unicode format %s", file_path_named)
+            self.debug_message(error_log)
+            return None
 
-    def read_schema_file(self, file_path_named: str, mode="r"):
+    def read_schema_file(self, file_path_named: str, mode="r") -> dict:
         """
         Open .json or toml files\n
         :param file_path_named: The path and file name of the json file
         :return: Generator element containing content
         """
+        import os
+        import json
+        import toml
+
+        from nnll_47 import ExtensionType as Ext, DownField, EmptyField
+
         header_field = DownField.RAW_DATA
         _, ext = os.path.splitext(file_path_named)
         if ext == Ext.TOML:
@@ -114,6 +124,10 @@ class MetadataFileReader:
         :param file_path_named: Location of file with file name and path
         :return: A mapping of information contained within it
         """
+        from nnll_54 import ModelTool
+        from pathlib import Path
+        from nnll_47 import ExtensionType as Ext
+
         ext = Path(file_path_named).suffix.lower()
         if ext in Ext.JPEG:
             return self.read_jpg_header(file_path_named)

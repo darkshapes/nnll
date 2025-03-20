@@ -1,16 +1,18 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-from collections import defaultdict
-
-from nnll_24 import KeyTrail
+# pylint: disable=import-outside-toplevel
 
 
 class LayerFilter:
     """
     Class to direct systematic comparison of model state dict layers
     """
+
+    def __init__(self):
+        from nnll_24 import KeyTrail
+
+        self.handle_values = KeyTrail
 
     def identify_layer_type(self, pattern_reference, unpacked_metadata, tensors):
         bundle_check = self.handle_values.pull_key_names(pattern_reference["layer_type"], unpacked_metadata, tensors)
@@ -31,8 +33,11 @@ class LayerFilter:
         :param tensors: `dict` Optional number of model layers in the unknown model file as an integer (None will bypass necessity of a match)
         :return: `dict` A mapping of attributes identifying the unknown model file and its constituent parts
         """
+
+        from collections import defaultdict
+
         file_metadata = defaultdict(dict)
-        self.handle_values = KeyTrail
+
         file_metadata["layer_type"] = self.identify_layer_type(pattern_reference, unpacked_metadata, tensors)
         bundle_check = file_metadata["layer_type"]
         bundle_types = []  # A place to store multiple matching elements
@@ -62,7 +67,7 @@ class LayerFilter:
                 bundle_check = []  # Empty variable by reinitialization
                 for category in file_metadata["category"]:  # Jump to known values inside
                     if len(bundle_check) >= 1 and len(file_metadata["category"]) > 1:  # If we already captured the first model and need more, ignore tensors
-                        bundle_check.extend(self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensors=None))
+                        bundle_check.extend(self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, None))
                     else:
                         bundle_check = self.handle_values.pull_key_names(pattern_reference[category], unpacked_metadata, tensors)  # First model only
 
@@ -79,7 +84,7 @@ class LayerFilter:
             else:  # Category was not a list, only found one
                 try:
                     file_metadata["model"] = self.handle_values.pull_key_names(pattern_reference[file_metadata["category"]], unpacked_metadata, tensors)
-                except KeyError as error_log:
+                except KeyError:  # as error_log:
                     # ("A reference to a key of the filter dictionary failed to be found.")
                     file_metadata["model"] = "unknown"
 

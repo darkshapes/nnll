@@ -1,10 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-from re import L
-from nnll_25 import ExtractAndMatchMetadata
-from nnll_44 import compute_hash_for
+# pylint: disable=import-outside-toplevel
 
 
 class ValueComparison:
@@ -12,7 +9,15 @@ class ValueComparison:
     Loop individual comparisons as situationally required
     """
 
+    def __init__(self):
+        from nnll_25 import ExtractAndMatchMetadata
+
+        self.extract = ExtractAndMatchMetadata()
+        self.is_identical = False
+
     def check_inner_values(self, pattern_details: dict, tensor_dimension: dict, attributes: dict | None = None) -> bool:
+        from nnll_44 import compute_hash_for
+
         possible_attributes = ["tensors", "file_size", "shapes", "hash"]
         if self.is_identical and not any(key in pattern_details for key in possible_attributes):
             return True
@@ -43,8 +48,6 @@ class ValueComparison:
         :return: `bool` Whether or not the values from the model header and tensors were found inside pattern_details\n
         The minimum requirement is a **blocks** string value to match, since our shape value is determined by which block is checked
         """
-        self.extract = ExtractAndMatchMetadata()
-        self.is_identical = False
         for layer_key, tensor_dimension in unpacked_metadata.items():
             if pattern_details and "blocks" in pattern_details:
                 blocks = pattern_details["blocks"]
@@ -54,13 +57,13 @@ class ValueComparison:
                 for block in blocks:
                     self.is_identical = self.extract.is_pattern_in_layer(block, layer_key)
                     # print(layer_key)
-                    if self.is_identical == True:
+                    if self.is_identical:
                         check_inner_value = self.check_inner_values(pattern_details, tensor_dimension, attributes)
-                        if check_inner_value == True:
+                        if check_inner_value:
                             return self.is_identical
             else:
                 check_inner_value = self.check_inner_values(pattern_details, tensor_dimension, attributes)
-                if check_inner_value == True:
+                if check_inner_value:
                     return self.is_identical
 
         return self.is_identical

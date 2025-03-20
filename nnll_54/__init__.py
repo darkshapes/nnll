@@ -1,11 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-from pathlib import Path
-from nnll_04 import metadata_from_safetensors
-from nnll_05 import metadata_from_gguf
-from nnll_28 import metadata_from_pickletensor
+# pylint: disable=import-outside-toplevel
 
 
 class ModelTool:
@@ -21,6 +17,12 @@ class ModelTool:
         :return: `dict` a dictionary including the metadata header and external file attributes\n
         (model_header, disk_size, file_name, file_extension)
         """
+        from nnll_02 import info_monitor as nfo
+        from pathlib import Path
+        from nnll_04 import metadata_from_safetensors
+        from nnll_05 import metadata_from_gguf
+        from nnll_28 import metadata_from_pickletensor
+
         metadata = None
         extension = Path(file_path_named).suffix
         import_map = {

@@ -1,11 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import os
-import sys
-
-from nnll_33 import ValueComparison
+# pylint: disable=import-outside-toplevel
 
 
 class KeyTrail:
@@ -22,20 +18,24 @@ class KeyTrail:
         :param attributes: `dict` Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
         :return: `list` The path of keys through the target `dict` leading to a matching subtree, or None if no match is found.
         """
+        from nnll_33 import ValueComparison
+
         compare = ValueComparison()
 
-        def sink_into(next_pattern_reference: dict, flat_key_trail: list = []) -> list | None:
+        def sink_into(next_pattern_reference: dict, flat_key_trail: list = None) -> list | None:
             """
             Recurse through dictionary and return parent keys on boolean condition\n
             :param next_pattern_reference: `dict` A sub-key from `pattern_reference`
             :param flat_key_trail: `list` Sub-keys of `pattern_reference` leading to the current
             :return: `list` The path of keys through the target `dict` if true, or None.
             """
+            if flat_key_trail is None:
+                flat_key_trail = []
             for current_key, pattern_details in next_pattern_reference.items():
                 flat_key_trail.append(current_key)
 
                 if isinstance(pattern_details, dict):  # Check if we've reached the bottom
-                    if compare.check_model_identity(pattern_details, unpacked_metadata, attributes) == True:
+                    if compare.check_model_identity(pattern_details, unpacked_metadata, attributes):
                         return flat_key_trail[-1]  # Return last found key only (as list)
 
                     detected_key = sink_into(pattern_details, flat_key_trail)  # Recurse into deeper levels

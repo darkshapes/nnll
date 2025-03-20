@@ -1,13 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import re
-import os
-import pathlib as pl
-from collections import defaultdict
-
-from nnll_35 import capture_title_numeral
+# pylint: disable=import-outside-toplevel
 
 
 def detect_index_sequence(file_name: str) -> tuple:
@@ -16,6 +10,7 @@ def detect_index_sequence(file_name: str) -> tuple:
     :param file_name: `str` The file name to inspect
     :return: `tuple` of `str` The matching sequence separated into individual variables
     """
+    import re
 
     patterns = [r"(\d+)(-[oO][fF]-)(\d+)", r"(\d)([oO][fF])(\d)"]  # at least one number, hyphen of hyphen number, with or without hyphen, | previously # r'[0000](\d+)[oO][fF][0000](\d+)'
     for pattern in patterns:
@@ -33,6 +28,8 @@ def gather_sharded_files(file_path_named, index_segments: str) -> list:
     :param file_name: `str` The file name to inspect
     :return: `tuple` of `str` The matching sequence separated into individual variables
     """
+    import pathlib as pl
+    import os
 
     part, sep, total = index_segments
     shard_list = []

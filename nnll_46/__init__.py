@@ -1,9 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-#
-from nnll_24 import KeyTrail
-from collections import defaultdict
+# pylint: disable=import-outside-toplevel
 
 
 class IdConductor:
@@ -21,8 +19,10 @@ class IdConductor:
         :param attributes: `dict` Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
         :return: `dict` A mapping of attributes identifying the unknown model file and its constituent parts
         """
-        key_trail = KeyTrail()
 
+        from nnll_24 import KeyTrail
+
+        key_trail = KeyTrail()
         self.model_keys = []
         if isinstance(category_type, str):
             category_type = [category_type]
@@ -47,6 +47,9 @@ class IdConductor:
         :param attributes: `dict` Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
         :return: `dict` A mapping of attributes identifying the unknown model file and its constituent parts
         """
+
+        from nnll_24 import KeyTrail
+
         key_trail = KeyTrail()
         self.category_keys = []
         self.category_keys.append(key_trail.pull_key_names(pattern_reference["category"], unpacked_metadata, attributes))
@@ -67,6 +70,9 @@ class IdConductor:
         :param attributes: `dict` Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
         :return: `dict` A mapping of attributes identifying the unknown model file and its constituent parts
         """
+        from collections import defaultdict
+        from nnll_24 import KeyTrail
+
         key_trail = KeyTrail()
         self.layer_keys = defaultdict(dict)
         self.layer_keys["layer_type"] = key_trail.pull_key_names(pattern_reference["layer_type"], unpacked_metadata, attributes)
