@@ -1,11 +1,12 @@
-
-
+<div align="center"> 
+  
+![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
 # nnll
 
 ## neural network link library
 `nnll` (or <em>null</em>) is a comprehensive AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
 
-Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Llama, 🍏MLX, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
+Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Ollama, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
 <br>
 
 # :shipit:
