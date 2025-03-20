@@ -19,6 +19,13 @@ pytest-trio
 aiofiles
 aiohttp
 llama-cpp-python
+textual>=2.1.2
+dspy>=2.6.13
+litellm>=1.63.12
+ollama>=0.4.7
+textual-plotext>=1.0.1
+sounddevice>=0.5.1
+networkx>=3.4.2
 
 [dev]
 nnll[opt]

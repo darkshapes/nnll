@@ -1,0 +1,38 @@
+{
+    "save_folder_path_absolute": "/Users/unauthorized/Documents/Combo/02/",
+    "weight_map_locations": {
+        "repo": "https://huggingface.co/exdysa/metadata/",
+        "unet": "transformer/diffusion_pytorch_model.safetensors.index.json",
+        "text_encoder": "text_encoder/model.safetensors.index.json",
+        "text_encoder_2": "text_encoder_2/model.safetensors.index.json",
+        "text_encoder_3": "text_encoder_3/model.safetensors.index.json"
+    },
+    "default_tokens": {
+        "user": "<|user|>",
+        "assistant": "<|assistant|>",
+        "suffix": "<|end|>"
+    },
+    "parler-tts-tiny": {
+        "repo": "parler-tts/parler-tiny-v1-jenny",
+        "tokenizer_kwargs": {
+            "return_tensors": "pt"
+        },
+        "tokenizer_name": "AutoTokenizer",
+        "pipe_name": "AutoModelForCasualLM"
+    },
+    "phi-4": {
+        "repo": "microsoft/Phi-4-multimodal-instruct",
+        "defaults": {},
+        "processor_name": "AutoProcessor",
+        "generation_name": "GenerationConfig",
+        "pipe_kwargs": {
+            "torch_dtype": "auto",
+            "trust_remote_code": true
+        },
+        "audio": {
+            "tokens": {
+                "user": "<|user|><|audio_1|>"
+            }
+        }
+    }
+}

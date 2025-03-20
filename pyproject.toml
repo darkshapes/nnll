@@ -66,6 +66,13 @@ dependencies = [
     # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-linux_x86_64.whl#sha256=d4c3e9a8d31a7c0fcbb9da17c31a1917e1fac26c566a4cfbd8c9568ad7cade79 ;platform_system=='linux' and python_version=='3.11' and platform_machine!='aarch64'",
     # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-linux_x86_64.whl#sha256=a393b506844035c0dac2f30ea8478c343b8e95a429f06f3b3cadfc7f53adb597 ;platform_system=='linux' and python_version=='3.12' and platform_machine!='aarch64'",
     # # "torch @ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp313-cp313-linux_x86_64.whl#sha256=0f3bc53c988ce9568cd876a2a5316761e84a8704135ec8068f5f81b4417979cb ;platform_system=='linux' and python_version=='3.13' and platform_machine!='aarch64'",
+    "textual>=2.1.2",
+    "dspy>=2.6.13",
+    "litellm>=1.63.12",
+    "ollama>=0.4.7",
+    "textual-plotext>=1.0.1",
+    "sounddevice>=0.5.1",
+    "networkx>=3.4.2",
 ]
 [project.optional-dependencies]
 opt = ["hidiffusion"]
@@ -129,7 +136,11 @@ packages = [
 write_to = "_version.py"
 
 [tool.uv]
-dev-dependencies = ["nnll[dev]"]
+dev-dependencies = [
+    "matplotlib>=3.10.1",
+    "nnll[dev]",
+    "textual-dev>=1.7.0",
+]
 
 [tool.ruff]
 line-length    = 140
