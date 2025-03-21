@@ -1,9 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import struct
-import json
+# pylint: disable=import-outside-toplevel
 
 
 def metadata_from_safetensors(file_path_named: str) -> dict:
@@ -12,6 +10,9 @@ def metadata_from_safetensors(file_path_named: str) -> dict:
     :param file_path_named: `str` the full path to the file being opened
     :return: `dict` the key value pair structure found in the file
     """
+    import struct
+    import json
+
     with open(file_path_named, "rb") as file_contents_to:
         first_8_bytes = file_contents_to.read(8)
         length_of_header = struct.unpack("<Q", first_8_bytes)[0]

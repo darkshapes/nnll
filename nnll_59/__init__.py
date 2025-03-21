@@ -3,6 +3,8 @@
 
 # # pylint: disable=line-too-long
 
+# pylint: disable=import-outside-toplevel
+
 import os
 from typing import LiteralString
 

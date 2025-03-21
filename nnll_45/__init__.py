@@ -1,9 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import os
-from huggingface_hub import hf_hub_download
+# pylint: disable=import-outside-toplevel
 
 
 def download_hub_file(**kwargs) -> tuple:
@@ -14,6 +12,10 @@ def download_hub_file(**kwargs) -> tuple:
     :param file_name: `str` Name of the specific file to download
     :return: `tuple` the default download folder and folder contents
     """
+
+    import os
+    from huggingface_hub import hf_hub_download
+
     os.environ["HUGGINGFACE_HUB_CACHE"] = kwargs["local_dir"]
     hf_hub_download(**kwargs)
     if not kwargs["local_dir"]:

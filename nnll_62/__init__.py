@@ -6,25 +6,16 @@
 # pylint:disable=unused-argument
 # pylint:disable=line-too-long
 
-import os
-import inspect
-from functools import wraps
-from typing import LiteralString
-
-import torch
-import diffusers
-
 
 from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 
-device: str = "mps"
-precision: torch.dtype = torch.float16
-variant: LiteralString = """fp16"""
 config_file = JSONCache(CONFIG_PATH_NAMED)
 
 
 def pipe_call(func):
     """Decorator for Diffusers pipes to combine arguments"""
+    from functools import wraps
+    import inspect
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -50,6 +41,8 @@ class ConstructPipeline:
         Build a diffusers pipe based on model type\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
         """
+        import os
+        import diffusers
 
         arch_data = self.construct[architecture]
         # repo = arch_data.get("local")
@@ -77,6 +70,9 @@ class ConstructPipeline:
         Add a LoRA to the diffusers pipe\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
         """
+        import os
+        import diffusers
+
         lora_data = self.construct[lora]
         arch_data = lora_data.get(architecture)
         solver = lora_data.get("solver")

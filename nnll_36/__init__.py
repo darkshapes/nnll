@@ -1,15 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-from collections import defaultdict
-
-import os
-from pathlib import Path
-import argparse
-
-from nnll_30 import write_json_file
-from nnll_32 import coordinate_header_tools
+# pylint: disable=import-outside-toplevel
 
 
 def read_state_dict_headers(folder_path_named: str = ".", save_location: str = ".") -> None:
@@ -19,6 +11,11 @@ def read_state_dict_headers(folder_path_named: str = ".", save_location: str = "
     :param save_location: `str` The full path to reserve for output. Must include a `.json` file name.
     :return: `None`
     """
+    from nnll_30 import write_json_file
+    from nnll_32 import coordinate_header_tools
+    from pathlib import Path
+    import os
+
     if folder_path_named is not None:
         for file_name in os.listdir(folder_path_named):
             # if file_name
@@ -32,6 +29,8 @@ def read_state_dict_headers(folder_path_named: str = ".", save_location: str = "
 
 
 def main():
+    import argparse
+
     # Set up argument parser
     parser = argparse.ArgumentParser(description="Output state dict from a model file at [path] to the console, then write to a json file at [save].", epilog="Example: nnll-parse ~/Downloads/models/images ~Downloads/models/metadata")
     parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=".")

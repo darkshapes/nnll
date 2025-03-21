@@ -4,10 +4,9 @@
 
 """區塊鏈儲存 Blockchain storage"""
 
-# pylint:disable=line-too-long
-import hashlib
-from dataclasses import dataclass, asdict
-from time import gmtime, strftime, time_ns
+# pylint:disable=line-too-long, import-outside-toplevel
+
+from dataclasses import dataclass
 
 from nnll_60 import CHAIN_PATH_NAMED, JSONCache
 
@@ -39,10 +38,14 @@ class Block:
             object.__setattr__(self, "block_hash", self.calculate_hash())
 
     def calculate_hash(self) -> str:
+        import hashlib
+
         block_contents = f"{self.index}{self.previous_hash}{self.data}{self.timestamp}".encode("utf-8")
         return hashlib.sha256(block_contents).hexdigest()
 
     def create_timestamp(self):
+        from time import gmtime, strftime, time_ns
+
         return strftime("%Y-%m-%d %H:%M:%s", gmtime(time_ns() // 1e9))
 
     @classmethod
@@ -107,6 +110,8 @@ class HyperChain:
     @chain_file.decorator
     def save_chain_to_file(self, data: str = None):  # pylint:disable=unused-argument
         """Will not save unless chain is valid"""
+        from dataclasses import asdict
+
         if self.is_chain_valid():
             self.chain_file.update_cache({"_hyperchain": [asdict(block) for block in self.chain]})
         else:
@@ -127,6 +132,8 @@ class HyperChain:
         Hash validation by recompute and comparison for blocks and links.\n
         Validate genesis block separately.
         """
+        import hashlib
+
         if self.chain[0].previous_hash != "init":
             return False
 

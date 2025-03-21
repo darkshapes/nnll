@@ -2,18 +2,15 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
-import os
-from nnll_07 import Domain, Architecture, Component
-from nnll_27 import pretty_tabled_output
-from nnll_39 import route_metadata
-
+# pylint: disable=import-outside-toplevel
 
 # parse metadata into tag?
 def create_model_tag(pulled_keys: dict) -> dict:
+    from nnll_07 import Domain, Architecture, Component
+
+    domain_ml = Domain("ml")  # create the domain only when we know its a model
     if "unknown" in pulled_keys:
-        domain_dev = Domain("dev")  # For unrecognized models,
-    else:
-        domain_ml = Domain("ml")  # create the domain only when we know its a model
+        domain_ml = Domain("dev")  # For unrecognized models,
 
     arch_found = Architecture(pulled_keys.get("architecture"))
     model_type = pulled_keys["model_type"]

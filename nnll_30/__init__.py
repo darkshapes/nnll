@@ -1,12 +1,13 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import os
-import json
+# pylint: disable=import-outside-toplevel
 
 
 def write_json_file(file_path: str, file_name: str, data, mode: str = "w"):
+    import os
+    import json
+
     if ".json" not in file_name:
         file_name += ".json"
     document = os.path.join(file_path, os.path.basename(file_name))
@@ -15,5 +16,7 @@ def write_json_file(file_path: str, file_name: str, data, mode: str = "w"):
 
 
 def read_json_file(file_path: str, mode="r"):
+    import json
+
     with open(file_path, mode, encoding="UTF-8") as f:
         return json.load(f)

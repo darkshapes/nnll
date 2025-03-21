@@ -1,10 +1,9 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
+# pylint: disable=import-outside-toplevel
 
 # courtesy HamenderSingh https://github.com/huggingface/diffusers/issues/2136#issuecomment-1952590982
-
-import torch
 
 
 def get_pipeline_embeds(pipeline, prompt, negative_prompt, device):
@@ -16,6 +15,9 @@ def get_pipeline_embeds(pipeline, prompt, negative_prompt, device):
     :param device:
     :return:
     """
+
+    import torch
+
     max_length = pipeline.tokenizer.model_max_length
 
     # simple way to determine length of tokens

@@ -1,8 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import random
+# pylint: disable=import-outside-toplevel
 
 
 def random_int_from_gpu(input_seed: int = None) -> int:
@@ -11,12 +10,9 @@ def random_int_from_gpu(input_seed: int = None) -> int:
     :params input_seed: `int`a seed to feed the random generator
     :returns: `int` a random number generated
     """
-    try:
-        import torch
-    except ImportError as error_log:
-        ImportError(f"{error_log} Torch not installed.")
-    else:
-        return torch.random.seed() if input_seed is None else torch.random.manual_seed(input_seed)
+    import torch
+
+    return torch.random.seed() if input_seed is None else torch.random.manual_seed(input_seed)
 
 
 def random_tensor_from_gpu(device: str = "cpu", input_seed: int = None):
@@ -26,11 +22,9 @@ def random_tensor_from_gpu(device: str = "cpu", input_seed: int = None):
     :params device: `str` device to assign generation to
     :returns: `tensor` random dimensional tensor
     """
-    try:
-        import torch
-    except ImportError as error_log:
-        ImportError(f"{error_log} Torch not installed.")
-    else:
-        if input_seed is not None:
-            torch.manual_seed(input_seed)
-        return torch.rand(1, device=device)
+
+    import torch
+
+    if input_seed is not None:
+        torch.manual_seed(input_seed)
+    return torch.rand(1, device=device)

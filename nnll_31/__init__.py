@@ -5,17 +5,15 @@ State dict layer equivalence tool : search and return layer/shape/tensors matchi
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-import sys
-import os
-import json
-import subprocess
-from contextlib import suppress
 
-from nnll_30 import read_json_file
-from nnll_02 import info_monitor as nfo
+# pylint: disable=import-outside-toplevel
 
 
 def count_tensors_and_extract_shape(pattern, file_path):
+    import os
+    import json
+    from nnll_30 import read_json_file
+
     try:
         content = read_json_file(file_path)  # Split into lines for easier processing
         # Find the line containing the pattern
@@ -41,6 +39,9 @@ def count_tensors_and_extract_shape(pattern, file_path):
 
 
 def find_files_with_pattern(pattern):
+    import sys
+    import subprocess
+
     if not pattern:
         print(f"Search for layer name metadata in the current folder's models.\n Usage: {sys.argv[0]} <pattern>")
         sys.exit(1)
@@ -60,6 +61,9 @@ def find_files_with_pattern(pattern):
 
 
 def find_entry(pattern=(TypeError)):
+    import sys
+    from contextlib import suppress
+
     with suppress(TypeError):
         if len(sys.argv) != 2:
             print(f"""
@@ -72,6 +76,8 @@ Usage: {sys.argv[0]} <pattern>\n""")
 
 
 if __name__ == "__main__":
+    import sys
+
     if len(sys.argv) != 2:
         print(f"""
                 Cannot be none.\n Search layer name metadata in the current folder's models. Usage: {sys.argv[0]} <pattern>""")

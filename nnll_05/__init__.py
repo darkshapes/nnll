@@ -1,11 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
-import os
-import struct
-from gguf import GGUFReader
-from llama_cpp import Llama
+# pylint: disable=import-outside-toplevel
 
 
 def gguf_check(file_path_named: str) -> tuple:
@@ -14,6 +10,8 @@ def gguf_check(file_path_named: str) -> tuple:
     :param file_path_named: `str` the full path to the file being opened
     :return: `tuple' the number
     """
+    import struct
+
     GGUF_MAGIC_NUMBER = b"GGUF"
 
     try:
@@ -44,6 +42,7 @@ def create_gguf_reader(file_path_named: str) -> dict:
     :type file_path_named: `str`
     :return: `dict` of relevant data from the file
     """
+    from gguf import GGUFReader
 
     try:  # method using gguf library, better for LDM conversions
         reader = GGUFReader(file_path_named, "r")  # obsolete in numpy 2, also slower
@@ -87,6 +86,8 @@ def create_llama_parser(file_path_named: str) -> dict:
     :param file_path_named: `str` the full path to the file being opened
     :return: `dict` The entire header with Llama parser formatting
     """
+    from llama_cpp import Llama
+
     file_metadata = {}
     parser = Llama(model_path=file_path_named, vocab_only=True, verbose=False)
     if parser:

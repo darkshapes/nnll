@@ -1,10 +1,19 @@
+<div align="center">
 
-
+![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
 # nnll
 
 ## neural network link library
-`nnll` (or <em>null</em>) is a comprehensive incubator and toolkit for Diffusion and Large Language Model (LLMs) applications. The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning. The library focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
+
+`nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
+
+The focus is on refining and optimizing code for extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a comprehensive suite of direct and indirect generative AI preparations.
+
+Solutions leverage 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🌀DSPy, and more.
+
 <br>
+
+# :shipit:
 
 [![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
 ![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)<br>
@@ -23,6 +32,7 @@ Some modules are full scripts and can be run from command line. These are writte
 Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
 
 - *Recommended* : Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
+- Install the entire project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
 - Basic clone or fork of the project
 -  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
 - [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own

@@ -2,10 +2,6 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
-import re
-import os
-
-
 def capture_title_numeral(file_name: str, query: str) -> int:
     """
     Retrieve a number from a file name string using the characters that directly follow it\n
@@ -13,6 +9,9 @@ def capture_title_numeral(file_name: str, query: str) -> int:
     :param query: `str` String of characters following the number to search for
     :return: `int` Integer of the number value found in the string
     """
+    import re
+    import os
+
     try:
         query = query.lower()  # normalize string formatting; digits are focus
         lowercase_filename = os.path.basename(file_name.lower())  # enforce file name only input
