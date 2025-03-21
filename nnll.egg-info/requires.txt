@@ -190,6 +190,7 @@ setuptools
 setuptools_scm
 wheel
 textual-dev
+python-semantic-release
 
 [full]
 nnll[01]
@@ -203,7 +204,6 @@ nnll[09]
 nnll[10]
 nnll[11]
 nnll[12]
-nnll[13]
 nnll[14]
 nnll[15]
 nnll[16]

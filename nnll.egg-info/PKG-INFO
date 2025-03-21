@@ -157,7 +157,6 @@ Requires-Dist: nnll[09]; extra == "full"
 Requires-Dist: nnll[10]; extra == "full"
 Requires-Dist: nnll[11]; extra == "full"
 Requires-Dist: nnll[12]; extra == "full"
-Requires-Dist: nnll[13]; extra == "full"
 Requires-Dist: nnll[14]; extra == "full"
 Requires-Dist: nnll[15]; extra == "full"
 Requires-Dist: nnll[16]; extra == "full"
@@ -214,6 +213,7 @@ Requires-Dist: setuptools; extra == "dev"
 Requires-Dist: setuptools_scm; extra == "dev"
 Requires-Dist: wheel; extra == "dev"
 Requires-Dist: textual-dev; extra == "dev"
+Requires-Dist: python-semantic-release; extra == "dev"
 Dynamic: license-file
 
 <div align="center">

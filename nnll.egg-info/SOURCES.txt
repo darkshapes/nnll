@@ -1,7 +1,6 @@
 .gitignore
 LICENSE
 README.md
-nnll._version.py
 pyproject.toml
 pytest.ini
 uv.lock
