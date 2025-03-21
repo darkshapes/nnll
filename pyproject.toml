@@ -26,59 +26,38 @@ keywords = [
     "torch",
 ]
 
-dependencies = ["setuptools"]
-
 [project.optional-dependencies]
-02 = ["nnll[01]", "rich"]
-03 = ["nnll[27]", "tqdm", "aioresponses", "anyio", "aiofiles", "aiohttp"]
-05 = ["llama-cpp-python", "gguf", "wheel"]
-08 = ["numpy", "torch"]
-09 = ["transformers", "torch", "torchvision"]
-10 = ["textual", "textual-plotext", "dspy", "litellm", "sounddevice"]
-11 = ["dspy", "pydantic"]
-# 13 = ["numpy", "llvmlite", "numba", "librosa", "outetts"]
-14 = ["networkx", "textual", "nnll[15]"]
-15 = ["pydantic"]
-16 = ["torch"]
-18 = ["torch"]
-24 = ["nnll[33]"]
-26 = ["torch"]
-29 = ["nnll[24]"]
-31 = ["nnll[30]"]
-32 = ["nnll[04]", "nnll[05]", "nnll[28]"]
-33 = ["nnll[25]", "nnll[44]"]
-36 = ["nnll[30]", "nnll[32]"]
-39 = ["nnll[30]", "nnll[46]", "nnll[47]"]
-40 = ["nnll[07]", "nnll[27]", "nnll[39]"]
-44 = ["huggingface_hub"]
-45 = ["huggingface_hub"]
-46 = ["nnll[24]"]
-47 = ["pydantic", "pydantic-core", "nnll[01]"]
-48 = ["pillow", "toml", "nnll[02]", "nnll[47]", "nnll[54]"]
-49 = ["nnll[47]", "nnll[48]", "nnll[02]", "pydantic"]
-54 = ["nnll[02]", "nnll[04]", "nnll[05]", "nnll[28]"]
-56 = ["torch", "hidiffusion"]
-57 = ["pillow"]
-59 = ["nnll[60]"]
-62 = ["nnll[60]"]
-63 = ["torch", "diffusers", "hidiffusion", "torchvision"]
-64 = ["nnll[59]", "nnll[61]", "nnll[62]", "nnll[63]", "nnll[08]", "pillow"]
-full = [
-    "nnll[01]",
-    "nnll[02]",
-    "nnll[03]",
-    "nnll[04]",
-    "nnll[05]",
-    "nnll[07]",
-    "nnll[08]",
-    "nnll[09]",
-    "nnll[10]",
-    "nnll[11]",
-    "nnll[12]",
-    # "nnll[13]",
-    "nnll[14]",
-    "nnll[15]",
-    "nnll[16]",
+09 = ["torch>=2.6.0", "torchvision>=0.21.0", "transformers>=4.49.0"]
+10 = [
+    "dspy>=2.6.13",
+    "litellm>=1.63.12",
+    "sounddevice>=0.5.1",
+    "textual>=2.1.2",
+    "textual-plotext>=1.0.1",
+]
+11 = ["dspy>=2.6.13", "pydantic>=2.10.6"]
+14 = ["networkx>=3.4.2", "textual>=2.1.2"]
+15 = ["pydantic>=2.10.6"]
+16 = ["torch>=2.6.0"]
+18 = ["torch>=2.6.0"]
+26 = ["torch>=2.6.0"]
+44 = ["huggingface-hub>=0.29.1"]
+45 = ["huggingface-hub>=0.29.1"]
+47 = ["pydantic>=2.10.6", "pydantic-core>=2.27.2"]
+48 = ["pillow>=11.1.0", "toml>=0.10.2"]
+49 = ["pydantic>=2.10.6"]
+56 = ["hidiffusion>=0.1.10", "torch>=2.6.0"]
+57 = ["pillow>=11.1.0"]
+63 = [
+    "diffusers>=0.32.2",
+    "hidiffusion>=0.1.10",
+    "torch>=2.6.0",
+    "torchvision>=0.21.0",
+]
+64 = ["pillow>=11.1.0"]
+opt = [
+    "ollama",
+    "huggingface-hub",
     "nnll[18]",
     "nnll[22]",
     "nnll[24]",
@@ -116,86 +95,45 @@ full = [
     "nnll[63]",
     "nnll[64]",
 ]
-opt = ["ollama", "huggingface_hub"]
 dev = [
-    "nnll[full]",
+    "matplotlib>=3.10.1",
     "nnll[opt]",
-    "pytest",
-    "ruff",
-    "matplotlib",
-    "pytest-asyncio",
-    "pytest-asyncio",
-    "pytest-tornasync",
-    "pytest-trio",
-    "setuptools",
-    "setuptools_scm",
-    "wheel",
-    "textual-dev",
-    "python-semantic-release",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.3",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.9.7",
+    "setuptools>=77.0.3",
+    "setuptools-scm>=8.2.1",
+    "textual-dev>=1.7.0",
+    "wheel>=0.45.1",
 ]
-
-
-[tool.setuptools]
-packages = [
-    "nnll_01",
-    "nnll_02",
-    "nnll_03",
-    "nnll_04",
-    "nnll_05",
-    "nnll_07",
-    "nnll_08",
-    "nnll_09",
-    "nnll_10",
-    "nnll_11",
-    "nnll_12",
-    # "nnll_13",
-    "nnll_14",
-    "nnll_15",
-    "nnll_16",
-    "nnll_18",
-    "nnll_22",
-    "nnll_24",
-    "nnll_25",
-    "nnll_26",
-    "nnll_27",
-    "nnll_28",
-    "nnll_29",
-    "nnll_30",
-    "nnll_31",
-    "nnll_32",
-    "nnll_33",
-    "nnll_34",
-    "nnll_35",
-    "nnll_36",
-    "nnll_37",
-    "nnll_39",
-    "nnll_40",
-    "nnll_41",
-    "nnll_44",
-    "nnll_45",
-    "nnll_46",
-    "nnll_47",
-    "nnll_48",
-    "nnll_49",
-    "nnll_51",
-    "nnll_53",
-    "nnll_54",
-    "nnll_56",
-    "nnll_57",
-    "nnll_59",
-    "nnll_60",
-    "nnll_61",
-    "nnll_62",
-    "nnll_63",
-    "nnll_64",
-]
+[tool.setuptools.packages.find]
+include = ["nnll_*"]
+exclude = ["test*"]
 
 [project.scripts]
 nnll-find  = "nnll_31:find_entry"
 nnll-parse = "nnll_36:main"
 
 [tool.uv]
-dev-dependencies = ["nnll[dev]", "textual-dev>=1.7.0"]
+package = true
+dev-dependencies = [
+    "matplotlib>=3.10.1",
+    "nnll[dev]",
+    "pytest-asyncio>=0.25.3",
+    "pytest>=8.3.4",
+    "ruff>=0.9.7",
+    "textual-dev>=1.7.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "setuptools>=77.0.3",
+    "setuptools-scm>=8.2.1",
+    "wheel>=0.45.1",
+]
+
+[tool.uv.sources]
+nnll = { workspace = true }
 
 [tool.ruff]
 line-length    = 140
@@ -214,89 +152,3 @@ ignore-overlong-task-comments = true
 
 [tool.typos]
 files.extend-exclude = ["^tests/.*$", "test.*$"]
-
-[tool.semantic_release]
-version_variables       = ["_semantic.py:__version__"]
-assets                  = []
-build_command_env       = []
-commit_message          = "{version}\n\nAutomatically generated by python-semantic-release"
-commit_parser           = "conventional"
-logging_use_named_masks = false
-major_on_zero           = true
-allow_zero_version      = true
-repo_dir                = "/Users/unauthorized/Documents/GitHub/darkshapes/nnll"
-no_git_verify           = false
-tag_format              = "v{version}"
-
-[tool.semantic_release.branches.main]
-match            = "(main|master)"
-prerelease_token = "rc"
-prerelease       = false
-
-[tool.semantic_release.changelog]
-changelog_file          = ""
-exclude_commit_patterns = []
-mode                    = "init"
-insertion_flag          = "<!-- version list -->"
-template_dir            = "templates"
-
-[tool.semantic_release.changelog.default_templates]
-changelog_file       = "CHANGELOG.md"
-output_format        = "md"
-mask_initial_release = false
-
-[tool.semantic_release.changelog.environment]
-block_start_string    = "{%"
-block_end_string      = "%}"
-variable_start_string = "{{"
-variable_end_string   = "}}"
-comment_start_string  = "{#"
-comment_end_string    = "#}"
-trim_blocks           = false
-lstrip_blocks         = false
-newline_sequence      = "\n"
-keep_trailing_newline = false
-extensions            = []
-autoescape            = false
-
-[tool.semantic_release.commit_author]
-env     = "GIT_COMMIT_AUTHOR"
-default = "semantic-release <semantic-release>"
-
-[tool.semantic_release.commit_parser_options]
-minor_tags = ["feat"]
-patch_tags = ["fix", "perf"]
-other_allowed_tags = [
-    "build",
-    "chore",
-    "ci",
-    "docs",
-    "style",
-    "refactor",
-    "test",
-]
-allowed_tags = [
-    "feat",
-    "fix",
-    "perf",
-    "build",
-    "chore",
-    "ci",
-    "docs",
-    "style",
-    "refactor",
-    "test",
-]
-default_bump_level = 0
-parse_squash_commits = false
-ignore_merge_commits = false
-
-[tool.semantic_release.remote]
-name                  = "origin"
-type                  = "github"
-ignore_token_for_push = false
-insecure              = false
-
-[tool.semantic_release.publish]
-dist_glob_patterns    = ["dist/*"]
-upload_to_vcs_release = true

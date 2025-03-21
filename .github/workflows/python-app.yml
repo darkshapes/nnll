@@ -25,6 +25,8 @@ jobs:
           python-version: 3.13
       - name: Install dependencies and run tests
         run: |
+          pip cache purge
+          rm -rf venv
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
