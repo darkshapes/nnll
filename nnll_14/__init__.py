@@ -22,8 +22,8 @@ def assign_edge_attributes():
     ollama_models = from_ollama_cache()
     hub_models = from_hf_hub_cache()
     for model in ollama_models:
-        nx_graph.add_edges_from(model[1].available_tasks, key=os.path.basename(model[0]), model_id=model[0], size=model[1].size, weight=1.0)
+        print(model.available_tasks)
+        nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
     for model in hub_models:
-        nx_graph.add_edges_from(model[1].available_tasks, key=os.path.basename(model[0]), model_id=model[0], size=model[1].size, weight=1.0)
-
+        nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
     return nx_graph

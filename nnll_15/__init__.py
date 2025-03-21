@@ -6,6 +6,7 @@
 # pylint: disable=line-too-long, import-outside-toplevel
 
 from typing import Dict, List, Any, Tuple
+from numpy import int64
 from pydantic import BaseModel, computed_field
 # import open_webui
 # from package import response_panel
@@ -25,9 +26,11 @@ HUB_TASKS = {
 class RegistryEntry(BaseModel):
     """Validate Hub / Ollama / LMStudio model input"""
 
+    model: str
     size: int
     tags: list[str]
     library: str
+    timestamp: int
 
     @computed_field
     @property
@@ -82,14 +85,14 @@ def _extract_model_info(source: str, model_data: dict = None) -> Dict[str, Any]:
     cache_dir = []
     cache_sizes = []
     model_tags = []
-    timestamps = []
+    timestamp = []
     models = []
 
     if source == "ollama":
         cache_dir = [f"ollama_chat/{model.model}" for model in model_data.models]
         cache_sizes = [model.size.real for model in model_data.models]
         model_tags = [[model.details.family] for model in model_data.models]
-        timestamps = [[model.modified_at] for model in model_data.models]
+        timestamp = [int(model.modified_at.timestamp()) for model in model_data.models]
 
     elif source == "hub":
         from huggingface_hub import repocard
@@ -98,7 +101,7 @@ def _extract_model_info(source: str, model_data: dict = None) -> Dict[str, Any]:
         cache_sizes = [obj.size_on_disk for obj in model_data.repos]
         metadata = [repocard.RepoCard.load(repo_name.repo_id) for repo_name in model_data.repos]
         repo_details = [obj.data for obj in metadata]
-        timestamps = [obj.last_modified for obj in model_data.repos]
+        timestamp = [int(obj.last_modified) for obj in model_data.repos]
 
         for obj in repo_details:
             current_tag = []
@@ -108,34 +111,17 @@ def _extract_model_info(source: str, model_data: dict = None) -> Dict[str, Any]:
                 current_tag.append(obj.pipeline_tag)
             model_tags.append(current_tag if current_tag else ["unknown"])
 
-    # elif source == "lms":
-    #     import lmstudio as lms
-
-    #     for model in model_data:
-    #         if not hasattr(model, "model_key"):
-    #             continue  # Skip models without a key
-    #         name = model.model_key
-    #         try:
-    #             llm_model = lms.llm(name)
-    #             cache_dir.append(f"lmstudio/{name}")
-    #             cache_sizes.append(llm_model.get_info().size_bytes)
-    #             tags = [llm_model.get_info().type]
-    #             if llm_model.get_info().vision:
-    #                 tags.append("vision")
-    #             model_tags.append(tags)
-
-    #         except (lms.LMStudioServerError, AttributeError):
-    #             continue
-
     else:
         raise ValueError(f"Unsupported source: {source}")
 
-    for model, size, tasks, timestamp in zip(cache_dir, cache_sizes, model_tags, timestamps):
-        entry = RegistryEntry(size=size, tags=tasks, library=source)
+    for model, size, tasks, ts in zip(cache_dir, cache_sizes, model_tags, timestamp):
+        entry = RegistryEntry(model=model, size=size, tags=tasks, library=source, timestamp=ts)
         if getattr(entry, "available_tasks", []) != [("default_task:", None)]:
-            models.append((model, entry, timestamp))
+            models.append(entry)
 
-    models.sort(key=lambda x: x[2])  # Sort by timestamp
+    # print(models)
+    models.sort(key=lambda x: x.timestamp, reverse=True)
+    # models.sort(key=lambda x: x[2])  # Sort by timestamp
     return models
 
 

@@ -1,17 +1,22 @@
+#  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+#  # # <!-- // /*  d a r k s h a p e s */ -->
+
+# pylint:disable=redefined-outer-name
+# pylint:disable=redefined-builtin
+
 import datetime
-from datetime import tzinfo
+from pathlib import PosixPath
 from unittest import mock
 
 # import matplotlib.pyplot as plt
 import pytest
-
 from nnll_14 import assign_edge_attributes
-from nnll_15 import VALID_CONVERSIONS, RegistryEntry, from_ollama_cache
-
-# Mock TzInfo for simplicity (assuming a fixed offset)
+from nnll_15 import VALID_CONVERSIONS
 
 
 class Model:
+    """Mock ollama Model class"""
+
     def __init__(self, model=None, modified_at=None, digest=None, size=None, details=None):
         self.model = model
         self.modified_at = modified_at
@@ -21,7 +26,9 @@ class Model:
 
 
 class ModelDetails:
-    def __init__(self, parent_model=None, format=None, family=None, families=None, parameter_size=None, quantization_level=None):  # pylint:ignore=redefined-builtin
+    """Mock ollama ModelDetails class"""
+
+    def __init__(self, parent_model=None, format=None, family=None, families=None, parameter_size=None, quantization_level=None):
         self.parent_model = parent_model
         self.format = format
         self.family = family
@@ -31,16 +38,16 @@ class ModelDetails:
 
 
 class ListResponse:
+    """Mock ollama ListResponse class"""
+
     def __init__(self, models=None):
         self.models = models
 
 
 @pytest.fixture(scope="session")
-def mock_registry_data():
+def mock_ollama_data():
+    """Mock ollama response"""
     with mock.patch("ollama.list", new_callable=mock.MagicMock()) as mock_get_registry_data:
-        tzinfo1 = None
-        tzinfo2 = None
-
         data = ListResponse(
             models=[
                 Model(
@@ -70,17 +77,93 @@ def mock_registry_data():
         yield mock_get_registry_data
 
 
+class HFCacheInfo:
+    """Mock hub cache"""
+
+    def __init__(self, size_on_disk, repos):
+        self.size_on_disk = size_on_disk
+        self.repos = repos
+
+
+class CachedRepoInfo:
+    """Mock hub repo cache"""
+
+    def __init__(self, repo_id, repo_type, repo_path, size_on_disk, nb_files, revisions, files, last_accessed, last_modified):
+        self.repo_id = repo_id
+        self.repo_type = repo_type
+        self.repo_path = repo_path
+        self.size_on_disk = size_on_disk
+        self.nb_files = nb_files
+        self.revisions = revisions
+        self.files = files
+        self.last_accessed = last_accessed
+        self.last_modified = last_modified
+
+
 @pytest.fixture(scope="session")
-def test_mocked_registry(mock_registry_data):
-    # Example usage of the mocked fixture in a test case
-    result = mock_registry_data()
+def mock_hub_data():
+    """Mock hub data"""
+    with mock.patch("huggingface_hub.scan_cache_dir", new_callable=mock.MagicMock()) as mock_get_registry_data:
+        data = HFCacheInfo(
+            size_on_disk=91018285403,
+            repos=frozenset(
+                {
+                    CachedRepoInfo(
+                        repo_id="parler-tts/parler-tts-large-v1",
+                        repo_type="model",
+                        repo_path=PosixPath("/Users/unauthorized/.cache/huggingface/hub/models--parler-tts--parler-tts-large-v1"),
+                        size_on_disk=9335526346,
+                        nb_files=14,
+                        revisions=None,
+                        files=None,
+                        last_accessed=1741910585.3828554,
+                        last_modified=1741908821.5103855,
+                    ),
+                    CachedRepoInfo(
+                        repo_id="THUDM/CogView3-Plus-3B",
+                        repo_type="model",
+                        repo_path=PosixPath("/Users/unauthorized/.cache/huggingface/hub/models--THUDM--CogView3-Plus-3B"),
+                        size_on_disk=25560123724,
+                        nb_files=20,
+                        revisions=None,
+                        files=None,
+                        last_accessed=1741827083.5111423,
+                        last_modified=1741827083.4126444,
+                    ),
+                }
+            ),
+        )
+        mock_get_registry_data.return_value = data
+        yield mock_get_registry_data
 
-    assert len(result) == 2
-    assert result[0][0] == "ollama_chat/llama3.2-vision:latest"
-    assert result[1][1].size == 48753768106
+
+def test_mocked_ollama(mock_ollama_data):
+    """Check if mocking ollama correctly"""
+    result = mock_ollama_data()
+
+    assert len(result.models) == 3
+    next_model = next(iter(result.models))
+    assert next_model.model == "hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0"
+    assert next_model.size == 29565711760
 
 
-def test_create_graph(mock_registry_data):
+def test_mocked_hub(mock_hub_data):
+    """Check if mocking hub correctly.
+    `frozenset` is converted to a sorted list
+    Otherwise hashed return becomes unordered"""
+    result = mock_hub_data()
+    new_list = []
+    assert len(result.repos) == 2
+    next_model = [*result.repos]
+    for x in next_model:
+        new_list.append([x.repo_id, x.size_on_disk])
+    new_list.sort(key=lambda x: x[1])
+    assert new_list[0][0] == "parler-tts/parler-tts-large-v1"
+    assert new_list[0][1] == 9335526346
+
+
+def test_create_graph(mock_ollama_data, mock_hub_data):
+    """Run test of graph creation"""
     nx_graph = assign_edge_attributes()
 
     assert list(nx_graph) == VALID_CONVERSIONS
@@ -91,9 +174,6 @@ def test_create_graph(mock_registry_data):
     for edge in size_data:
         assert isinstance(edge[2], int)
 
-
-if __name__ == "__main__":
-    test_create_graph()
 
 # seen2 = set([e[1] for e in nx_graph.edges]) # get all target types
 # when user presses trigger :
