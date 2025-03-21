@@ -26,6 +26,8 @@ keywords = [
     "torch",
 ]
 
+dependencies = ["setuptools"]
+
 [project.optional-dependencies]
 02 = ["nnll[01]", "rich"]
 03 = ["nnll[27]", "tqdm", "aioresponses", "anyio", "aiofiles", "aiohttp"]
