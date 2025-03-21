@@ -1,4 +1,5 @@
-from package.conversion_graph import assign_edge_attributes, VALID_CONVERSIONS
+from nnll_15 import VALID_CONVERSIONS
+from nnll_14 import assign_edge_attributes
 # import matplotlib.pyplot as plt
 
 
@@ -8,10 +9,11 @@ def test_create_graph():
     assert list(nx_graph) == VALID_CONVERSIONS
     key_data = nx_graph.edges.data("key")
     for edge in key_data:
-        assert isinstance(edge[2],str)
+        assert isinstance(edge[2], str)
     size_data = nx_graph.edges.data("size")
     for edge in size_data:
-        assert isinstance(edge[2],int)
+        assert isinstance(edge[2], int)
+
 
 if __name__ == "__main__":
     test_create_graph()

@@ -1,7 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.widgets import Static
 import networkx as nx
-from package.conversion_graph import assign_edge_attributes
+from nnll_14 import assign_edge_attributes
 import matplotlib.pyplot as plt
 import numpy as np
 # from textual_plot import HiResMode  # , PlotWidget
@@ -48,16 +48,15 @@ def draw_matplot_graphviz() -> None:
     nx.draw(nx_graph, pos, node_color=edge_colors, **options)
     plt.show()
 
-def draw_matplot_weights()-> None:
+
+def draw_matplot_weights() -> None:
     nx_graph = assign_edge_attributes()
-    pos = nx.spring_layout(nx_graph, scale=20, k=3/np.sqrt(nx_graph.order()))
-    nx.draw(nx_graph, pos=pos,
-        node_color='lightblue',
-        with_labels=True,
-        node_size=500)
-    labels = nx.get_edge_attributes(nx_graph,'weight')
-    nx.draw_networkx_edge_labels(nx_graph,pos,edge_labels=labels)
+    pos = nx.spring_layout(nx_graph, scale=20, k=3 / np.sqrt(nx_graph.order()))
+    nx.draw(nx_graph, pos=pos, node_color="lightblue", with_labels=True, node_size=500)
+    labels = nx.get_edge_attributes(nx_graph, "weight")
+    nx.draw_networkx_edge_labels(nx_graph, pos, edge_labels=labels)
     plt.show()
+
 
 if __name__ == "__main__":
     # draw_matplot_weights()

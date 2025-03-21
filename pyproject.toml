@@ -1,6 +1,6 @@
 #
 [build-system]
-requires      = ["setuptools>=41", "wheel", "setuptools_scm"]
+requires      = ["setuptools>=64", "wheel", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 
@@ -34,8 +34,13 @@ keywords = [
 05 = ["llama-cpp-python", "gguf", "wheel"]
 07 = []
 08 = ["numpy", "torch"]
-09 = ["transformers", "torch"]
+09 = ["transformers", "torch", "torchvision"]
+10 = ["textual", "textual-plotext", "dspy", "litellm", "sounddevice"]
+11 = ["dspy", "pydantic"]
 13 = ["outetts"]
+14 = ["networkx", "textual", "nnll_15"]
+15 = ["pydantic"]
+16 = ["torch"]
 18 = ["torch"]
 22 = []
 24 = ["nnll[33]"]
@@ -70,7 +75,7 @@ keywords = [
 60 = []
 61 = []
 62 = ["nnll[60]"]
-63 = ["torch", "diffusers", "hidiffusion"]
+63 = ["torch", "diffusers", "hidiffusion", "torchivision"]
 64 = ["nnll[59]", "nnll[61]", "nnll[62]", "nnll[63]", "nnll[08]", "pillow"]
 full = [
     "nnll[01]",
@@ -81,6 +86,7 @@ full = [
     "nnll[07]",
     "nnll[08]",
     "nnll[09]",
+    "nnll[10]",
     "nnll[18]",
     "nnll[22]",
     "nnll[24]",
@@ -118,10 +124,13 @@ full = [
     "nnll[63]",
     "nnll[64]",
 ]
+opt = ["ollama", "huggingface_hub"]
 dev = [
     "nnll[full]",
+    "nnll[opt]",
     "pytest",
     "ruff",
+    "matplotlib",
     "pytest-asyncio",
     "pytest-asyncio",
     "pytest-tornasync",
@@ -129,6 +138,8 @@ dev = [
     "setuptools",
     "setuptools_scm",
     "wheel",
+    "textual-dev",
+
 ]
 
 [project.scripts]
@@ -142,14 +153,14 @@ exclude    = ["nnll.tests*"]
 namespaces = false
 
 [tool.setuptools.dynamic]
-version = { attr = "nnll.__version__" }
+# version = { attr = "_version" }
 
 [tool.setuptools_scm]
-version_file = "nnll/_version.py"
+version_file = "_version.py"
 
 
 [tool.uv]
-dev-dependencies = ["nnll[dev]"]
+dev-dependencies = ["nnll[dev]", "textual-dev>=1.7.0"]
 
 [tool.ruff]
 line-length    = 140
