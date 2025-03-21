@@ -23,11 +23,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.13
-      - name: Install dependencies and run Test
+      - name: Install dependencies and run tests
         run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv venv .venv
+          pip install --upgrade pip
+          python -m venv .venv
           source .venv/bin/activate
-          uv pip install ".[dev]"
+          pip install ".[dev]"
           cd tests
           pytest -rPvv *.py
