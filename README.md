@@ -1,6 +1,6 @@
 <div align="center">
 
-![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
+![a simple, monochromatic design on a solid background featuring the letters "NNLL" in a futuristic font. The overall design is minimalist, with a focus on simplicity and elegance. The use of a single color and a stylized font creates a cohesive and appealing visual identity](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
 # nnll
 
 ## neural network link library

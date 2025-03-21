@@ -26,9 +26,14 @@ keywords = [
     "torch",
 ]
 
-dependencies = ["tqdm", "wheel", "numpy", "rich", "toml"]
+dependencies = []
 [project.optional-dependencies]
 opt = [
+    "tqdm",
+    "wheel",
+    "numpy",
+    "rich",
+    "toml",
     "hidiffusion",
     "ollama",
     "gguf",
