@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev174+gb01b37d.d20250321
+Version: 0.0.0
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -49,12 +49,10 @@ Requires-Dist: sounddevice; extra == "10"
 Provides-Extra: 11
 Requires-Dist: dspy; extra == "11"
 Requires-Dist: pydantic; extra == "11"
-Provides-Extra: 13
-Requires-Dist: outetts; extra == "13"
 Provides-Extra: 14
 Requires-Dist: networkx; extra == "14"
 Requires-Dist: textual; extra == "14"
-Requires-Dist: nnll_15; extra == "14"
+Requires-Dist: nnll[15]; extra == "14"
 Provides-Extra: 15
 Requires-Dist: pydantic; extra == "15"
 Provides-Extra: 16
@@ -157,6 +155,12 @@ Requires-Dist: nnll[07]; extra == "full"
 Requires-Dist: nnll[08]; extra == "full"
 Requires-Dist: nnll[09]; extra == "full"
 Requires-Dist: nnll[10]; extra == "full"
+Requires-Dist: nnll[11]; extra == "full"
+Requires-Dist: nnll[12]; extra == "full"
+Requires-Dist: nnll[13]; extra == "full"
+Requires-Dist: nnll[14]; extra == "full"
+Requires-Dist: nnll[15]; extra == "full"
+Requires-Dist: nnll[16]; extra == "full"
 Requires-Dist: nnll[18]; extra == "full"
 Requires-Dist: nnll[22]; extra == "full"
 Requires-Dist: nnll[24]; extra == "full"

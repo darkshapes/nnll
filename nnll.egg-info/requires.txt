@@ -42,13 +42,10 @@ sounddevice
 dspy
 pydantic
 
-[13]
-outetts
-
 [14]
 networkx
 textual
-nnll_15
+nnll[15]
 
 [15]
 pydantic
@@ -204,6 +201,12 @@ nnll[07]
 nnll[08]
 nnll[09]
 nnll[10]
+nnll[11]
+nnll[12]
+nnll[13]
+nnll[14]
+nnll[15]
+nnll[16]
 nnll[18]
 nnll[22]
 nnll[24]

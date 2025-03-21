@@ -1,6 +1,6 @@
 #
 [build-system]
-requires      = ["setuptools>=64", "wheel"]
+requires      = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 
@@ -37,8 +37,8 @@ keywords = [
 09 = ["transformers", "torch", "torchvision"]
 10 = ["textual", "textual-plotext", "dspy", "litellm", "sounddevice"]
 11 = ["dspy", "pydantic"]
-13 = ["outetts"]
-14 = ["networkx", "textual", "nnll_15"]
+# 13 = ["numpy", "llvmlite", "numba", "librosa", "outetts"]
+14 = ["networkx", "textual", "nnll[15]"]
 15 = ["pydantic"]
 16 = ["torch"]
 18 = ["torch"]
@@ -87,6 +87,12 @@ full = [
     "nnll[08]",
     "nnll[09]",
     "nnll[10]",
+    "nnll[11]",
+    "nnll[12]",
+    # "nnll[13]",
+    "nnll[14]",
+    "nnll[15]",
+    "nnll[16]",
     "nnll[18]",
     "nnll[22]",
     "nnll[24]",
@@ -140,6 +146,62 @@ dev = [
     "wheel",
     "textual-dev",
 
+]
+
+
+[tool.setuptools]
+packages = [
+    "nnll_01",
+    "nnll_02",
+    "nnll_03",
+    "nnll_04",
+    "nnll_05",
+    "nnll_07",
+    "nnll_08",
+    "nnll_09",
+    "nnll_10",
+    "nnll_11",
+    "nnll_12",
+    # "nnll_13",
+    "nnll_14",
+    "nnll_15",
+    "nnll_16",
+    "nnll_18",
+    "nnll_22",
+    "nnll_24",
+    "nnll_25",
+    "nnll_26",
+    "nnll_27",
+    "nnll_28",
+    "nnll_29",
+    "nnll_30",
+    "nnll_31",
+    "nnll_32",
+    "nnll_33",
+    "nnll_34",
+    "nnll_35",
+    "nnll_36",
+    "nnll_37",
+    "nnll_39",
+    "nnll_40",
+    "nnll_41",
+    "nnll_44",
+    "nnll_45",
+    "nnll_46",
+    "nnll_47",
+    "nnll_48",
+    "nnll_49",
+    "nnll_51",
+    "nnll_53",
+    "nnll_54",
+    "nnll_56",
+    "nnll_57",
+    "nnll_59",
+    "nnll_60",
+    "nnll_61",
+    "nnll_62",
+    "nnll_63",
+    "nnll_64",
 ]
 
 [project.scripts]
