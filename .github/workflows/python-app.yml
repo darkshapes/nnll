@@ -30,6 +30,6 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
-          pip install .[dev]
+          pip install ".[dev]"
           cd tests
-          pytest -rPvv *.py
+          pytest -v *.py
