@@ -1,9 +1,86 @@
-from nnll_15 import VALID_CONVERSIONS
-from nnll_14 import assign_edge_attributes
+import datetime
+from datetime import tzinfo
+from unittest import mock
+
 # import matplotlib.pyplot as plt
+import pytest
+
+from nnll_14 import assign_edge_attributes
+from nnll_15 import VALID_CONVERSIONS, RegistryEntry, from_ollama_cache
+
+# Mock TzInfo for simplicity (assuming a fixed offset)
 
 
-def test_create_graph():
+class Model:
+    def __init__(self, model=None, modified_at=None, digest=None, size=None, details=None):
+        self.model = model
+        self.modified_at = modified_at
+        self.digest = digest
+        self.size = size
+        self.details = details
+
+
+class ModelDetails:
+    def __init__(self, parent_model=None, format=None, family=None, families=None, parameter_size=None, quantization_level=None):  # pylint:ignore=redefined-builtin
+        self.parent_model = parent_model
+        self.format = format
+        self.family = family
+        self.families = families
+        self.parameter_size = parameter_size
+        self.quantization_level = quantization_level
+
+
+class ListResponse:
+    def __init__(self, models=None):
+        self.models = models
+
+
+@pytest.fixture(scope="session")
+def mock_registry_data():
+    with mock.patch("ollama.list", new_callable=mock.MagicMock()) as mock_get_registry_data:
+        tzinfo1 = None
+        tzinfo2 = None
+
+        data = ListResponse(
+            models=[
+                Model(
+                    model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0",
+                    modified_at=datetime.datetime(2025, 3, 19, 12, 21, 19, 112890, tzinfo=None),
+                    digest="965289b1e3e63c66bfc018051b6a907b2f0b18620d5721dd1cdfad759b679a2c",
+                    size=29565711760,
+                    details=ModelDetails(parent_model="", format="gguf", family="gemma3", families=["gemma3"], parameter_size="27B", quantization_level="unknown"),
+                ),
+                Model(
+                    model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q5_K_M",
+                    modified_at=datetime.datetime(2025, 3, 18, 12, 13, 57, 294851, tzinfo=None),
+                    digest="82c7d241b764d0346f382a9059a7b08056075c7bc2d81ac21dfa20d525556b16",
+                    size=20129415184,
+                    details=ModelDetails(parent_model="", format="gguf", family="gemma3", families=["gemma3"], parameter_size="27B", quantization_level="unknown"),
+                ),
+                Model(
+                    model="hf.co/bartowski/RekaAI_reka-flash-3-GGUF:Q5_K_M",
+                    modified_at=datetime.datetime(2025, 3, 13, 18, 28, 57, 859962, tzinfo=None),
+                    digest="43d35cd4e25e90f9cbb33585f60823450bd1f279c4703a1b2831a9cba73e60e4",
+                    size=15635474582,
+                    details=ModelDetails(parent_model="", format="gguf", family="llama", families=["llama"], parameter_size="20.9B", quantization_level="unknown"),
+                ),
+            ]
+        )
+        mock_get_registry_data.return_value = data
+        yield mock_get_registry_data
+
+
+@pytest.fixture(scope="session")
+def test_mocked_registry(mock_registry_data):
+    # Example usage of the mocked fixture in a test case
+    result = mock_registry_data()
+
+    assert len(result) == 2
+    assert result[0][0] == "ollama_chat/llama3.2-vision:latest"
+    assert result[1][1].size == 48753768106
+
+
+def test_create_graph(mock_registry_data):
     nx_graph = assign_edge_attributes()
 
     assert list(nx_graph) == VALID_CONVERSIONS
