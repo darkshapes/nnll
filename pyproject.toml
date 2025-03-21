@@ -146,19 +146,6 @@ dev = [
 nnll-find  = "nnll_31:find_entry"
 nnll-parse = "nnll_36:main"
 
-[tool.setuptools.packages.find]
-where      = ["."]
-include    = ["nnll_*"]
-exclude    = ["nnll.tests*"]
-namespaces = false
-
-[tool.setuptools.dynamic]
-# version = { attr = "_version" }
-
-[tool.setuptools_scm]
-version_file = "_version.py"
-
-
 [tool.uv]
 dev-dependencies = ["nnll[dev]", "textual-dev>=1.7.0"]
 
