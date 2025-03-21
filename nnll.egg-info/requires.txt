@@ -29,6 +29,7 @@ torch
 [09]
 transformers
 torch
+torchvision
 
 [10]
 textual
@@ -37,8 +38,23 @@ dspy
 litellm
 sounddevice
 
+[11]
+dspy
+pydantic
+
 [13]
 outetts
+
+[14]
+networkx
+textual
+nnll_15
+
+[15]
+pydantic
+
+[16]
+torch
 
 [18]
 torch
@@ -154,6 +170,7 @@ nnll[60]
 torch
 diffusers
 hidiffusion
+torchvision
 
 [64]
 nnll[59]
@@ -168,6 +185,7 @@ nnll[full]
 nnll[opt]
 pytest
 ruff
+matplotlib
 pytest-asyncio
 pytest-tornasync
 pytest-trio

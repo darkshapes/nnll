@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev173+g8860202.d20250320
+Version: 0.1.dev174+gb01b37d.d20250321
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -39,14 +39,26 @@ Requires-Dist: torch; extra == "08"
 Provides-Extra: 09
 Requires-Dist: transformers; extra == "09"
 Requires-Dist: torch; extra == "09"
+Requires-Dist: torchvision; extra == "09"
 Provides-Extra: 10
 Requires-Dist: textual; extra == "10"
 Requires-Dist: textual-plotext; extra == "10"
 Requires-Dist: dspy; extra == "10"
 Requires-Dist: litellm; extra == "10"
 Requires-Dist: sounddevice; extra == "10"
+Provides-Extra: 11
+Requires-Dist: dspy; extra == "11"
+Requires-Dist: pydantic; extra == "11"
 Provides-Extra: 13
 Requires-Dist: outetts; extra == "13"
+Provides-Extra: 14
+Requires-Dist: networkx; extra == "14"
+Requires-Dist: textual; extra == "14"
+Requires-Dist: nnll_15; extra == "14"
+Provides-Extra: 15
+Requires-Dist: pydantic; extra == "15"
+Provides-Extra: 16
+Requires-Dist: torch; extra == "16"
 Provides-Extra: 18
 Requires-Dist: torch; extra == "18"
 Provides-Extra: 22
@@ -127,6 +139,7 @@ Provides-Extra: 63
 Requires-Dist: torch; extra == "63"
 Requires-Dist: diffusers; extra == "63"
 Requires-Dist: hidiffusion; extra == "63"
+Requires-Dist: torchvision; extra == "63"
 Provides-Extra: 64
 Requires-Dist: nnll[59]; extra == "64"
 Requires-Dist: nnll[61]; extra == "64"
@@ -188,6 +201,7 @@ Requires-Dist: nnll[full]; extra == "dev"
 Requires-Dist: nnll[opt]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: ruff; extra == "dev"
+Requires-Dist: matplotlib; extra == "dev"
 Requires-Dist: pytest-asyncio; extra == "dev"
 Requires-Dist: pytest-asyncio; extra == "dev"
 Requires-Dist: pytest-tornasync; extra == "dev"

@@ -2,6 +2,7 @@
 LICENSE
 README.md
 _version.py
+nnll._version.py
 pyproject.toml
 pytest.ini
 uv.lock

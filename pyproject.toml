@@ -75,7 +75,7 @@ keywords = [
 60 = []
 61 = []
 62 = ["nnll[60]"]
-63 = ["torch", "diffusers", "hidiffusion", "torchivision"]
+63 = ["torch", "diffusers", "hidiffusion", "torchvision"]
 64 = ["nnll[59]", "nnll[61]", "nnll[62]", "nnll[63]", "nnll[08]", "pillow"]
 full = [
     "nnll[01]",
