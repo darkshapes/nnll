@@ -4,9 +4,13 @@
 # nnll
 
 ## neural network link library
-`nnll` (or <em>null</em>) is a comprehensive AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
 
-Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Ollama, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
+`nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
+
+The focus is on refining and optimizing code for extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a comprehensive suite of direct and indirect generative AI preparations.
+
+Solutions leverage 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🌀DSPy, and more.
+
 <br>
 
 # :shipit:
