@@ -1459,7 +1459,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev199+g9af0ccc.d20250322"
+version = "0.1.dev200+g77bfb68.d20250322"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1475,6 +1475,7 @@ all = [
     { name = "llama-cpp-python" },
     { name = "matplotlib" },
     { name = "networkx" },
+    { name = "ollama" },
     { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-core" },
@@ -1491,6 +1492,7 @@ all = [
 dev = [
     { name = "aiofiles" },
     { name = "aiohttp" },
+    { name = "aioresponses" },
     { name = "diffusers" },
     { name = "dspy" },
     { name = "gguf" },
@@ -1500,12 +1502,19 @@ dev = [
     { name = "llama-cpp-python" },
     { name = "matplotlib" },
     { name = "networkx" },
+    { name = "ollama" },
     { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-core" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-tornasync" },
+    { name = "pytest-trio" },
     { name = "rich" },
+    { name = "ruff" },
     { name = "sounddevice" },
     { name = "textual" },
+    { name = "textual-dev" },
     { name = "textual-plotext" },
     { name = "toml" },
     { name = "torch" },
@@ -1537,6 +1546,7 @@ nnll-09 = [
 nnll-10 = [
     { name = "dspy" },
     { name = "litellm" },
+    { name = "ollama" },
     { name = "sounddevice" },
     { name = "textual" },
     { name = "textual-plotext" },
@@ -1612,6 +1622,7 @@ dev = [
 requires-dist = [
     { name = "aiofiles", marker = "extra == 'nnll-03'", specifier = ">=24.1.0" },
     { name = "aiohttp", marker = "extra == 'nnll-03'", specifier = ">=3.11.13" },
+    { name = "aioresponses", marker = "extra == 'dev'", specifier = ">=0.7.8" },
     { name = "diffusers", marker = "extra == 'nnll-63'", specifier = ">=0.32.2" },
     { name = "dspy", marker = "extra == 'nnll-10'", specifier = ">=2.6.13" },
     { name = "dspy", marker = "extra == 'nnll-11'", specifier = ">=2.6.13" },
@@ -1625,6 +1636,7 @@ requires-dist = [
     { name = "matplotlib", marker = "extra == 'nnll-14'", specifier = ">=3.10.1" },
     { name = "networkx", marker = "extra == 'nnll-14'", specifier = ">=3.4.2" },
     { name = "nnll", extras = ["all"], marker = "extra == 'dev'" },
+    { name = "nnll", extras = ["dev"], marker = "extra == 'dev'" },
     { name = "nnll", extras = ["nnll-02"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-03"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-05"], marker = "extra == 'all'" },
@@ -1646,6 +1658,7 @@ requires-dist = [
     { name = "nnll", extras = ["nnll-63"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-64"], marker = "extra == 'all'" },
     { name = "numpy", marker = "extra == 'nnll-08'", specifier = ">=2.2.3" },
+    { name = "ollama", marker = "extra == 'nnll-10'", specifier = ">=0.4.7" },
     { name = "pillow", marker = "extra == 'nnll-48'", specifier = ">=11.1.0" },
     { name = "pillow", marker = "extra == 'nnll-57'", specifier = ">=11.1.0" },
     { name = "pillow", marker = "extra == 'nnll-64'", specifier = ">=11.1.0" },
@@ -1654,10 +1667,16 @@ requires-dist = [
     { name = "pydantic", marker = "extra == 'nnll-47'", specifier = ">=2.10.6" },
     { name = "pydantic", marker = "extra == 'nnll-49'", specifier = ">=2.10.6" },
     { name = "pydantic-core", marker = "extra == 'nnll-47'", specifier = ">=2.27.2" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.4" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.25.3" },
+    { name = "pytest-tornasync", marker = "extra == 'dev'", specifier = ">=0.6.0.post2" },
+    { name = "pytest-trio", marker = "extra == 'dev'", specifier = ">=0.8.0" },
     { name = "rich", marker = "extra == 'nnll-02'", specifier = ">=13.9.4" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.7" },
     { name = "sounddevice", marker = "extra == 'nnll-10'", specifier = ">=0.5.1" },
     { name = "textual", marker = "extra == 'nnll-10'", specifier = ">=2.1.2" },
     { name = "textual", marker = "extra == 'nnll-14'", specifier = ">=2.1.2" },
+    { name = "textual-dev", marker = "extra == 'dev'", specifier = ">=1.7.0" },
     { name = "textual-plotext", marker = "extra == 'nnll-10'", specifier = ">=1.0.1" },
     { name = "toml", marker = "extra == 'nnll-48'", specifier = ">=0.10.2" },
     { name = "torch", marker = "extra == 'nnll-08'", specifier = ">=2.6.0" },
@@ -1874,6 +1893,19 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/06/39/471f581edbb7804b39e8063d92fc8305bdc7a80ae5c07dbe6ea5c50d14a5/nvidia_nvtx_cu12-12.4.127-py3-none-manylinux2014_aarch64.whl", hash = "sha256:7959ad635db13edf4fc65c06a6e9f9e55fc2f92596db928d169c0bb031e88ef3", size = 100417 },
     { url = "https://files.pythonhosted.org/packages/87/20/199b8713428322a2f22b722c62b8cc278cc53dffa9705d744484b5035ee9/nvidia_nvtx_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl", hash = "sha256:781e950d9b9f60d8241ccea575b32f5105a5baf4c2351cab5256a24869f12a1a", size = 99144 },
+]
+
+[[package]]
+name = "ollama"
+version = "0.4.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpx" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b0/6d/dc77539c735bbed5d0c873fb029fb86aa9f0163df169b34152914331c369/ollama-0.4.7.tar.gz", hash = "sha256:891dcbe54f55397d82d289c459de0ea897e103b86a3f1fad0fdb1895922a75ff", size = 12843 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/31/83/c3ffac86906c10184c88c2e916460806b072a2cfe34cdcaf3a0c0e836d39/ollama-0.4.7-py3-none-any.whl", hash = "sha256:85505663cca67a83707be5fb3aeff0ea72e67846cea5985529d8eca4366564a1", size = 13210 },
 ]
 
 [[package]]

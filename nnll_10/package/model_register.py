@@ -148,8 +148,6 @@
 # encoding = tiktoken.get_encoding("cl100k_base")
 # token_count = len(encoding.encode(message))
 import os
-from ollama import ListResponse
-from ollama import list as ollama_list
 
 
 def legible_size(num, suffix="B"):
@@ -162,6 +160,9 @@ def legible_size(num, suffix="B"):
 
 def from_ollama_cache() -> dict:
     """Retrieve models from ollama server"""
+    from ollama import ListResponse
+    from ollama import list as ollama_list
+
     response: ListResponse = ollama_list()
     map_models = {}
     for model in response.models:  # pylint: disable=no-member

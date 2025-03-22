@@ -79,7 +79,6 @@ nnll_46/__init__.py
 nnll_47/__init__.py
 nnll_48/__init__.py
 nnll_49/__init__.py
-nnll_51/__init__.py
 nnll_53/__init__.py
 nnll_54/__init__.py
 nnll_56/__init__.py
@@ -103,6 +102,11 @@ tests/05_expected_output.json
 tests/05_test_src.py
 tests/07_test_src.py
 tests/08_test_src.py
+tests/10_test_init_exit.py
+tests/10_test_model_register.py
+tests/10_test_orientation.py
+tests/10_test_register_types.py
+tests/10_test_widget_mounts.py
 tests/14_draw_graph.py
 tests/14_test_graph.py
 tests/15_test_register_types.py
@@ -125,7 +129,6 @@ tests/44_test_src.py
 tests/46_test_src.py
 tests/48_test_src.py
 tests/49_test_src.py
-tests/51_test_src.py
 tests/57_test_src.py
 tests/60_test_src.py
 tests/61_test_src.py
@@ -133,10 +136,4 @@ tests/61_test_src_2.py
 tests/62_test_src.py
 tests/__init__.py
 tests/test.py
-tests/test_combo_history.db
 tests/test_img.png
-tests/10/test_init_exit.py
-tests/10/test_model_register.py
-tests/10/test_orientation.py
-tests/10/test_register_types.py
-tests/10/test_widget_mounts.py

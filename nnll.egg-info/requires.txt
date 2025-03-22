@@ -23,85 +23,94 @@ nnll[nnll_64]
 
 [dev]
 nnll[all]
+aioresponses>=0.7.8
+nnll[dev]
+pytest-asyncio>=0.25.3
+pytest>=8.3.4
+ruff>=0.9.7
+textual-dev>=1.7.0
+pytest-tornasync>=0.6.0.post2
+pytest-trio>=0.8.0
 
-[nnll_02]
+[nnll-02]
 rich>=13.9.4
 
-[nnll_03]
+[nnll-03]
 aiofiles>=24.1.0
 aiohttp>=3.11.13
 tqdm>=4.67.1
 
-[nnll_05]
+[nnll-05]
 gguf>=0.14.0
 llama-cpp-python>=0.3.8
 
-[nnll_08]
+[nnll-08]
 numpy>=2.2.3
 torch>=2.6.0
 
-[nnll_09]
+[nnll-09]
 torch>=2.6.0
 torchvision>=0.21.0
 transformers>=4.49.0
 
-[nnll_10]
+[nnll-10]
 dspy>=2.6.13
 litellm>=1.63.12
 sounddevice>=0.5.1
 textual>=2.1.2
 textual-plotext>=1.0.1
+ollama>=0.4.7
 
-[nnll_11]
+[nnll-11]
 dspy>=2.6.13
 pydantic>=2.10.6
 
-[nnll_14]
+[nnll-14]
 matplotlib>=3.10.1
 networkx>=3.4.2
 textual>=2.1.2
 
-[nnll_15]
+[nnll-15]
 pydantic>=2.10.6
 
-[nnll_16]
+[nnll-16]
 torch>=2.6.0
 
-[nnll_18]
+[nnll-18]
 torch>=2.6.0
 
-[nnll_26]
+[nnll-26]
 torch>=2.6.0
 
-[nnll_44]
+[nnll-44]
 huggingface-hub>=0.29.1
 
-[nnll_45]
+[nnll-45]
 huggingface-hub>=0.29.1
 
-[nnll_47]
+[nnll-47]
 pydantic>=2.10.6
 pydantic-core>=2.27.2
 
-[nnll_48]
+[nnll-48]
 pillow>=11.1.0
 toml>=0.10.2
 
-[nnll_49]
+[nnll-49]
 pydantic>=2.10.6
 
-[nnll_56]
+[nnll-56]
 hidiffusion>=0.1.10
 torch>=2.6.0
 
-[nnll_57]
+[nnll-57]
 pillow>=11.1.0
 
-[nnll_63]
+[nnll-63]
 diffusers>=0.32.2
 hidiffusion>=0.1.10
 torch>=2.6.0
 torchvision>=0.21.0
 
-[nnll_64]
+[nnll-64]
 pillow>=11.1.0

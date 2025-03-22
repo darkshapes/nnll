@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev199+g9af0ccc.d20250322
+Version: 0.1.dev200+g77bfb68.d20250322
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -38,6 +38,7 @@ Requires-Dist: litellm>=1.63.12; extra == "nnll-10"
 Requires-Dist: sounddevice>=0.5.1; extra == "nnll-10"
 Requires-Dist: textual>=2.1.2; extra == "nnll-10"
 Requires-Dist: textual-plotext>=1.0.1; extra == "nnll-10"
+Requires-Dist: ollama>=0.4.7; extra == "nnll-10"
 Provides-Extra: nnll-11
 Requires-Dist: dspy>=2.6.13; extra == "nnll-11"
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-11"
@@ -100,6 +101,14 @@ Requires-Dist: nnll[nnll_63]; extra == "all"
 Requires-Dist: nnll[nnll_64]; extra == "all"
 Provides-Extra: dev
 Requires-Dist: nnll[all]; extra == "dev"
+Requires-Dist: aioresponses>=0.7.8; extra == "dev"
+Requires-Dist: nnll[dev]; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.25.3; extra == "dev"
+Requires-Dist: pytest>=8.3.4; extra == "dev"
+Requires-Dist: ruff>=0.9.7; extra == "dev"
+Requires-Dist: textual-dev>=1.7.0; extra == "dev"
+Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
+Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
 Dynamic: license-file
 
 <div align="center">
