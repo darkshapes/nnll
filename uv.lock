@@ -8,6 +8,15 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "aiofiles"
+version = "24.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0b/03/a88171e277e8caa88a4c77808c20ebb04ba74cc4681bf1e9416c862de237/aiofiles-24.1.0.tar.gz", hash = "sha256:22a075c9e5a3810f0c2e48f3008c94d68c65d763b9b03857924c99e57355166c", size = 30247 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a5/45/30bb92d442636f570cb5651bc661f52b610e2eec3f891a5dc3a4c3667db0/aiofiles-24.1.0-py3-none-any.whl", hash = "sha256:b4ec55f4195e3eb5d7abd1bf7e061763e864dd4954231fb8539a0ef8bb8260e5", size = 15896 },
+]
+
+[[package]]
 name = "aiohappyeyeballs"
 version = "2.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -109,6 +118,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e6/39/da5a94dd89b1af7241fb7fc99ae4e73505b5f898b540b6aba6dc7afe600e/aiohttp-jinja2-1.6.tar.gz", hash = "sha256:a3a7ff5264e5bca52e8ae547bbfd0761b72495230d438d05b6c0915be619b0e2", size = 53057 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/eb/90/65238d4246307195411b87a07d03539049819b022c01bcc773826f600138/aiohttp_jinja2-1.6-py3-none-any.whl", hash = "sha256:0df405ee6ad1b58e5a068a105407dc7dcc1704544c559f1938babde954f945c7", size = 11736 },
+]
+
+[[package]]
+name = "aioresponses"
+version = "0.7.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/de/03/532bbc645bdebcf3b6af3b25d46655259d66ce69abba7720b71ebfabbade/aioresponses-0.7.8.tar.gz", hash = "sha256:b861cdfe5dc58f3b8afac7b0a6973d5d7b2cb608dd0f6253d16b8ee8eaf6df11", size = 40253 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/12/b7/584157e43c98aa89810bc2f7099e7e01c728ecf905a66cf705106009228f/aioresponses-0.7.8-py2.py3-none-any.whl", hash = "sha256:b73bd4400d978855e55004b23a3a84cb0f018183bcf066a85ad392800b5b9a94", size = 12518 },
 ]
 
 [[package]]
@@ -696,6 +718,21 @@ http = [
 ]
 
 [[package]]
+name = "gguf"
+version = "0.14.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "pyyaml" },
+    { name = "sentencepiece" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e4/51/d532d776d01d9ed60d930fe58554ecb05806fc9aaffa2400344d3a9d630b/gguf-0.14.0.tar.gz", hash = "sha256:d9996f197a777831cf9e01efac24cbfa817787375305b8c4ee16074778e2bce8", size = 69683 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/94/ee/0301c4a2bdb43da8d059d67382ec7ca554677366ebb73db82b690a10c98a/gguf-0.14.0-py3-none-any.whl", hash = "sha256:d279b33cd743d6211c09d96f0797eb36652c0d9d90844f8986a7c25e445906c4", size = 76159 },
+]
+
+[[package]]
 name = "greenlet"
 version = "3.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1078,6 +1115,18 @@ wheels = [
 ]
 
 [[package]]
+name = "llama-cpp-python"
+version = "0.3.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "diskcache" },
+    { name = "jinja2" },
+    { name = "numpy" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/95/4e/da912ff2bf9bf855c86e8b1ae9fe1eaedf47d75a66728896b533901c4610/llama_cpp_python-0.3.8.tar.gz", hash = "sha256:31c91323b555c025a76a30923cead9f5695da103dd68c15cdbb4509b17f0ed77", size = 67301056 }
+
+[[package]]
 name = "magicattr"
 version = "0.1.6"
 source = { registry = "https://pypi.org/simple" }
@@ -1410,10 +1459,26 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.0.0"
+version = "0.1.dev196+g9f68ada.d20250322"
 source = { editable = "." }
 
 [package.optional-dependencies]
+02 = [
+    { name = "rich" },
+]
+03 = [
+    { name = "aiofiles" },
+    { name = "aiohttp" },
+    { name = "tqdm" },
+]
+05 = [
+    { name = "gguf" },
+    { name = "llama-cpp-python" },
+]
+08 = [
+    { name = "numpy" },
+    { name = "torch" },
+]
 09 = [
     { name = "torch" },
     { name = "torchvision" },
@@ -1480,10 +1545,20 @@ source = { editable = "." }
     { name = "pillow" },
 ]
 dev = [
+    { name = "aiofiles" },
+    { name = "aiohttp" },
+    { name = "aioresponses" },
+    { name = "anyio" },
     { name = "diffusers" },
+    { name = "dspy" },
+    { name = "gguf" },
     { name = "hidiffusion" },
     { name = "huggingface-hub" },
+    { name = "litellm" },
+    { name = "llama-cpp-python" },
     { name = "matplotlib" },
+    { name = "networkx" },
+    { name = "numpy" },
     { name = "ollama" },
     { name = "pillow" },
     { name = "pydantic" },
@@ -1492,141 +1567,135 @@ dev = [
     { name = "pytest-asyncio" },
     { name = "pytest-tornasync" },
     { name = "pytest-trio" },
+    { name = "rich" },
     { name = "ruff" },
-    { name = "setuptools" },
-    { name = "setuptools-scm" },
+    { name = "sentencepiece" },
+    { name = "sounddevice" },
+    { name = "textual" },
     { name = "textual-dev" },
+    { name = "textual-plotext" },
     { name = "toml" },
     { name = "torch" },
-    { name = "torchvision" },
+    { name = "tqdm" },
+    { name = "transformers" },
     { name = "wheel" },
 ]
 opt = [
+    { name = "aiofiles" },
+    { name = "aiohttp" },
+    { name = "aioresponses" },
+    { name = "anyio" },
     { name = "diffusers" },
+    { name = "dspy" },
+    { name = "gguf" },
     { name = "hidiffusion" },
     { name = "huggingface-hub" },
+    { name = "litellm" },
+    { name = "llama-cpp-python" },
+    { name = "matplotlib" },
+    { name = "networkx" },
+    { name = "numpy" },
     { name = "ollama" },
     { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-core" },
+    { name = "rich" },
+    { name = "sentencepiece" },
+    { name = "sounddevice" },
+    { name = "textual" },
+    { name = "textual-plotext" },
     { name = "toml" },
     { name = "torch" },
-    { name = "torchvision" },
+    { name = "tqdm" },
+    { name = "transformers" },
+    { name = "wheel" },
 ]
 
 [package.dev-dependencies]
 dev = [
-    { name = "matplotlib" },
     { name = "nnll", extra = ["dev"] },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-tornasync" },
-    { name = "pytest-trio" },
-    { name = "ruff" },
-    { name = "setuptools" },
-    { name = "setuptools-scm" },
-    { name = "textual-dev" },
-    { name = "wheel" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "aiofiles", marker = "extra == '03'", specifier = ">=24.1.0" },
+    { name = "aiofiles", marker = "extra == 'opt'" },
+    { name = "aiohttp", marker = "extra == '03'", specifier = ">=3.11.13" },
+    { name = "aiohttp", marker = "extra == 'opt'" },
+    { name = "aioresponses", marker = "extra == 'opt'" },
+    { name = "anyio", marker = "extra == 'opt'" },
     { name = "diffusers", marker = "extra == '63'", specifier = ">=0.32.2" },
+    { name = "diffusers", marker = "extra == 'opt'" },
     { name = "dspy", marker = "extra == '10'", specifier = ">=2.6.13" },
     { name = "dspy", marker = "extra == '11'", specifier = ">=2.6.13" },
+    { name = "dspy", marker = "extra == 'opt'" },
+    { name = "gguf", marker = "extra == '05'", specifier = ">=0.14.0" },
+    { name = "gguf", marker = "extra == 'opt'" },
     { name = "hidiffusion", marker = "extra == '56'", specifier = ">=0.1.10" },
     { name = "hidiffusion", marker = "extra == '63'", specifier = ">=0.1.10" },
+    { name = "hidiffusion", marker = "extra == 'opt'" },
     { name = "huggingface-hub", marker = "extra == '44'", specifier = ">=0.29.1" },
     { name = "huggingface-hub", marker = "extra == '45'", specifier = ">=0.29.1" },
     { name = "huggingface-hub", marker = "extra == 'opt'" },
     { name = "litellm", marker = "extra == '10'", specifier = ">=1.63.12" },
-    { name = "matplotlib", marker = "extra == 'dev'", specifier = ">=3.10.1" },
+    { name = "litellm", marker = "extra == 'opt'" },
+    { name = "llama-cpp-python", marker = "extra == '05'", specifier = ">=0.3.8" },
+    { name = "llama-cpp-python", marker = "extra == 'opt'" },
+    { name = "matplotlib", marker = "extra == 'opt'" },
     { name = "networkx", marker = "extra == '14'", specifier = ">=3.4.2" },
-    { name = "nnll", extras = ["18"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["22"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["24"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["25"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["26"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["27"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["28"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["29"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["30"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["31"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["32"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["33"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["34"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["35"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["36"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["37"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["39"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["40"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["41"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["44"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["45"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["46"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["47"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["48"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["49"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["51"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["53"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["54"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["56"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["57"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["59"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["60"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["61"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["62"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["63"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["64"], marker = "extra == 'opt'", editable = "." },
-    { name = "nnll", extras = ["opt"], marker = "extra == 'dev'", editable = "." },
+    { name = "networkx", marker = "extra == 'opt'" },
+    { name = "nnll", extras = ["opt"], marker = "extra == 'dev'" },
+    { name = "numpy", marker = "extra == '08'", specifier = ">=2.2.3" },
+    { name = "numpy", marker = "extra == 'opt'" },
     { name = "ollama", marker = "extra == 'opt'" },
     { name = "pillow", marker = "extra == '48'", specifier = ">=11.1.0" },
     { name = "pillow", marker = "extra == '57'", specifier = ">=11.1.0" },
     { name = "pillow", marker = "extra == '64'", specifier = ">=11.1.0" },
+    { name = "pillow", marker = "extra == 'opt'" },
     { name = "pydantic", marker = "extra == '11'", specifier = ">=2.10.6" },
     { name = "pydantic", marker = "extra == '15'", specifier = ">=2.10.6" },
     { name = "pydantic", marker = "extra == '47'", specifier = ">=2.10.6" },
     { name = "pydantic", marker = "extra == '49'", specifier = ">=2.10.6" },
+    { name = "pydantic", marker = "extra == 'opt'" },
     { name = "pydantic-core", marker = "extra == '47'", specifier = ">=2.27.2" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.4" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.25.3" },
-    { name = "pytest-tornasync", marker = "extra == 'dev'", specifier = ">=0.6.0.post2" },
-    { name = "pytest-trio", marker = "extra == 'dev'", specifier = ">=0.8.0" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.7" },
-    { name = "setuptools", marker = "extra == 'dev'", specifier = ">=77.0.3" },
-    { name = "setuptools-scm", marker = "extra == 'dev'", specifier = ">=8.2.1" },
+    { name = "pydantic-core", marker = "extra == 'opt'" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'" },
+    { name = "pytest-tornasync", marker = "extra == 'dev'" },
+    { name = "pytest-trio", marker = "extra == 'dev'" },
+    { name = "rich", marker = "extra == '02'", specifier = ">=13.9.4" },
+    { name = "rich", marker = "extra == 'opt'" },
+    { name = "ruff", marker = "extra == 'dev'" },
+    { name = "sentencepiece", marker = "extra == 'opt'" },
     { name = "sounddevice", marker = "extra == '10'", specifier = ">=0.5.1" },
+    { name = "sounddevice", marker = "extra == 'opt'" },
     { name = "textual", marker = "extra == '10'", specifier = ">=2.1.2" },
     { name = "textual", marker = "extra == '14'", specifier = ">=2.1.2" },
-    { name = "textual-dev", marker = "extra == 'dev'", specifier = ">=1.7.0" },
+    { name = "textual", marker = "extra == 'opt'" },
+    { name = "textual-dev", marker = "extra == 'dev'" },
     { name = "textual-plotext", marker = "extra == '10'", specifier = ">=1.0.1" },
+    { name = "textual-plotext", marker = "extra == 'opt'" },
     { name = "toml", marker = "extra == '48'", specifier = ">=0.10.2" },
+    { name = "toml", marker = "extra == 'opt'" },
+    { name = "torch", marker = "extra == '08'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '09'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '16'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '18'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '26'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '56'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '63'", specifier = ">=2.6.0" },
+    { name = "torch", marker = "extra == 'opt'", specifier = ">=2.4.0" },
     { name = "torchvision", marker = "extra == '09'", specifier = ">=0.21.0" },
     { name = "torchvision", marker = "extra == '63'", specifier = ">=0.21.0" },
+    { name = "tqdm", marker = "extra == '03'", specifier = ">=4.67.1" },
+    { name = "tqdm", marker = "extra == 'opt'" },
     { name = "transformers", marker = "extra == '09'", specifier = ">=4.49.0" },
-    { name = "wheel", marker = "extra == 'dev'", specifier = ">=0.45.1" },
+    { name = "transformers", marker = "extra == 'opt'" },
+    { name = "wheel", marker = "extra == 'opt'" },
 ]
 
 [package.metadata.requires-dev]
-dev = [
-    { name = "matplotlib", specifier = ">=3.10.1" },
-    { name = "nnll", extras = ["dev"], editable = "." },
-    { name = "pytest", specifier = ">=8.3.4" },
-    { name = "pytest-asyncio", specifier = ">=0.25.3" },
-    { name = "pytest-tornasync", specifier = ">=0.6.0.post2" },
-    { name = "pytest-trio", specifier = ">=0.8.0" },
-    { name = "ruff", specifier = ">=0.9.7" },
-    { name = "setuptools", specifier = ">=77.0.3" },
-    { name = "setuptools-scm", specifier = ">=8.2.1" },
-    { name = "textual-dev", specifier = ">=1.7.0" },
-    { name = "wheel", specifier = ">=0.45.1" },
-]
+dev = [{ name = "nnll", extras = ["dev"] }]
 
 [[package]]
 name = "numpy"
@@ -2656,26 +2725,44 @@ wheels = [
 ]
 
 [[package]]
+name = "sentencepiece"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c9/d2/b9c7ca067c26d8ff085d252c89b5f69609ca93fb85a00ede95f4857865d4/sentencepiece-0.2.0.tar.gz", hash = "sha256:a52c19171daaf2e697dc6cbe67684e0fa341b1248966f6aebb541de654d15843", size = 2632106 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f6/71/98648c3b64b23edb5403f74bcc906ad21766872a6e1ada26ea3f1eb941ab/sentencepiece-0.2.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:188779e1298a1c8b8253c7d3ad729cb0a9891e5cef5e5d07ce4592c54869e227", size = 2408979 },
+    { url = "https://files.pythonhosted.org/packages/77/9f/7efbaa6d4c0c718a9affbecc536b03ca62f99f421bdffb531c16030e2d2b/sentencepiece-0.2.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:bed9cf85b296fa2b76fc2547b9cbb691a523864cebaee86304c43a7b4cb1b452", size = 1238845 },
+    { url = "https://files.pythonhosted.org/packages/1c/e4/c2541027a43ec6962ba9b601805d17ba3f86b38bdeae0e8ac65a2981e248/sentencepiece-0.2.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:d7b67e724bead13f18db6e1d10b6bbdc454af574d70efbb36f27d90387be1ca3", size = 1181472 },
+    { url = "https://files.pythonhosted.org/packages/fd/46/316c1ba6c52b97de76aff7b9da678f7afbb52136afb2987c474d95630e65/sentencepiece-0.2.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2fde4b08cfe237be4484c6c7c2e2c75fb862cfeab6bd5449ce4caeafd97b767a", size = 1259151 },
+    { url = "https://files.pythonhosted.org/packages/aa/5a/3c48738a0835d76dd06c62b6ac48d39c923cde78dd0f587353bdcbb99851/sentencepiece-0.2.0-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:4c378492056202d1c48a4979650981635fd97875a00eabb1f00c6a236b013b5e", size = 1355931 },
+    { url = "https://files.pythonhosted.org/packages/a6/27/33019685023221ca8ed98e8ceb7ae5e166032686fa3662c68f1f1edf334e/sentencepiece-0.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1380ce6540a368de2ef6d7e6ba14ba8f3258df650d39ba7d833b79ee68a52040", size = 1301537 },
+    { url = "https://files.pythonhosted.org/packages/ca/e4/55f97cef14293171fef5f96e96999919ab5b4d1ce95b53547ad653d7e3bf/sentencepiece-0.2.0-cp310-cp310-win32.whl", hash = "sha256:a1151d6a6dd4b43e552394aed0edfe9292820272f0194bd56c7c1660a0c06c3d", size = 936747 },
+    { url = "https://files.pythonhosted.org/packages/85/f4/4ef1a6e0e9dbd8a60780a91df8b7452ada14cfaa0e17b3b8dfa42cecae18/sentencepiece-0.2.0-cp310-cp310-win_amd64.whl", hash = "sha256:d490142b0521ef22bc1085f061d922a2a6666175bb6b42e588ff95c0db6819b2", size = 991525 },
+    { url = "https://files.pythonhosted.org/packages/32/43/8f8885168a47a02eba1455bd3f4f169f50ad5b8cebd2402d0f5e20854d04/sentencepiece-0.2.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:17982700c4f6dbb55fa3594f3d7e5dd1c8659a274af3738e33c987d2a27c9d5c", size = 2409036 },
+    { url = "https://files.pythonhosted.org/packages/0f/35/e63ba28062af0a3d688a9f128e407a1a2608544b2f480cb49bf7f4b1cbb9/sentencepiece-0.2.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:7c867012c0e8bcd5bdad0f791609101cb5c66acb303ab3270218d6debc68a65e", size = 1238921 },
+    { url = "https://files.pythonhosted.org/packages/de/42/ae30952c4a0bd773e90c9bf2579f5533037c886dfc8ec68133d5694f4dd2/sentencepiece-0.2.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:7fd6071249c74f779c5b27183295b9202f8dedb68034e716784364443879eaa6", size = 1181477 },
+    { url = "https://files.pythonhosted.org/packages/e3/ac/2f2ab1d60bb2d795d054eebe5e3f24b164bc21b5a9b75fba7968b3b91b5a/sentencepiece-0.2.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:27f90c55a65013cbb8f4d7aab0599bf925cde4adc67ae43a0d323677b5a1c6cb", size = 1259182 },
+    { url = "https://files.pythonhosted.org/packages/45/fb/14633c6ecf262c468759ffcdb55c3a7ee38fe4eda6a70d75ee7c7d63c58b/sentencepiece-0.2.0-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b293734059ef656dcd65be62ff771507bea8fed0a711b6733976e1ed3add4553", size = 1355537 },
+    { url = "https://files.pythonhosted.org/packages/fb/12/2f5c8d4764b00033cf1c935b702d3bb878d10be9f0b87f0253495832d85f/sentencepiece-0.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e58b47f933aca74c6a60a79dcb21d5b9e47416256c795c2d58d55cec27f9551d", size = 1301464 },
+    { url = "https://files.pythonhosted.org/packages/4e/b1/67afc0bde24f6dcb3acdea0dd8dcdf4b8b0db240f6bacd39378bd32d09f8/sentencepiece-0.2.0-cp311-cp311-win32.whl", hash = "sha256:c581258cf346b327c62c4f1cebd32691826306f6a41d8c4bec43b010dee08e75", size = 936749 },
+    { url = "https://files.pythonhosted.org/packages/a2/f6/587c62fd21fc988555b85351f50bbde43a51524caafd63bc69240ded14fd/sentencepiece-0.2.0-cp311-cp311-win_amd64.whl", hash = "sha256:0993dbc665f4113017892f1b87c3904a44d0640eda510abcacdfb07f74286d36", size = 991520 },
+    { url = "https://files.pythonhosted.org/packages/27/5a/141b227ed54293360a9ffbb7bf8252b4e5efc0400cdeac5809340e5d2b21/sentencepiece-0.2.0-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:ea5f536e32ea8ec96086ee00d7a4a131ce583a1b18d130711707c10e69601cb2", size = 2409370 },
+    { url = "https://files.pythonhosted.org/packages/2e/08/a4c135ad6fc2ce26798d14ab72790d66e813efc9589fd30a5316a88ca8d5/sentencepiece-0.2.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:d0cb51f53b6aae3c36bafe41e86167c71af8370a039f542c43b0cce5ef24a68c", size = 1239288 },
+    { url = "https://files.pythonhosted.org/packages/49/0a/2fe387f825ac5aad5a0bfe221904882106cac58e1b693ba7818785a882b6/sentencepiece-0.2.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:3212121805afc58d8b00ab4e7dd1f8f76c203ddb9dc94aa4079618a31cf5da0f", size = 1181597 },
+    { url = "https://files.pythonhosted.org/packages/cc/38/e4698ee2293fe4835dc033c49796a39b3eebd8752098f6bd0aa53a14af1f/sentencepiece-0.2.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2a3149e3066c2a75e0d68a43eb632d7ae728c7925b517f4c05c40f6f7280ce08", size = 1259220 },
+    { url = "https://files.pythonhosted.org/packages/12/24/fd7ef967c9dad2f6e6e5386d0cadaf65cda8b7be6e3861a9ab3121035139/sentencepiece-0.2.0-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:632f3594d3e7ac8b367bca204cb3fd05a01d5b21455acd097ea4c0e30e2f63d7", size = 1355962 },
+    { url = "https://files.pythonhosted.org/packages/4f/d2/18246f43ca730bb81918f87b7e886531eda32d835811ad9f4657c54eee35/sentencepiece-0.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f295105c6bdbb05bd5e1b0cafbd78ff95036f5d3641e7949455a3f4e5e7c3109", size = 1301706 },
+    { url = "https://files.pythonhosted.org/packages/8a/47/ca237b562f420044ab56ddb4c278672f7e8c866e183730a20e413b38a989/sentencepiece-0.2.0-cp312-cp312-win32.whl", hash = "sha256:fb89f811e5efd18bab141afc3fea3de141c3f69f3fe9e898f710ae7fe3aab251", size = 936941 },
+    { url = "https://files.pythonhosted.org/packages/c6/97/d159c32642306ee2b70732077632895438867b3b6df282354bd550cf2a67/sentencepiece-0.2.0-cp312-cp312-win_amd64.whl", hash = "sha256:7a673a72aab81fef5ebe755c6e0cc60087d1f3a4700835d40537183c1703a45f", size = 991994 },
+]
+
+[[package]]
 name = "setuptools"
 version = "77.0.3"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/81/ed/7101d53811fd359333583330ff976e5177c5e871ca8b909d1d6c30553aa3/setuptools-77.0.3.tar.gz", hash = "sha256:583b361c8da8de57403743e756609670de6fb2345920e36dc5c2d914c319c945", size = 1367236 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a9/07/99f2cefae815c66eb23148f15d79ec055429c38fa8986edcc712ab5f3223/setuptools-77.0.3-py3-none-any.whl", hash = "sha256:67122e78221da5cf550ddd04cf8742c8fe12094483749a792d56cd669d6cf58c", size = 1255678 },
-]
-
-[[package]]
-name = "setuptools-scm"
-version = "8.2.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "packaging" },
-    { name = "setuptools" },
-    { name = "tomli", marker = "python_full_version < '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/98/7d/334fba3c2e30ddb5cb9fca7fb8f883c8093891cd1fb02fcf981f2fc4ca96/setuptools_scm-8.2.1.tar.gz", hash = "sha256:51cfdd1deefc9b8c08d1a61e940a59c4dec39eb6c285d33fa2f1b4be26c7874d", size = 78075 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/55/bf/994a6da3f2a412630feb9d30ab4d35c78985a052ad28e6ee053ac92f00e5/setuptools_scm-8.2.1-py3-none-any.whl", hash = "sha256:0d234a45ca9e4cb7379886b827558d952d1d8f730c3957e7f217b2ec77fe4402", size = 44016 },
 ]
 
 [[package]]

@@ -4,16 +4,15 @@
 
 """建立控制檯日誌 logging"""
 
-import sys
 import logging as py_logging
-from logging import StreamHandler, Formatter
-
-from rich import theme
-from rich import console
-from rich import logging as rich_logging
-from rich import style
-from typing import Callable
+import sys
 from functools import wraps
+from logging import Formatter, StreamHandler
+from typing import Callable
+
+from rich import console, style, theme
+from rich import logging as rich_logging
+
 from nnll_01 import LOG_LEVEL
 
 msg_init = None  # pylint: disable=invalid-name

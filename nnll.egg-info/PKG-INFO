@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev186+g27431f3.d20250321
+Version: 0.1.dev196+g9f68ada.d20250322
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -16,51 +16,80 @@ Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: tqdm
-Requires-Dist: wheel
-Requires-Dist: numpy
-Requires-Dist: gguf
-Requires-Dist: sentencepiece
-Requires-Dist: diffusers
-Requires-Dist: transformers
-Requires-Dist: huggingface-hub
-Requires-Dist: pydantic
-Requires-Dist: pydantic-core
-Requires-Dist: rich
-Requires-Dist: toml
-Requires-Dist: pillow
-Requires-Dist: aioresponses
-Requires-Dist: anyio
-Requires-Dist: aiofiles
-Requires-Dist: aiohttp
-Requires-Dist: llama-cpp-python
-Requires-Dist: torch
-Requires-Dist: dspy
-Requires-Dist: litellm
-Requires-Dist: sounddevice
-Requires-Dist: textual
-Requires-Dist: textual-plotext
-Requires-Dist: networkx
-Requires-Dist: hidiffusion
-Requires-Dist: sentencepiece
-Requires-Dist: matplotlib
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp310-none-macosx_11_0_arm64.whl ; python_version == "3.10" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp311-none-macosx_11_0_arm64.whl ; python_version == "3.11" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp312-none-macosx_11_0_arm64.whl ; python_version == "3.12" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp313-none-macosx_11_0_arm64.whl ; python_version == "3.13" and platform_machine == "arm64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp310-cp310-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp311-cp311-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp313-cp313t-manylinux_2_28_aarch64.whl ; python_version == "3.13" and platform_machine == "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-win_amd64.whl#sha256=7cc45c5b39d74875cfafe908b7f55c544147cc16b01e795feb2fe766583efe78 ; platform_system == "windows" and python_version == "3.10" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-win_amd64.whl#sha256=6a1fb2714e9323f11edb6e8abf7aad5f79e45ad25c081cde87681a18d99c29eb ; platform_system == "windows" and python_version == "3.11" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl#sha256=3313061c1fec4c7310cf47944e84513dcd27b6173b72a349bb7ca68d0ee6e9c0 ; platform_system == "windows" and python_version == "3.12" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp313-cp313-win_amd64.whl#sha256=519330eef09534acad8110b6f423d2fe58c1d8e9ada999ed077a637a0021f908 ; platform_system == "windows" and python_version == "3.13" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=7f2ba7f7c0459320a521696f6b5bccc187f59890b23c9dfb6c49b0b87c6bfc97 ; platform_system == "linux" and python_version == "3.10" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-linux_x86_64.whl#sha256=d4c3e9a8d31a7c0fcbb9da17c31a1917e1fac26c566a4cfbd8c9568ad7cade79 ; platform_system == "linux" and python_version == "3.11" and platform_machine != "aarch64"
-Requires-Dist: torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-linux_x86_64.whl#sha256=a393b506844035c0dac2f30ea8478c343b8e95a429f06f3b3cadfc7f53adb597 ; platform_system == "linux" and python_version == "3.12" and platform_machine != "aarch64"
+Provides-Extra: 02
+Requires-Dist: rich>=13.9.4; extra == "02"
+Provides-Extra: 03
+Requires-Dist: aiofiles>=24.1.0; extra == "03"
+Requires-Dist: aiohttp>=3.11.13; extra == "03"
+Requires-Dist: tqdm>=4.67.1; extra == "03"
+Provides-Extra: 05
+Requires-Dist: gguf>=0.14.0; extra == "05"
+Requires-Dist: llama-cpp-python>=0.3.8; extra == "05"
+Provides-Extra: 08
+Requires-Dist: numpy>=2.2.3; extra == "08"
+Requires-Dist: torch>=2.6.0; extra == "08"
+Provides-Extra: 09
+Requires-Dist: torch>=2.6.0; extra == "09"
+Requires-Dist: torchvision>=0.21.0; extra == "09"
+Requires-Dist: transformers>=4.49.0; extra == "09"
+Provides-Extra: 10
+Requires-Dist: dspy>=2.6.13; extra == "10"
+Requires-Dist: litellm>=1.63.12; extra == "10"
+Requires-Dist: sounddevice>=0.5.1; extra == "10"
+Requires-Dist: textual>=2.1.2; extra == "10"
+Requires-Dist: textual-plotext>=1.0.1; extra == "10"
+Provides-Extra: 11
+Requires-Dist: dspy>=2.6.13; extra == "11"
+Requires-Dist: pydantic>=2.10.6; extra == "11"
+Provides-Extra: 14
+Requires-Dist: networkx>=3.4.2; extra == "14"
+Requires-Dist: textual>=2.1.2; extra == "14"
+Provides-Extra: 15
+Requires-Dist: pydantic>=2.10.6; extra == "15"
+Provides-Extra: 16
+Requires-Dist: torch>=2.6.0; extra == "16"
+Provides-Extra: 18
+Requires-Dist: torch>=2.6.0; extra == "18"
+Provides-Extra: 26
+Requires-Dist: torch>=2.6.0; extra == "26"
+Provides-Extra: 44
+Requires-Dist: huggingface-hub>=0.29.1; extra == "44"
+Provides-Extra: 45
+Requires-Dist: huggingface-hub>=0.29.1; extra == "45"
+Provides-Extra: 47
+Requires-Dist: pydantic>=2.10.6; extra == "47"
+Requires-Dist: pydantic-core>=2.27.2; extra == "47"
+Provides-Extra: 48
+Requires-Dist: pillow>=11.1.0; extra == "48"
+Requires-Dist: toml>=0.10.2; extra == "48"
+Provides-Extra: 49
+Requires-Dist: pydantic>=2.10.6; extra == "49"
+Provides-Extra: 56
+Requires-Dist: hidiffusion>=0.1.10; extra == "56"
+Requires-Dist: torch>=2.6.0; extra == "56"
+Provides-Extra: 57
+Requires-Dist: pillow>=11.1.0; extra == "57"
+Provides-Extra: 63
+Requires-Dist: diffusers>=0.32.2; extra == "63"
+Requires-Dist: hidiffusion>=0.1.10; extra == "63"
+Requires-Dist: torch>=2.6.0; extra == "63"
+Requires-Dist: torchvision>=0.21.0; extra == "63"
+Provides-Extra: 64
+Requires-Dist: pillow>=11.1.0; extra == "64"
 Provides-Extra: opt
-Requires-Dist: hidiffusion; extra == "opt"
+Requires-Dist: nnll[02]; extra == "opt"
+Requires-Dist: nnll[03]; extra == "opt"
+Requires-Dist: nnll[05]; extra == "opt"
+Requires-Dist: nnll[08]; extra == "opt"
+Requires-Dist: nnll[09]; extra == "opt"
+Requires-Dist: nnll[10]; extra == "opt"
+Requires-Dist: nnll[11]; extra == "opt"
+Requires-Dist: nnll[14]; extra == "opt"
+Requires-Dist: nnll[47]; extra == "opt"
+Requires-Dist: nnll[44]; extra == "opt"
+Requires-Dist: nnll[48]; extra == "opt"
+Requires-Dist: nnll[57]; extra == "opt"
+Requires-Dist: nnll[63]; extra == "opt"
 Provides-Extra: dev
 Requires-Dist: nnll[opt]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
@@ -77,9 +106,12 @@ Dynamic: license-file
 # nnll
 
 ## neural network link library
-`nnll` (or <em>null</em>) is a comprehensive AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into highly modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
 
-Library compatibility includes 🧨Diffusers, 🤗Transformers, 🦙Ollama, and focuses on refining methods for tasks such as extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a variety of direct and indirect generative AI preparations.
+`nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
+
+Emphasis is on refining and optimizing code for extracting and classifying metadata, ML pipeline preparation, GPU configuration, consumer-grade system optimization, and a comprehensive suite of direct and indirect generative AI preparations for 🧨Diffusers, 🤗Transformers, 🦙Ollama and 🌀DSPy frameworks.
+
+
 <br>
 
 # :shipit:
