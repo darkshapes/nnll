@@ -8,15 +8,16 @@ import struct
 import shutil
 import os
 
-from nnll_05 import metadata_from_gguf, gguf_check
+from nnll_04 import ModelTool
 from nnll_30 import read_json_file
 from nnll_45 import download_hub_file
 
 
 class TestLoadMetadataGGUF(unittest.TestCase):
-    @patch("nnll_05.create_llama_parser")
+    @patch("nnll_04.ModelTool.create_llama_parser")
     def setUp(self, MockParseModel) -> None:
         # Create a temporary file with known GGUF header data
+        self.model_tool = ModelTool()
         self.test_file_name = "test.gguf"
         magic = b"GGUF"
         with open(self.test_file_name, "wb") as f:
@@ -32,7 +33,7 @@ class TestLoadMetadataGGUF(unittest.TestCase):
         MockParseModel.return_value = self.mock_parser
 
     def test_read_valid_header(self):
-        result = gguf_check(self.test_file_name)
+        result = self.model_tool.gguf_check(self.test_file_name)
         self.assertTrue(result)
 
     def test_metadata_from_gguf(self):
@@ -41,7 +42,7 @@ class TestLoadMetadataGGUF(unittest.TestCase):
         file_name = "TinyStories-LLaMA2-20M-256h-4l-colab.Q2_K.gguf"
         folder_path_named, folder_contents = download_hub_file(repo_id="exdysa/tinystories-llama-20m-gguf", filename=file_name, local_dir=local_folder_test)
         real_file = os.path.join(folder_path_named, file_name)
-        virtual_data_00 = metadata_from_gguf(real_file)
+        virtual_data_00 = self.model_tool.metadata_from_gguf(real_file)
         gguf_state_dict = os.path.join(local_folder, "05_expected_output.json")
         expected_output_part_1 = {"architecture_name": "llama", "general_name": ("TinyStories LLaMA2 20M 256h 4l Colab",)}
         expected_output_part_2 = read_json_file(gguf_state_dict)

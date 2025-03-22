@@ -12,16 +12,9 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
     :return: `tuple` Four values constituting the metadata header and external file attributes\n
     (model_header, disk_size, file_name, file_extension)
     """
-    import os
     import itertools
 
-    from nnll_04 import metadata_from_safetensors
-    from nnll_05 import metadata_from_gguf
-    from nnll_28 import metadata_from_pickletensor
-
-    safetensors_loader = None
-    gguf_loader = None
-    pickletensor_loader = None
+    from nnll_04 import ModelTool
 
     # todo: move this and import statements to .json file
     safetensors_extensions = [".safetensors", ".sft"]
@@ -39,11 +32,12 @@ def coordinate_header_tools(file_path_named: str, file_extension: str) -> tuple:
     if file_extension == "" or file_extension is None or file_extension not in list(supported_extensions):  # Skip file if we cannot possibly know what it is
         return
     else:
+        model_tool = ModelTool()
         if file_extension in safetensors_extensions:
-            open_header_method = metadata_from_safetensors
+            open_header_method = model_tool.metadata_from_safetensors
         elif file_extension in gguf_extensions:
-            open_header_method = metadata_from_gguf
+            open_header_method = model_tool.metadata_from_gguf
         elif file_extension in pickletensor_extensions:
-            open_header_method = metadata_from_pickletensor
+            open_header_method = model_tool.metadata_from_pickletensor
 
         return open_header_method

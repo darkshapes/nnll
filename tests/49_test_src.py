@@ -8,10 +8,10 @@
 
 import unittest
 from unittest.mock import Mock, patch, call
-
+import logging
 from pydantic import ValidationError
 
-from nnll_02 import logger
+# from nnll_01 import assign_logging_to
 from nnll_48 import MetadataFileReader
 from nnll_47 import UpField, DownField, EmptyField
 from nnll_49 import (
@@ -29,6 +29,10 @@ from nnll_49 import (
     validate_typical,
     # clean_with_json
 )
+
+# logger = assign_logging_to()
+
+logger = logging.Logger("logger")
 
 
 class TestParseMetadata(unittest.TestCase):
