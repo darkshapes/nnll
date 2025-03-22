@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev196+g9f68ada.d20250322
+Version: 0.1.dev198+g46b57b8.d20250322
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -16,82 +16,90 @@ Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Provides-Extra: 02
-Requires-Dist: rich>=13.9.4; extra == "02"
-Provides-Extra: 03
-Requires-Dist: aiofiles>=24.1.0; extra == "03"
-Requires-Dist: aiohttp>=3.11.13; extra == "03"
-Requires-Dist: tqdm>=4.67.1; extra == "03"
-Provides-Extra: 05
-Requires-Dist: gguf>=0.14.0; extra == "05"
-Requires-Dist: llama-cpp-python>=0.3.8; extra == "05"
-Provides-Extra: 08
-Requires-Dist: numpy>=2.2.3; extra == "08"
-Requires-Dist: torch>=2.6.0; extra == "08"
-Provides-Extra: 09
-Requires-Dist: torch>=2.6.0; extra == "09"
-Requires-Dist: torchvision>=0.21.0; extra == "09"
-Requires-Dist: transformers>=4.49.0; extra == "09"
-Provides-Extra: 10
-Requires-Dist: dspy>=2.6.13; extra == "10"
-Requires-Dist: litellm>=1.63.12; extra == "10"
-Requires-Dist: sounddevice>=0.5.1; extra == "10"
-Requires-Dist: textual>=2.1.2; extra == "10"
-Requires-Dist: textual-plotext>=1.0.1; extra == "10"
-Provides-Extra: 11
-Requires-Dist: dspy>=2.6.13; extra == "11"
-Requires-Dist: pydantic>=2.10.6; extra == "11"
-Provides-Extra: 14
-Requires-Dist: networkx>=3.4.2; extra == "14"
-Requires-Dist: textual>=2.1.2; extra == "14"
-Provides-Extra: 15
-Requires-Dist: pydantic>=2.10.6; extra == "15"
-Provides-Extra: 16
-Requires-Dist: torch>=2.6.0; extra == "16"
-Provides-Extra: 18
-Requires-Dist: torch>=2.6.0; extra == "18"
-Provides-Extra: 26
-Requires-Dist: torch>=2.6.0; extra == "26"
-Provides-Extra: 44
-Requires-Dist: huggingface-hub>=0.29.1; extra == "44"
-Provides-Extra: 45
-Requires-Dist: huggingface-hub>=0.29.1; extra == "45"
-Provides-Extra: 47
-Requires-Dist: pydantic>=2.10.6; extra == "47"
-Requires-Dist: pydantic-core>=2.27.2; extra == "47"
-Provides-Extra: 48
-Requires-Dist: pillow>=11.1.0; extra == "48"
-Requires-Dist: toml>=0.10.2; extra == "48"
-Provides-Extra: 49
-Requires-Dist: pydantic>=2.10.6; extra == "49"
-Provides-Extra: 56
-Requires-Dist: hidiffusion>=0.1.10; extra == "56"
-Requires-Dist: torch>=2.6.0; extra == "56"
-Provides-Extra: 57
-Requires-Dist: pillow>=11.1.0; extra == "57"
-Provides-Extra: 63
-Requires-Dist: diffusers>=0.32.2; extra == "63"
-Requires-Dist: hidiffusion>=0.1.10; extra == "63"
-Requires-Dist: torch>=2.6.0; extra == "63"
-Requires-Dist: torchvision>=0.21.0; extra == "63"
-Provides-Extra: 64
-Requires-Dist: pillow>=11.1.0; extra == "64"
-Provides-Extra: opt
-Requires-Dist: nnll[02]; extra == "opt"
-Requires-Dist: nnll[03]; extra == "opt"
-Requires-Dist: nnll[05]; extra == "opt"
-Requires-Dist: nnll[08]; extra == "opt"
-Requires-Dist: nnll[09]; extra == "opt"
-Requires-Dist: nnll[10]; extra == "opt"
-Requires-Dist: nnll[11]; extra == "opt"
-Requires-Dist: nnll[14]; extra == "opt"
-Requires-Dist: nnll[47]; extra == "opt"
-Requires-Dist: nnll[44]; extra == "opt"
-Requires-Dist: nnll[48]; extra == "opt"
-Requires-Dist: nnll[57]; extra == "opt"
-Requires-Dist: nnll[63]; extra == "opt"
+Provides-Extra: nnll-02
+Requires-Dist: rich>=13.9.4; extra == "nnll-02"
+Provides-Extra: nnll-03
+Requires-Dist: aiofiles>=24.1.0; extra == "nnll-03"
+Requires-Dist: aiohttp>=3.11.13; extra == "nnll-03"
+Requires-Dist: tqdm>=4.67.1; extra == "nnll-03"
+Provides-Extra: nnll-05
+Requires-Dist: gguf>=0.14.0; extra == "nnll-05"
+Requires-Dist: llama-cpp-python>=0.3.8; extra == "nnll-05"
+Provides-Extra: nnll-08
+Requires-Dist: numpy>=2.2.3; extra == "nnll-08"
+Requires-Dist: torch>=2.6.0; extra == "nnll-08"
+Provides-Extra: nnll-09
+Requires-Dist: torch>=2.6.0; extra == "nnll-09"
+Requires-Dist: torchvision>=0.21.0; extra == "nnll-09"
+Requires-Dist: transformers>=4.49.0; extra == "nnll-09"
+Provides-Extra: nnll-10
+Requires-Dist: dspy>=2.6.13; extra == "nnll-10"
+Requires-Dist: litellm>=1.63.12; extra == "nnll-10"
+Requires-Dist: sounddevice>=0.5.1; extra == "nnll-10"
+Requires-Dist: textual>=2.1.2; extra == "nnll-10"
+Requires-Dist: textual-plotext>=1.0.1; extra == "nnll-10"
+Provides-Extra: nnll-11
+Requires-Dist: dspy>=2.6.13; extra == "nnll-11"
+Requires-Dist: pydantic>=2.10.6; extra == "nnll-11"
+Provides-Extra: nnll-14
+Requires-Dist: matplotlib>=3.10.1; extra == "nnll-14"
+Requires-Dist: networkx>=3.4.2; extra == "nnll-14"
+Requires-Dist: textual>=2.1.2; extra == "nnll-14"
+Provides-Extra: nnll-15
+Requires-Dist: pydantic>=2.10.6; extra == "nnll-15"
+Provides-Extra: nnll-16
+Requires-Dist: torch>=2.6.0; extra == "nnll-16"
+Provides-Extra: nnll-18
+Requires-Dist: torch>=2.6.0; extra == "nnll-18"
+Provides-Extra: nnll-26
+Requires-Dist: torch>=2.6.0; extra == "nnll-26"
+Provides-Extra: nnll-44
+Requires-Dist: huggingface-hub>=0.29.1; extra == "nnll-44"
+Provides-Extra: nnll-45
+Requires-Dist: huggingface-hub>=0.29.1; extra == "nnll-45"
+Provides-Extra: nnll-47
+Requires-Dist: pydantic>=2.10.6; extra == "nnll-47"
+Requires-Dist: pydantic-core>=2.27.2; extra == "nnll-47"
+Provides-Extra: nnll-48
+Requires-Dist: pillow>=11.1.0; extra == "nnll-48"
+Requires-Dist: toml>=0.10.2; extra == "nnll-48"
+Provides-Extra: nnll-49
+Requires-Dist: pydantic>=2.10.6; extra == "nnll-49"
+Provides-Extra: nnll-56
+Requires-Dist: hidiffusion>=0.1.10; extra == "nnll-56"
+Requires-Dist: torch>=2.6.0; extra == "nnll-56"
+Provides-Extra: nnll-57
+Requires-Dist: pillow>=11.1.0; extra == "nnll-57"
+Provides-Extra: nnll-63
+Requires-Dist: diffusers>=0.32.2; extra == "nnll-63"
+Requires-Dist: hidiffusion>=0.1.10; extra == "nnll-63"
+Requires-Dist: torch>=2.6.0; extra == "nnll-63"
+Requires-Dist: torchvision>=0.21.0; extra == "nnll-63"
+Provides-Extra: nnll-64
+Requires-Dist: pillow>=11.1.0; extra == "nnll-64"
+Provides-Extra: all
+Requires-Dist: nnll[nnll_02]; extra == "all"
+Requires-Dist: nnll[nnll_03]; extra == "all"
+Requires-Dist: nnll[nnll_05]; extra == "all"
+Requires-Dist: nnll[nnll_09]; extra == "all"
+Requires-Dist: nnll[nnll_10]; extra == "all"
+Requires-Dist: nnll[nnll_11]; extra == "all"
+Requires-Dist: nnll[nnll_14]; extra == "all"
+Requires-Dist: nnll[nnll_15]; extra == "all"
+Requires-Dist: nnll[nnll_16]; extra == "all"
+Requires-Dist: nnll[nnll_26]; extra == "all"
+Requires-Dist: nnll[nnll_18]; extra == "all"
+Requires-Dist: nnll[nnll_44]; extra == "all"
+Requires-Dist: nnll[nnll_45]; extra == "all"
+Requires-Dist: nnll[nnll_47]; extra == "all"
+Requires-Dist: nnll[nnll_48]; extra == "all"
+Requires-Dist: nnll[nnll_49]; extra == "all"
+Requires-Dist: nnll[nnll_56]; extra == "all"
+Requires-Dist: nnll[nnll_57]; extra == "all"
+Requires-Dist: nnll[nnll_63]; extra == "all"
+Requires-Dist: nnll[nnll_64]; extra == "all"
 Provides-Extra: dev
-Requires-Dist: nnll[opt]; extra == "dev"
+Requires-Dist: nnll[all]; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: ruff; extra == "dev"
 Requires-Dist: textual-dev; extra == "dev"
@@ -132,7 +140,7 @@ Some modules are full scripts and can be run from command line. These are writte
 
 Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
 
-- *Recommended* : Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
+- *Recommended* : Add the project as a dependency including only modules that are needed with `"nnll[04,16]" @ git+https://github.com/darkshapes/nnll`
 - Install the entire project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
 - Basic clone or fork of the project
 -  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
@@ -176,10 +184,14 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 > ```
 > pip install -e nnll
 > ```
-or
->
+> or for select packages
+> ```
+> pip install -e "nnll[33,56]"
+> ```
+or for all packages :
+> ```
 > pip install -e 'nnll\[dev\]'
->
+>```
 
 ##### Done.
 </details>

@@ -121,19 +121,6 @@ wheels = [
 ]
 
 [[package]]
-name = "aioresponses"
-version = "0.7.8"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "aiohttp" },
-    { name = "packaging" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/de/03/532bbc645bdebcf3b6af3b25d46655259d66ce69abba7720b71ebfabbade/aioresponses-0.7.8.tar.gz", hash = "sha256:b861cdfe5dc58f3b8afac7b0a6973d5d7b2cb608dd0f6253d16b8ee8eaf6df11", size = 40253 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/b7/584157e43c98aa89810bc2f7099e7e01c728ecf905a66cf705106009228f/aioresponses-0.7.8-py2.py3-none-any.whl", hash = "sha256:b73bd4400d978855e55004b23a3a84cb0f018183bcf066a85ad392800b5b9a94", size = 12518 },
-]
-
-[[package]]
 name = "aiosignal"
 version = "1.3.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1459,7 +1446,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev196+g9f68ada.d20250322"
+version = "0.1.dev198+g46b57b8.d20250322"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1496,6 +1483,7 @@ source = { editable = "." }
     { name = "pydantic" },
 ]
 14 = [
+    { name = "matplotlib" },
     { name = "networkx" },
     { name = "textual" },
 ]
@@ -1545,70 +1533,12 @@ source = { editable = "." }
     { name = "pillow" },
 ]
 dev = [
-    { name = "aiofiles" },
-    { name = "aiohttp" },
-    { name = "aioresponses" },
-    { name = "anyio" },
-    { name = "diffusers" },
-    { name = "dspy" },
-    { name = "gguf" },
-    { name = "hidiffusion" },
-    { name = "huggingface-hub" },
-    { name = "litellm" },
-    { name = "llama-cpp-python" },
-    { name = "matplotlib" },
-    { name = "networkx" },
-    { name = "numpy" },
-    { name = "ollama" },
-    { name = "pillow" },
-    { name = "pydantic" },
-    { name = "pydantic-core" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-tornasync" },
     { name = "pytest-trio" },
-    { name = "rich" },
     { name = "ruff" },
-    { name = "sentencepiece" },
-    { name = "sounddevice" },
-    { name = "textual" },
     { name = "textual-dev" },
-    { name = "textual-plotext" },
-    { name = "toml" },
-    { name = "torch" },
-    { name = "tqdm" },
-    { name = "transformers" },
-    { name = "wheel" },
-]
-opt = [
-    { name = "aiofiles" },
-    { name = "aiohttp" },
-    { name = "aioresponses" },
-    { name = "anyio" },
-    { name = "diffusers" },
-    { name = "dspy" },
-    { name = "gguf" },
-    { name = "hidiffusion" },
-    { name = "huggingface-hub" },
-    { name = "litellm" },
-    { name = "llama-cpp-python" },
-    { name = "matplotlib" },
-    { name = "networkx" },
-    { name = "numpy" },
-    { name = "ollama" },
-    { name = "pillow" },
-    { name = "pydantic" },
-    { name = "pydantic-core" },
-    { name = "rich" },
-    { name = "sentencepiece" },
-    { name = "sounddevice" },
-    { name = "textual" },
-    { name = "textual-plotext" },
-    { name = "toml" },
-    { name = "torch" },
-    { name = "tqdm" },
-    { name = "transformers" },
-    { name = "wheel" },
 ]
 
 [package.dev-dependencies]
@@ -1619,64 +1549,41 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "aiofiles", marker = "extra == '03'", specifier = ">=24.1.0" },
-    { name = "aiofiles", marker = "extra == 'opt'" },
     { name = "aiohttp", marker = "extra == '03'", specifier = ">=3.11.13" },
-    { name = "aiohttp", marker = "extra == 'opt'" },
-    { name = "aioresponses", marker = "extra == 'opt'" },
-    { name = "anyio", marker = "extra == 'opt'" },
     { name = "diffusers", marker = "extra == '63'", specifier = ">=0.32.2" },
-    { name = "diffusers", marker = "extra == 'opt'" },
     { name = "dspy", marker = "extra == '10'", specifier = ">=2.6.13" },
     { name = "dspy", marker = "extra == '11'", specifier = ">=2.6.13" },
-    { name = "dspy", marker = "extra == 'opt'" },
     { name = "gguf", marker = "extra == '05'", specifier = ">=0.14.0" },
-    { name = "gguf", marker = "extra == 'opt'" },
     { name = "hidiffusion", marker = "extra == '56'", specifier = ">=0.1.10" },
     { name = "hidiffusion", marker = "extra == '63'", specifier = ">=0.1.10" },
-    { name = "hidiffusion", marker = "extra == 'opt'" },
     { name = "huggingface-hub", marker = "extra == '44'", specifier = ">=0.29.1" },
     { name = "huggingface-hub", marker = "extra == '45'", specifier = ">=0.29.1" },
-    { name = "huggingface-hub", marker = "extra == 'opt'" },
     { name = "litellm", marker = "extra == '10'", specifier = ">=1.63.12" },
-    { name = "litellm", marker = "extra == 'opt'" },
     { name = "llama-cpp-python", marker = "extra == '05'", specifier = ">=0.3.8" },
-    { name = "llama-cpp-python", marker = "extra == 'opt'" },
-    { name = "matplotlib", marker = "extra == 'opt'" },
+    { name = "matplotlib", marker = "extra == '14'", specifier = ">=3.10.1" },
     { name = "networkx", marker = "extra == '14'", specifier = ">=3.4.2" },
-    { name = "networkx", marker = "extra == 'opt'" },
     { name = "nnll", extras = ["opt"], marker = "extra == 'dev'" },
     { name = "numpy", marker = "extra == '08'", specifier = ">=2.2.3" },
-    { name = "numpy", marker = "extra == 'opt'" },
-    { name = "ollama", marker = "extra == 'opt'" },
     { name = "pillow", marker = "extra == '48'", specifier = ">=11.1.0" },
     { name = "pillow", marker = "extra == '57'", specifier = ">=11.1.0" },
     { name = "pillow", marker = "extra == '64'", specifier = ">=11.1.0" },
-    { name = "pillow", marker = "extra == 'opt'" },
     { name = "pydantic", marker = "extra == '11'", specifier = ">=2.10.6" },
     { name = "pydantic", marker = "extra == '15'", specifier = ">=2.10.6" },
     { name = "pydantic", marker = "extra == '47'", specifier = ">=2.10.6" },
     { name = "pydantic", marker = "extra == '49'", specifier = ">=2.10.6" },
-    { name = "pydantic", marker = "extra == 'opt'" },
     { name = "pydantic-core", marker = "extra == '47'", specifier = ">=2.27.2" },
-    { name = "pydantic-core", marker = "extra == 'opt'" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-asyncio", marker = "extra == 'dev'" },
     { name = "pytest-tornasync", marker = "extra == 'dev'" },
     { name = "pytest-trio", marker = "extra == 'dev'" },
     { name = "rich", marker = "extra == '02'", specifier = ">=13.9.4" },
-    { name = "rich", marker = "extra == 'opt'" },
     { name = "ruff", marker = "extra == 'dev'" },
-    { name = "sentencepiece", marker = "extra == 'opt'" },
     { name = "sounddevice", marker = "extra == '10'", specifier = ">=0.5.1" },
-    { name = "sounddevice", marker = "extra == 'opt'" },
     { name = "textual", marker = "extra == '10'", specifier = ">=2.1.2" },
     { name = "textual", marker = "extra == '14'", specifier = ">=2.1.2" },
-    { name = "textual", marker = "extra == 'opt'" },
     { name = "textual-dev", marker = "extra == 'dev'" },
     { name = "textual-plotext", marker = "extra == '10'", specifier = ">=1.0.1" },
-    { name = "textual-plotext", marker = "extra == 'opt'" },
     { name = "toml", marker = "extra == '48'", specifier = ">=0.10.2" },
-    { name = "toml", marker = "extra == 'opt'" },
     { name = "torch", marker = "extra == '08'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '09'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '16'", specifier = ">=2.6.0" },
@@ -1684,14 +1591,10 @@ requires-dist = [
     { name = "torch", marker = "extra == '26'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '56'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == '63'", specifier = ">=2.6.0" },
-    { name = "torch", marker = "extra == 'opt'", specifier = ">=2.4.0" },
     { name = "torchvision", marker = "extra == '09'", specifier = ">=0.21.0" },
     { name = "torchvision", marker = "extra == '63'", specifier = ">=0.21.0" },
     { name = "tqdm", marker = "extra == '03'", specifier = ">=4.67.1" },
-    { name = "tqdm", marker = "extra == 'opt'" },
     { name = "transformers", marker = "extra == '09'", specifier = ">=4.49.0" },
-    { name = "transformers", marker = "extra == 'opt'" },
-    { name = "wheel", marker = "extra == 'opt'" },
 ]
 
 [package.metadata.requires-dev]
@@ -1886,19 +1789,6 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/06/39/471f581edbb7804b39e8063d92fc8305bdc7a80ae5c07dbe6ea5c50d14a5/nvidia_nvtx_cu12-12.4.127-py3-none-manylinux2014_aarch64.whl", hash = "sha256:7959ad635db13edf4fc65c06a6e9f9e55fc2f92596db928d169c0bb031e88ef3", size = 100417 },
     { url = "https://files.pythonhosted.org/packages/87/20/199b8713428322a2f22b722c62b8cc278cc53dffa9705d744484b5035ee9/nvidia_nvtx_cu12-12.4.127-py3-none-manylinux2014_x86_64.whl", hash = "sha256:781e950d9b9f60d8241ccea575b32f5105a5baf4c2351cab5256a24869f12a1a", size = 99144 },
-]
-
-[[package]]
-name = "ollama"
-version = "0.4.7"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "httpx" },
-    { name = "pydantic" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b0/6d/dc77539c735bbed5d0c873fb029fb86aa9f0163df169b34152914331c369/ollama-0.4.7.tar.gz", hash = "sha256:891dcbe54f55397d82d289c459de0ea897e103b86a3f1fad0fdb1895922a75ff", size = 12843 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/31/83/c3ffac86906c10184c88c2e916460806b072a2cfe34cdcaf3a0c0e836d39/ollama-0.4.7-py3-none-any.whl", hash = "sha256:85505663cca67a83707be5fb3aeff0ea72e67846cea5985529d8eca4366564a1", size = 13210 },
 ]
 
 [[package]]
@@ -3289,15 +3179,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/aa/63/e53da845320b757bf29ef6a9062f5c669fe997973f966045cb019c3f4b66/urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d", size = 307268 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c8/19/4ec628951a74043532ca2cf5d97b7b14863931476d117c471e8e2b1eb39f/urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df", size = 128369 },
-]
-
-[[package]]
-name = "wheel"
-version = "0.45.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8a/98/2d9906746cdc6a6ef809ae6338005b3f21bb568bea3165cfc6a243fdc25c/wheel-0.45.1.tar.gz", hash = "sha256:661e1abd9198507b1409a20c02106d9670b2576e916d58f520316666abca6729", size = 107545 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/2c/87f3254fd8ffd29e4c02732eee68a83a1d3c346ae39bc6822dcbcb697f2b/wheel-0.45.1-py3-none-any.whl", hash = "sha256:708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248", size = 72494 },
 ]
 
 [[package]]

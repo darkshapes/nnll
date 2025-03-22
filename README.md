@@ -30,7 +30,7 @@ Some modules are full scripts and can be run from command line. These are writte
 
 Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
 
-- *Recommended* : Add the project as a dependency including only modules that are needed with `"nnll[04,16]" @ git+https://github.com/darkshapes/nnll`
+- *Recommended* : Add the project as a dependency including only modules that are needed with `"nnll[nnll_04,nnll_16]" @ git+https://github.com/darkshapes/nnll`
 - Install the entire project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
 - Basic clone or fork of the project
 -  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
@@ -76,11 +76,11 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 > ```
 > or for select packages
 > ```
-> pip install -e "nnll[33,56]"
+> pip install -e "nnll\[nnll_33,nnll_56\]"
 > ```
 or for all packages :
 > ```
-> pip install -e 'nnll\[dev\]'
+> pip install -e "nnll\[dev\]"
 >```
 
 ##### Done.
