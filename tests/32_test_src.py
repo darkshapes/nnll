@@ -3,16 +3,22 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
+# pylint:disable=redefined-outer-name
 import unittest
-from unittest.mock import patch, MagicMock
-from pathlib import Path
-import os
+from unittest.mock import patch
+from unittest import mock
 
-# Assuming get_model_header is in a module named model_loader
-from nnll_04 import metadata_from_safetensors
-from nnll_05 import metadata_from_gguf
-from nnll_28 import metadata_from_pickletensor
+
+import pytest
+
+from nnll_04 import ModelTool
 from nnll_32 import coordinate_header_tools
+
+
+@pytest.fixture(scope="session")
+def mock_model_tools():
+    with mock.patch("nnll_04.ModelTool", new_callable=mock.MagicMock()) as mock_tool:
+        return mock_tool
 
 
 class TestGetModelHeader(unittest.TestCase):
@@ -28,22 +34,21 @@ class TestGetModelHeader(unittest.TestCase):
         self.mock_disk_size = 1024
 
     def test_safetensors_file(self):
-        result = coordinate_header_tools(self.file_path, ".safetensors")
-        expected_result = metadata_from_safetensors
+        with patch("nnll_04.ModelTool") as mock_model_tools:
+            result = coordinate_header_tools(self.file_path, ".safetensors")
+            mock_model_tools.assert_called_once()
 
-        self.assertEqual(result, expected_result)
+        # self.assertEqual(result, expected_result)
 
     def test_gguf_file(self):
-        result = coordinate_header_tools(self.file_path, ".gguf")
-        expected_result = metadata_from_gguf
-
-        self.assertEqual(result, expected_result)
+        with patch("nnll_04.ModelTool") as mock_model_tools:
+            result = coordinate_header_tools(self.file_path, ".gguf")
+            mock_model_tools.assert_called_once()
 
     def test_pickletensor_file(self):
-        result = coordinate_header_tools(self.file_path, ".pt")
-        expected_result = metadata_from_pickletensor
-
-        self.assertEqual(result, expected_result)
+        with patch("nnll_04.ModelTool") as mock_model_tools:
+            result = coordinate_header_tools(self.file_path, ".pt")
+            mock_model_tools.assert_called_once()
 
     @patch("nnll_32.Path")
     def test_invalid_extension(self, mock_path):

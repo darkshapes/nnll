@@ -7,8 +7,8 @@
 # pylint: disable=line-too-long, import-outside-toplevel
 
 from typing import List, Tuple
-from nnll_02 import debug_monitor, debug_message
-from nnll_02 import info_monitor as nfo
+from nnll_01 import debug_monitor, debug_message
+from nnll_01 import info_monitor as nfo
 from nnll_47 import (
     BracketedDict,
     DownField,

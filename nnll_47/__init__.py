@@ -11,7 +11,7 @@ from ast import Constant
 from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator
 from pydantic_core import ValidationError
 
-from nnll_01 import LOG_LEVEL
+# from nnll_01 import LOG_LEVEL
 
 if float(python_version_tuple()[0]) == 3.0 and float(python_version_tuple()[1]) <= 12.0:
     from typing_extensions import TypedDict, Annotated, List, Union, Set
@@ -181,7 +181,7 @@ class NodeNames:
     }
 
 
-EXC_INFO: bool = LOG_LEVEL != "i"
+# EXC_INFO: bool = LOG_LEVEL != "i"
 
 
 def bracket_check(maybe_brackets: str | dict):

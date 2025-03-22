@@ -5,7 +5,7 @@
 
 # pylint: disable=import-outside-toplevel
 
-from nnll_02 import debug_monitor
+from nnll_01 import debug_monitor
 
 
 class MetadataFileReader:
@@ -13,10 +13,10 @@ class MetadataFileReader:
 
     def __init__(self):
         self.show_content = None
-        import nnll_02
+        import nnll_01
 
-        self.nfo = nnll_02.info_monitor
-        self.debug_message = nnll_02.debug_message
+        self.nfo = nnll_01.info_monitor
+        self.debug_message = nnll_01.debug_message
         # debug_monitor = nnll_02.debug_monitor
 
     @debug_monitor
