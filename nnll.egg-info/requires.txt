@@ -23,12 +23,6 @@ nnll[nnll_64]
 
 [dev]
 nnll[all]
-pytest
-ruff
-textual-dev
-pytest-asyncio
-pytest-tornasync
-pytest-trio
 
 [nnll_02]
 rich>=13.9.4

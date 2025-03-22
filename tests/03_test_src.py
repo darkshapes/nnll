@@ -38,8 +38,8 @@ async def test_prepare_download():
     assert remote_file_name == expected_return_remote
     assert save_file_path_absolute == expected_return_local
 
-class AsyncContextManager:
 
+class AsyncContextManager:
     def __init__(self, obj):
         self._obj = obj
 
@@ -48,6 +48,7 @@ class AsyncContextManager:
 
     async def __aexit__(self, *args):
         pass
+
 
 @pytest_asyncio.fixture
 async def test_save_file_async():

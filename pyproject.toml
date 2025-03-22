@@ -84,12 +84,14 @@ all = [
 ]
 dev = [
     "nnll[all]",
-    "pytest",
-    "ruff",
-    "textual-dev",
-    "pytest-asyncio",
-    "pytest-tornasync",
-    "pytest-trio",
+    "aioresponses>=0.7.8",
+    "nnll[dev]",
+    "pytest-asyncio>=0.25.3",
+    "pytest>=8.3.4",
+    "ruff>=0.9.7",
+    "textual-dev>=1.7.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
 ]
 
 
@@ -106,7 +108,16 @@ exclude = ["tests*"]
 write_to = "_version.py"
 
 [tool.uv]
-dev-dependencies = ["nnll[dev]"]
+dev-dependencies = [
+    "aioresponses>=0.7.8",
+    "nnll[dev]",
+    "pytest-asyncio>=0.25.3",
+    "pytest>=8.3.4",
+    "ruff>=0.9.7",
+    "textual-dev>=1.7.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+]
 
 [tool.ruff]
 line-length    = 140

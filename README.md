@@ -9,6 +9,7 @@
 
 Emphasis is on refining and optimizing code for extracting and classifying metadata, ML pipeline preparation, GPU configuration, consumer-grade system optimization, and a comprehensive suite of direct and indirect generative AI preparations for 🧨Diffusers, 🤗Transformers, 🦙Ollama and 🌀DSPy frameworks.
 
+Thank you for looking forward to it.
 
 <br>
 
@@ -76,11 +77,11 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 > ```
 > or for select packages
 > ```
-> pip install -e "nnll\[nnll_33,nnll_56\]"
+> pip install -e "nnll[nnll_33,nnll_56]"
 > ```
-or for all packages :
+> or for all packages :
 > ```
-> pip install -e "nnll\[dev\]"
+> pip install -e "nnll[dev]"
 >```
 
 ##### Done.
