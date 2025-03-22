@@ -102,9 +102,7 @@ tests/05_expected_output.json
 tests/05_test_src.py
 tests/07_test_src.py
 tests/08_test_src.py
-tests/10_test_init_exit.py
 tests/10_test_model_register.py
-tests/10_test_orientation.py
 tests/10_test_register_types.py
 tests/10_test_widget_mounts.py
 tests/14_draw_graph.py

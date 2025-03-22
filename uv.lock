@@ -1459,7 +1459,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev200+g77bfb68.d20250322"
+version = "0.1.dev201+g341e3cf.d20250322"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1475,6 +1475,7 @@ all = [
     { name = "llama-cpp-python" },
     { name = "matplotlib" },
     { name = "networkx" },
+    { name = "numpy" },
     { name = "ollama" },
     { name = "pillow" },
     { name = "pydantic" },
@@ -1502,6 +1503,7 @@ dev = [
     { name = "llama-cpp-python" },
     { name = "matplotlib" },
     { name = "networkx" },
+    { name = "numpy" },
     { name = "ollama" },
     { name = "pillow" },
     { name = "pydantic" },
@@ -1546,6 +1548,7 @@ nnll-09 = [
 nnll-10 = [
     { name = "dspy" },
     { name = "litellm" },
+    { name = "numpy" },
     { name = "ollama" },
     { name = "sounddevice" },
     { name = "textual" },
@@ -1658,6 +1661,7 @@ requires-dist = [
     { name = "nnll", extras = ["nnll-63"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-64"], marker = "extra == 'all'" },
     { name = "numpy", marker = "extra == 'nnll-08'", specifier = ">=2.2.3" },
+    { name = "numpy", marker = "extra == 'nnll-10'", specifier = ">=2.2.3" },
     { name = "ollama", marker = "extra == 'nnll-10'", specifier = ">=0.4.7" },
     { name = "pillow", marker = "extra == 'nnll-48'", specifier = ">=11.1.0" },
     { name = "pillow", marker = "extra == 'nnll-57'", specifier = ">=11.1.0" },

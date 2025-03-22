@@ -60,6 +60,7 @@ sounddevice>=0.5.1
 textual>=2.1.2
 textual-plotext>=1.0.1
 ollama>=0.4.7
+numpy>=2.2.3
 
 [nnll-11]
 dspy>=2.6.13
