@@ -18,29 +18,29 @@ async def retry(max_retries: int, delay_seconds: int, operation: Callable, excep
     :return: The awaited result of operation()
     """
     import asyncio
-    import json
+    # import json
 
     for retries in range(max_retries + 1):
         try:
             return await operation()
-        except exception_type as error_log:
+        except exception_type:  # as error_log:
             if retries < max_retries:
                 # error_dict = f"Operation failed (retry {retries + 1}/{max_retries})"
-                json_log = json.dumps(str(error_log))
-                await async_save_file(f"error_log{operation}.json", json_log)
+                # json_log = json.dumps(str(error_log))
+                # await async_save_file(f"error_log{operation}.json", json_log)
                 await asyncio.sleep(delay_seconds)
                 retries += 1
             else:
                 # error_dict = f"Operation failed after {max_retries} retries"
-                json_log = json.dumps(str(error_log))
-                await async_save_file(f"error_log{operation}.json", json_log)
+                # json_log = json.dumps(str(error_log))
+                # await async_save_file(f"error_log{operation}.json", json_log)
                 raise
 
 
 async def async_remote_transfer(session, remote_file_path: str):
     """Request .pdb file from AlphaFold server.
     Ensure the download folder exists (will be rewritten)."""
-    import json
+    # import json
     import aiohttp
 
     # error_dict = f"Downloading PDB file from: {remote_file_path}"
@@ -49,14 +49,16 @@ async def async_remote_transfer(session, remote_file_path: str):
         async with await session.get(remote_file_path) as response:
             response.raise_for_status()
             return await response.read()
-    except aiohttp.client_exceptions.ClientConnectionError as error_log:
+    except aiohttp.client_exceptions.ClientConnectionError:  # as error_log:
+        pass
         # error_dict = f"Connection error"
-        json_log = json.dumps(str(error_log))
-        await async_save_file(f"error_log{remote_file_path}.json", json_log)
-    except RuntimeError as error_log:
+        # json_log = json.dumps(str(error_log))
+        # await async_save_file(f"error_log{remote_file_path}.json", json_log)
+    except RuntimeError:  # as error_log:
+        pass
         # error_dict = f"Failed to download, Session Error"
-        json_log = json.dumps(str(error_log))
-        async_save_file(f"error_log{remote_file_path}.json", json_log)
+        # json_log = json.dumps(str(error_log))
+        # async_save_file(f"error_log{remote_file_path}.json", json_log)
 
 
 async def async_save_file(save_file_path_absolute, file_content, mode=None):
@@ -98,7 +100,8 @@ async def async_download_session(remote_url, save_file_path_absolute):
 
     import asyncio
     import aiohttp
-    import json
+
+    # import json
     import requests
 
     async with aiohttp.ClientSession() as session:
@@ -108,10 +111,11 @@ async def async_download_session(remote_url, save_file_path_absolute):
             save_task = asyncio.create_task(retry(3, 1, lambda: async_save_file(save_file_path_absolute, file_content), OSError))
             tasks.append(save_task)
 
-        except aiohttp.ClientError as error_log:
+        except aiohttp.ClientError:  # as error_log:
+            pass
             # error_dict = "Error occurred during request"
-            json_log = json.dumps(str(error_log))
-            async_save_file(f"error_log{remote_url}.json", json_log)
+            # json_log = json.dumps(str(error_log))
+            # async_save_file(f"error_log{remote_url}.json", json_log)
         else:
             await asyncio.gather(*tasks)
 

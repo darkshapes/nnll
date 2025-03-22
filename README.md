@@ -7,9 +7,9 @@
 
 `nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
 
-The focus is on refining and optimizing code for extracting and classifying metadata, pipeline preparation, GPU configuration, consumer-grade system optimization, and a comprehensive suite of direct and indirect generative AI preparations.
+Emphasis is on refining and optimizing code for extracting and classifying metadata, ML pipeline preparation, GPU configuration, consumer-grade system optimization, and a comprehensive suite of direct and indirect generative AI preparations for 🧨Diffusers, 🤗Transformers, 🦙Ollama and 🌀DSPy frameworks.
 
-Solutions leverage 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🌀DSPy, and more.
+Thank you for looking forward to it.
 
 <br>
 
@@ -31,7 +31,7 @@ Some modules are full scripts and can be run from command line. These are writte
 
 Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
 
-- *Recommended* : Install the project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
+- *Recommended* : Add the project as a dependency including only modules that are needed with `"nnll[nnll_04,nnll_16]" @ git+https://github.com/darkshapes/nnll`
 - Install the entire project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
 - Basic clone or fork of the project
 -  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
@@ -75,10 +75,14 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 > ```
 > pip install -e nnll
 > ```
-or
->
-> pip install -e 'nnll\[dev\]'
->
+> or for select packages
+> ```
+> pip install -e "nnll[nnll_33,nnll_56]"
+> ```
+> or for all packages :
+> ```
+> pip install -e "nnll[dev]"
+>```
 
 ##### Done.
 </details>

@@ -1,79 +1,117 @@
-tqdm
-wheel
-numpy
-gguf
-sentencepiece
-diffusers
-transformers
-huggingface-hub
-pydantic
-pydantic-core
-rich
-toml
-pillow
-aioresponses
-anyio
-aiofiles
-aiohttp
-llama-cpp-python
-torch
-dspy
-litellm
-sounddevice
-textual
-textual-plotext
-networkx
-hidiffusion
-sentencepiece
-matplotlib
 
-[:platform_system == "linux" and python_version == "3.10" and platform_machine != "aarch64"]
-torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-linux_x86_64.whl#sha256=7f2ba7f7c0459320a521696f6b5bccc187f59890b23c9dfb6c49b0b87c6bfc97
-
-[:platform_system == "linux" and python_version == "3.11" and platform_machine != "aarch64"]
-torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-linux_x86_64.whl#sha256=d4c3e9a8d31a7c0fcbb9da17c31a1917e1fac26c566a4cfbd8c9568ad7cade79
-
-[:platform_system == "linux" and python_version == "3.12" and platform_machine != "aarch64"]
-torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-linux_x86_64.whl#sha256=a393b506844035c0dac2f30ea8478c343b8e95a429f06f3b3cadfc7f53adb597
-
-[:platform_system == "windows" and python_version == "3.10" and platform_machine != "aarch64"]
-torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp310-cp310-win_amd64.whl#sha256=7cc45c5b39d74875cfafe908b7f55c544147cc16b01e795feb2fe766583efe78
-
-[:platform_system == "windows" and python_version == "3.11" and platform_machine != "aarch64"]
-torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp311-cp311-win_amd64.whl#sha256=6a1fb2714e9323f11edb6e8abf7aad5f79e45ad25c081cde87681a18d99c29eb
-
-[:platform_system == "windows" and python_version == "3.12" and platform_machine != "aarch64"]
-torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl#sha256=3313061c1fec4c7310cf47944e84513dcd27b6173b72a349bb7ca68d0ee6e9c0
-
-[:platform_system == "windows" and python_version == "3.13" and platform_machine != "aarch64"]
-torch@ https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp313-cp313-win_amd64.whl#sha256=519330eef09534acad8110b6f423d2fe58c1d8e9ada999ed077a637a0021f908
-
-[:python_version == "3.10" and platform_machine == "arm64"]
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp310-none-macosx_11_0_arm64.whl
-
-[:python_version == "3.11" and platform_machine == "arm64"]
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp311-none-macosx_11_0_arm64.whl
-
-[:python_version == "3.12" and platform_machine == "arm64"]
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp312-none-macosx_11_0_arm64.whl
-
-[:python_version == "3.13" and platform_machine == "aarch64"]
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp310-cp310-manylinux_2_28_aarch64.whl
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp311-cp311-manylinux_2_28_aarch64.whl
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227%2Bcpu-cp313-cp313t-manylinux_2_28_aarch64.whl
-
-[:python_version == "3.13" and platform_machine == "arm64"]
-torch@ https://download.pytorch.org/whl/nightly/cpu/torch-2.7.0.dev20250227-cp313-none-macosx_11_0_arm64.whl
+[all]
+nnll[nnll_02]
+nnll[nnll_03]
+nnll[nnll_05]
+nnll[nnll_09]
+nnll[nnll_10]
+nnll[nnll_11]
+nnll[nnll_14]
+nnll[nnll_15]
+nnll[nnll_16]
+nnll[nnll_26]
+nnll[nnll_18]
+nnll[nnll_44]
+nnll[nnll_45]
+nnll[nnll_47]
+nnll[nnll_48]
+nnll[nnll_49]
+nnll[nnll_56]
+nnll[nnll_57]
+nnll[nnll_63]
+nnll[nnll_64]
 
 [dev]
-nnll[opt]
-pytest
-ruff
-textual-dev
-pytest-asyncio
-pytest-tornasync
-pytest-trio
+nnll[all]
+aioresponses>=0.7.8
+nnll[dev]
+pytest-asyncio>=0.25.3
+pytest>=8.3.4
+ruff>=0.9.7
+textual-dev>=1.7.0
+pytest-tornasync>=0.6.0.post2
+pytest-trio>=0.8.0
 
-[opt]
-hidiffusion
+[nnll-02]
+rich>=13.9.4
+
+[nnll-03]
+aiofiles>=24.1.0
+aiohttp>=3.11.13
+tqdm>=4.67.1
+
+[nnll-05]
+gguf>=0.14.0
+llama-cpp-python>=0.3.8
+
+[nnll-08]
+numpy>=2.2.3
+torch>=2.6.0
+
+[nnll-09]
+torch>=2.6.0
+torchvision>=0.21.0
+transformers>=4.49.0
+
+[nnll-10]
+dspy>=2.6.13
+litellm>=1.63.12
+sounddevice>=0.5.1
+textual>=2.1.2
+textual-plotext>=1.0.1
+ollama>=0.4.7
+numpy>=2.2.3
+
+[nnll-11]
+dspy>=2.6.13
+pydantic>=2.10.6
+
+[nnll-14]
+matplotlib>=3.10.1
+networkx>=3.4.2
+textual>=2.1.2
+
+[nnll-15]
+pydantic>=2.10.6
+
+[nnll-16]
+torch>=2.6.0
+
+[nnll-18]
+torch>=2.6.0
+
+[nnll-26]
+torch>=2.6.0
+
+[nnll-44]
+huggingface-hub>=0.29.1
+
+[nnll-45]
+huggingface-hub>=0.29.1
+
+[nnll-47]
+pydantic>=2.10.6
+pydantic-core>=2.27.2
+
+[nnll-48]
+pillow>=11.1.0
+toml>=0.10.2
+
+[nnll-49]
+pydantic>=2.10.6
+
+[nnll-56]
+hidiffusion>=0.1.10
+torch>=2.6.0
+
+[nnll-57]
+pillow>=11.1.0
+
+[nnll-63]
+diffusers>=0.32.2
+hidiffusion>=0.1.10
+torch>=2.6.0
+torchvision>=0.21.0
+
+[nnll-64]
+pillow>=11.1.0

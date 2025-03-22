@@ -30,7 +30,7 @@ else:
     LOG_LEVEL = "DEBUG"
 
 
-try:
-    __version__ = metadata.version("nnll")
-except metadata.PackageNotFoundError as error_log:
-    print(f"dataset-tools package is not installed. Did you run `pip install .`? {error_log}")
+# try:
+#     __version__ = metadata.version("nnll")
+# except metadata.PackageNotFoundError as error_log:
+#     print(f"nnll package is not installed. Did you run `pip install .`? {error_log}")
