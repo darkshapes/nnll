@@ -9,6 +9,5 @@
 
 # # HF_HUB_OFFLINE=True
 # # DISABLE_TELEMETRY=YES
-# # DISABLE_TELEMETRY=YES
-# # HF_HOME
-# # HUGGINFACE_HUB_CACHE
+# # HF_HOME= #this changes hub location
+# # HUGGINFACE_HUB_CACHE=  #this also changes hub location

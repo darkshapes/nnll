@@ -14,7 +14,7 @@ def gather_metadata(pattern_reference_path_named: str = None) -> dict:
     import os
     from nnll_30 import read_json_file
 
-    if pattern_reference_path_named == None:
+    if pattern_reference_path_named is None:
         filter_file = os.path.dirname(os.path.abspath(__file__))
         pattern_reference_path_named = os.path.join(filter_file, "filter.json")
 
@@ -39,4 +39,4 @@ def route_metadata(unpacked_metadata: dict, pattern_reference: dict, attributes:
     model_type = conductor_instance.identify_model(category_type, pattern_reference, unpacked_metadata, attributes)
     # pulled_keys = parse_pulled_keys(layer_keys, category_type, model_type)
 
-    return pulled_keys
+    # return pulled_keys

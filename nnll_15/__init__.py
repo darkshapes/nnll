@@ -6,7 +6,6 @@
 # pylint: disable=line-too-long, import-outside-toplevel
 
 from typing import Dict, List, Any, Tuple
-from numpy import int64
 from pydantic import BaseModel, computed_field
 # import open_webui
 # from package import response_panel

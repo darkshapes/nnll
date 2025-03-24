@@ -2,23 +2,20 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
-import hash_calc as hash_calc
+from nnll_44 import collect_hashes
 
 
-def add_to_undo(**kwargs):
-    if not undo:
-        undo = [kwargs]
-    else:
-        undo.extend([4, 5, 6])
+# def add_to_undo(**kwargs):
+#     if not undo:
+#         undo = [kwargs]
+#     else:
+#         undo.extend([4, 5, 6])
 
 
 def add_to_metadata(pipe, model, prompt, kwargs, negative_prompt=None):
     model_data = {}
 
-    hashable = [model]
-    for file in hashable:
-        if file:
-            model_data.setdefault(file, hash_calc.compute_hash_for(file))
+    model_data.setdefault(collect_hashes(model))
 
     gen_data = {
         "parameters": {

@@ -15,15 +15,15 @@ class Domain:
     ***dev*** : Any pre-release or under evaluation items without an identifier in an expected format\n
     """
 
-    def __init__(self, domain_name):
+    def __init__(self, domain_name: str) -> None:
         self.domain_name = domain_name
         self.architectures = {}
 
-    def add_architecture(self, architecture_name, architecture_obj):
+    def add_architecture(self, architecture_name: str, architecture_obj: Any) -> None:
         """Create a sub-class of Domain"""
         self.architectures[architecture_name] = architecture_obj
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         """Flatten the Domain class structure"""
         flat_dict = {}
         for arc_name, arc_obj in self.architectures.items():
@@ -38,15 +38,15 @@ class Architecture:
     model_forms.json contains the lengthy key list of supported architectures\n
     """
 
-    def __init__(self, architecture: str):
+    def __init__(self, architecture: str) -> None:
         self.architecture = architecture
         self.components = {}
 
-    def add_component(self, model_type: str, component_obj: str):
+    def add_component(self, model_type: str, component_obj: str) -> None:
         """Add_component: create a sub-class of the architecture"""
         self.components[model_type] = component_obj
 
-    def to_dict(self, prefix):
+    def to_dict(self, prefix: str) -> Dict[str, Any]:
         """:Flatten the Architecture class structure"""
         flat_dict = {}
         for comp_name, comp_obj in self.components.items():

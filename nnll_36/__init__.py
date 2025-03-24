@@ -29,6 +29,7 @@ def read_state_dict_headers(folder_path_named: str = ".", save_location: str = "
 
 
 def main():
+    """Parse arguments to feed to dict header reader"""
     import argparse
 
     # Set up argument parser

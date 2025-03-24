@@ -1,6 +1,8 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+# pylint: disable=import-outside-toplevel
+
 
 def build_conversion_graph():
     """create coordinate pair from valid conversions then deploy as a graph"""

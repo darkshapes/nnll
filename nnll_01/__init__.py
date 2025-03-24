@@ -8,10 +8,8 @@
 import argparse
 import logging as py_logging
 import sys
-from functools import wraps
 from importlib import metadata
 from logging import Formatter, StreamHandler
-from typing import Callable
 
 from rich import console, style, theme
 from rich import logging as rich_logging
@@ -116,56 +114,6 @@ def debug_monitor(func):
 def info_monitor(*args):
     """Info log output"""
     logger.info(" ".join(map(str, args)), exc_info=LOG_LEVEL)
-
-
-def handle_exception(exc_type, exc_value, exc_traceback):
-    logger.error("Uncaught exception in function", exc_info=(exc_type, exc_value, exc_traceback))
-
-
-class CaptureStdOut:
-    def __init__(self, logger_func: Callable, level=LOG_LEVEL):
-        """Capture console output and send automatically to logger
-        :param logger_func: The logging function (e.g., logger.info)
-        :param level: Logging level to use when writing logs.
-        """
-        self.logger = logger_func
-        self.level = level
-        self.linebuf = ""
-
-    def write(self, buf):
-        for line in buf.rstrip().splitlines():
-            self.logger(line)
-
-    def flush(self):
-        # This may be needed by some libraries that expect a flush method.
-        pass
-
-
-def capture_io(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        # Save original stdout and stderr
-        # Redirect stdout, stderr,custom exception handler to the logger
-        # Restore original stdout, stderr, exception hook
-        original_stdout = sys.stdout
-        original_stderr = sys.stderr
-        original_excepthook = sys.excepthook
-
-        try:
-            sys.stdout = CaptureStdOut(info_monitor)
-            sys.stderr = CaptureStdOut(info_monitor, level=py_logging.ERROR)
-
-            sys.excepthook = handle_exception
-
-            return func(*args, **kwargs)
-
-        finally:
-            sys.stdout = original_stdout
-            sys.stderr = original_stderr
-
-            sys.excepthook = original_excepthook
-
-    return wrapper
 
 
 def debug_message(*args):

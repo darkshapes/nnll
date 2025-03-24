@@ -38,28 +38,33 @@ class Block:
             object.__setattr__(self, "block_hash", self.calculate_hash())
 
     def calculate_hash(self) -> str:
+        """Calculate hash for string of prior hash, contents, and time combined"""
         import hashlib
 
         block_contents = f"{self.index}{self.previous_hash}{self.data}{self.timestamp}".encode("utf-8")
         return hashlib.sha256(block_contents).hexdigest()
 
     def create_timestamp(self):
+        """Add timestamp attribute"""
         from time import gmtime, strftime, time_ns
 
         return strftime("%Y-%m-%d %H:%M:%s", gmtime(time_ns() // 1e9))
 
     @classmethod
     def create(cls, index: int, previous_hash: str, data: str) -> "Block":
+        """Form a new block"""
         return cls(index=index, previous_hash=previous_hash, data=data)
 
     @classmethod
     def from_dict(cls, data: dict):
+        """Recreate existing block"""
         block = cls(index=data["index"], data=data["data"], previous_hash=data["previous_hash"])
         object.__setattr__(block, "timestamp", data["timestamp"])
         object.__setattr__(block, "block_hash", data["block_hash"])
         return block
 
     def to_dict(self):
+        """Flatten block into serializable structure"""
         return {
             "index": self.index,
             "data": self.data,

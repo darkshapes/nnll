@@ -6,6 +6,8 @@ import dspy
 
 
 class ChatWithListMemory(dspy.Module):
+    """Store previous responses as a list"""
+
     def __init__(self, memory_size=5):
         super().__init__()
         self.memory = []

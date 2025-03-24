@@ -20,7 +20,7 @@ def soft_random(size: int = 0x2540BE3FF) -> int:
     return int(rndmc.integers(0, size))
 
 
-def seed_planter(seed, deterministic=True):
+def seed_planter(seed, deterministic=True) -> int:
     from numpy import random
     import torch
 
