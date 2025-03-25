@@ -1,7 +1,12 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+# pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
+
+
+@debug_monitor
 def build_conversion_graph():
     """create coordinate pair from valid conversions then deploy as a graph"""
     import networkx as nx
@@ -13,6 +18,7 @@ def build_conversion_graph():
     return new_graph
 
 
+@debug_monitor
 def assign_edge_attributes():
     """Build graph and assign edge attributes to it"""
     import os

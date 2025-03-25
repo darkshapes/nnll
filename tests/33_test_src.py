@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 
 from nnll_33 import ValueComparison
 from nnll_25 import ExtractAndMatchMetadata
-from nnll_44 import compute_hash_for
+# from nnll_44 import compute_hash_for
 
 
 class TestCompareValues(unittest.TestCase):

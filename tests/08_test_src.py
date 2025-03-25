@@ -54,5 +54,5 @@ class TestRandom:
     def test_hard_random_uniqueness(self):
         """Test that hard_random generates a diverse set of values."""
         results = [hard_random(4) for _ in range(256)]
-        # Expecting no duplicates; statistically may vary. (sometimes fails check)
+        # Expecting no duplicates; statistically may vary.
         assert len(set(results)) == 256

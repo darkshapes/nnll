@@ -6,6 +6,8 @@
 from textual.widgets import DataTable
 from textual.reactive import reactive
 
+from nnll_01 import debug_monitor
+
 
 class Carousel(DataTable):
     content_cell: reactive[int] = reactive(0.0)
@@ -14,6 +16,7 @@ class Carousel(DataTable):
         self.show_header = False
         self.cursor_type = "cell"
 
+    @debug_monitor
     def emulate_scroll_down(self, content) -> str:
         ceiling = len(content)
         if self.content_cell < ceiling - 1:
@@ -21,12 +24,14 @@ class Carousel(DataTable):
         current_content = self.tag_line_scroller(content)
         return current_content
 
+    @debug_monitor
     def emulate_scroll_up(self, content) -> str:
         if self.content_cell > 0:
             self.content_cell -= 0.1
         current_content = self.tag_line_scroller(content)
         return current_content
 
+    @debug_monitor
     def tag_line_scroller(self, content) -> str:
         """Translate scroll events into datatable cursor movement"""
         coordinate = int(round(self.content_cell))

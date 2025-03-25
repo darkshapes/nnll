@@ -6,8 +6,9 @@
 # pylint: disable=line-too-long, import-outside-toplevel
 
 from typing import Dict, List, Any, Tuple
-from numpy import int64
 from pydantic import BaseModel, computed_field
+
+from nnll_01 import debug_monitor
 # import open_webui
 # from package import response_panel
 
@@ -62,6 +63,7 @@ class RegistryEntry(BaseModel):
         return processed_tasks
 
 
+@debug_monitor
 def sort_dates_by_age(date_strings):
     """Parses datetime objects from strings and returns a list of dates sorted by age."""
 
@@ -80,6 +82,7 @@ def sort_dates_by_age(date_strings):
     return dates
 
 
+@debug_monitor
 def _extract_model_info(source: str, model_data: dict = None) -> Dict[str, Any]:
     """Helper function to extract common model information."""
     cache_dir = []
@@ -125,6 +128,7 @@ def _extract_model_info(source: str, model_data: dict = None) -> Dict[str, Any]:
     return models
 
 
+@debug_monitor
 def from_ollama_cache() -> Dict[str, RegistryEntry]:
     """Retrieve models from ollama server."""
     from ollama import ListResponse, list as ollama_list
@@ -133,6 +137,7 @@ def from_ollama_cache() -> Dict[str, RegistryEntry]:
     return _extract_model_info("ollama", model_data)
 
 
+@debug_monitor
 def from_hf_hub_cache() -> Dict[str, RegistryEntry]:
     """Retrieve models from local huggingface hub cache."""
     from huggingface_hub import scan_cache_dir

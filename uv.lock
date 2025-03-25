@@ -1459,7 +1459,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev201+g341e3cf.d20250322"
+version = "0.1.dev205+gb539702.d20250324"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1482,6 +1482,7 @@ all = [
     { name = "pydantic-core" },
     { name = "rich" },
     { name = "sounddevice" },
+    { name = "structlog" },
     { name = "textual" },
     { name = "textual-plotext" },
     { name = "toml" },
@@ -1515,6 +1516,7 @@ dev = [
     { name = "rich" },
     { name = "ruff" },
     { name = "sounddevice" },
+    { name = "structlog" },
     { name = "textual" },
     { name = "textual-dev" },
     { name = "textual-plotext" },
@@ -1524,15 +1526,16 @@ dev = [
     { name = "tqdm" },
     { name = "transformers" },
 ]
-nnll-02 = [
+nnll-01 = [
     { name = "rich" },
+    { name = "structlog" },
 ]
 nnll-03 = [
     { name = "aiofiles" },
     { name = "aiohttp" },
     { name = "tqdm" },
 ]
-nnll-05 = [
+nnll-04 = [
     { name = "gguf" },
     { name = "llama-cpp-python" },
 ]
@@ -1599,6 +1602,11 @@ nnll-56 = [
 nnll-57 = [
     { name = "pillow" },
 ]
+nnll-62 = [
+    { name = "diffusers" },
+    { name = "torch" },
+    { name = "torchvision" },
+]
 nnll-63 = [
     { name = "diffusers" },
     { name = "hidiffusion" },
@@ -1626,23 +1634,24 @@ requires-dist = [
     { name = "aiofiles", marker = "extra == 'nnll-03'", specifier = ">=24.1.0" },
     { name = "aiohttp", marker = "extra == 'nnll-03'", specifier = ">=3.11.13" },
     { name = "aioresponses", marker = "extra == 'dev'", specifier = ">=0.7.8" },
+    { name = "diffusers", marker = "extra == 'nnll-62'", specifier = ">=0.32.2" },
     { name = "diffusers", marker = "extra == 'nnll-63'", specifier = ">=0.32.2" },
     { name = "dspy", marker = "extra == 'nnll-10'", specifier = ">=2.6.13" },
     { name = "dspy", marker = "extra == 'nnll-11'", specifier = ">=2.6.13" },
-    { name = "gguf", marker = "extra == 'nnll-05'", specifier = ">=0.14.0" },
+    { name = "gguf", marker = "extra == 'nnll-04'", specifier = ">=0.14.0" },
     { name = "hidiffusion", marker = "extra == 'nnll-56'", specifier = ">=0.1.10" },
     { name = "hidiffusion", marker = "extra == 'nnll-63'", specifier = ">=0.1.10" },
     { name = "huggingface-hub", marker = "extra == 'nnll-44'", specifier = ">=0.29.1" },
     { name = "huggingface-hub", marker = "extra == 'nnll-45'", specifier = ">=0.29.1" },
     { name = "litellm", marker = "extra == 'nnll-10'", specifier = ">=1.63.12" },
-    { name = "llama-cpp-python", marker = "extra == 'nnll-05'", specifier = ">=0.3.8" },
+    { name = "llama-cpp-python", marker = "extra == 'nnll-04'", specifier = ">=0.3.8" },
     { name = "matplotlib", marker = "extra == 'nnll-14'", specifier = ">=3.10.1" },
     { name = "networkx", marker = "extra == 'nnll-14'", specifier = ">=3.4.2" },
     { name = "nnll", extras = ["all"], marker = "extra == 'dev'" },
     { name = "nnll", extras = ["dev"], marker = "extra == 'dev'" },
-    { name = "nnll", extras = ["nnll-02"], marker = "extra == 'all'" },
+    { name = "nnll", extras = ["nnll-01"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-03"], marker = "extra == 'all'" },
-    { name = "nnll", extras = ["nnll-05"], marker = "extra == 'all'" },
+    { name = "nnll", extras = ["nnll-04"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-09"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-10"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-11"], marker = "extra == 'all'" },
@@ -1658,6 +1667,7 @@ requires-dist = [
     { name = "nnll", extras = ["nnll-49"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-56"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-57"], marker = "extra == 'all'" },
+    { name = "nnll", extras = ["nnll-62"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-63"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-64"], marker = "extra == 'all'" },
     { name = "numpy", marker = "extra == 'nnll-08'", specifier = ">=2.2.3" },
@@ -1675,9 +1685,10 @@ requires-dist = [
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.25.3" },
     { name = "pytest-tornasync", marker = "extra == 'dev'", specifier = ">=0.6.0.post2" },
     { name = "pytest-trio", marker = "extra == 'dev'", specifier = ">=0.8.0" },
-    { name = "rich", marker = "extra == 'nnll-02'", specifier = ">=13.9.4" },
+    { name = "rich", marker = "extra == 'nnll-01'", specifier = ">=13.9.4" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.7" },
     { name = "sounddevice", marker = "extra == 'nnll-10'", specifier = ">=0.5.1" },
+    { name = "structlog", marker = "extra == 'nnll-01'", specifier = ">=25.2.0" },
     { name = "textual", marker = "extra == 'nnll-10'", specifier = ">=2.1.2" },
     { name = "textual", marker = "extra == 'nnll-14'", specifier = ">=2.1.2" },
     { name = "textual-dev", marker = "extra == 'dev'", specifier = ">=1.7.0" },
@@ -1689,8 +1700,10 @@ requires-dist = [
     { name = "torch", marker = "extra == 'nnll-18'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == 'nnll-26'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == 'nnll-56'", specifier = ">=2.6.0" },
+    { name = "torch", marker = "extra == 'nnll-62'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == 'nnll-63'", specifier = ">=2.6.0" },
     { name = "torchvision", marker = "extra == 'nnll-09'", specifier = ">=0.21.0" },
+    { name = "torchvision", marker = "extra == 'nnll-62'", specifier = ">=0.21.0" },
     { name = "torchvision", marker = "extra == 'nnll-63'", specifier = ">=0.21.0" },
     { name = "tqdm", marker = "extra == 'nnll-03'", specifier = ">=4.67.1" },
     { name = "transformers", marker = "extra == 'nnll-09'", specifier = ">=4.49.0" },
@@ -2861,6 +2874,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/b4/60/76714cecb528da46bc53a0dd36d1ccef2f74ef25448b630a0a760ad07bdb/sqlalchemy-2.0.39-cp313-cp313-win32.whl", hash = "sha256:23c5aa33c01bd898f879db158537d7e7568b503b15aad60ea0c8da8109adf3e7", size = 2075315 },
     { url = "https://files.pythonhosted.org/packages/5b/7c/76828886d913700548bac5851eefa5b2c0251ebc37921fe476b93ce81b50/sqlalchemy-2.0.39-cp313-cp313-win_amd64.whl", hash = "sha256:4dabd775fd66cf17f31f8625fc0e4cfc5765f7982f94dc09b9e5868182cb71c0", size = 2099175 },
     { url = "https://files.pythonhosted.org/packages/7b/0f/d69904cb7d17e65c65713303a244ec91fd3c96677baf1d6331457fd47e16/sqlalchemy-2.0.39-py3-none-any.whl", hash = "sha256:a1c6b0a5e3e326a466d809b651c63f278b1256146a377a528b6938a279da334f", size = 1898621 },
+]
+
+[[package]]
+name = "structlog"
+version = "25.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/78/b8/d3670aec25747e32d54cd5258102ae0d69b9c61c79e7aa326be61a570d0d/structlog-25.2.0.tar.gz", hash = "sha256:d9f9776944207d1035b8b26072b9b140c63702fd7aa57c2f85d28ab701bd8e92", size = 1367438 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/51/eb/244741c1abf7b4092686db0798a4c43491298f40ddec4226f5c4f6b5d3eb/structlog-25.2.0-py3-none-any.whl", hash = "sha256:0fecea2e345d5d491b72f3db2e5fcd6393abfc8cd06a4851f21fcd4d1a99f437", size = 68448 },
 ]
 
 [[package]]

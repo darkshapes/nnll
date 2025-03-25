@@ -149,7 +149,10 @@
 # token_count = len(encoding.encode(message))
 import os
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def legible_size(num, suffix="B"):
     for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
         if abs(num) < 1024.0:
@@ -158,6 +161,7 @@ def legible_size(num, suffix="B"):
     return f"{num:.1f}Yi{suffix}"
 
 
+@debug_monitor
 def from_ollama_cache() -> dict:
     """Retrieve models from ollama server"""
     from ollama import ListResponse

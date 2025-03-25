@@ -1,21 +1,24 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-
+# pylint: disable=import-outside-toplevel
 # import os
+from typing import Any
 
 
-def run_inference():
+def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
+    """Create diffusion process"""
     import nnll_59 as disk
     from nnll_61 import HyperChain
     from nnll_62 import ConstructPipeline
     import nnll_63 as techniques
     from nnll_08 import soft_random, seed_planter
     from PIL import PngImagePlugin
+    from nnll_16 import first_available
 
     noise_seed = soft_random()
     seed_planter(noise_seed)
-    user_set = {
+    user_set = {  # needs to be abstracted out still
         "output_type": "pil",
         "noise_seed": noise_seed,
         "denoising_end": 1.5,
@@ -27,20 +30,25 @@ def run_inference():
         "safety_checker": False,
     }
     model_hash = {}
-    active_gpu = "mps"
+    active_gpu = first_available()
 
     prompt = "aquatic scene, sunken ship, ocean divers, coral, exotic fish"
-    # negative_prompt = ""
-    model = "lumina-2"
-    # lora = "slam"
+    negative_prompt = ""
+    lora = lora_opt
     # optimization = "ays"
-    # factory.add_lora("", "", pipe)
 
     data_chain = HyperChain()
     factory = ConstructPipeline()
-    pipe, model, kwargs = factory.create_pipeline("lumina-2")
+    pipe, model, kwargs = factory.create_pipeline(mir_arch)
+
+    if lora:
+        pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe)
+
     pipe.prompt = prompt
+    if negative_prompt:
+        pipe.prompt += negative_prompt
     pipe.to(active_gpu)
+
     pipe = techniques.add_generator(pipe, noise_seed=user_set.get("noise_seed", 0))
 
     # generator

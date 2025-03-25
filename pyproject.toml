@@ -26,9 +26,8 @@ keywords = [
     "torch",
 ]
 
-dependencies = []
+dependencies = ["rich>=13.9.4", "structlog>=25.2.0"]
 [project.optional-dependencies]
-nnll-01 = ["rich>=13.9.4"]
 nnll-03 = ["aiofiles>=24.1.0", "aiohttp>=3.11.13", "tqdm>=4.67.1"]
 nnll-04 = ["gguf>=0.14.0", "llama-cpp-python>=0.3.8"]
 nnll-08 = ["numpy>=2.2.3", "torch>=2.6.0"]
@@ -64,17 +63,17 @@ nnll-63 = [
 ]
 nnll-64 = ["pillow>=11.1.0"]
 all = [
-    "nnll[nnll_01]",
     "nnll[nnll_03]",
     "nnll[nnll_04]",
+    "nnll[nnll_08]",
     "nnll[nnll_09]",
     "nnll[nnll_10]",
     "nnll[nnll_11]",
     "nnll[nnll_14]",
     "nnll[nnll_15]",
     "nnll[nnll_16]",
-    "nnll[nnll_26]",
     "nnll[nnll_18]",
+    "nnll[nnll_26]",
     "nnll[nnll_44]",
     "nnll[nnll_45]",
     "nnll[nnll_47]",

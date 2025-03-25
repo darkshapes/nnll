@@ -1,16 +1,20 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-# pylint: disable=import-outside-toplevel
+# pylint: disable=import-outside-toplevel,unused-variable, assignment-from-no-return
+# ruff: noqa: F841
 
-from typing import Callable, Tuple
+import os
+from typing import Any, Callable, Tuple
 
-error_dict = "No Errors"
+from nnll_01 import debug_message, debug_monitor
+from nnll_01 import info_message as nfo
 
 
+@debug_monitor
 async def retry(max_retries: int, delay_seconds: int, operation: Callable, exception_type: Exception) -> Callable:
     """
-    Loop from 0 to `max_retries`\n
+    Loop a routine from 0 to `max_retries` and catch exceptions in advance\n
     :param max_retries: The amount of times to attempt the operation
     :param delay_seconds: The delay between attempts
     :param operation: The function/method to attempt
@@ -18,62 +22,72 @@ async def retry(max_retries: int, delay_seconds: int, operation: Callable, excep
     :return: The awaited result of operation()
     """
     import asyncio
-    # import json
 
     for retries in range(max_retries + 1):
         try:
             return await operation()
-        except exception_type:  # as error_log:
+        except exception_type as error_log:
             if retries < max_retries:
-                # error_dict = f"Operation failed (retry {retries + 1}/{max_retries})"
-                # json_log = json.dumps(str(error_log))
-                # await async_save_file(f"error_log{operation}.json", json_log)
+                debug_message(f"Operation failed (retry {retries + 1}/{max_retries}", tb=error_log.__traceback__)
                 await asyncio.sleep(delay_seconds)
                 retries += 1
             else:
-                # error_dict = f"Operation failed after {max_retries} retries"
-                # json_log = json.dumps(str(error_log))
-                # await async_save_file(f"error_log{operation}.json", json_log)
+                debug_message(f"Operation failed after {max_retries}) retries.", tb=error_log.__traceback__)
                 raise
 
 
-async def async_remote_transfer(session, remote_file_path: str):
-    """Request .pdb file from AlphaFold server.
-    Ensure the download folder exists (will be rewritten)."""
+@debug_monitor
+async def async_remote_transfer(session, remote_file_path: str) -> Any:
+    """Request a file from a server.  Ensure empty download location exists in advance\n
+    :param session: Current asynchronous session
+    :param remote_file_path: Full URL to the file
+    :return: The downloaded file from `response`"""
+
     # import json
     import aiohttp
 
-    # error_dict = f"Downloading PDB file from: {remote_file_path}"
+    nfo(f"Downloading PDB file from: {remote_file_path}")
 
     try:
         async with await session.get(remote_file_path) as response:
             response.raise_for_status()
             return await response.read()
-    except aiohttp.client_exceptions.ClientConnectionError:  # as error_log:
-        pass
-        # error_dict = f"Connection error"
-        # json_log = json.dumps(str(error_log))
-        # await async_save_file(f"error_log{remote_file_path}.json", json_log)
-    except RuntimeError:  # as error_log:
-        pass
-        # error_dict = f"Failed to download, Session Error"
-        # json_log = json.dumps(str(error_log))
-        # async_save_file(f"error_log{remote_file_path}.json", json_log)
+    except aiohttp.client_exceptions.ClientConnectionError as error_log:
+        debug_message(f"Connection error.{error_log}", tb=error_log.__traceback__)
+
+    except RuntimeError as error_log:
+        debug_message(f"Failed to download, Session Error. {error_log}", tb=error_log.__traceback__)
 
 
-async def async_save_file(save_file_path_absolute, file_content, mode=None):
+@debug_monitor
+async def async_save_file(save_file_path_absolute: str, file_content: Any, mode=None) -> None:
+    """
+    Write a file to disk while keeping asynchronicity\n
+    :param save_file_path_absolute: Location to save the file
+    :param file_content: The data to store in the file
+    :param mode: File write method (default: `w` or `wb` by `content type`)
+    :return: None
+    """
     from aiofiles import open as async_open
 
-    # error_dict = f"Saving file: {save_file_path_absolute}"
-    mode = "wb" if isinstance(file_content, bytes) else "w"
+    nfo(f"Saving file: {save_file_path_absolute}")
+    if mode is None:
+        mode = "wb" if isinstance(file_content, bytes) else "w"
     file_obj = await async_open(save_file_path_absolute, mode)
     await file_obj.write(file_content)
     await file_obj.close()
 
 
+@debug_monitor
 async def prepare_download(file_prefix: str, file_suffix: str, remote_url: str, local_download_folder: str) -> Tuple[str]:
-    """Prepare download paths for retrieval"""
-    import os
+    """
+    Construct paths and URL locations\n
+    :param file_prefix: The head of the file name
+    :param file_suffix: The extension of the file name
+    :param remote_url: Remote location of file
+    :param local_download_folder: Relative or absolute target folder
+    :return: The absolute paths of local and remote endpoints
+    """
 
     file_name = f"{file_prefix}{file_suffix}"
     remote_file_name = f"{remote_url}{file_name}"
@@ -82,8 +96,13 @@ async def prepare_download(file_prefix: str, file_suffix: str, remote_url: str, 
     return remote_file_name, save_file_path_absolute
 
 
+@debug_monitor
 async def gather_text_lines_from(file_path_absolute: str) -> list:
-    """synchronously read lines from a text file using aiofiles as async_open"""
+    """
+    Asynchronously read lines from a text file using aiofiles as async_ope\n
+    :param gather_text_lines_from: A file with a linebreak-separated list of file basenames
+    :return: A iterator object from the text lines
+    """
     from aiofiles import open as async_open
 
     async with async_open(file_path_absolute, "r") as file_contents:
@@ -91,18 +110,21 @@ async def gather_text_lines_from(file_path_absolute: str) -> list:
     return text_lines
 
 
-async def async_download_session(remote_url, save_file_path_absolute):
+@debug_monitor
+async def async_download_session(remote_url: str, save_file_path_absolute: str) -> None:
     """
     Create an async task for heavy downloading procedures
-    Await and use lambda to give retry something callable
+    Await and use lambda to give retry something callable\n
+    :param remote_url: Remote location of file_content
+    :param save_file_path_absolute: Local path to save file atan
+    :return: None
     """
-    tasks = []
-
     import asyncio
-    import aiohttp
 
-    # import json
+    import aiohttp
     import requests
+
+    tasks = []
 
     async with aiohttp.ClientSession() as session:
         try:
@@ -111,15 +133,13 @@ async def async_download_session(remote_url, save_file_path_absolute):
             save_task = asyncio.create_task(retry(3, 1, lambda: async_save_file(save_file_path_absolute, file_content), OSError))
             tasks.append(save_task)
 
-        except aiohttp.ClientError:  # as error_log:
-            pass
-            # error_dict = "Error occurred during request"
-            # json_log = json.dumps(str(error_log))
-            # async_save_file(f"error_log{remote_url}.json", json_log)
+        except aiohttp.ClientError as error_log:
+            debug_message(f"Error occurred during request. {error_log}", tb=error_log.__traceback__)
         else:
             await asyncio.gather(*tasks)
 
 
+@debug_monitor
 async def bulk_download(
     remote_file_segments: str,
     remote_url: str,
@@ -133,12 +153,12 @@ async def bulk_download(
     :param file_suffix: Extension for the files
     :return: None
     """
-    from nnll_27 import pretty_tabled_output
     from tqdm.auto import tqdm
+
+    from nnll_27 import pretty_tabled_output
 
     url_segments = await gather_text_lines_from(remote_file_segments)
     for file_prefix in tqdm(url_segments, total=len(url_segments), position=0, leave=True):
-        # error_dict = "No Errors"
         remote_path, save_file_path_absolute = await prepare_download(file_prefix, file_suffix, remote_url, local_download_folder)
         pretty_tabled_output({"title": file_prefix}, {"url": remote_path}, 30)
         await async_download_session(remote_path, save_file_path_absolute)

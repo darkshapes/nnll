@@ -3,7 +3,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def soft_random(size: int = 0x2540BE3FF) -> int:
     """
     Generate a deterministic random number using philox\n
@@ -20,7 +23,8 @@ def soft_random(size: int = 0x2540BE3FF) -> int:
     return int(rndmc.integers(0, size))
 
 
-def seed_planter(seed, deterministic=True):
+@debug_monitor
+def seed_planter(seed, deterministic=True) -> int:
     from numpy import random
     import torch
 
@@ -36,6 +40,7 @@ def seed_planter(seed, deterministic=True):
         return torch.xpu.manual_seed(seed)
 
 
+@debug_monitor
 def hard_random(hardness: int = 5) -> int:
     """
     Generate a cryptographically secure random number\n

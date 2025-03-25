@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev201+g341e3cf.d20250322
+Version: 0.1.dev205+gb539702.d20250324
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -16,15 +16,16 @@ Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Provides-Extra: nnll-02
-Requires-Dist: rich>=13.9.4; extra == "nnll-02"
+Provides-Extra: nnll-01
+Requires-Dist: rich>=13.9.4; extra == "nnll-01"
+Requires-Dist: structlog>=25.2.0; extra == "nnll-01"
 Provides-Extra: nnll-03
 Requires-Dist: aiofiles>=24.1.0; extra == "nnll-03"
 Requires-Dist: aiohttp>=3.11.13; extra == "nnll-03"
 Requires-Dist: tqdm>=4.67.1; extra == "nnll-03"
-Provides-Extra: nnll-05
-Requires-Dist: gguf>=0.14.0; extra == "nnll-05"
-Requires-Dist: llama-cpp-python>=0.3.8; extra == "nnll-05"
+Provides-Extra: nnll-04
+Requires-Dist: gguf>=0.14.0; extra == "nnll-04"
+Requires-Dist: llama-cpp-python>=0.3.8; extra == "nnll-04"
 Provides-Extra: nnll-08
 Requires-Dist: numpy>=2.2.3; extra == "nnll-08"
 Requires-Dist: torch>=2.6.0; extra == "nnll-08"
@@ -72,6 +73,10 @@ Requires-Dist: hidiffusion>=0.1.10; extra == "nnll-56"
 Requires-Dist: torch>=2.6.0; extra == "nnll-56"
 Provides-Extra: nnll-57
 Requires-Dist: pillow>=11.1.0; extra == "nnll-57"
+Provides-Extra: nnll-62
+Requires-Dist: diffusers>=0.32.2; extra == "nnll-62"
+Requires-Dist: torch>=2.6.0; extra == "nnll-62"
+Requires-Dist: torchvision>=0.21.0; extra == "nnll-62"
 Provides-Extra: nnll-63
 Requires-Dist: diffusers>=0.32.2; extra == "nnll-63"
 Requires-Dist: hidiffusion>=0.1.10; extra == "nnll-63"
@@ -80,9 +85,9 @@ Requires-Dist: torchvision>=0.21.0; extra == "nnll-63"
 Provides-Extra: nnll-64
 Requires-Dist: pillow>=11.1.0; extra == "nnll-64"
 Provides-Extra: all
-Requires-Dist: nnll[nnll_02]; extra == "all"
+Requires-Dist: nnll[nnll_01]; extra == "all"
 Requires-Dist: nnll[nnll_03]; extra == "all"
-Requires-Dist: nnll[nnll_05]; extra == "all"
+Requires-Dist: nnll[nnll_04]; extra == "all"
 Requires-Dist: nnll[nnll_09]; extra == "all"
 Requires-Dist: nnll[nnll_10]; extra == "all"
 Requires-Dist: nnll[nnll_11]; extra == "all"
@@ -98,6 +103,7 @@ Requires-Dist: nnll[nnll_48]; extra == "all"
 Requires-Dist: nnll[nnll_49]; extra == "all"
 Requires-Dist: nnll[nnll_56]; extra == "all"
 Requires-Dist: nnll[nnll_57]; extra == "all"
+Requires-Dist: nnll[nnll_62]; extra == "all"
 Requires-Dist: nnll[nnll_63]; extra == "all"
 Requires-Dist: nnll[nnll_64]; extra == "all"
 Provides-Extra: dev

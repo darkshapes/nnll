@@ -6,6 +6,7 @@ from textual import work
 # from textual.binding import Binding
 from textual.reactive import reactive
 from textual.widgets import TextArea
+from nnll_01 import debug_monitor
 from nnll_10.package.chat_machine import chat_machine
 
 
@@ -20,6 +21,7 @@ class ResponsePanel(TextArea):
         self.read_only = True
         self.soft_wrap = True
 
+    @debug_monitor
     @work(group="chat")
     async def generate_response(self, model, message):
         """Fill display with generated content"""

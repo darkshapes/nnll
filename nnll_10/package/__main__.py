@@ -8,6 +8,7 @@ from textual.app import App
 from textual.binding import Binding
 from textual.reactive import reactive
 
+from nnll_01 import debug_monitor
 from nnll_10.package.main_screen import MainScreen  # pylint: disable=import-error
 # from theme import fluoresce_theme
 
@@ -28,6 +29,7 @@ class Combo(App):
         self.supports_smooth_scrolling = True
         self.theme = "flexoki"
 
+    @debug_monitor
     @work(exit_on_error=True)
     async def _on_key(self, event: events.Key):
         """Window for triggering key bindings"""

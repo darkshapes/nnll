@@ -4,14 +4,18 @@
 import dspy
 from pydantic import BaseModel
 
+from nnll_01 import debug_monitor
+
 
 class ChatWithListMemory(dspy.Module):
+    @debug_monitor
     def __init__(self, memory_size=5):
         super().__init__()
         self.memory = []
         self.memory_size = memory_size
         self.chat_instance = dspy.Predict("message, history -> answer")
 
+    @debug_monitor
     def forward(self, message: str):
         self.memory.append(message)
         if len(self.memory) > self.memory_size:
@@ -44,24 +48,29 @@ class dspyConstructor(BaseModel):
     generator: dspy.asyncify = None
     streaminator: dspy.asyncify = None
 
+    @debug_monitor
     async def link_model(self, model: str, api_base: str, **kwargs):
         """Set model for inference"""
         self.active_model = dspy.LM(api_base=api_base, model=model, **kwargs)
         dspy.settings.configure(lm=self.active_model, async_max_workers=4)
 
+    @debug_monitor
     async def load_ollama(self, model: str):
         """Ollama specific implementation"""
         await self.link_model(model, "http://localhost:11434/api/chat")
 
+    @debug_monitor
     async def load_lmstudio(self, model: str):
         """Lmstudio specific implementation"""
         await self.link_model(model, "http://localhost:1234/v1", api_key="lm-studio")
 
+    @debug_monitor
     async def initialize_generator(self, component: dspy.Signature):
         """Add generator with inference type"""
         self.generator = dspy.asyncify(dspy.Predict(component))
         self.streaminator = dspy.streamify(self.generator)
 
+    @debug_monitor
     async def respond_to(self, message: str):
         """Create a chat response from user message"""
         async for chunk in self.streaminator(question=message, stream=True):

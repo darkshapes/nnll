@@ -11,6 +11,7 @@ from textual.containers import Horizontal, Container
 from textual.screen import Screen
 from textual.widgets import Footer, Static
 
+from nnll_01 import debug_monitor
 from nnll_10.package.fold import Fold  # pylint: disable=import-error
 
 
@@ -31,6 +32,7 @@ class MainScreen(Screen):
             yield Fold(id="centre-frame")
             yield ResponsiveRightBottom(id="right-frame")
 
+    @debug_monitor
     @work(exit_on_error=False)
     async def on_resize(self, event=events.Resize):
         """Fit shape to screen"""
