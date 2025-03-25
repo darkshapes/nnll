@@ -4,17 +4,22 @@
 # pylint: disable=import-outside-toplevel
 
 
+from nnll_01 import debug_monitor
+
+
 class ValueComparison:
     """
     Loop individual comparisons as situationally required
     """
 
+    @debug_monitor
     def __init__(self):
         from nnll_25 import ExtractAndMatchMetadata
 
         self.extract = ExtractAndMatchMetadata()
         self.is_identical = False
 
+    @debug_monitor
     def check_inner_values(self, pattern_details: dict, tensor_dimension: dict, attributes: dict | None = None) -> bool:
         from nnll_44 import compute_hash_for
 
@@ -39,6 +44,7 @@ class ValueComparison:
             self.is_identical = all(self.extract.is_pattern_in_layer(pattern_details[k], v) for k, v in tensor_dimensions.items())
         return self.is_identical
 
+    @debug_monitor
     def check_model_identity(self, pattern_details: dict, unpacked_metadata: dict, attributes: dict | None = None) -> bool:
         """
         Iteratively structure unpacked metadata into reference pattern, then feed a equivalence check.\n

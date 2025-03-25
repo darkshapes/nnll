@@ -3,7 +3,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def read_state_dict_headers(folder_path_named: str = ".", save_location: str = ".") -> None:
     """
     Output the full state dict from a model's header to the console and a JSON file.\n
@@ -12,22 +15,20 @@ def read_state_dict_headers(folder_path_named: str = ".", save_location: str = "
     :return: `None`
     """
     from nnll_30 import write_json_file
-    from nnll_32 import coordinate_header_tools
+    from nnll_04 import ModelTool
     from pathlib import Path
     import os
 
+    model_tool = ModelTool()
     if folder_path_named is not None:
         for file_name in os.listdir(folder_path_named):
-            # if file_name
             file = os.path.join(folder_path_named, file_name)
-            extension = Path(file_name).suffix
-            header_method = coordinate_header_tools(file, extension)
-            if header_method is not None:
-                virtual_data_00 = header_method(file)
-                if virtual_data_00 is not None:
-                    write_json_file(save_location, f"{file_name}.json", virtual_data_00)
+            virtual_data_00 = model_tool.read_metadata_from(file)
+            if virtual_data_00 is not None:
+                write_json_file(save_location, f"{file_name}.json", virtual_data_00)
 
 
+@debug_monitor
 def main():
     """Parse arguments to feed to dict header reader"""
     import argparse

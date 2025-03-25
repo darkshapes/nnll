@@ -2,16 +2,11 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
+from nnll_01 import debug_monitor
 from nnll_44 import collect_hashes
 
 
-# def add_to_undo(**kwargs):
-#     if not undo:
-#         undo = [kwargs]
-#     else:
-#         undo.extend([4, 5, 6])
-
-
+@debug_monitor
 def add_to_metadata(pipe, model, prompt, kwargs, negative_prompt=None):
     model_data = {}
 

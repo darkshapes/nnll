@@ -3,8 +3,14 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def add_hi_diffusion(pipe, kwargs):
+    """Apply support for up to 4096 generation without upscaling
+    compatibility: stable-diffusion-xl, stable-diffusion, stable-diffusion-2
+    """
     from hidiffusion import apply_hidiffusion
 
     apply_hidiffusion(pipe)
@@ -12,7 +18,11 @@ def add_hi_diffusion(pipe, kwargs):
     return pipe, kwargs
 
 
+@debug_monitor
 def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
+    """Apply AlignYourSteps optimization
+    compatibility: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
+    """
     from diffusers.schedulers.scheduling_utils import AysSchedules
 
     # pipe, kwargs = solvers.dpmpp(pipe, kwargs, order=2)
@@ -27,6 +37,7 @@ def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
     return pipe, kwargs
 
 
+@debug_monitor
 def add_generator(pipe, noise_seed: int = 0):
     """Create a generator object ready to receive seeds"""
 
@@ -36,7 +47,11 @@ def add_generator(pipe, noise_seed: int = 0):
     return pipe
 
 
+@debug_monitor
 def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False):
+    """
+    Compile torch processes for speed
+    """
     import torch
 
     if transformer:
@@ -46,3 +61,11 @@ def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool 
     if vae:
         pipe.vae = torch.compile(pipe.vae, mode="reduce-overhead", fullgraph=True)
     return pipe
+
+
+@debug_monitor
+def get_func_name() -> str:
+    """Return the name of the calling function for self-identification or diagnostic purposes"""
+    from inspect import currentframe
+
+    return currentframe().f_back.f_code.co_name

@@ -3,7 +3,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def trace_file_structure(walk_path: str, indicator=r".*nnll.*") -> list:
     """
     Find all module based on local file/folder structure\n

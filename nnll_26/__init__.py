@@ -3,7 +3,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def random_int_from_gpu(input_seed: int = None) -> int:
     """
     Generate a random number via pytorch
@@ -15,6 +18,7 @@ def random_int_from_gpu(input_seed: int = None) -> int:
     return torch.random.seed() if input_seed is None else torch.random.manual_seed(input_seed)
 
 
+@debug_monitor
 def random_tensor_from_gpu(device: str = "cpu", input_seed: int = None):
     """
     Create a random tensor shape (for testing or other purposes)\n

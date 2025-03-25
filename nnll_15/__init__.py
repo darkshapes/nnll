@@ -5,10 +5,11 @@
 
 # pylint: disable=line-too-long, import-outside-toplevel
 
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Tuple
 from pydantic import BaseModel, computed_field
 
-from nnll_01 import debug_monitor
+from nnll_01 import debug_message, debug_monitor
+
 # import open_webui
 # from package import response_panel
 
@@ -36,7 +37,7 @@ class RegistryEntry(BaseModel):
     @computed_field
     @property
     def available_tasks(self) -> List[Tuple]:
-        """Filter tag tasks into edge coordinates"""
+        """Filter tag tasks into edge coordinates for graphing"""
         import re
 
         default_task = None
@@ -64,49 +65,34 @@ class RegistryEntry(BaseModel):
 
 
 @debug_monitor
-def sort_dates_by_age(date_strings):
-    """Parses datetime objects from strings and returns a list of dates sorted by age."""
-
-    from datetime import datetime
-
-    dates = []
-    for date_string in date_strings:
-        try:
-            # Attempt to parse the datetime string
-            date_object = datetime.strptime(date_string, "%Y, %m, %d, %H, %M, %S, %f")
-            dates.append(date_object)
-        except ValueError:
-            print(f"Invalid date format: {date_string}")
-            continue
-    # Sort dates in ascending order (oldest to newest)
-    return dates
-
-
-@debug_monitor
-def _extract_model_info(source: str, model_data: dict = None) -> Dict[str, Any]:
-    """Helper function to extract common model information."""
+def _extract_model_info(source: str, model_data: dict = None) -> RegistryEntry:
+    """
+    Helper function to extract common model information.\n
+    :param source: Origin of this data (eg: HuggingFace, Ollama, ModelScope)
+    :param model_data: Metadata of the local cache library of `source`
+    :return: A class object containing model metadata relevant to execution
+    """
     cache_dir = []
     cache_sizes = []
-    model_tags = []
     timestamp = []
-    models = []
+    model_tags = []
 
     if source == "ollama":
         cache_dir = [f"ollama_chat/{model.model}" for model in model_data.models]
         cache_sizes = [model.size.real for model in model_data.models]
-        model_tags = [[model.details.family] for model in model_data.models]
         timestamp = [int(model.modified_at.timestamp()) for model in model_data.models]
+        model_tags = [[model.details.family] for model in model_data.models]
 
     elif source == "hub":
         from huggingface_hub import repocard
 
         cache_dir = [obj.repo_id for obj in model_data.repos]
         cache_sizes = [obj.size_on_disk for obj in model_data.repos]
-        metadata = [repocard.RepoCard.load(repo_name.repo_id) for repo_name in model_data.repos]
-        repo_details = [obj.data for obj in metadata]
         timestamp = [int(obj.last_modified) for obj in model_data.repos]
 
-        for obj in repo_details:
+        metadata = [repocard.RepoCard.load(repo_name.repo_id) for repo_name in model_data.repos]
+        repo_details = [obj.data for obj in metadata]
+        for obj in repo_details:  # retrieve model types from repocard tags
             current_tag = []
             if hasattr(obj, "tags"):
                 current_tag.extend([*obj.tags])
@@ -115,16 +101,17 @@ def _extract_model_info(source: str, model_data: dict = None) -> Dict[str, Any]:
             model_tags.append(current_tag if current_tag else ["unknown"])
 
     else:
+        debug_message(f"Unsupported source: {source}")
         raise ValueError(f"Unsupported source: {source}")
 
+    models = []
     for model, size, tasks, ts in zip(cache_dir, cache_sizes, model_tags, timestamp):
         entry = RegistryEntry(model=model, size=size, tags=tasks, library=source, timestamp=ts)
         if getattr(entry, "available_tasks", []) != [("default_task:", None)]:
             models.append(entry)
 
-    # print(models)
+    debug_message(models)
     models.sort(key=lambda x: x.timestamp, reverse=True)
-    # models.sort(key=lambda x: x[2])  # Sort by timestamp
     return models
 
 
@@ -144,14 +131,3 @@ def from_hf_hub_cache() -> Dict[str, RegistryEntry]:
 
     model_data = scan_cache_dir()
     return _extract_model_info("hub", model_data)
-
-
-# def from_lms_cache() -> Dict[str, RegistryEntry]:
-#     """Retrieve models from local lmstudio cache."""
-
-#     import lmstudio as lms
-
-#     lms_client = lms.get_default_client()
-#     lms_client.api_host = "localhost:1143"
-#     model_data = lms.list_downloaded_models()
-#     return _extract_model_info("lms", model_data)

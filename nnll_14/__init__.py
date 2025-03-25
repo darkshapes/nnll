@@ -19,12 +19,11 @@ def build_conversion_graph():
 
 
 @debug_monitor
-def assign_edge_attributes():
+def assign_edge_attributes(nx_graph):
     """Build graph and assign edge attributes to it"""
     import os
     from nnll_15 import from_ollama_cache, from_hf_hub_cache
 
-    nx_graph = build_conversion_graph()
     ollama_models = from_ollama_cache()
     hub_models = from_hf_hub_cache()
     for model in ollama_models:

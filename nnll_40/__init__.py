@@ -5,6 +5,10 @@
 # pylint: disable=import-outside-toplevel
 
 # parse metadata into tag?
+from nnll_01 import debug_monitor
+
+
+@debug_monitor
 def create_model_tag(pulled_keys: dict) -> dict:
     from nnll_07 import Domain, Architecture, Component
 

@@ -26,13 +26,15 @@ keywords = [
     "torch",
 ]
 
-dependencies = ["rich>=13.9.4", "structlog>=25.2.0"]
+dependencies = [
+    "structlog>=25.2.0",
+    "viztracer>=1.0.3",
+]
 [project.optional-dependencies]
-nnll-03 = ["aiofiles>=24.1.0", "aiohttp>=3.11.13", "tqdm>=4.67.1"]
-nnll-04 = ["gguf>=0.14.0", "llama-cpp-python>=0.3.8"]
 nnll-08 = ["numpy>=2.2.3", "torch>=2.6.0"]
-nnll-09 = ["torch>=2.6.0", "torchvision>=0.21.0", "transformers>=4.49.0"]
+nnll-09 = ["torch>=2.6.0", "transformers>=4.49.0"]
 nnll-10 = [
+    "rich>=13.9.4",
     "dspy>=2.6.13",
     "litellm>=1.63.12",
     "sounddevice>=0.5.1",
@@ -43,7 +45,7 @@ nnll-10 = [
 ]
 nnll-11 = ["dspy>=2.6.13", "pydantic>=2.10.6"]
 nnll-14 = ["matplotlib>=3.10.1", "networkx>=3.4.2", "textual>=2.1.2"]
-nnll-15 = ["pydantic>=2.10.6"]
+nnll-15 = ["huggingface-hub>=0.29.1", "ollama>=0.4.7", "pydantic>=2.10.6"]
 nnll-16 = ["torch>=2.6.0"]
 nnll-18 = ["torch>=2.6.0"]
 nnll-26 = ["torch>=2.6.0"]
@@ -52,19 +54,10 @@ nnll-45 = ["huggingface-hub>=0.29.1"]
 nnll-47 = ["pydantic>=2.10.6", "pydantic-core>=2.27.2"]
 nnll-48 = ["pillow>=11.1.0", "toml>=0.10.2"]
 nnll-49 = ["pydantic>=2.10.6"]
-nnll-56 = ["hidiffusion>=0.1.10", "torch>=2.6.0"]
-nnll-57 = ["pillow>=11.1.0"]
+nnll-56 = ["hidiffusion>=0.1.10", "torch>=2.6.0", "torchvision>=0.21.0"]
 nnll-62 = ["diffusers>=0.32.2", "torch>=2.6.0", "torchvision>=0.21.0"]
-nnll-63 = [
-    "diffusers>=0.32.2",
-    "hidiffusion>=0.1.10",
-    "torch>=2.6.0",
-    "torchvision>=0.21.0",
-]
 nnll-64 = ["pillow>=11.1.0"]
 all = [
-    "nnll[nnll_03]",
-    "nnll[nnll_04]",
     "nnll[nnll_08]",
     "nnll[nnll_09]",
     "nnll[nnll_10]",
@@ -82,7 +75,6 @@ all = [
     "nnll[nnll_56]",
     "nnll[nnll_57]",
     "nnll[nnll_62]",
-    "nnll[nnll_63]",
     "nnll[nnll_64]",
 ]
 dev = [
@@ -96,7 +88,6 @@ dev = [
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
 ]
-
 
 [project.scripts]
 nnll-find  = "nnll_31:find_entry"
@@ -139,3 +130,7 @@ ignore-overlong-task-comments = true
 
 [tool.typos]
 files.extend-exclude = ["^tests/.*$", "test.*$"]
+nnll-03              = ["aiofiles>=24.1.0", "aiohttp>=3.11.13", "tqdm>=4.67.1"]
+nnll-04              = ["gguf>=0.14.0", "llama-cpp-python>=0.3.8"]
+nnll-08              = ["numpy>=2.2.3", "torch>=2.6.0"]
+nnll-09              = ["torch>=2.6.0", "torchvision>=0.21.0", "transformers>=4.49.0"]

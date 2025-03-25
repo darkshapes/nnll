@@ -5,8 +5,11 @@
 from math import isclose
 import re
 
+from nnll_01 import debug_monitor
+
 
 class ExtractAndMatchMetadata:
+    @debug_monitor
     def is_pattern_in_layer(self, block_pattern: list | str, layer_element: list) -> bool:
         """
         Match a string, int or regex pattern to metadata (specifically state dict layers)\n

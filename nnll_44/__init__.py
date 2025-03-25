@@ -3,7 +3,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def retrieve_remote_hash(repo_id: str, file_path_absolute: str):
     """Return the hash value of a file from HF"""
 
@@ -14,6 +17,7 @@ def retrieve_remote_hash(repo_id: str, file_path_absolute: str):
     return metadata.etag
 
 
+@debug_monitor
 def compute_hash_for(file_path_named: str) -> str:
     """
     Compute and return the SHA256 hash of a given file.\n
@@ -34,6 +38,7 @@ def compute_hash_for(file_path_named: str) -> str:
             return hashlib.sha256(file_to_hash.read()).hexdigest()
 
 
+@debug_monitor
 def collect_hashes(hash_dict):
     """Arrange files for hash retrieval"""
 

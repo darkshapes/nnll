@@ -65,3 +65,5 @@ modules/nnll_35/__pycache__/test_src.cpython-312.pyc
 modules/nnll_38/__pycache__/test_src.cpython-312-pytest-8.3.3.pyc
 log/
 tests/log
+.env
+result.json

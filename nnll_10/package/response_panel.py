@@ -6,22 +6,26 @@ from textual import work
 # from textual.binding import Binding
 from textual.reactive import reactive
 from textual.widgets import TextArea
-from nnll_01 import debug_monitor
+
+# from nnll_01 import debug_monitor
 from nnll_10.package.chat_machine import chat_machine
+from nnll_14 import build_conversion_graph, assign_edge_attributes
 
 
 class ResponsePanel(TextArea):
     """Machine response field"""
 
+    nx_graph = None
     prefix: str = "ollama_chat/"
     is_generating: reactive[bool] = reactive(False)
 
     def on_mount(self):
+        nx_graph = build_conversion_graph()
+        self.nx_graph = assign_edge_attributes(nx_graph)
         self.language = "markdown"
         self.read_only = True
         self.soft_wrap = True
 
-    @debug_monitor
     @work(group="chat")
     async def generate_response(self, model, message):
         """Fill display with generated content"""
@@ -31,6 +35,7 @@ class ResponsePanel(TextArea):
         self.insert("\n---\n")
         model = f"{self.prefix}{model}"
         self.move_cursor(self.document.end, center=True)
+        # run graph path routine here
         try:
             async for chunk in chat_machine(model, message):
                 self.insert(chunk)

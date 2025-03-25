@@ -3,7 +3,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def wipe_printer(*formatted_data: dict) -> None:
     """
     Print data sp that it replaces itself in the console buffer\n
@@ -20,6 +23,7 @@ def wipe_printer(*formatted_data: dict) -> None:
     stdout.flush()  # Empty output buffer to ensure the changes are shown
 
 
+@debug_monitor
 def pretty_tabled_output(table_title: str, aggregate_data: dict, width: int = 18) -> None:
     """
     Pretty print data in column format\n
