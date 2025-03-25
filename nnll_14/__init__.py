@@ -3,6 +3,8 @@
 
 # pylint: disable=import-outside-toplevel
 
+from typing import Dict
+import networkx as nx
 from nnll_01 import debug_monitor
 
 
@@ -32,3 +34,10 @@ def assign_edge_attributes(nx_graph):
     for model in hub_models:
         nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
     return nx_graph
+
+
+@debug_monitor
+def path_objective(nx_graph: nx.Graph, source: str, target: str) -> Dict:
+    import networkx as nx
+
+    path = nx.bidirectional_shortest_path(nx_graph, source, target)

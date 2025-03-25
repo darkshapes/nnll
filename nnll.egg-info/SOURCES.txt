@@ -67,7 +67,11 @@ nnll_56/__init__.py
 nnll_59/__init__.py
 nnll_60/__init__.py
 nnll_60/config/config.json
+nnll_60/config/filter.json
+nnll_60/config/huggingface.json
 nnll_60/config/hyperchain.json
+nnll_60/config/mir.json
+nnll_60/config/precisions.json
 nnll_61/__init__.py
 nnll_62/__init__.py
 nnll_62/sd_xl_base.yaml

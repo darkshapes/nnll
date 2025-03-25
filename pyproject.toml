@@ -26,11 +26,9 @@ keywords = [
     "torch",
 ]
 
-dependencies = [
-    "structlog>=25.2.0",
-    "viztracer>=1.0.3",
-]
+dependencies = ["structlog>=25.2.0", "viztracer>=1.0.3"]
 [project.optional-dependencies]
+nnll-04 = ["gguf>=0.14.0", "llama-cpp-python>=0.3.8"]
 nnll-08 = ["numpy>=2.2.3", "torch>=2.6.0"]
 nnll-09 = ["torch>=2.6.0", "transformers>=4.49.0"]
 nnll-10 = [
@@ -49,6 +47,7 @@ nnll-15 = ["huggingface-hub>=0.29.1", "ollama>=0.4.7", "pydantic>=2.10.6"]
 nnll-16 = ["torch>=2.6.0"]
 nnll-18 = ["torch>=2.6.0"]
 nnll-26 = ["torch>=2.6.0"]
+nnll-36 = ["torch>=2.6.0"]
 nnll-44 = ["huggingface-hub>=0.29.1"]
 nnll-45 = ["huggingface-hub>=0.29.1"]
 nnll-47 = ["pydantic>=2.10.6", "pydantic-core>=2.27.2"]
@@ -88,6 +87,7 @@ dev = [
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
 ]
+
 
 [project.scripts]
 nnll-find  = "nnll_31:find_entry"

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev206+g161c1c5.d20250325
+Version: 0.1.dev213+g9b384d9.d20250325
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -50,6 +50,8 @@ Provides-Extra: nnll-18
 Requires-Dist: torch>=2.6.0; extra == "nnll-18"
 Provides-Extra: nnll-26
 Requires-Dist: torch>=2.6.0; extra == "nnll-26"
+Provides-Extra: nnll-36
+Requires-Dist: torch>=2.6.0; extra == "nnll-36"
 Provides-Extra: nnll-44
 Requires-Dist: huggingface-hub>=0.29.1; extra == "nnll-44"
 Provides-Extra: nnll-45
@@ -101,6 +103,9 @@ Requires-Dist: ruff>=0.9.7; extra == "dev"
 Requires-Dist: textual-dev>=1.7.0; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
+Provides-Extra: nnll-04
+Requires-Dist: gguf>=0.14.0; extra == "nnll-04"
+Requires-Dist: llama-cpp-python>=0.3.8; extra == "nnll-04"
 Dynamic: license-file
 
 <div align="center">

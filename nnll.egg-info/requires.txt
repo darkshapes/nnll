@@ -32,6 +32,10 @@ textual-dev>=1.7.0
 pytest-tornasync>=0.6.0.post2
 pytest-trio>=0.8.0
 
+[nnll-04]
+gguf>=0.14.0
+llama-cpp-python>=0.3.8
+
 [nnll-08]
 numpy>=2.2.3
 torch>=2.6.0
@@ -71,6 +75,9 @@ torch>=2.6.0
 torch>=2.6.0
 
 [nnll-26]
+torch>=2.6.0
+
+[nnll-36]
 torch>=2.6.0
 
 [nnll-44]
