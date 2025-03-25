@@ -1,14 +1,17 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-# pylint: disable=import-outside-toplevel
+# pylint: disable=import-outside-toplevel,unused-variable, assignment-from-no-return
+# ruff: noqa: F841
 
-from typing import Callable, Tuple, Any
+import os
+from typing import Any, Callable, Tuple
+
+from nnll_01 import debug_message, debug_monitor
+from nnll_01 import info_message as nfo
 
 
-# error_dict = "No Errors"
-
-
+@debug_monitor
 async def retry(max_retries: int, delay_seconds: int, operation: Callable, exception_type: Exception) -> Callable:
     """
     Loop a routine from 0 to `max_retries` and catch exceptions in advance\n
@@ -19,25 +22,21 @@ async def retry(max_retries: int, delay_seconds: int, operation: Callable, excep
     :return: The awaited result of operation()
     """
     import asyncio
-    # import json
 
     for retries in range(max_retries + 1):
         try:
             return await operation()
-        except exception_type:  # as error_log:
+        except exception_type as error_log:
             if retries < max_retries:
-                # error_dict = f"Operation failed (retry {retries + 1}/{max_retries})"
-                # json_log = json.dumps(str(error_log))
-                # await async_save_file(f"error_log{operation}.json", json_log)
+                debug_message(f"Operation failed (retry {retries + 1}/{max_retries}", tb=error_log.__traceback__)
                 await asyncio.sleep(delay_seconds)
                 retries += 1
             else:
-                # error_dict = f"Operation failed after {max_retries} retries"
-                # json_log = json.dumps(str(error_log))
-                # await async_save_file(f"error_log{operation}.json", json_log)
+                debug_message(f"Operation failed after {max_retries}) retries.", tb=error_log.__traceback__)
                 raise
 
 
+@debug_monitor
 async def async_remote_transfer(session, remote_file_path: str) -> Any:
     """Request a file from a server.  Ensure empty download location exists in advance\n
     :param session: Current asynchronous session
@@ -47,24 +46,20 @@ async def async_remote_transfer(session, remote_file_path: str) -> Any:
     # import json
     import aiohttp
 
-    # error_dict = f"Downloading PDB file from: {remote_file_path}"
+    nfo(f"Downloading PDB file from: {remote_file_path}")
 
     try:
         async with await session.get(remote_file_path) as response:
             response.raise_for_status()
             return await response.read()
-    except aiohttp.client_exceptions.ClientConnectionError:  # as error_log:
-        pass
-        # error_dict = f"Connection error"
-        # json_log = json.dumps(str(error_log))
-        # await async_save_file(f"error_log{remote_file_path}.json", json_log)
-    except RuntimeError:  # as error_log:
-        pass
-        # error_dict = f"Failed to download, Session Error"
-        # json_log = json.dumps(str(error_log))
-        # async_save_file(f"error_log{remote_file_path}.json", json_log)
+    except aiohttp.client_exceptions.ClientConnectionError as error_log:
+        debug_message(f"Connection error.{error_log}", tb=error_log.__traceback__)
+
+    except RuntimeError as error_log:
+        debug_message(f"Failed to download, Session Error. {error_log}", tb=error_log.__traceback__)
 
 
+@debug_monitor
 async def async_save_file(save_file_path_absolute: str, file_content: Any, mode=None) -> None:
     """
     Write a file to disk while keeping asynchronicity\n
@@ -75,7 +70,7 @@ async def async_save_file(save_file_path_absolute: str, file_content: Any, mode=
     """
     from aiofiles import open as async_open
 
-    # error_dict = f"Saving file: {save_file_path_absolute}"
+    nfo(f"Saving file: {save_file_path_absolute}")
     if mode is None:
         mode = "wb" if isinstance(file_content, bytes) else "w"
     file_obj = await async_open(save_file_path_absolute, mode)
@@ -83,6 +78,7 @@ async def async_save_file(save_file_path_absolute: str, file_content: Any, mode=
     await file_obj.close()
 
 
+@debug_monitor
 async def prepare_download(file_prefix: str, file_suffix: str, remote_url: str, local_download_folder: str) -> Tuple[str]:
     """
     Construct paths and URL locations\n
@@ -92,7 +88,6 @@ async def prepare_download(file_prefix: str, file_suffix: str, remote_url: str, 
     :param local_download_folder: Relative or absolute target folder
     :return: The absolute paths of local and remote endpoints
     """
-    import os
 
     file_name = f"{file_prefix}{file_suffix}"
     remote_file_name = f"{remote_url}{file_name}"
@@ -101,6 +96,7 @@ async def prepare_download(file_prefix: str, file_suffix: str, remote_url: str, 
     return remote_file_name, save_file_path_absolute
 
 
+@debug_monitor
 async def gather_text_lines_from(file_path_absolute: str) -> list:
     """
     Asynchronously read lines from a text file using aiofiles as async_ope\n
@@ -114,6 +110,7 @@ async def gather_text_lines_from(file_path_absolute: str) -> list:
     return text_lines
 
 
+@debug_monitor
 async def async_download_session(remote_url: str, save_file_path_absolute: str) -> None:
     """
     Create an async task for heavy downloading procedures
@@ -123,9 +120,8 @@ async def async_download_session(remote_url: str, save_file_path_absolute: str) 
     :return: None
     """
     import asyncio
-    import aiohttp
 
-    # import json
+    import aiohttp
     import requests
 
     tasks = []
@@ -137,15 +133,13 @@ async def async_download_session(remote_url: str, save_file_path_absolute: str) 
             save_task = asyncio.create_task(retry(3, 1, lambda: async_save_file(save_file_path_absolute, file_content), OSError))
             tasks.append(save_task)
 
-        except aiohttp.ClientError:  # as error_log:
-            pass
-            # error_dict = "Error occurred during request"
-            # json_log = json.dumps(str(error_log))
-            # async_save_file(f"error_log{remote_url}.json", json_log)
+        except aiohttp.ClientError as error_log:
+            debug_message(f"Error occurred during request. {error_log}", tb=error_log.__traceback__)
         else:
             await asyncio.gather(*tasks)
 
 
+@debug_monitor
 async def bulk_download(
     remote_file_segments: str,
     remote_url: str,
@@ -159,12 +153,12 @@ async def bulk_download(
     :param file_suffix: Extension for the files
     :return: None
     """
-    from nnll_27 import pretty_tabled_output
     from tqdm.auto import tqdm
+
+    from nnll_27 import pretty_tabled_output
 
     url_segments = await gather_text_lines_from(remote_file_segments)
     for file_prefix in tqdm(url_segments, total=len(url_segments), position=0, leave=True):
-        # error_dict = "No Errors"
         remote_path, save_file_path_absolute = await prepare_download(file_prefix, file_suffix, remote_url, local_download_folder)
         pretty_tabled_output({"title": file_prefix}, {"url": remote_path}, 30)
         await async_download_session(remote_path, save_file_path_absolute)

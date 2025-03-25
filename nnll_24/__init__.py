@@ -4,12 +4,16 @@
 # pylint: disable=import-outside-toplevel
 
 
+from nnll_01 import debug_monitor
+
+
 class KeyTrail:
     """
     Class for route tracing nested dictionary keys
     """
 
     @classmethod
+    @debug_monitor
     def pull_key_names(cls, pattern_reference: dict, unpacked_metadata: dict, attributes: int | None = None) -> list | None:
         """
         Instantiate comparison function and run a quick check on top-level criteria, otherwise run recursion function\n

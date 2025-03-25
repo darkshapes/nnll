@@ -2,6 +2,7 @@
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 from textual.reactive import reactive
+from nnll_01 import debug_monitor
 from nnll_10.package.model_register import from_ollama_cache
 
 from nnll_10.package.carousel import Carousel

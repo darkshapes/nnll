@@ -15,7 +15,7 @@ class MetadataFileReader:
         self.show_content = None
         import nnll_01
 
-        self.nfo = nnll_01.info_monitor
+        self.nfo = nnll_01.info_message
         self.debug_message = nnll_01.debug_message
         # debug_monitor = nnll_02.debug_monitor
 
@@ -124,7 +124,7 @@ class MetadataFileReader:
         :param file_path_named: Location of file with file name and path
         :return: A mapping of information contained within it
         """
-        from nnll_54 import ModelTool
+        from nnll_04 import ModelTool
         from pathlib import Path
         from nnll_47 import ExtensionType as Ext
 

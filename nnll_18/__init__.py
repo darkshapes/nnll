@@ -5,7 +5,10 @@
 
 # courtesy HamenderSingh https://github.com/huggingface/diffusers/issues/2136#issuecomment-1952590982
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def get_pipeline_embeds(pipeline, prompt, negative_prompt, device):
     """ "
     Get pipeline embeds for prompts bigger than the maxlength of the pipe

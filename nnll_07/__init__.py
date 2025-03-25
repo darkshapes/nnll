@@ -5,6 +5,8 @@
 from dataclasses import dataclass
 from typing import Optional, Any, Dict
 
+from nnll_01 import debug_monitor
+
 
 class Domain:
     """
@@ -15,14 +17,17 @@ class Domain:
     ***dev*** : Any pre-release or under evaluation items without an identifier in an expected format\n
     """
 
+    @debug_monitor
     def __init__(self, domain_name: str) -> None:
         self.domain_name = domain_name
         self.architectures = {}
 
+    @debug_monitor
     def add_architecture(self, architecture_name: str, architecture_obj: Any) -> None:
         """Create a sub-class of Domain"""
         self.architectures[architecture_name] = architecture_obj
 
+    @debug_monitor
     def to_dict(self) -> Dict[str, Any]:
         """Flatten the Domain class structure"""
         flat_dict = {}
@@ -38,6 +43,7 @@ class Architecture:
     model_forms.json contains the lengthy key list of supported architectures\n
     """
 
+    @debug_monitor
     def __init__(self, architecture: str) -> None:
         self.architecture = architecture
         self.components = {}
@@ -93,6 +99,7 @@ class Component:
     file_size: Optional[int] = None
     layer_type: Optional[str] = None
 
+    @debug_monitor
     def to_dict(self) -> Dict[str, Any]:
         """
         Serializes the Component to a dictionary, including only attributes that are not None.

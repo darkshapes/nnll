@@ -1,7 +1,10 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def first_available(processor=None):
     from functools import reduce
     import torch

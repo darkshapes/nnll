@@ -9,6 +9,8 @@ from textual import work
 
 from textual_plotext import PlotextPlot
 
+from nnll_01 import debug_monitor
+
 
 class VoicePanel(PlotextPlot):  # (PlotWidget)
     """Create an unselectable display element"""
@@ -23,6 +25,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
         self.can_focus = True
         # self.theme = "flexoki"
 
+    @debug_monitor
     @work(exclusive=True)
     async def record_audio(self) -> None:
         precision = self.duration * self.sample_freq
@@ -38,6 +41,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
         self.plt.scatter(self.audio[:, 0], marker="braille", color=(128, 0, 255))
         self.calculate_sample_length()
 
+    @debug_monitor
     @work(exclusive=True)
     async def play_audio(self):
         """Playback audio recordings"""
@@ -47,11 +51,13 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
         except TypeError as error_log:
             print(error_log)
 
+    @debug_monitor
     @work(exclusive=True)
     async def erase_audio(self):
         self.plt.clear_data()
         self.audio = [0]
 
+    @debug_monitor
     @work(exclusive=True)
     async def calculate_sample_length(self):
         sample_len = float(len(self.audio) / self.sample_freq)
