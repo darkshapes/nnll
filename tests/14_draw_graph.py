@@ -1,17 +1,12 @@
-from textual.app import App, ComposeResult
-from textual.widgets import Static
 import networkx as nx
-from nnll_14 import assign_edge_attributes
+from nnll_14 import label_edge_attrib_for, build_conversion_graph
 import matplotlib.pyplot as plt
 import numpy as np
-# from textual_plot import HiResMode  # , PlotWidget
-# from textual_plotext import PlotextPlot
-# from networkx import convert_node_labels_to_integers
-# import numpy as np
-# from typing import Sequence
 
 
 def draw_matplot_labeled(nx_graph: nx.Graph) -> None:
+    nx_graph = build_conversion_graph()
+    nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
     path = nx.bidirectional_shortest_path(nx_graph, "text", "image")
     path_edges = list(zip(path, path[1:]))
     edge_colors = ["red" if edge in path_edges or tuple(reversed(edge)) in path_edges else "black" for edge in nx_graph.edges()]
@@ -26,7 +21,8 @@ def draw_matplot_labeled(nx_graph: nx.Graph) -> None:
 
 
 def draw_matplot_circular() -> None:
-    nx_graph = assign_edge_attributes()
+    nx_graph = build_conversion_graph()
+    nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
     path = nx.bidirectional_shortest_path(nx_graph, "image", "speech")
     path_edges = list(zip(path, path[1:]))
     edge_colors = ["red" if edge in path_edges or tuple(reversed(edge)) in path_edges else "black" for edge in nx_graph.edges()]
@@ -39,7 +35,8 @@ def draw_matplot_circular() -> None:
 
 
 def draw_matplot_graphviz() -> None:
-    nx_graph = assign_edge_attributes()
+    nx_graph = build_conversion_graph()
+    nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
     path = nx.bidirectional_shortest_path(nx_graph, "image", "speech")
     path_edges = list(zip(path, path[1:]))
     edge_colors = ["red" if edge in path_edges or tuple(reversed(edge)) in path_edges else "black" for edge in nx_graph.edges()]
@@ -50,7 +47,8 @@ def draw_matplot_graphviz() -> None:
 
 
 def draw_matplot_weights() -> None:
-    nx_graph = assign_edge_attributes()
+    nx_graph = build_conversion_graph()
+    nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
     pos = nx.spring_layout(nx_graph, scale=20, k=3 / np.sqrt(nx_graph.order()))
     nx.draw(nx_graph, pos=pos, node_color="lightblue", with_labels=True, node_size=500)
     labels = nx.get_edge_attributes(nx_graph, "weight")
@@ -63,6 +61,13 @@ if __name__ == "__main__":
     draw_matplot_circular()
 
 
+# from textual.app import App, ComposeResult
+# from textual.widgets import Static
+# from textual_plot import HiResMode  # , PlotWidget
+# from textual_plotext import PlotextPlot
+# from networkx import convert_node_labels_to_integers
+# import numpy as np
+# from typing import Sequence
 # class MinimalApp(App[None]):
 #     def compose(self) -> ComposeResult:
 #         yield Static()
@@ -70,7 +75,8 @@ if __name__ == "__main__":
 #         # yield PlotWidget(id="plot)
 
 #     def on_mount(self) -> None:
-#         nx_graph = assign_edge_attributes()
+
+#         nx_graph = label_edge_attrib_for(nx_graph)
 # self.draw_matplot(nx_graph)
 #         # nx_graph_num = convert_node_labels_to_integers(nx_graph)
 #         # self.draw_textual_plotext(nx_graph_num)

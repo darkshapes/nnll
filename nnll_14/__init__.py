@@ -21,19 +21,30 @@ def build_conversion_graph():
 
 
 @debug_monitor
-def assign_edge_attributes(nx_graph):
-    """Build graph and assign edge attributes to it"""
+def label_edge_attrib_for(nx_graph: nx.Graph, ollama: bool = False, hf_hub: bool = False) -> nx.Graph:
+    """
+    Build graph and assign edge attributes to it\n
+    :param nx_graph: Preassembled graph of models to label
+    :param ollama: Whether to process ollama models
+    :param hf_hub: Whether to process hub models
+    :return: A graph with model data attached to it
+    """
     import os
-    from nnll_15 import from_ollama_cache, from_hf_hub_cache
 
-    ollama_models = from_ollama_cache()
-    hub_models = from_hf_hub_cache()
-    for model in ollama_models:
-        print(model.available_tasks)
-        nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
-    for model in hub_models:
-        nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
-    return nx_graph
+    if ollama:
+        from nnll_15 import from_ollama_cache
+
+        ollama_models = from_ollama_cache()
+        for model in ollama_models:
+            print(model.available_tasks)
+            nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
+    if hf_hub:
+        from nnll_15 import from_hf_hub_cache
+
+        hub_models = from_hf_hub_cache()
+        for model in hub_models:
+            nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
+        return nx_graph
 
 
 @debug_monitor

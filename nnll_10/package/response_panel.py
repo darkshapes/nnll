@@ -9,19 +9,19 @@ from textual.widgets import TextArea
 
 # from nnll_01 import debug_monitor
 from nnll_10.package.chat_machine import chat_machine
-from nnll_14 import build_conversion_graph, assign_edge_attributes
+# from nnll_14 import build_conversion_graph, label_edge_attrib_for
 
 
 class ResponsePanel(TextArea):
     """Machine response field"""
 
-    nx_graph = None
+    # nx_graph = None
     prefix: str = "ollama_chat/"
     is_generating: reactive[bool] = reactive(False)
 
     def on_mount(self):
-        nx_graph = build_conversion_graph()
-        self.nx_graph = assign_edge_attributes(nx_graph)
+        # nx_graph = build_conversion_graph()
+        # self.nx_graph = label_edge_attrib_for(nx_graph, 1,1)
         self.language = "markdown"
         self.read_only = True
         self.soft_wrap = True

@@ -8,6 +8,7 @@ from textual.app import App
 from textual.binding import Binding
 from textual.reactive import reactive
 
+from nnll_01 import info_message as nfo
 from nnll_10.package.main_screen import MainScreen  # pylint: disable=import-error
 from viztracer import VizTracer
 from datetime import datetime
@@ -33,7 +34,6 @@ class Combo(App):
         self.scroll_sensitivity_y = 1
         self.supports_smooth_scrolling = True
         self.theme = "flexoki"
-        os.makedirs("logs", exist_ok=True)
         self.tracer.start()
 
     @work(exit_on_error=True)
@@ -52,4 +52,5 @@ class Combo(App):
 
 if __name__ == "__main__":
     app = Combo(ansi_color=False)
+    nfo("Launching...")
     app.run()
