@@ -4,7 +4,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def gather_metadata(pattern_reference_path_named: str = None) -> dict:
     """
     Collect data for comparison steps\n
@@ -15,13 +18,14 @@ def gather_metadata(pattern_reference_path_named: str = None) -> dict:
     from nnll_30 import read_json_file
 
     if pattern_reference_path_named is None:
-        filter_file = os.path.dirname(os.path.abspath(__file__))
-        pattern_reference_path_named = os.path.join(filter_file, "filter.json")
+        filter_file = "nnll_60"
+        pattern_reference_path_named = os.path.join(filter_file, "config", "filter.json")
 
     pattern_reference = read_json_file(pattern_reference_path_named)
     return pattern_reference
 
 
+@debug_monitor
 def route_metadata(unpacked_metadata: dict, pattern_reference: dict, attributes: int) -> dict:
     """
     Direct metadata information transmission between layers of identity checks\n

@@ -143,10 +143,6 @@
 # separate keywords
 # mllama (vllm), text-to-image, text-generation
 
-# openai token counter
-#
-# encoding = tiktoken.get_encoding("cl100k_base")
-# token_count = len(encoding.encode(message))
 import os
 
 from nnll_01 import debug_monitor

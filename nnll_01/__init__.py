@@ -14,81 +14,74 @@ from typing import Callable
 from threading import get_native_id
 
 
-def use_nouveau_theme():
-    """Set a a midnight blue and dark purple theme to console logs"""
-    from rich import style
-    from rich.theme import Theme
-
-    NOUVEAU: Theme = Theme(
-        {
-            "logging.level.notset": style.Style(dim=True),  # level ids
-            "logging.level.debug": style.Style(color="magenta3"),
-            "logging.level.info": style.Style(color="blue_violet"),
-            "logging.level.warning": style.Style(color="gold3"),
-            "logging.level.error": style.Style(color="dark_orange3", bold=True),
-            "logging.level.critical": style.Style(color="deep_pink4", bold=True, reverse=True),
-            "logging.keyword": style.Style(bold=True, color="cyan", dim=True),
-            "log.path": style.Style(dim=True, color="royal_blue1"),  # line number
-            "repr.str": style.Style(color="sky_blue3", dim=True),
-            "json.str": style.Style(color="gray53", italic=False, bold=False),
-            "log.message": style.Style(color="steel_blue1"),  # variable name, normal strings
-            "repr.tag_start": style.Style(color="white"),  # class name tag
-            "repr.tag_end": style.Style(color="white"),  # class name tag
-            "repr.tag_contents": style.Style(color="deep_sky_blue4"),  # class readout
-            "repr.ellipsis": style.Style(color="purple4"),
-            "log.level": style.Style(color="gray37"),
-        }
-    )
-    return NOUVEAU
-
-
-def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S") -> Logger:
+def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f") -> Logger:
     """
-    Configure and launch logger\n
+    Configure and launch *structured* logger integration
+    base python logger + formatter + custom logger\n
     :param file_name: The desired filename of the log file
     :param folder_path_named: The desired path of the folder
     :param time_format: The desired time signature format of the log entry
     :return: a `logging` object ready to use for tracking operations
     """
     from datetime import datetime
-    from logging import basicConfig  # noqa: F401, pylint:disable=unused-import
 
-    from structlog import WriteLoggerFactory, get_logger, make_filtering_bound_logger
-    from structlog import configure as sl_conf
-    from structlog.processors import ExceptionPrettyPrinter, JSONRenderer, StackInfoRenderer, TimeStamper, format_exc_info, CallsiteParameter, CallsiteParameterAdder
+    import logging
+    import structlog
+    import litellm
+    from structlog.processors import ExceptionPrettyPrinter, StackInfoRenderer, format_exc_info, dict_tracebacks, TimeStamper, JSONRenderer
+    from structlog.stdlib import add_log_level, PositionalArgumentsFormatter
+    from structlog import configure as structlog_conf, make_filtering_bound_logger, WriteLoggerFactory, get_logger
 
     file_name += f"{datetime.now().strftime('%Y%m%d')}"
     os.makedirs(folder_path_named, exist_ok=True)
     assembled_path = os.path.join(folder_path_named, file_name)
-    # basicConfig(format="%(message)s", datefmt=time_format, level=DEBUG)
 
-    sl_conf(
-        cache_logger_on_first_use=True,
-        wrapper_class=make_filtering_bound_logger(DEBUG),
-        processors=[
-            CallsiteParameterAdder(
-                parameters={
-                    CallsiteParameter.FILENAME,
-                    CallsiteParameter.FUNC_NAME,
-                    # CallsiteParameter.LINENO,
-                    # CallsiteParameter.MODULE,
-                    CallsiteParameter.PATHNAME,
-                    CallsiteParameter.PROCESS,
-                    CallsiteParameter.THREAD,
-                }
-            ),
-            TimeStamper(fmt=time_format, key="+ts"),
-            StackInfoRenderer(),
-            format_exc_info,
-            ExceptionPrettyPrinter(),
+    timestamper = [  # replicate in both loggers
+        TimeStamper(fmt=time_format, key="+ts", utc=True),
+        add_log_level,
+        PositionalArgumentsFormatter(),
+        ExceptionPrettyPrinter(),
+        StackInfoRenderer(),
+        format_exc_info,
+        dict_tracebacks,
+    ]
+
+    structlog_conf(
+        processors=timestamper
+        + [
             JSONRenderer(
                 indent=1,
                 sort_keys=True,
             ),
         ],
+        wrapper_class=make_filtering_bound_logger(min_level=0),
         logger_factory=WriteLoggerFactory(file=Path(assembled_path).open("at", encoding="utf-8")),
+        cache_logger_on_first_use=True,
     )
-    logger = get_logger(__name__)  # snake case is intentional
+
+    formatter = structlog.stdlib.ProcessorFormatter(
+        foreign_pre_chain=timestamper,
+        processors=[
+            structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+            structlog.processors.JSONRenderer(
+                indent=1,
+                sort_keys=True,
+            ),
+        ],
+    )
+    litellm.disable_streaming_logging = True
+    litellm.turn_off_message_logging = True
+    litellm.suppress_debug_info = False
+    litellm.json_logs = True
+    handler = logging.FileHandler(assembled_path)
+    handler.setFormatter(formatter)
+    handler.setLevel(logging.DEBUG)
+    root_logger = logging.getLogger()
+    root_logger.addHandler(handler)
+    # litellm._turn_on_debug()
+    # logging.root.addHandler(handler)
+
+    logger = get_logger()
     return logger
 
 
@@ -99,36 +92,37 @@ def debug_monitor(func: Callable = None) -> Callable:
 
     def wrapper(*args, **kwargs) -> None:
         """Wrap log"""
-        return_data = func(*args, **kwargs)
-        if not kwargs:
+        try:
+            return_data = func(*args, **kwargs)
             logger_obj.debug(
-                filename=func.__module__,
-                pathname=Path(func.__module__).cwd(),
-                func_name=func.__name__,
-                process=os.getpid(),
-                thread=get_native_id(),
-                event={
-                    "ain_type": type(args),
-                    "ain": args,
-                    "output": return_data,
-                },
+                {
+                    str(return_data): {
+                        "filename": func.__module__,
+                        "pathname": Path(func.__module__).cwd(),
+                        "func_name": func.__name__,
+                        "process": os.getppid(),
+                        "thread": get_native_id(),
+                        **{"ain_type": type(args), "ain": args if args else {}},
+                        **{"kin_type": type(kwargs), "kin": kwargs if kwargs else {}},
+                    }
+                }
             )
-        else:
+
+            return return_data
+        except Exception as e:
             logger_obj.debug(
-                filename=func.__module__,
-                pathname=Path(func.__module__).cwd(),
-                func_name=func.__name__,
-                process=os.getpid(),
-                thread=get_native_id(),
-                event={
-                    "ain_type": type(args),
-                    "ain": args,
-                    "kin_type": type(kwargs),
-                    "kin": kwargs,
-                    "output": return_data,
-                },
+                str(e)
+                # exc_info=str(e),
+                # filename=func.__module__,
+                # pathname=Path(func.__module__).cwd(),
+                # func_name=func.__name__,
+                # process=os.getppid(),
+                # thread=get_native_id(),
+                # **{"ain_type": type(args), "ain": args} if args else {},
+                # **{"kin_type": type(kwargs), "kin": kwargs} if kwargs else {},
             )
-        return return_data
+            # Re-raise the exception to propagate it
+            raise e
 
     return wrapper
 
@@ -188,68 +182,3 @@ if __name__ == "__main__":
 else:
     LOG_LEVEL = DEBUG
     logger_obj = configure_logging()
-
-    from asyncio import run as asyncio_run
-    # alogger_obj = configure_async_logging()
-    # asyncio_run(async_monitor())
-
-
-# def configure_async_logging(file_name: str = ".nnll_async", folder_path_named: str = "log", time_format: str = "%H:%M:%S") -> Logger:
-#     from datetime import datetime
-#     from structlog import configure as st_conf, WriteLoggerFactory, get_logger
-#     from structlog.processors import JSONRenderer, add_log_level, format_exc_info, TimeStamper
-#     from structlog.stdlib import AsyncBoundLogger
-#     from structlog.contextvars import merge_contextvars
-
-#     file_name += f"{datetime.now().strftime('%Y%m%d')}"
-#     os.makedirs(folder_path_named, exist_ok=True)
-#     assembled_path = os.path.join(folder_path_named, file_name)
-
-#     st_conf(
-#         processors=[
-#             TimeStamper(fmt=time_format, key="+ts"),
-#             merge_contextvars,
-#             add_log_level,
-#             format_exc_info,
-#             JSONRenderer(),
-#         ],
-#         wrapper_class=AsyncBoundLogger,
-#         context_class=dict,
-#         cache_logger_on_first_use=True,
-#         logger_factory=WriteLoggerFactory(file=Path(assembled_path).open("at", encoding="utf-8")),
-#     )
-#     return get_logger()
-
-# async def async_monitor(func: Callable = None) -> Callable:
-#     """Debug output decorator function
-#     Data returned from decorated methods/functions is automatically sent to debugger
-#     """
-
-#     async def wrapper(*args, **kwargs) -> None:
-#         """Wrap log"""
-#         return_data = func(*args, **kwargs)
-#         if not kwargs:
-#             await alogger_obj.adebug(
-#                 "%s",
-#                 filename=func.__module__,
-#                 pathname=Path(func.__module__).cwd(),
-#                 func_name=func.__name__,
-#                 ain_type=type(args),
-#                 ain=args,
-#                 output=return_data,
-#             )
-#         else:
-#             await alogger_obj.adebug(
-#                 "%s",
-#                 filename=func.__module__,
-#                 pathname=Path(func.__module__).cwd(),
-#                 func_name=func.__name__,
-#                 ain_type=type(args),
-#                 ain=args,
-#                 kin_type=type(kwargs),
-#                 kin=kwargs,
-#                 output=return_data,
-#             )
-#         return return_data
-
-# return wrapper

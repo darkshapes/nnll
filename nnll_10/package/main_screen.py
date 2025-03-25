@@ -32,7 +32,6 @@ class MainScreen(Screen):
             yield Fold(id="centre-frame")
             yield ResponsiveRightBottom(id="right-frame")
 
-    @debug_monitor
     @work(exit_on_error=False)
     async def on_resize(self, event=events.Resize):
         """Fit shape to screen"""

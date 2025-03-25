@@ -10,7 +10,7 @@ from unittest import mock
 
 # import matplotlib.pyplot as plt
 import pytest
-from nnll_14 import assign_edge_attributes
+from nnll_14 import build_conversion_graph, label_edge_attrib_for
 from nnll_15 import VALID_CONVERSIONS
 
 
@@ -164,7 +164,8 @@ def test_mocked_hub(mock_hub_data):
 
 def test_create_graph(mock_ollama_data, mock_hub_data):
     """Run test of graph creation"""
-    nx_graph = assign_edge_attributes()
+    nx_graph = build_conversion_graph()
+    nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
 
     assert list(nx_graph) == VALID_CONVERSIONS
     key_data = nx_graph.edges.data("key")

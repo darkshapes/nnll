@@ -5,13 +5,16 @@
 # import os
 from typing import Any
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     """Create diffusion process"""
     import nnll_59 as disk
     from nnll_61 import HyperChain
     from nnll_62 import ConstructPipeline
-    import nnll_63 as techniques
+    import nnll_56 as techniques
     from nnll_08 import soft_random, seed_planter
     from PIL import PngImagePlugin
     from nnll_16 import first_available
@@ -59,7 +62,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
         **kwargs,
     ).images[0]
 
-    gen_data = disk.form_metadata(pipe, prompt, model_hash, kwargs)
+    gen_data = disk.add_to_metadata(pipe, prompt, model_hash, kwargs)
 
     metadata = PngImagePlugin.PngInfo()
     metadata.add_text("parameters", str(gen_data.get("parameters")))

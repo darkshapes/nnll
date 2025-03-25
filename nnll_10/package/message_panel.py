@@ -3,7 +3,7 @@
 from textual import work
 from textual.widgets import TextArea
 
-from nnll_01 import debug_monitor
+# from nnll_01 import debug_monitor
 
 
 class MessagePanel(TextArea):
@@ -12,7 +12,6 @@ class MessagePanel(TextArea):
     #     # self.theme = "vscode_dark"
     #     # self.language = "python"
 
-    @debug_monitor
     @work(exclusive=True)
     async def erase_message(self):
         """Empty panel contents"""

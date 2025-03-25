@@ -4,12 +4,16 @@
 # pylint: disable=import-outside-toplevel
 
 
+from nnll_01 import debug_monitor
+
+
 class IdConductor:
     """Navigate through a dictionary of known model attributes to determine an unknown model file's identity\n"""
 
     current_file = ""
     attributes = None
 
+    @debug_monitor
     def identify_model(self, category_type: dict, pattern_reference: dict, unpacked_metadata: dict, attributes: dict | None = None):
         """
         Operate model id search functions\n
@@ -38,6 +42,7 @@ class IdConductor:
 
         return self.model_keys
 
+    @debug_monitor
     def identify_category_type(self, layer_keys: dict, pattern_reference: dict, unpacked_metadata: dict, attributes: dict | None = None) -> dict:
         """
         Operate category type search functions\n
@@ -62,6 +67,7 @@ class IdConductor:
 
         return self.category_keys
 
+    @debug_monitor
     def identify_layer_type(self, pattern_reference: dict, unpacked_metadata: dict, attributes: dict | None = None):
         """
         Operate model layer search functions\n

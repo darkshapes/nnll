@@ -3,7 +3,10 @@
 
 # pylint: disable=import-outside-toplevel
 
+from nnll_01 import debug_monitor
 
+
+@debug_monitor
 def download_hub_file(**kwargs) -> tuple:
     """
     Download a model from HuggingFace Hub and return path and blob names\n

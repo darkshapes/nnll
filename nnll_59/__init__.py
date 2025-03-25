@@ -5,16 +5,21 @@
 
 # pylint: disable=import-outside-toplevel
 
+from io import TextIOWrapper
 import os
-from typing import LiteralString
+from typing import LiteralString, Dict, List
 
+import PIL
+from nnll_01 import debug_monitor
+from nnll_44 import collect_hashes
 from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 
 config_data = JSONCache(CONFIG_PATH_NAMED)
 
 
+@debug_monitor
 @config_data.decorator
-def name_save_file_as(extension: str = ".png", data=None) -> str:
+def name_save_file_as(extension: str = ".png", data: TextIOWrapper = None) -> str:
     """
     Construct the file name of a save file\n
     :param extension: The extension of the file
@@ -36,22 +41,33 @@ def name_save_file_as(extension: str = ".png", data=None) -> str:
     return file_path_absolute
 
 
-def write_image_to_disk(image, metadata, extension: LiteralString = """.png"""):
-    """Save image to file"""
-    file_path_absolute = name_save_file_as(extension)
-    image.save(file_path_absolute, "PNG", pnginfo=metadata)
-    image.show()
+@debug_monitor
+def add_to_metadata(pipe: Dict, model: str, prompt: str | List[str] | Dict[str], kwargs: Dict) -> Dict:
+    """
+    Create metadata from active hf inference pipes\n
+    :param pipe: Active HuggingFace pipe from diffusers/transformers
+    :param model: Generative model filename/path
+    :param prompt: Input for genereation
+    :param kwargs: Arguments passed to constructors
+    :return: Dictionary of attributes
+    """
+    model_data = {}
+    model_data.setdefault(collect_hashes(model))
 
-
-def form_metadata(pipe, prompt, model_data, kwargs, negative_prompt=None):
-    """Tabulate metadata"""
     gen_data = {
         "parameters": {
             "Prompt": prompt,
-            "\nNegative prompt": negative_prompt if negative_prompt else "\n",
             "\nData": kwargs,
             "\nPipe": pipe,
             "\nModels": model_data,
         }
     }
     return gen_data
+
+
+@debug_monitor
+def write_image_to_disk(image: PIL, metadata: Dict[str], extension: LiteralString = """.png"""):
+    """Save image to file"""
+    file_path_absolute = name_save_file_as(extension)
+    image.save(file_path_absolute, "PNG", pnginfo=metadata)
+    image.show()

@@ -25,7 +25,7 @@ from nnll_48 import MetadataFileReader
 # /______________________________________________________________________________________________________________________ ComfyUI format
 
 
-# @debug_monitor
+@debug_monitor
 def clean_with_json(prestructured_data: dict, first_key: str) -> dict:
     """
     Use json loads to arrange half-formatted dict into valid dict\n
@@ -139,7 +139,6 @@ def filter_keys_of(normalized_clean_data: dict) -> Tuple[dict]:
                     node_name = search_data[name_column]
                     break
                 node_name = search_data
-                # raise KeyError("Metadata validated but expected keys were not found.")
             if node_name in NodeNames.ENCODERS or node_name in NodeNames.STRING_INPUT:
                 extracted_prompt_data.update(search_for_prompt_in(search_data, extracted_prompt_data, name_column))
             else:
@@ -175,6 +174,7 @@ def redivide_nodeui_data_in(header: str, first_key: str) -> Tuple[dict]:
         return sorted_header_prompt, sorted_header_data
 
 
+@debug_monitor
 def arrange_nodeui_metadata(header_data: dict) -> dict:
     """
     Using the header from a file, run formatting and parsing processes \n
@@ -288,6 +288,7 @@ def extract_dict_by_delineation(deprompted_text: str) -> Tuple[dict, list]:
 
     import re
 
+    @debug_monitor
     def repair_flat_dict(traces_of_pairs: List[str]) -> dict:
         """
         Convert a list with the first element as a key into a string with delinations \n
@@ -339,7 +340,7 @@ def make_paired_str_dict(text_to_convert: str) -> dict:
     try:
         converted_text = {el[0]: el[1] for el in delineated if len(el) == 2}
     except IndexError as error_log:
-        nfo("Index position for prompt input out of range", text_to_convert, "at", delineated, error_log)
+        debug_message("Index position for prompt input out of range", text_to_convert, "at", delineated, error_log, tb=error_log.__traceback__)
         converted_text = None
     return converted_text
 
@@ -367,49 +368,9 @@ def arrange_webui_metadata(header_data: str) -> dict:
 # /______________________________________________________________________________________________________________________ EXIF Tags
 
 
-# @debug_monitor
-# def remove_esc_codes(header_data: dict) -> dict:
-#     """
-#     Format text from header file by removing escape codes\n
-#     :param text_chunk: Data from a file header
-#     :return: text data in a dict structure
-#     """
-#     clean_dictionary = {}
-#     for tag, dirty_string in header_data.items():
-#         if isinstance(dirty_string, bytes):  # Check if it is bytes
-#             decoded_string = dirty_string.decode("utf-16-be")  # If it is, decode into utf-16 format
-
-#             map_start = decoded_string.find("{")
-#             decoded_string = decoded_string.replace("'", '"')
-#             scrub_dictionary = {tag: decoded_string[map_start:]}
-#             new_data = clean_with_json(scrub_dictionary, tag)
-#             clean_dictionary.update(new_data)
-
-#     return clean_dictionary
-
-
-# def filter_exif_keys_in(metadata_tag: dict) -> dict:
-#     """
-#     Extract relevant EXIF values and arrange to display\n
-#     :param metadata_tag: A set of tags to evaluate
-#     :type variable: dict
-#     :return: A dict formatted for the UI
-#     """
-
-#     main_data = metadata_tag.get("extraMetadata")
-#     if main_data:
-#         metadata_tag.pop("extraMetadata")
-#     loads_main_data = json.loads(main_data.strip())
-#     generation_data = loads_main_data.get("prompt")
-#     sorted_header_prompt, sorted_header_data = filter_keys_of(metadata_tag)
-
-#     return {UpField.METADATA: sorted_header_prompt, DownField.GENERATION_DATA: sorted_header_data}
-
-
 @debug_monitor
 def arrange_exif_metadata(header_data: dict) -> dict:
     """Arrange EXIF data into correct format"""
-    # clean_dictionary = {}
     for tag, dirty_string in header_data.items():
         if isinstance(dirty_string, bytes):  # Check if it is bytes
             decoded_data = dirty_string.decode("utf-16-be")  # If it is, decode into utf-16 format
@@ -431,22 +392,6 @@ def arrange_exif_metadata(header_data: dict) -> dict:
                         UpField.DATA: sorted_header_data.get("exif"),
                     },
                 }
-    # metadata_tag = remove_esc_codes(header_data)
-    # print("triggered")
-    # if metadata_tag:
-    #     metadata = filter_exif_keys_in(metadata_tag)
-    #     return metadata
-    # else:
-    # try:
-    #     metadata_tag = metadata_tag.get("UserComment")
-    # except KeyError:
-    # regex_dict = {}
-    # nfo("Expected exif key not found")
-
-    # decoded_tag = metadata_tag.decode("utf-16")
-    # test = json.loads(decoded_tag)
-    # delineated_tags = delineate_by_esc_codes(decoded_tag)
-    # structured_tags = dict(delineated_tags)
 
 
 # /______________________________________________________________________________________________________________________ Module Interface
@@ -510,6 +455,7 @@ def arrange_dict_metadata(header_data: dict) -> dict:
     return metadata
 
 
+@debug_monitor
 def arrange_str_metadata(header_data: str) -> dict:
     """
     Perform simple processing of raw text strings inside of a file\n
@@ -523,10 +469,10 @@ def arrange_str_metadata(header_data: str) -> dict:
     try:
         metadata = dict(header_data)
     except JSONDecodeError as error_log:
-        nfo("JSON Decode failed %s", error_log)
+        debug_message("JSON Decode failed %s", error_log, tb=error_log.__traceback__)
         metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
     except KeyError as error_log:
-        nfo("Could not load metadata as dict %s", error_log)
+        debug_message("Could not load metadata as dict %s", error_log, tb=error_log.__traceback__)
         metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
     else:
         up_data = {UpField.DATA: header_data}

@@ -4,27 +4,34 @@
 # pylint: disable=import-outside-toplevel
 
 
+from nnll_01 import debug_monitor
+
+
 class LayerFilter:
     """
     Class to direct systematic comparison of model state dict layers
     """
 
+    @debug_monitor
     def __init__(self):
         from nnll_24 import KeyTrail
 
         self.handle_values = KeyTrail
 
+    @debug_monitor
     def identify_layer_type(self, pattern_reference, unpacked_metadata, tensors):
         bundle_check = self.handle_values.pull_key_names(pattern_reference["layer_type"], unpacked_metadata, tensors)
         layer_type = bundle_check if bundle_check else "unknown"
         return layer_type
 
+    @debug_monitor
     def finalize_metadata(self, file_metadata):
         for key, value in file_metadata.items():
             if isinstance(value, list):
                 file_metadata[key] = " ".join(map(str, value))
         return file_metadata
 
+    @debug_monitor
     def reference_walk_conductor(self, pattern_reference: dict, unpacked_metadata: dict, tensors: int) -> dict:
         """
         Navigate through a dictionary of known model attributes to determine an unknown model file's identity\n

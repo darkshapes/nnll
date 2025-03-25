@@ -7,11 +7,13 @@
 # pylint:disable=line-too-long
 
 
+from nnll_01 import debug_monitor
 from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 
 config_file = JSONCache(CONFIG_PATH_NAMED)
 
 
+@debug_monitor
 def pipe_call(func):
     """Decorator for Diffusers pipes to combine arguments"""
     from functools import wraps
@@ -30,11 +32,13 @@ def pipe_call(func):
 class ConstructPipeline:
     """Build and configure Diffusers pipelines"""
 
+    @debug_monitor
     @config_file.decorator
     def __init__(self, *args, **kwargs):
         """Encapsulate the config file for later use"""
         self.construct = kwargs.get("data", None)
 
+    @debug_monitor
     @pipe_call
     def create_pipeline(self, architecture, *args, **kwargs):
         """
@@ -64,6 +68,7 @@ class ConstructPipeline:
 
         return pipe, repo, kwargs
 
+    @debug_monitor
     @pipe_call
     def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """

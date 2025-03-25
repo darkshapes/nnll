@@ -22,10 +22,10 @@ from nnll_10.package.response_panel import ResponsePanel
 from nnll_10.package.tag_line import TagLine
 from nnll_10.package.input_tag import InputTag
 from nnll_10.package.voice_panel import VoicePanel
+
 # from package.panel_swap import PanelSwap
 
 
-@debug_monitor
 class PanelSwap(ContentSwitcher):
     """Switch media panel"""
 
@@ -56,7 +56,6 @@ class Fold(Container):
     current_model: reactive[str] = reactive("")
     hilite = ReprHighlighter()
 
-    @debug_monitor
     def compose(self) -> ComposeResult:
         with Container(id="responsive_input"):
             with PanelSwap(id="panel_swap", initial="message_panel"):
@@ -75,7 +74,6 @@ class Fold(Container):
         display_bar.add_columns(*self.rows[0])
         display_bar.add_rows(self.rows[1:])
 
-    @debug_monitor
     @work(exclusive=True)
     async def _on_key(self, event: events.Key):
         """Class method, window for triggering key bindings"""
@@ -104,15 +102,14 @@ class Fold(Container):
             if not self.query_one("#response_panel").has_focus:
                 self.alternate_panel("message_panel", 0)
 
-    @debug_monitor
     @work(exclusive=True)
     @on(MessagePanel.Changed, "#message_panel")
     async def pass_text_to_tokenizer(self) -> None:
         """Transmit info to token calculation"""
         message = self.query_one("#message_panel").text
+        self.current_model = self.query_one("#tag_line").current_model
         self.query_one("#display_bar").calculate_tokens(self.current_model, message, self.unit_labels)
 
-    @debug_monitor
     @work(exclusive=True)
     async def pass_audio_to_tokenizer(self) -> None:
         sample_length = len(self.query_one("#voice_panel").audio)
@@ -148,14 +145,12 @@ class Fold(Container):
             class_name = input_tag.emulate_scroll_up(input_tag.available_inputs)
             self.query_one(PanelSwap).current = class_name
 
-    @debug_monitor
     @work(exclusive=True)
     async def cancel_generation(self) -> None:
         """Stop the processing of a model"""
         self.query_one("#response_panel").workers.cancel_all()
         self.query_one("#tag_line").set_classes("tag_line")
 
-    @debug_monitor
     @work(exclusive=True)
     async def clear_input(self):
         """Clear the input on the focused panel"""
@@ -165,7 +160,6 @@ class Fold(Container):
         elif self.query_one("#message_panel").has_focus:
             self.query_one("#message_panel").erase_message()
 
-    @debug_monitor
     @work(exclusive=True)
     async def alternate_panel(self, id_name, y_coordinate):
         input_tag = self.query_one("#input_tag")

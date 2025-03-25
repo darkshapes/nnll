@@ -8,6 +8,7 @@
 
 from dataclasses import dataclass
 
+from nnll_01 import debug_monitor
 from nnll_60 import CHAIN_PATH_NAMED, JSONCache
 
 
@@ -31,12 +32,14 @@ class Block:
     timestamp: str = None
     block_hash: str = None
 
+    @debug_monitor
     def __post_init__(self):
         if self.timestamp is None:
             object.__setattr__(self, "timestamp", self.create_timestamp())
         if self.block_hash is None:
             object.__setattr__(self, "block_hash", self.calculate_hash())
 
+    @debug_monitor
     def calculate_hash(self) -> str:
         """Calculate hash for string of prior hash, contents, and time combined"""
         import hashlib
@@ -44,6 +47,7 @@ class Block:
         block_contents = f"{self.index}{self.previous_hash}{self.data}{self.timestamp}".encode("utf-8")
         return hashlib.sha256(block_contents).hexdigest()
 
+    @debug_monitor
     def create_timestamp(self):
         """Add timestamp attribute"""
         from time import gmtime, strftime, time_ns
@@ -51,11 +55,13 @@ class Block:
         return strftime("%Y-%m-%d %H:%M:%s", gmtime(time_ns() // 1e9))
 
     @classmethod
+    @debug_monitor
     def create(cls, index: int, previous_hash: str, data: str) -> "Block":
         """Form a new block"""
         return cls(index=index, previous_hash=previous_hash, data=data)
 
     @classmethod
+    @debug_monitor
     def from_dict(cls, data: dict):
         """Recreate existing block"""
         block = cls(index=data["index"], data=data["data"], previous_hash=data["previous_hash"])
@@ -63,6 +69,7 @@ class Block:
         object.__setattr__(block, "block_hash", data["block_hash"])
         return block
 
+    @debug_monitor
     def to_dict(self):
         """Flatten block into serializable structure"""
         return {
@@ -82,6 +89,7 @@ class HyperChain:
 
     chain_file = JSONCache(CHAIN_PATH_NAMED)
 
+    @debug_monitor
     @chain_file.decorator
     def __init__(self, data=None):
         self.chain = []
@@ -91,12 +99,14 @@ class HyperChain:
             # Ensure latest data is loaded
         # self.cache = chain_file
 
+    @debug_monitor
     def synthesize_genesis_block(self) -> Block:
         """Runs once."""
         genesis_block = Block.create(index=0, previous_hash="init", data="Genesis Block")
         self.chain.append(genesis_block)
         return genesis_block
 
+    @debug_monitor
     def add_block(self, data: str) -> Block:
         """
         Add a new block to the chain\n
@@ -112,6 +122,7 @@ class HyperChain:
         self.save_chain_to_file()
         return new_block
 
+    @debug_monitor
     @chain_file.decorator
     def save_chain_to_file(self, data: str = None):  # pylint:disable=unused-argument
         """Will not save unless chain is valid"""
@@ -123,6 +134,7 @@ class HyperChain:
             raise ValueError("Invalid Block Value, chain cannot save. File handling error or otherwise corrupt chain.")
 
     # @chain_file.decorator
+    @debug_monitor
     def load_chain_from_file(self, data: str):
         """Load and validate chain"""
         for block_data in data["_hyperchain"]:
@@ -132,6 +144,7 @@ class HyperChain:
             self.chain = []
             raise ValueError("Invalid Block Value, chain cannot load. File handling error or otherwise corrupt chain.")
 
+    @debug_monitor
     def is_chain_valid(self) -> bool:
         """
         Hash validation by recompute and comparison for blocks and links.\n
