@@ -26,7 +26,7 @@ class Combo(App):
     file_name = f".nnll{datetime.now().strftime('%Y%m%d')}_trace.json"
     assembled_path = os.path.join("log", file_name)
     tracer = VizTracer()
-    safety: reactive[int] = reactive(2)
+    safety: reactive[int] = reactive(1)
 
     def on_mount(self) -> None:
         """Draw screen"""

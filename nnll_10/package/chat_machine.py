@@ -40,8 +40,8 @@ class ChainOfThought(dspy.Signature):
 
 @debug_monitor
 async def main(model, message):
-    local_llama = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
-    dspy.settings.configure(lm=local_llama, async_max_workers=4)
+    model = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
+    dspy.settings.configure(lm=model, async_max_workers=4)
     generator = dspy.asyncify(dspy.Predict(BasicQA))
     streaminator = dspy.streamify(generator)
 

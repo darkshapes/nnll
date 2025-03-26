@@ -6,12 +6,12 @@
 from typing import Dict
 import networkx as nx
 from nnll_01 import debug_monitor
+from nnll_15 import RegistryEntry
 
 
 @debug_monitor
 def build_conversion_graph():
     """create coordinate pair from valid conversions then deploy as a graph"""
-    import networkx as nx
     from nnll_15 import VALID_CONVERSIONS
 
     new_graph = nx.MultiDiGraph()
@@ -36,19 +36,67 @@ def label_edge_attrib_for(nx_graph: nx.Graph, ollama: bool = False, hf_hub: bool
 
         ollama_models = from_ollama_cache()
         for model in ollama_models:
-            print(model.available_tasks)
-            nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
+            nx_graph.add_edges_from(
+                model.available_tasks,
+                entry=model,
+                key=os.path.basename(model.model),
+                library=model.library,
+                model_id=model.model,
+                size=model.size,
+                time=model.timestamp,
+                weight=1.0,
+            )
     if hf_hub:
         from nnll_15 import from_hf_hub_cache
 
         hub_models = from_hf_hub_cache()
         for model in hub_models:
-            nx_graph.add_edges_from(model.available_tasks, key=os.path.basename(model.model), model_id=model.model, size=model.size, weight=1.0)
-        return nx_graph
+            nx_graph.add_edges_from(
+                model.available_tasks,
+                entry=model,
+                library=model.library,
+                model_id=model.model,
+                name=os.path.basename(model.model),
+                size=model.size,
+                time=model.timestamp,
+                weight=1.0,
+            )
+    return nx_graph
 
 
 @debug_monitor
-def path_objective(nx_graph: nx.Graph, source: str, target: str) -> Dict:
-    import networkx as nx
+def path_objective(nx_graph: nx.Graph, source: str, target: str):
+    """
+    Find a valid path from current state (source) to designated state (target)\n
+    :param nx_graph: Model graph to use for tracking operation order
+    :param source: Input prompt state/states
+    :param target: The user-seleccted end-state
+    :return: An iterator for the edges forming a way towards the target, or Note
+    """
 
-    path = nx.bidirectional_shortest_path(nx_graph, source, target)
+    # Ensure path exists (otherwise 'bidirectional' loops infinitely)
+    if nx.has_path(nx_graph, source, target):
+        model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
+        return model_path
+
+
+# get all neighbor connection
+# nx_graph['speech']['text']
+
+# get all model name on graph
+# nx_graph.edges.data('keys')
+
+# change attribute
+# nx_graph.edges[‘text’, ‘image’][‘weight'] = 4.2
+# edge_attrib nx.get_edge_attributes(nx_graph,'key')
+
+# get number of edges/paths directed away
+# nx_graph.out_degree('text')
+
+# get number of edges/paths directed towards
+# nx_graph.in_degree('text')
+
+# show all edge attributes by index
+# node_attrib nx.get_edge_attributes(nx_graph,'key')
+
+# seen2 = set([e[1] for e in nx_graph.edges]) # list all potential target states (to populate list)

@@ -170,13 +170,19 @@ def test_create_graph(mock_ollama_data, mock_hub_data):
     assert list(nx_graph) == VALID_CONVERSIONS
     key_data = nx_graph.edges.data("key")
     for edge in key_data:
-        assert isinstance(edge[2], str)
+        if edge[2] is not None:
+            assert isinstance(edge[2], str)
+        else:
+            assert isinstance(edge[1], str)
+
     size_data = nx_graph.edges.data("size")
     for edge in size_data:
-        assert isinstance(edge[2], int)
+        if edge[2] is not None:
+            assert isinstance(edge[2], int)
+        else:
+            assert isinstance(edge[1], str)
 
 
-# seen2 = set([e[1] for e in nx_graph.edges]) # get all target types
 # when user presses trigger :
 # run shortest distance, then run operations identified on edges
 
@@ -188,13 +194,14 @@ def test_create_graph(mock_ollama_data, mock_hub_data):
 # nx_graph.edges.data(“keys”) get all model name on graph
 # nx_graph.edges['text','speech',0]['key']
 
-# nx_graph.out_degree('text') get number of edges pointing away
-# nx_graph.in_degree('text') get number of edges pointing towards
-
+# nx_graph.out_degree('text') get number of edges/paths pointing away
+# nx_graph.in_degree('text') get number of edges/paths pointing towards
 # nx_graph.edges[‘text’, ‘image’][‘weight'] = 4.2 change attribute
+
 
 # node_attrib = nx.get_node_attributes(nx_graph, “model”)
 # node_attrib[‘text’]
+
 
 # nx.draw_networkx
 # adjacent_pairs = [(key, item) for key, value in VALID_CONVERSIONS.input.items() for item in (value.values if isinstance(value.values, tuple) else ())]

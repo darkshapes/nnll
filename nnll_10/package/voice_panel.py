@@ -5,7 +5,7 @@
 import sounddevice as sd
 
 from textual import work
-# from textual.reactive import reactive
+from textual.reactive import reactive
 
 from textual_plotext import PlotextPlot
 
@@ -19,7 +19,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
     audio = [0]
     sample_freq: int = 16000
     duration: float = 3.0
-    # sample_len: reactive[float] = reactive(0.0, recompose=True)
+    sample_len: reactive[float] = reactive(0.0, recompose=True)
 
     def on_mount(self):
         self.can_focus = True
@@ -27,11 +27,18 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
 
     @work(exclusive=True)
     async def record_audio(self) -> None:
+        """Get audio from mic"""
+        self.plt.clear_data()
         precision = self.duration * self.sample_freq
         self.audio = [0]
         self.audio = sd.rec(int(precision), samplerate=self.sample_freq, channels=1)
         sd.wait()
-        self.plt.clear_data()
+        self.graph_audio()
+        # self.calculate_sample_length()
+
+    @work(exclusive=True)
+    async def graph_audio(self):
+        """Draw audio waveform"""
         self.plt.frame(0)
         self.plt.canvas_color((0, 0, 0))
         self.can_focus = True
@@ -51,6 +58,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
 
     @work(exclusive=True)
     async def erase_audio(self):
+        """Clear audio graph and recording"""
         self.plt.clear_data()
         self.audio = [0]
 
