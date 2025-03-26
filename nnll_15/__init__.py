@@ -18,7 +18,7 @@ VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "upscale_image
 OLLAMA_TASKS = {("image", "text"): ["mllama", "llava", "vllm"]}
 LMS_TASKS = {("text", "text"): ["llm"], ("image", "text"): [True]}
 HUB_TASKS = {
-    ("text", "image"): ["image-generation", "image-text-to-text", "visual-question-answering"],
+    ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
     ("text", "text"): ["chat", "conversational", "text-generation"],
     ("text", "video"): ["video generation"],
     ("speech", "text"): ["speech-translation", "speech-summarization", "automatic-speech-recognition"],
@@ -68,9 +68,10 @@ class RegistryEntry(BaseModel):
 def _extract_model_info(source: str, model_data: dict = None) -> RegistryEntry:
     """
     Helper function to extract common model information.\n
-    :param source: Origin of this data (eg: HuggingFace, Ollama, ModelScope)
+    Output stacked by newest model first for each conversion type.\n
+    :param source: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
     :param model_data: Metadata of the local cache library of `source`
-    :return: A class object containing model metadata relevant to execution
+    :return: A class object containing model metadata relevant to execution\n
     """
     cache_dir = []
     cache_sizes = []

@@ -8,6 +8,8 @@ from nnll_10.package.token_counters import tk_count
 
 
 class DisplayBar(DataTable):
+    """Thin instant user feedback display"""
+
     token_prefix = "ollama_chat/"
     duration: reactive[float] = reactive(0.0, recompose=True)
 
@@ -28,5 +30,5 @@ class DisplayBar(DataTable):
     @work(exclusive=True)
     async def calculate_audio(self, duration, unit_labels):
         """Live display of sound recording length"""
-        self.duration = duration
+        self.duration = duration if duration > 0.0 else 0.0
         self.update_cell_at((0, 2), f"{self.duration}{unit_labels[2]}", update_width=True)

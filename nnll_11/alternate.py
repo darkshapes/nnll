@@ -6,6 +6,8 @@ from pydantic import BaseModel
 
 from nnll_01 import debug_monitor
 
+#         async def process text chat
+
 
 class ChatWithListMemory(dspy.Module):
     @debug_monitor

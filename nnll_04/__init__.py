@@ -211,6 +211,20 @@ class ModelTool:
         import struct
         import json
 
+        # huggingface_hub.HfApi.parse_safetensors_file_metadata
+        # from safetensors import safe_open
+        # try:
+        #     with safe_open(safetensors_file, framework="pt", device="cpu") as f:
+        #         model_weights = {}
+        #         for key in f.keys():
+        #             model_weights[key] = f.get_tensor(key)
+        #         metadata = f.metadata()
+        #     if metadata is None:
+        #         metadata = {}
+        #     return model_weights, metadata
+        # except KeyError as error_log:
+        # pass
+
         assembled_data = {}
         with open(file_path_named, "rb") as file_contents_to:
             first_8_bytes = file_contents_to.read(8)

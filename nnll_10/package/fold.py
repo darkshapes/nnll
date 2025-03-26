@@ -112,6 +112,7 @@ class Fold(Container):
 
     @work(exclusive=True)
     async def pass_audio_to_tokenizer(self) -> None:
+        """Transmit audio to sample length"""
         sample_length = len(self.query_one("#voice_panel").audio)
         sample_frequency = self.query_one("#voice_panel").sample_freq
         duration = float(sample_length / sample_frequency)

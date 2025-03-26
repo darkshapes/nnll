@@ -5,7 +5,15 @@
         "unet": "transformer/diffusion_pytorch_model.safetensors.index.json",
         "text_encoder": "text_encoder/model.safetensors.index.json",
         "text_encoder_2": "text_encoder_2/model.safetensors.index.json",
-        "text_encoder_3": "text_encoder_3/model.safetensors.index.json"
+        "text_encoder_3": "text_encoder_3/model.safetensors.index.json",
+        "image": [
+            "nnll_60",
+            "ConstructPipeline",
+            "create_pipeline"
+        ],
+        "speech": [],
+        "text": [],
+        "video": []
     },
     "cogview-3": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/CogView3-Plus-3B",
@@ -16,7 +24,8 @@
             "guidance_scale": 4.0,
             "num_inference_steps": 50
         },
-        "torch_dtype": "torch.bfloat16"
+        "torch_dtype": "torch.bfloat16",
+        "constructor": "image"
     },
     "kolors": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/Kolors-diffusers",
@@ -26,7 +35,8 @@
             "guidance_scale": 5.0,
             "num_inference_steps": 50
         },
-        "pipe_name": "KolorsPipeline"
+        "pipe_name": "KolorsPipeline",
+        "constructor": "image"
     },
     "lumina-2": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/Lumina-Image-2.0",
@@ -38,7 +48,8 @@
             "num_inference_steps": 50
         },
         "pipe_name": "Lumina2Text2ImgPipeline",
-        "torch_dtype": "torch.bfloat16"
+        "torch_dtype": "torch.bfloat16",
+        "constructor": "image"
     },
     "stable-diffusion-1": {},
     "stable-diffusion-xl-base": {
@@ -63,7 +74,8 @@
             "denoising_end": 0.8,
             "output_type": "latent"
         },
-        "config": "/Users/unauthorized/Documents/GitHub/darkshapes/combo/sd_sdxl_base.yaml"
+        "config": "/Users/unauthorized/Documents/GitHub/darkshapes/combo/sd_sdxl_base.yaml",
+        "constructor": "image"
     },
     "stable-diffusionl-xl-refiner": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/stable-diffusion-xl-refiner-1.0",
@@ -75,25 +87,30 @@
         "defaults": {
             "num_inference_steps": 40,
             "denoising_end": 0.8
-        }
+        },
+        "constructor": "image"
     },
     "stable-diffusion-3": {
         "repo": "stabilityai/stable-diffusion-3.5-large",
-        "repo_alt": "stabilityai/stable-diffusion-3.5-medium"
+        "repo_alt": "stabilityai/stable-diffusion-3.5-medium",
+        "constructor": "image"
     },
     "flux-1-dev": {
         "repo": "black-forest-labs/FLUX.1-dev",
-        "repo_alt": "cocktailpeanut/xulf-d/"
+        "repo_alt": "cocktailpeanut/xulf-d/",
+        "constructor": "image"
     },
     "flux-1-schnell": {
         "repo": "black-forest-labs/FLUX.1-schnell",
         "repo_alt": "cocktailpeanut/xulf-s/",
-        "unet": {}
+        "unet": {},
+        "constructor": "image"
     },
     "pixart-sigma": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/PixArt-Sigma-XL-2-1024-MS",
         "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
-        "pipe_name": "PixArtSigmaPipeline"
+        "pipe_name": "PixArtSigmaPipeline",
+        "constructor": "image"
     },
     "dmd": {
         "solver": "LCMScheduler",
