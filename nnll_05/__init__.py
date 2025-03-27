@@ -8,7 +8,7 @@ mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 
 @mir_db.decorator
-def generate_from_hf_repo(known_repo: str, mir_data: dict = None) -> str:
+def generate_from_hf_repo(known_repo: str, mir_data: dict = {}) -> str:
     """
     Find MIR id from known repo name and run generation\n
     MIR data and call instructions autofilled by decorator\n

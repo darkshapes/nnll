@@ -214,14 +214,12 @@ class ModelTool:
         # huggingface_hub.HfApi.parse_safetensors_file_metadata
         # from safetensors import safe_open
         # try:
-        #     with safe_open(safetensors_file, framework="pt", device="cpu") as f:
+        #     with safe_open(safetensors_file, framework="pt", device="cpu") as stfile:
         #         model_weights = {}
-        #         for key in f.keys():
-        #             model_weights[key] = f.get_tensor(key)
-        #         metadata = f.metadata()
-        #     if metadata is None:
-        #         metadata = {}
-        #     return model_weights, metadata
+        #         for key in stfile.keys():
+        #             model_weights.setdefault(key,stfile.get_tensor(key))
+        #         model_weights.setdefault(metadata],stfile.metadata())
+        #     return model_weights
         # except KeyError as error_log:
         # pass
 

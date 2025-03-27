@@ -17,18 +17,20 @@ class ResponsePanel(TextArea):
     """Machine response field"""
 
     # nx_graph = None
+    # target_options = (,)
     prefix: str = "ollama_chat/"
     is_generating: reactive[bool] = reactive(False)
 
     def on_mount(self):
         # nx_graph = build_conversion_graph()
         # self.nx_graph = label_edge_attrib_for(nx_graph, 1,1)
+        # self.target_options = set([edge[1] for edge in nx_graph.edges]) # as in : ('text','text')[1]
         self.language = "markdown"
         self.read_only = True
         self.soft_wrap = True
 
     @work(group="chat")
-    async def generate_response(self, model, message):  # ,source, target):
+    async def generate_response(self, model, message):  # content, target):
         """Fill display with generated content"""
         self.is_generating = True
         # output = execute_model_path(input_types: list[str], content[image|text|np.array], target)

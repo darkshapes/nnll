@@ -5,9 +5,14 @@
 
 ## neural network link library
 
-`nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components, and may appeal to researchers or developers working in the general field of machine learning.
+`nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components and may appeal to researchers or developers working in the general field of machine learning.
 
-Emphasis is on refining and optimizing code for extracting and classifying metadata, ML pipeline preparation, GPU configuration, consumer-grade system optimization, and a comprehensive suite of direct and indirect generative AI preparations for 🧨Diffusers, 🤗Transformers, 🦙Ollama and 🌀DSPy frameworks.
+Tasks :
+* Generative AI pipeline preparation & execution
+* Extracting and classifying metadata from images/models
+* Consumer-grade GPU/CPU inference optimization
+* Misc UX/UI Experimentation
+* 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
 
 Thank you for looking forward to it.
 
@@ -15,16 +20,17 @@ Thank you for looking forward to it.
 
 # :shipit:
 
-[![Python application](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
-![GitHub repo size](https://img.shields.io/github/repo-size/darkshapes/nnll)<br>
-![Discord](https://img.shields.io/discord/1266757128249675867)<br>
+[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
+![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
+![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
+![Discord](https://img.shields.io/discord/1266757128249675867?color=black)<br>
 <br>
 
 ## use
 Some modules are full scripts and can be run from command line. These are written here:
 
+`astra`        - Experimental generative system<br>
 `nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
-`nnll-find`    - Scan .json files from `-parse` for string patterns within tensor layer metadata and output matches to console.<br>
 <br>
 
 ## specifics
@@ -39,6 +45,13 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 
 
 `nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want a static hard copy, you are welcome to copy and paste folders or code wherever you please.
+
+* Environment  : `uv`
+* Testing      : `pytest -vv`
+* Formatting   : `ruff/better align`
+* Linting      : `ruff/pylint`
+* Type Checking: `pylance/pyright`
+* Spelling     : `typos`
 
 <br><br>
 

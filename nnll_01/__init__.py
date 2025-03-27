@@ -10,11 +10,13 @@ import os
 from argparse import ArgumentParser
 from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING, Logger  # noqa: F401, pylint:disable=unused-import
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Literal
 from threading import get_native_id
+from datetime import datetime
+# import viztracer
 
 
-def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f") -> Logger:
+def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
     """
     Configure and launch *structured* logger integration
     base python logger + formatter + custom logger\n
@@ -23,7 +25,6 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
     :param time_format: The desired time signature format of the log entry
     :return: a `logging` object ready to use for tracking operations
     """
-    from datetime import datetime
 
     import logging
     import structlog
@@ -33,7 +34,6 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
     from structlog import configure as structlog_conf, make_filtering_bound_logger, WriteLoggerFactory, get_logger
 
     file_name += f"{datetime.now().strftime('%Y%m%d')}"
-    os.makedirs(folder_path_named, exist_ok=True)
     assembled_path = os.path.join(folder_path_named, file_name)
 
     timestamper = [  # replicate in both loggers
@@ -71,11 +71,11 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
     )
     litellm.disable_streaming_logging = True
     litellm.turn_off_message_logging = True
-    litellm.suppress_debug_info = False
-    litellm.json_logs = True
+    litellm.suppress_debug_info = True
+    litellm.json_logs = True  # type: ignore
     handler = logging.FileHandler(assembled_path)
     handler.setFormatter(formatter)
-    handler.setLevel(logging.DEBUG)
+    handler.setLevel(level)
     root_logger = logging.getLogger()
     root_logger.addHandler(handler)
     # litellm._turn_on_debug()
@@ -110,18 +110,28 @@ def debug_monitor(func: Callable = None) -> Callable:
 
             return return_data
         except Exception as e:
+            # file_name = f".nnll_trace{datetime.now().strftime('%Y%m%d')}"
+            # assembled_path = os.path.join("log", file_name)
+
+            # tracer = viztracer.VizTracer()
+            # tracer.start()
             logger_obj.debug(
-                str(e)
-                # exc_info=str(e),
-                # filename=func.__module__,
-                # pathname=Path(func.__module__).cwd(),
-                # func_name=func.__name__,
-                # process=os.getppid(),
-                # thread=get_native_id(),
-                # **{"ain_type": type(args), "ain": args} if args else {},
-                # **{"kin_type": type(kwargs), "kin": kwargs} if kwargs else {},
+                {
+                    str(e): {
+                        "exc_info": e,
+                        "filename": func.__module__,
+                        "pathname": Path(func.__module__).cwd(),
+                        "func_name": func.__name__,
+                        "process": os.getppid(),
+                        "thread": get_native_id(),
+                        **{"ain_type": type(args), "ain": args if args else {}},
+                        **{"kin_type": type(kwargs), "kin": kwargs if kwargs else {}},
+                    }
+                }
             )
             # Re-raise the exception to propagate it
+            # tracer.stop()
+            # tracer.save(output_file=assembled_path)
             raise e
 
     return wrapper
@@ -151,6 +161,17 @@ def debug_message(*args, **kwargs):
     )
 
 
+os.makedirs("log", exist_ok=True)
+
+
+def main():
+    from nnll_10.package import __main__ as app_nnll_10
+
+    app = app_nnll_10.Combo(ansi_color=False)
+    info_message("Launching...")
+    app.run()
+
+
 if __name__ == "__main__":
     from sys import modules as sys_modules
 
@@ -172,7 +193,8 @@ if __name__ == "__main__":
     else:
         LOG_LEVEL = DEBUG
 
-    logger_obj = configure_logging()
+    logger_obj = configure_logging(level=LOG_LEVEL)
+
     try:
         from importlib import metadata
 

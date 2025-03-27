@@ -10,9 +10,7 @@ from textual.reactive import reactive
 
 from nnll_01 import info_message as nfo
 from nnll_10.package.main_screen import MainScreen  # pylint: disable=import-error
-from viztracer import VizTracer
-from datetime import datetime
-import os
+
 # from theme import fluoresce_theme
 
 
@@ -23,9 +21,6 @@ class Combo(App):
     CSS_PATH = "combo.tcss"
     BINDINGS = [Binding("escape", "safe_exit", "◼︎ / ⏏︎")]  # Cancel response
 
-    file_name = f".nnll{datetime.now().strftime('%Y%m%d')}_trace.json"
-    assembled_path = os.path.join("log", file_name)
-    tracer = VizTracer()
     safety: reactive[int] = reactive(1)
 
     def on_mount(self) -> None:
@@ -34,7 +29,6 @@ class Combo(App):
         self.scroll_sensitivity_y = 1
         self.supports_smooth_scrolling = True
         self.theme = "flexoki"
-        self.tracer.start()
 
     @work(exit_on_error=True)
     async def _on_key(self, event: events.Key):
@@ -45,12 +39,30 @@ class Combo(App):
             self.safety -= 1
             if self.safety < 0:
                 event.prevent_default()
-                self.tracer.stop()
-                self.tracer.save(output_file=self.assembled_path)  # also takes output_file as an optional argument
+
                 await self.app.action_quit()
 
 
 if __name__ == "__main__":
+    import sys
+
+    trace = False
+    if sys.argv[0] == "-t" or sys.argv[0] == "--trace":
+        from viztracer import VizTracer
+
+        trace = True
+        tracer = VizTracer()
+        tracer.start()
+
     app = Combo(ansi_color=False)
+
     nfo("Launching...")
     app.run()
+    if trace:
+        import os
+        from datetime import datetime
+
+        os.makedirs("log", exist_ok=True)
+        assembled_path = os.path.join("log", f".nnll{datetime.now().strftime('%Y%m%d')}_trace.json")
+        tracer.stop()
+        tracer.save(output_file=assembled_path)  # also takes output_file as an optional argument

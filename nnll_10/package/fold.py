@@ -79,12 +79,20 @@ class Fold(Container):
         """Class method, window for triggering key bindings"""
         if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
             event.prevent_default()
-            message = self.query_one("#message_panel").text
             model_path = f"{self.current_model}"
-            response_panel = self.query_one("#response_panel")
+            # target = self.query_one("#tag_line").target
+            message = self.query_one("#message_panel").text
+            # audio_sample = self.query_one("#voice_panel").audio
+            # image_sample = self.query_one("#image_panel").file_name # probably drag and drop this
+            # content = {
+            #     "text_sample": message if message and len(message) > 0 else None,
+            #     "audio_sample": audio_sample if audio_sample and len(audio_sample) > 0 else None,
+            #     "image_sample": image_sample if image_sample and len(image_sample) > 0 else None,
+            # }
             self.query_one("#tag_line").add_class("active")
-            response_panel.generate_response(model_path, message)
-            self.query_one("#tag_line").set_classes("tag_line")
+            response_panel = self.query_one("#response_panel")
+            response_panel.generate_response(model_path, message)  # , content, target)
+            self.query_one("#tag_line").set_classes(["tag_line"])
         elif event.key == "escape":  # self.query_one("#responsive_input").has_focus_within and
             # self.query_one("#response_panel").focus()
             self.cancel_generation()
@@ -107,7 +115,7 @@ class Fold(Container):
     async def pass_text_to_tokenizer(self) -> None:
         """Transmit info to token calculation"""
         message = self.query_one("#message_panel").text
-        self.current_model = self.query_one("#tag_line").current_model
+        # self.current_model = self.query_one("#tag_line").current_model
         self.query_one("#display_bar").calculate_tokens(self.current_model, message, self.unit_labels)
 
     @work(exclusive=True)

@@ -27,7 +27,6 @@ nnll_10/package/__main__.py
 nnll_10/package/carousel.py
 nnll_10/package/chat_machine.py
 nnll_10/package/combo.tcss
-nnll_10/package/conversion_graph.py
 nnll_10/package/display_bar.py
 nnll_10/package/fold.py
 nnll_10/package/input_tag.py
