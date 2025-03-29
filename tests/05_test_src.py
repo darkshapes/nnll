@@ -56,4 +56,7 @@ def test_main():
 # response = main(nx.graph, {"text": "Test Prompt"}, target="text")
 
 if __name__ == "__main__":
-    test_main()
+    import sys
+
+    if "pytest" not in sys.modules:
+        test_main()
