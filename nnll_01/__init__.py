@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
-# import viztracer
+import viztracer
 
 
 def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
@@ -109,16 +109,16 @@ def debug_monitor(func: Callable = None) -> Callable:
             )
 
             return return_data
-        except Exception as e:
-            # file_name = f".nnll_trace{datetime.now().strftime('%Y%m%d')}"
-            # assembled_path = os.path.join("log", file_name)
+        except Exception as error_log:
+            file_name = f".nnll_trace{datetime.now().strftime('%Y%m%d%_H.%M.%S.%f')}.json"
+            assembled_path = os.path.join("log", file_name)
 
-            # tracer = viztracer.VizTracer()
-            # tracer.start()
+            tracer = viztracer.VizTracer()
+            tracer.start()
             logger_obj.debug(
                 {
-                    str(e): {
-                        "exc_info": e,
+                    "Exception": {
+                        "exc_info": error_log,
                         "filename": func.__module__,
                         "pathname": Path(func.__module__).cwd(),
                         "func_name": func.__name__,
@@ -126,13 +126,15 @@ def debug_monitor(func: Callable = None) -> Callable:
                         "thread": get_native_id(),
                         **{"ain_type": type(args), "ain": args if args else {}},
                         **{"kin_type": type(kwargs), "kin": kwargs if kwargs else {}},
+                        "locals": locals(),
+                        "globals": globals(),
                     }
                 }
             )
             # Re-raise the exception to propagate it
-            # tracer.stop()
-            # tracer.save(output_file=assembled_path)
-            raise e
+            tracer.stop()
+            tracer.save(output_file=assembled_path)
+            raise error_log
 
     return wrapper
 
@@ -151,14 +153,7 @@ def info_message(*args, **kwargs):
 
 def debug_message(*args, **kwargs):
     """Info log output"""
-    logger_obj.debug(
-        "%s",
-        type_ain=type(args),
-        ain=args,
-        type_kin=type(kwargs),
-        kin=kwargs,
-        stack_info=True,
-    )
+    logger_obj.debug("%s", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=False)
 
 
 os.makedirs("log", exist_ok=True)

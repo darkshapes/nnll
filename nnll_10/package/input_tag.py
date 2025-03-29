@@ -10,7 +10,7 @@ from nnll_10.package.carousel import Carousel
 class InputTag(Carousel):
     """Input Types"""
 
-    available_inputs: dict = {"Prompt": "message_panel", "Speech": "voice_panel"}
+    available_inputs: dict = {"▲ Prompt ▼": "message_panel", "▲ Speech ▼": "voice_panel"}
     current_input: reactive[str] = reactive("")
 
     def on_mount(self):

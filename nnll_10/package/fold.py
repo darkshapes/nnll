@@ -64,7 +64,7 @@ class Fold(Container):
             yield InputTag(id="input_tag")
         yield DisplayBar(id="display_bar")
         with Container(id="responsive_display"):
-            yield ResponsePanel("\n", id="response_panel")
+            yield ResponsePanel("\n", id="response_panel", language="markdown")
             yield TagLine(id="tag_line", classes="tag_line")
 
     def on_mount(self) -> None:
@@ -85,9 +85,9 @@ class Fold(Container):
             # audio_sample = self.query_one("#voice_panel").audio
             # image_sample = self.query_one("#image_panel").file_name # probably drag and drop this
             # content = {
-            #     "text_sample": message if message and len(message) > 0 else None,
-            #     "audio_sample": audio_sample if audio_sample and len(audio_sample) > 0 else None,
-            #     "image_sample": image_sample if image_sample and len(image_sample) > 0 else None,
+            #     "text": message if message and len(message) > 0 else None,
+            #     "audio": audio_sample if audio_sample and len(audio_sample) > 0 else None,
+            #     "image": image_sample if image_sample and len(image_sample) > 0 else None,
             # }
             self.query_one("#tag_line").add_class("active")
             response_panel = self.query_one("#response_panel")

@@ -25,13 +25,13 @@ nnll[nnll_64]
 [dev]
 nnll[all]
 aioresponses>=0.7.8
-nnll[dev]
 pytest-asyncio>=0.25.3
 pytest>=8.3.4
 ruff>=0.9.7
 textual-dev>=1.7.0
 pytest-tornasync>=0.6.0.post2
 pytest-trio>=0.8.0
+viztracer>=1.0.3
 
 [nnll-03]
 aiofiles>=24.1.0
@@ -53,12 +53,13 @@ transformers>=4.49.0
 [nnll-10]
 rich>=13.9.4
 dspy>=2.6.13
-litellm>=1.63.12
 sounddevice>=0.5.1
-textual>=2.1.2
+textual[syntax]>=2.1.2
 textual-plotext>=1.0.1
 ollama>=0.4.7
 numpy>=2.2.3
+tree-sitter>=0.24.0
+litellm>=1.65.0
 
 [nnll-11]
 dspy>=2.6.13

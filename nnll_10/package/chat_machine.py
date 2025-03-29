@@ -1,9 +1,10 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+from asyncio import Future
 import dspy
 
-from nnll_01 import debug_monitor
+from nnll_01 import debug_monitor, debug_message as dbug
 # from pydantic import BaseModel
 
 
@@ -39,26 +40,28 @@ class ChainOfThought(dspy.Signature):
 
 
 @debug_monitor
-async def main(model, message):
-    local_llama = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
-    dspy.settings.configure(lm=local_llama, async_max_workers=4)
+async def main(model: str, message: str):
+    model = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
+    dspy.settings.configure(lm=model, async_max_workers=8)
     generator = dspy.asyncify(dspy.Predict(BasicQA))
     streaminator = dspy.streamify(generator)
-
     async for chunk in streaminator(question=message, stream=True):
-        if isinstance(chunk, dspy.Prediction):
-            if str(chunk) is not None:
-                yield ""  # str(chunk)
-        else:
-            chnk = chunk["choices"][0]["delta"]["content"]
-            if chnk is not None:
-                yield chnk
+        try:
+            if chunk is not None:
+                if isinstance(chunk, dspy.Prediction):
+                    yield chunk
+                else:
+                    chnk = chunk["choices"][0]["delta"]["content"]
+                    if chnk is not None:
+                        yield chnk
+        except AttributeError as error_log:
+            dbug(error_log)
 
 
 @debug_monitor
 async def chat_machine(model, message):
     async for chunk in main(model, message):
-        yield chunk  # Stream each chunk in real-time
+        yield chunk
 
 
 # ["choices"][0]["delta"]["content"]  # Process chunks as they arrive

@@ -14,12 +14,12 @@ from nnll_01 import debug_message, debug_monitor
 # from package import response_panel
 
 
-VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "upscale_image"]
+VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d", "upscale_image"]
 OLLAMA_TASKS = {("image", "text"): ["mllama", "llava", "vllm"]}
 LMS_TASKS = {("text", "text"): ["llm"], ("image", "text"): [True]}
 HUB_TASKS = {
     ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
-    ("text", "text"): ["chat", "conversational", "text-generation"],
+    ("text", "text"): ["chat", "conversational", "text-generation", "text2text-generation"],
     ("text", "video"): ["video generation"],
     ("speech", "text"): ["speech-translation", "speech-summarization", "automatic-speech-recognition"],
 }

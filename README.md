@@ -1,64 +1,24 @@
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll
-
-## neural network link library
+# nnll <br><font size=5>neural network link library</font>
 
 `nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components and may appeal to researchers or developers working in the general field of machine learning.
 
-Tasks :
 * Generative AI pipeline preparation & execution
 * Extracting and classifying metadata from images/models
 * Consumer-grade GPU/CPU inference optimization
 * Misc UX/UI Experimentation
-* 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
-
-Thank you for looking forward to it.
-
-<br>
+* 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM<br><br>
 
 # :shipit:
-
-[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml)<br>
+[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
 ![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
-![Discord](https://img.shields.io/discord/1266757128249675867?color=black)<br>
-<br>
+![Discord](https://img.shields.io/discord/1266757128249675867?color=black)<br><br>
 
-## use
-Some modules are full scripts and can be run from command line. These are written here:
-
-`astra`        - Experimental generative system<br>
-`nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
-<br>
-
-## specifics
-
-Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
-
-- *Recommended* : Add the project as a dependency including only modules that are needed with `"nnll[nnll_04,nnll_16]" @ git+https://github.com/darkshapes/nnll`
-- Install the entire project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
-- Basic clone or fork of the project
--  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
-- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
-
-
-`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want a static hard copy, you are welcome to copy and paste folders or code wherever you please.
-
-* Environment  : `uv`
-* Testing      : `pytest -vv`
-* Formatting   : `ruff/better align`
-* Linting      : `ruff/pylint`
-* Type Checking: `pylance/pyright`
-* Spelling     : `typos`
-
-<br><br>
-
-## setup
-
-##### clone repo
-
+## setup <br> <font size=2>`clone` -> `venv` -> `activate` -> `pip install "nnll[module]"`</font>
+#####  clone repo
 > ```
 > git clone https://github.com/darkshapes/nnll.git
 > ```
@@ -85,20 +45,45 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 <details> <summary> <a>Next--></a></summary>
 
 ##### 4 install
+> - install the bare minimum:
 > ```
 > pip install -e nnll
 > ```
-> or for select packages
+> - install select packages:
 > ```
 > pip install -e "nnll[nnll_33,nnll_56]"
 > ```
-> or for all packages :
+> - install all packages :
 > ```
 > pip install -e "nnll[dev]"
 >```
-
 ##### Done.
-</details>
-</details>
-</details>
+</details></details></details><br>
+
+## use
+Some modules are full scripts and can be run from command line. These are written here:
+
+`astra`        - Experimental generative system<br>
+`nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
+<br>
+
+Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
+
+- *Recommended* : Add the project as a dependency including only modules that are needed with `"nnll[nnll_04,nnll_16]" @ git+https://github.com/darkshapes/nnll`
+- Install the entire project as a dependency via `nnll @ git+https://github.com/darkshapes/nnll`
+- Basic clone or fork of the project
+-  Use a [submodule](https://github.blog/open-source/git/working-with-submodules/)
+- [Filter](https://github.com/newren/git-filter-repo/) a clone of the project to a single subfolder and include it in your own
+
+
+`nnll` is a 'living' project. Like a spoken language, it evolves over time. For this reason, we prefer 'living' duplications of the repo. If you still want a static hard copy, you are welcome to copy and paste folders or code wherever you please.<br><br>
+## contributing
+```
+* Environment  : uv
+* Testing      : pytest -vv tests/*.py
+* Formatting   : ruff/better align
+* Linting      : ruff/pylint
+* Type Checking: pylance/pyright
+* Spelling     : typos vsc
+```
 <br><br><br>
