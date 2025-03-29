@@ -94,25 +94,3 @@ def loop_in_feature_processes(nx_graph: nx.Graph, process_type: str, target: str
         language (t/s:interpret/i:pose/v:gesture/m:genre+instrumentation))
     """
     return nx_graph, process_type, target
-
-
-# get all neighbor connection
-# nx_graph['speech']['text']
-
-# get all model name on graph
-# nx_graph.edges.data('model_id')
-
-# change attribute
-# nx_graph.edges[‘text’, ‘image’][‘weight'] = 4.2
-# edge_attrib nx.get_edge_attributes(nx_graph,'key')
-
-# get number of edges/paths directed away
-# nx_graph.out_degree('text')
-
-# get number of edges/paths directed towards
-# nx_graph.in_degree('text')
-
-# show all edge attributes by index
-# node_attrib nx.get_edge_attributes(nx_graph,'key')
-
-# seen2 = set([e[1] for e in nx_graph.edges]) # list all potential target states (to populate list)
