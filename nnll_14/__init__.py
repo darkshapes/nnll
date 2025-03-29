@@ -3,10 +3,8 @@
 
 # pylint: disable=import-outside-toplevel
 
-from typing import Dict
 import networkx as nx
 from nnll_01 import debug_monitor
-from nnll_15 import RegistryEntry
 
 
 @debug_monitor
@@ -65,38 +63,34 @@ def label_edge_attrib_for(nx_graph: nx.Graph, ollama: bool = False, hf_hub: bool
 
 
 @debug_monitor
-def path_objective(nx_graph: nx.Graph, source: str, target: str):
+def trace_objective(nx_graph: nx.Graph, prompt_type: str, target: str):
     """
-    Find a valid path from current state (source) to designated state (target)\n
+    Find a valid path from current state (prompt_type) to designated state (target)\n
     :param nx_graph: Model graph to use for tracking operation order
-    :param source: Input prompt state/states
+    :param prompt_type: Input prompt state/states
     :param target: The user-seleccted end-state
     :return: An iterator for the edges forming a way towards the target, or Note
     """
 
-    # Ensure path exists (otherwise 'bidirectional' loops infinitely)
-    if nx.has_path(nx_graph, source, target):
-        model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
+    # Ensure path exists (otherwise 'bidirectional' may loop infinitely)
+    if nx.has_path(nx_graph, prompt_type, target):
+        model_path = nx.bidirectional_shortest_path(nx_graph, prompt_type, target)
+        if len(model_path) == 1:
+            model_path.append(target)
         return model_path
 
 
-# get all neighbor connection
-# nx_graph['speech']['text']
+@debug_monitor
+def loop_in_feature_processes(nx_graph: nx.Graph, process_type: str, target: str) -> nx.Graph:
+    """loop in additional process chains based on target
+    graft to init/callback of imported function
+    add processes to appropriate graph edges
 
-# get all model name on graph
-# nx_graph.edges.data('keys')
-
-# change attribute
-# nx_graph.edges[‘text’, ‘image’][‘weight'] = 4.2
-# edge_attrib nx.get_edge_attributes(nx_graph,'key')
-
-# get number of edges/paths directed away
-# nx_graph.out_degree('text')
-
-# get number of edges/paths directed towards
-# nx_graph.in_degree('text')
-
-# show all edge attributes by index
-# node_attrib nx.get_edge_attributes(nx_graph,'key')
-
-# seen2 = set([e[1] for e in nx_graph.edges]) # list all potential target states (to populate list)
+    feature switches available to user:
+        none: (for single-input streams)
+        description (t:s:i:v:m:meta analysis)
+        reference (t:s:i:v:m:retrieval augmentation)
+        identity (t:writer/i:face/s:voice/v:m:phrasing))
+        language (t/s:interpret/i:pose/v:gesture/m:genre+instrumentation))
+    """
+    return nx_graph, process_type, target

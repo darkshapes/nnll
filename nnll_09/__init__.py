@@ -6,10 +6,10 @@
 
 def encode_prompt(device, prompts, tokenizers, text_encoders):
     """
-    ####  Create prompt encodings prior to loading main model to lower memory overhead
-    #### `prompts`: prompt string fed from a list of prompts
-    #### `tokenizers`: tokenizer models
-    #### OUTPUT: a set of encodings formatted to feed into `pipe`
+     Create prompt encodings prior to loading main model to lower memory overhead
+    :param `prompts`: Prompt string fed from a list of prompts
+    :param `tokenizers`: Tokenizer models
+    OUTPUT: a set of encodings formatted to feed into `pipe`
     """
     import os
     import sys

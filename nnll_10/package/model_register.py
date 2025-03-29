@@ -171,6 +171,6 @@ def from_ollama_cache() -> dict:
         else:
             short_name = str(model.model).strip("[@]")
         model_size_legible = legible_size(model.size.real)
-        model_desc = f"{short_name} - {model_size_legible}"
+        model_desc = f"▲ {short_name} - {model_size_legible} ▼"
         map_models.setdefault(model_desc, model.model)
     return map_models

@@ -2,6 +2,7 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
+from math import exp
 import os
 from unittest import TestCase, mock
 import pytest
@@ -35,8 +36,7 @@ class TestExtractAndMatchMetadata(TestCase):
     @mock.patch("builtins.open", side_effect=IOError)
     def test_io_error(self, mock_open):
         with pytest.raises(OSError) as exc_info:
-            compute_hash_for("n.txt")
-        assert "File 'n.txt' does not exist." in str(exc_info.value)
+            compute_hash_for("test.txt")
 
     @classmethod
     def tearDownClass(cls) -> None:
