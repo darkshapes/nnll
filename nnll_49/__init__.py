@@ -266,15 +266,14 @@ def validate_mapping_bracket_pair_structure_of(possibly_invalid: str) -> str:
     :return: A correctly formatted string ready for json.loads/dict conversion operations
     """
 
-    _, bracketed_kv_pairs = possibly_invalid
-    bracketed_kv_pairs = BracketedDict(brackets=bracketed_kv_pairs)
+    _, kv_pairs = possibly_invalid
+    bracketed_kv_pairs = BracketedDict(bracketed=kv_pairs)
 
     # There may also need to be a check for quotes here
 
     valid_kv_pairs = BracketedDict.model_validate(bracketed_kv_pairs)
-
-    pair_string_checked = getattr(valid_kv_pairs, next(iter(valid_kv_pairs.model_fields)))  # Removes pydantic annotations
-    pair_string = str(pair_string_checked).replace("'", '"')
+    # Removes pydantic annotations
+    pair_string = str(valid_kv_pairs.bracketed).replace("'", '"')
     return pair_string
 
 
@@ -301,8 +300,7 @@ def extract_dict_by_delineation(deprompted_text: str) -> Tuple[dict, list]:
 
         delineated_str = ListOfDelineatedStr(convert=traces_of_pairs)
         key, _ = next(iter(traces_of_pairs))
-        reformed_sub_dict = getattr(delineated_str, next(iter(delineated_str.model_fields)))
-        validated_string = validate_mapping_bracket_pair_structure_of(reformed_sub_dict)
+        validated_string = validate_mapping_bracket_pair_structure_of(delineated_str.convert)
         repaired_sub_dict[key] = validated_string
         return repaired_sub_dict
 

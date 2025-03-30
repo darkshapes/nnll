@@ -41,28 +41,3 @@ class Combo(App):
                 event.prevent_default()
 
                 await self.app.action_quit()
-
-
-if __name__ == "__main__":
-    # import sys
-
-    # trace = False
-    # if sys.argv[0] == "-t" or sys.argv[0] == "--trace":
-    #     from viztracer import VizTracer
-
-    #     trace = True
-    #     tracer = VizTracer()
-    #     tracer.start()
-
-    app = Combo(ansi_color=False)
-
-    nfo("Launching...")
-    app.run()
-    # if trace:
-    #     import os
-    #     from datetime import datetime
-
-    #     os.makedirs("log", exist_ok=True)
-    #     assembled_path = os.path.join("log", f".nnll{datetime.now().strftime('%Y%m%d')}_trace.json")
-    #     tracer.stop()
-    #     tracer.save(output_file=assembled_path)  # also takes output_file as an optional argument

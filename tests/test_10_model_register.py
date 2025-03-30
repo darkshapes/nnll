@@ -1,7 +1,7 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
-# pylint: disable=redefined-outer-name
+# pylint: disable=redefined-outer-name, unused-argument
 
 from unittest import mock
 import pytest
@@ -10,12 +10,12 @@ import datetime
 
 from nnll_10.package.model_register import from_ollama_cache
 from nnll_10.package import __main__
-from nnll_10.package.fold import Fold
 
 
-# @pytest.mark.asyncio(loop_scope="session")
-# async def test_model_register(app=__main__.Combo()):
-#     """ """
+@pytest.fixture(scope="session")
+def test_app_instance():
+    app = __main__.Combo()
+    return app
 
 
 class Model:
@@ -81,12 +81,6 @@ def mock_ollama_data():
         yield mock_get_registry_data
 
 
-@pytest.fixture(scope="session")
-def test_app_instance():
-    app = __main__.Combo()
-    return app
-
-
 @pytest.mark.asyncio(loop_scope="session")
 async def test_model_selected_on_init(mock_ollama_data, test_app_instance):
     """Test that a model is available"""
@@ -100,9 +94,9 @@ async def test_model_selected_on_init(mock_ollama_data, test_app_instance):
 
 
 @pytest_asyncio.fixture(loop_scope="session")
-def mock_generate_response():
+def mock_scribe_response():
     """Create a decoy chat machine"""
-    with mock.patch("nnll_10.package.fold.ResponsePanel.generate_response", mock.MagicMock()) as mocked:
+    with mock.patch("nnll_10.package.fold.ResponsePanel.scribe_response", mock.MagicMock()) as mocked:
         yield mocked
 
 
@@ -117,7 +111,7 @@ async def test_status_color_remains(mock_ollama_data, app=__main__.Combo()):
 
 
 @pytest.mark.asyncio(loop_scope="session")
-async def test_status_color_continues_to_remain(mock_ollama_data, mock_generate_response, app=__main__.Combo()):
+async def test_status_color_continues_to_remain(mock_ollama_data, mock_scribe_response, app=__main__.Combo()):
     """Ensure cannot accidentally trigger"""
     async with app.run_test() as pilot:
         # ensure no accidental triggers
@@ -126,11 +120,11 @@ async def test_status_color_continues_to_remain(mock_ollama_data, mock_generate_
         screen = pilot.app.screen.query("#tag_line")
         node = pilot.app.screen.query_one(screen.nodes[0].__class__.__name__)
         assert node.classes == expected
-        mock_generate_response.assert_not_called()
+        mock_scribe_response.assert_not_called()
 
 
 @pytest.mark.asyncio(loop_scope="session")
-async def test_status_color_changes(mock_generate_response, mock_ollama_data, app=__main__.Combo()):
+async def test_status_color_changes(mock_scribe_response, mock_ollama_data, app=__main__.Combo()):
     """Ensure color changes when activated"""
     async with app.run_test() as pilot:
         text_insert = "chunk"
@@ -146,7 +140,7 @@ async def test_status_color_changes(mock_generate_response, mock_ollama_data, ap
         node = pilot.app.screen.query_one(screen.nodes[0].__class__.__name__)
         assert node.classes == expected
 
-        mock_generate_response.assert_called_once()
+        mock_scribe_response.assert_called_once()
         last_model = node.current_model
 
         # test color reverts
@@ -158,6 +152,6 @@ async def test_status_color_changes(mock_generate_response, mock_ollama_data, ap
         screen = pilot.app.screen.query("#tag_line")
         node = pilot.app.screen.query_one(screen.nodes[0].__class__.__name__)
         assert node.classes == expected
-        mock_generate_response.assert_called_with(last_model, text_insert)
+        mock_scribe_response.assert_called_with(last_model, text_insert)
 
         pilot.app.exit()

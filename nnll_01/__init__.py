@@ -162,9 +162,8 @@ os.makedirs("log", exist_ok=True)
 def main():
     from nnll_10.package import __main__ as app_nnll_10
 
-    app = app_nnll_10.Combo(ansi_color=False)
     info_message("Launching...")
-    app.run()
+    return app_nnll_10.Combo(ansi_color=False)
 
 
 if __name__ == "__main__":

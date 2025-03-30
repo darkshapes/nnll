@@ -228,7 +228,7 @@ class BracketedDict(BaseModel):
     :type node_data: `str`, required
     """
 
-    brackets: Annotated[str, Field(init=False), AfterValidator(bracket_check)]
+    bracketed: Annotated[str, Field(init=False, exclude=True), AfterValidator(bracket_check)]
 
 
 class IsThisNode:

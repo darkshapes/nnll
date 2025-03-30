@@ -8,7 +8,7 @@
 from typing import Dict, List, Tuple
 from pydantic import BaseModel, computed_field
 
-from nnll_01 import debug_message, debug_monitor
+from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
 
 # import open_webui
 # from package import response_panel
@@ -33,6 +33,7 @@ class RegistryEntry(BaseModel):
     tags: list[str]
     library: str
     timestamp: int
+    # tokenizer: None
 
     @computed_field
     @property
@@ -77,6 +78,7 @@ def _extract_model_info(source: str, model_data: dict = None) -> RegistryEntry:
     cache_sizes = []
     timestamp = []
     model_tags = []
+    # tokenizer: None
 
     if source == "ollama":
         cache_dir = [f"ollama_chat/{model.model}" for model in model_data.models]
@@ -90,6 +92,7 @@ def _extract_model_info(source: str, model_data: dict = None) -> RegistryEntry:
         cache_dir = [obj.repo_id for obj in model_data.repos]
         cache_sizes = [obj.size_on_disk for obj in model_data.repos]
         timestamp = [int(obj.last_modified) for obj in model_data.repos]
+        # tokenizer = [x.file_path for obj in model_data.repos for x in obj.revisions if "tokenizer.json" in str(x.file_path)]
 
         metadata = [repocard.RepoCard.load(repo_name.repo_id) for repo_name in model_data.repos]
         repo_details = [obj.data for obj in metadata]
@@ -102,7 +105,7 @@ def _extract_model_info(source: str, model_data: dict = None) -> RegistryEntry:
             model_tags.append(current_tag if current_tag else ["unknown"])
 
     else:
-        debug_message(f"Unsupported source: {source}")
+        dbug(f"Unsupported source: {source}")
         raise ValueError(f"Unsupported source: {source}")
 
     models = []
@@ -111,7 +114,7 @@ def _extract_model_info(source: str, model_data: dict = None) -> RegistryEntry:
         if getattr(entry, "available_tasks", []) != [("default_task:", None)]:
             models.append(entry)
 
-    debug_message(models)
+    dbug(models)
     models.sort(key=lambda x: x.timestamp, reverse=True)
     return models
 
@@ -132,3 +135,20 @@ def from_hf_hub_cache() -> Dict[str, RegistryEntry]:
 
     model_data = scan_cache_dir()
     return _extract_model_info("hub", model_data)
+
+
+def from_lms_cache() -> Dict[str, RegistryEntry]:
+    """!!! Incomplete! Retrieve models from local lmstudio cache.
+    我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。
+    LMStudio is not OSS, but contributions are welcome.
+    """
+    try:
+        import lmstudio as lms
+    except ImportError as error_log:
+        print("LMStudio not found")
+        nfo(error_log)
+
+    lms_client = lms.get_default_client()
+    lms_client.api_host = "localhost:1143"
+    model_data = lms.list_downloaded_models()
+    return _extract_model_info("lms", model_data)

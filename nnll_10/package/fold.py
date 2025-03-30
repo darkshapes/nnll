@@ -36,7 +36,7 @@ class Fold(Container):
     TEXT = """"""
 
     BINDINGS = [
-        Binding("`", "generate_response", "go", priority=True),  # Send to LLM
+        Binding("`", "scribe_response", "go", priority=True),  # Send to LLM
         Binding("bk", "", "⌨️"),
         Binding("alt+bk", "clear_input", "del"),
         Binding("ent", "start_recording", "◉", priority=True),
@@ -91,7 +91,7 @@ class Fold(Container):
             # }
             self.query_one("#tag_line").add_class("active")
             response_panel = self.query_one("#response_panel")
-            response_panel.generate_response(model_path, message)  # , content, target)
+            response_panel.scribe_response(model_path, message)  # , content, target)
             self.query_one("#tag_line").set_classes(["tag_line"])
         elif event.key == "escape":  # self.query_one("#responsive_input").has_focus_within and
             # self.query_one("#response_panel").focus()

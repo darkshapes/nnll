@@ -1510,7 +1510,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev219+gdb1c7d5.d20250328"
+version = "0.1.dev223+ga850fd3.d20250330"
 source = { editable = "." }
 dependencies = [
     { name = "structlog" },
