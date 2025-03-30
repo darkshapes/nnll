@@ -1,7 +1,7 @@
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll <br><font size=5>neural network link library</font>
+# nnll <br><sub>neural network link library</sub>
 
 `nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components and may appeal to researchers or developers working in the general field of machine learning.
 
@@ -17,7 +17,7 @@
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
 ![Discord](https://img.shields.io/discord/1266757128249675867?color=black)<br><br>
 
-## setup <br> <font size=2>`clone` -> `venv` -> `activate` -> `pip install "nnll[module]"`</font>
+## setup <br> <sub>`clone` -> `venv` -> `activate` -> `pip install "nnll[module]"`<sub>
 #####  clone repo
 > ```
 > git clone https://github.com/darkshapes/nnll.git

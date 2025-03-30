@@ -1,3 +1,6 @@
+from nnll_30 import read_json_file
+
+
 def tk_count(model, message):
     # import tiktoken
     # encoding = tiktoken.get_encoding("cl100k_base")

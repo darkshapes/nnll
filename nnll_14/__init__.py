@@ -93,4 +93,6 @@ def loop_in_feature_processes(nx_graph: nx.Graph, process_type: str, target: str
         identity (t:writer/i:face/s:voice/v:m:phrasing))
         language (t/s:interpret/i:pose/v:gesture/m:genre+instrumentation))
     """
-    return nx_graph, process_type, target
+    # nx_graph.edges[‘text’, ‘image’]['aux'] = [process_names,more_process_names]
+
+    return nx_graph

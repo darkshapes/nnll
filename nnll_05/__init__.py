@@ -5,7 +5,7 @@
 from typing import Any
 import networkx as nx
 from nnll_01 import debug_monitor, info_message as nfo
-from nnll_11 import chat_machine
+from nnll_11 import load_model
 from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 from nnll_14 import trace_objective  # , loop_in_feature_processes
 
@@ -86,17 +86,22 @@ def execute_path(nx_graph: nx.Graph, traced_path: list[tuple], prompt: Any) -> N
         nfo(registry_entry)
         current_entry = registry_entry[next(iter(registry_entry))]
         current_model = current_entry.get("model_id")
+        current_library = current_entry.get("library")
         nfo(f"current model : {current_model}")
-        if current_entry.get("library") == "hub":
+        if current_library == "hub":
             operations = lookup_function_for(current_model)
             import_name = next(iter(operations))
             module = importlib.import_module(import_name)
             func = getattr(module, module[import_name])
             new_output = func(current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
-
-        elif current_entry.get("library") == "ollama":
-            new_output = chat_machine(current_model, output_map[i])
+        elif current_library == "ollama":
+            chat_machine = load_model(current_model, current_library)
+            new_output = chat_machine.generate_response(output_map[i])
+            output_map.setdefault(i + 1, new_output)
+        elif current_library == "lmstudio":
+            chat_machine = load_model(current_model, current_library)
+            new_output = chat_machine.generate_response(output_map[i])
             output_map.setdefault(i + 1, new_output)
     return output_map
 
