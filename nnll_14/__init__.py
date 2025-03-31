@@ -27,18 +27,14 @@ def label_edge_attrib_for(nx_graph: nx.Graph, ollama: bool = False, hf_hub: bool
     :param hf_hub: Whether to process hub models
     :return: A graph with model data attached to it
     """
-    import os
+    from nnll_15 import RegistryEntry
 
     if ollama:
-        from nnll_15 import from_ollama_cache
-
-        ollama_models = from_ollama_cache()
+        ollama_models = RegistryEntry.from_model_data("ollama")
         for model in ollama_models:
             nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
     if hf_hub:
-        from nnll_15 import from_hf_hub_cache
-
-        hub_models = from_hf_hub_cache()
+        hub_models = hub_models = RegistryEntry.from_model_data("hub")
         for model in hub_models:
             nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
     return nx_graph
@@ -54,10 +50,10 @@ def trace_objective(nx_graph: nx.Graph, source: str, target: str):
     :return: An iterator for the edges forming a way towards the target, or Note
     """
 
-    # Ensure path exists (otherwise 'bidirectional' may loop infinitely)
-    if nx.has_path(nx_graph, source, target):
+    model_path = None
+    if nx.has_path(nx_graph, source, target):  # Ensure path exists (otherwise 'bidirectional' may loop infinitely)
         if source == target and source != "text":
-            original_target = target
+            original_target = target  # Solve case of non-text self-loop edge being incomplete transformation
             target = "text"
             model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
             model_path.append(original_target)
@@ -65,7 +61,7 @@ def trace_objective(nx_graph: nx.Graph, source: str, target: str):
             model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
             if len(model_path) == 1:
                 model_path.append(target)
-        return model_path
+    return model_path
 
 
 @debug_monitor
