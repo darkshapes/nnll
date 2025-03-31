@@ -34,49 +34,37 @@ def label_edge_attrib_for(nx_graph: nx.Graph, ollama: bool = False, hf_hub: bool
 
         ollama_models = from_ollama_cache()
         for model in ollama_models:
-            nx_graph.add_edges_from(
-                model.available_tasks,
-                entry=model,
-                key=os.path.basename(model.model),
-                library=model.library,
-                model_id=model.model,
-                size=model.size,
-                time=model.timestamp,
-                weight=1.0,
-            )
+            nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
     if hf_hub:
         from nnll_15 import from_hf_hub_cache
 
         hub_models = from_hf_hub_cache()
         for model in hub_models:
-            nx_graph.add_edges_from(
-                model.available_tasks,
-                entry=model,
-                library=model.library,
-                model_id=model.model,
-                name=os.path.basename(model.model),
-                size=model.size,
-                time=model.timestamp,
-                weight=1.0,
-            )
+            nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
     return nx_graph
 
 
 @debug_monitor
-def trace_objective(nx_graph: nx.Graph, prompt_type: str, target: str):
+def trace_objective(nx_graph: nx.Graph, source: str, target: str):
     """
-    Find a valid path from current state (prompt_type) to designated state (target)\n
+    Find a valid path from current state (source) to designated state (target)\n
     :param nx_graph: Model graph to use for tracking operation order
-    :param prompt_type: Input prompt state/states
-    :param target: The user-seleccted end-state
+    :param source: Input prompt type or starting state/states
+    :param target: The user-selected ending-state
     :return: An iterator for the edges forming a way towards the target, or Note
     """
 
     # Ensure path exists (otherwise 'bidirectional' may loop infinitely)
-    if nx.has_path(nx_graph, prompt_type, target):
-        model_path = nx.bidirectional_shortest_path(nx_graph, prompt_type, target)
-        if len(model_path) == 1:
-            model_path.append(target)
+    if nx.has_path(nx_graph, source, target):
+        if source == target and source != "text":
+            original_target = target
+            target = "text"
+            model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
+            model_path.append(original_target)
+        else:
+            model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
+            if len(model_path) == 1:
+                model_path.append(target)
         return model_path
 
 

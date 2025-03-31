@@ -32,6 +32,7 @@ class ResponsePanel(TextArea):
     async def scribe_response(self, model: str, message: dict[str]) -> None:
         """Write a text response to current widget"""
         self.is_generating = True
+        model = f"ollama_chat/{model}"
         self.move_cursor(self.document.end)
         self.scroll_end(animate=True)
         self.insert("\n---\n")

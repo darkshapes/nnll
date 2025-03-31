@@ -2,10 +2,12 @@
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
+
 from typing import Any
 import networkx as nx
 from nnll_01 import debug_monitor, info_message as nfo
-from nnll_11 import load_model
+
+# from nnll_11 import
 from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 from nnll_14 import trace_objective  # , loop_in_feature_processes
 
@@ -14,7 +16,7 @@ mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 @debug_monitor
 def resolve_prompt(content: Any = None) -> tuple[str, nx.Graph]:
-    """Assess prompt data streams, output primary source input\n
+    """Filter prompt data input streams into a primary source\n
     :param content: User-supplied input data
     :param target: User-supplied objective data state
     :return: `str` Initial conversion state\n\n
@@ -75,15 +77,26 @@ def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
 
 
 @debug_monitor
-def execute_path(nx_graph: nx.Graph, traced_path: list[tuple], prompt: Any) -> None:
-    """Create operating instructions from user input"""
+def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
+    """Create operating instructions from user input
+    Trace the next hop along the path, collect all compatible models
+    Set current model based on weight and next available
+    """
+    if nx.has_path(nx_graph, traced_path[0], traced_path[1]):
+        registry_entries = [  # ruff : noqa
+            nx_graph[traced_path[i]][traced_path[i + 1]][hop]  #
+            for i in range(len(traced_path) - 1)  #
+            for hop in nx_graph[traced_path[i]][traced_path[i + 1]]  #
+        ]
+    return registry_entries
+
+
+def execute_path(nx_graph: nx.Graph, traced_path: list[tuple], prompt: Any, registry_entry: dict) -> None:
+    """Execute on instructions selected previously"""
     import importlib
 
     output_map = {0: prompt}
     for i in range(len(traced_path) - 1):
-        nfo(nx_graph["text"])
-        registry_entry = nx_graph[traced_path[i]][traced_path[i + 1]]
-        nfo(registry_entry)
         current_entry = registry_entry[next(iter(registry_entry))]
         current_model = current_entry.get("model_id")
         current_library = current_entry.get("library")

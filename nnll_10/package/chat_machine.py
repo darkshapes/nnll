@@ -42,18 +42,18 @@ class ChainOfThought(dspy.Signature):
 @debug_monitor
 async def main(model: str, message: str):
     model = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
-    dspy.settings.configure(lm=model, async_max_workers=8)
+    dspy.settings.configure(lm=model, async_max_workers=4)
     generator = dspy.asyncify(dspy.Predict(BasicQA))
     streaminator = dspy.streamify(generator)
     async for chunk in streaminator(question=message, stream=True):
         try:
             if chunk is not None:
-                if isinstance(chunk, dspy.Prediction):
-                    yield chunk
-                else:
+                if not isinstance(chunk, dspy.Prediction):
                     chnk = chunk["choices"][0]["delta"]["content"]
-                    if chnk is not None:
-                        yield chnk
+                    yield chnk
+                else:
+                    dbug(chunk)
+                    break
         except AttributeError as error_log:
             dbug(error_log)
 
