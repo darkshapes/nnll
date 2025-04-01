@@ -1,13 +1,13 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
-from textual import events
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Button, Static, RichLog, ListView, ListItem, Label
 import networkx as nx
 from nnll_05 import pull_path_entries
 from nnll_14 import build_conversion_graph, label_edge_attrib_for, trace_objective
+from nnll_15.constants import LibType
 
 
 class ButtonsApp(App[str]):
@@ -40,7 +40,8 @@ class ButtonsApp(App[str]):
             if not self.nx_graph:
                 write_args = "Missing step: Build graph"
             else:
-                self.nx_graph = label_edge_attrib_for(self.nx_graph, 1, 1)
+                self.nx_graph = label_edge_attrib_for(self.nx_graph, LibType.OLLAMA)
+                self.nx_graph = label_edge_attrib_for(self.nx_graph, LibType.HUB)
                 event.button.variant = "success"
                 write_args = f"Attributes added to {self.nx_graph}"
                 available_conversions = {edge[1] for edge in self.nx_graph.edges}
@@ -64,7 +65,6 @@ class ButtonsApp(App[str]):
                 results_panel.write(f"start : {event.list_view.highlighted_child.id} end: {end_points.highlighted_child.id} ")
                 traced_path = trace_objective(nx_graph=self.nx_graph, source=event.list_view.highlighted_child.id, target=end_points.highlighted_child.id)
                 results_panel.write(traced_path)
-                # if traced_path[0] != "speech":
                 registry_entries = pull_path_entries(self.nx_graph, traced_path)
                 results_panel.write(list(registry_entries))
 
@@ -76,7 +76,6 @@ class ButtonsApp(App[str]):
                 results_panel.write(f"start : {start_points.highlighted_child.id}  end :{event.list_view.highlighted_child.id}")
                 traced_path = trace_objective(nx_graph=self.nx_graph, source=start_points.highlighted_child.id, target=event.list_view.highlighted_child.id)
                 results_panel.write(traced_path)
-                # if traced_path[0] != "speech":
                 registry_entries = pull_path_entries(self.nx_graph, traced_path)
                 results_panel.write(list(registry_entries))
 
@@ -84,4 +83,3 @@ class ButtonsApp(App[str]):
 if __name__ == "__main__":
     app = ButtonsApp()
     app.run()
-    # print(app.run())

@@ -9,23 +9,10 @@ from typing import Dict, List, Tuple
 from pydantic import BaseModel, computed_field
 
 from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
-from nnll_05 import split_sequence_by
-from nnll_60 import CONFIG_PATH_NAMED, JSONCache
+from nnll_15.constants import VALID_CONVERSIONS, VALID_TASKS, LibType
 
 # import open_webui
 # from package import response_panel
-
-mir_db = JSONCache(CONFIG_PATH_NAMED)
-
-VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d", "upscale_image"]
-OLLAMA_TASKS = {("image", "text"): ["mllama", "llava", "vllm"]}
-LMS_TASKS = {("text", "text"): ["llm"], ("image", "text"): [True]}
-HUB_TASKS = {
-    ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
-    ("text", "text"): ["chat", "conversational", "text-generation", "text2text-generation"],
-    ("text", "video"): ["video generation"],
-    ("speech", "text"): ["speech-translation", "speech-summarization", "automatic-speech-recognition"],
-}
 
 
 class RegistryEntry(BaseModel):
@@ -34,7 +21,7 @@ class RegistryEntry(BaseModel):
     model: str
     size: int
     tags: list[str]
-    library: str
+    library: LibType
     timestamp: int
     # tokenizer: None
 
@@ -47,13 +34,10 @@ class RegistryEntry(BaseModel):
         default_task = None
         library_tasks = {}
         processed_tasks = []
-        if self.library == "ollama":
-            library_tasks = OLLAMA_TASKS
+        library_tasks = VALID_TASKS[self.library]
+        if self.library == LibType.OLLAMA:
             default_task = ("text", "text")
-        elif self.library == "lms":
-            library_tasks = LMS_TASKS
-        elif self.library == "hub":
-            library_tasks = HUB_TASKS
+        elif self.library == LibType.HUB:
             pattern = re.compile(r"(\w+)-to-(\w+)")
             for tag in self.tags:
                 match = pattern.search(tag)
@@ -69,17 +53,16 @@ class RegistryEntry(BaseModel):
 
     @classmethod
     @debug_monitor
-    def from_model_data(cls, source: str) -> list[tuple[str]]:  # model_data: tuple[frozenset[str]]
+    def from_model_data(cls, lib_type: LibType) -> list[tuple[str]]:  # model_data: tuple[frozenset[str]]
         """
         Create RegistryEntry instances based on source\n
         Extract common model information and stack by newest model first for each conversion type.\n
-        :param source: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
-        :param model_data: Metadata of the local cache library of `source`
+        :param lib_type: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
         :return: A list of RegistryEntry objects containing model metadata relevant to execution\n
         """
         entries = []
 
-        if source == "ollama":
+        if lib_type == LibType.OLLAMA:
             from ollama import ListResponse, list as ollama_list
 
             model_data: ListResponse = ollama_list()
@@ -88,11 +71,11 @@ class RegistryEntry(BaseModel):
                     model=f"ollama_chat/{model.model}",
                     size=model.size.real,
                     tags=[model.details.family],
-                    library=source,
+                    library=lib_type,
                     timestamp=int(model.modified_at.timestamp()),
                 )
                 entries.append(entry)
-        elif source == "hub":
+        elif lib_type == LibType.HUB:
             from huggingface_hub import scan_cache_dir
 
             model_data = scan_cache_dir()
@@ -111,11 +94,11 @@ class RegistryEntry(BaseModel):
                     model=repo.repo_id,
                     size=repo.size_on_disk,
                     tags=tags,
-                    library=source,
+                    library=lib_type,
                     timestamp=int(repo.last_modified),
                 )
                 entries.append(entry)
-        elif source == "lms":
+        elif lib_type == LibType.LM_STUDIO:
             try:
                 import lmstudio as lms
             except ImportError as error_log:
@@ -126,22 +109,17 @@ class RegistryEntry(BaseModel):
             lms_client.api_host = "localhost:1143"
             model_data = lms.list_downloaded_models()
         else:
-            dbug(f"Unsupported source: {source}")
-            raise ValueError(f"Unsupported source: {source}")
+            dbug(f"Unsupported source: {lib_type}")
+            raise ValueError(f"Unsupported source: {lib_type}")
 
         return sorted(entries, key=lambda x: x.timestamp, reverse=True)
 
 
 @debug_monitor
-def from_cache(ollama: bool = True, hub: bool = True, lms: bool = False) -> Dict[str, RegistryEntry]:
+def from_cache(lib_type: LibType) -> Dict[str, RegistryEntry]:
     """
     Retrieve models from ollama server, local huggingface hub cache, !!! Incomplete! local lmstudio cache.
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
-    if ollama:
-        ollama_models = RegistryEntry.from_model_data("ollama")
-    if hub:
-        hub_models = RegistryEntry.from_model_data("hub")
-    if lms:
-        lms_models = RegistryEntry.from_model_data("lms")
-    return {"ollama": ollama_models, "hub": hub_models, "lms": lms_models}
+    models = RegistryEntry.from_model_data(lib_type)
+    return models

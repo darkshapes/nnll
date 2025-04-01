@@ -5,6 +5,7 @@
 
 import networkx as nx
 from nnll_01 import debug_monitor
+from nnll_15.constants import LibType
 
 
 @debug_monitor
@@ -19,7 +20,7 @@ def build_conversion_graph():
 
 
 @debug_monitor
-def label_edge_attrib_for(nx_graph: nx.Graph, ollama: bool = False, hf_hub: bool = False) -> nx.Graph:
+def label_edge_attrib_for(nx_graph: nx.Graph, lib_type: LibType) -> nx.Graph:
     """
     Build graph and assign edge attributes to it\n
     :param nx_graph: Preassembled graph of models to label
@@ -29,14 +30,9 @@ def label_edge_attrib_for(nx_graph: nx.Graph, ollama: bool = False, hf_hub: bool
     """
     from nnll_15 import RegistryEntry
 
-    if ollama:
-        ollama_models = RegistryEntry.from_model_data("ollama")
-        for model in ollama_models:
-            nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
-    if hf_hub:
-        hub_models = hub_models = RegistryEntry.from_model_data("hub")
-        for model in hub_models:
-            nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
+    registry_entries = RegistryEntry.from_model_data(lib_type)
+    for model in registry_entries:
+        nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
     return nx_graph
 
 

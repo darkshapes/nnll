@@ -6,12 +6,7 @@
 from typing import Any
 import networkx as nx
 from nnll_01 import debug_monitor, info_message as nfo
-
-# from nnll_11 import
-from nnll_60 import JSONCache, CONFIG_PATH_NAMED
-from nnll_14 import trace_objective  # , loop_in_feature_processes
-
-mir_db = JSONCache(CONFIG_PATH_NAMED)
+from nnll_15.constants import mir_db, LibType
 
 
 @debug_monitor
@@ -99,6 +94,7 @@ def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
 
 def execute_path(traced_path: list[tuple], prompt: Any, registry_entries: dict) -> None:
     """Execute on instructions selected previously"""
+    from nnll_11 import chat_machine
 
     output_map = {0: prompt}
     for i in range(len(traced_path) - 1):
@@ -106,20 +102,22 @@ def execute_path(traced_path: list[tuple], prompt: Any, registry_entries: dict) 
         current_model = current_entry.get("model_id")
         current_library = current_entry.get("library")
         nfo(f"current model : {current_model}")
-        if current_library == "hub":
+        if current_library == LibType.HUB:
             function_call = lookup_function_for(current_model)
             new_output = function_call(current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
-        elif current_library == "ollama":
-            new_output = chat_machine(current_model, current_library, output_map[i])
+        elif current_library == LibType.OLLAMA:
+            new_output = chat_machine(current_library, current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
-        elif current_library == "lmstudio":
-            new_output = chat_machine(current_model, current_library, output_map[i])
+        elif current_library == LibType.LM_STUDIO:
+            new_output = chat_machine(current_library, current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
     return output_map
 
 
 def main(nx_graph: nx.Graph, content: dict, target: str):
+    from nnll_14 import trace_objective  # , loop_in_feature_processes
+
     prompt_type = resolve_prompt(content)  # , aux_processes
     traced_path = trace_objective(nx_graph, prompt_type, target)
     if traced_path is not None:
