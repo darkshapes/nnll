@@ -48,6 +48,7 @@ torch>=2.6.0
 
 [nnll-09]
 torch>=2.6.0
+torchvision>=0.21.0
 transformers>=4.49.0
 
 [nnll-10]

@@ -1510,7 +1510,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev223+ga850fd3.d20250330"
+version = "0.1.dev227+g2fcadee.d20250401"
 source = { editable = "." }
 dependencies = [
     { name = "structlog" },
@@ -1596,6 +1596,7 @@ nnll-08 = [
 ]
 nnll-09 = [
     { name = "torch" },
+    { name = "torchvision" },
     { name = "transformers" },
 ]
 nnll-10 = [
@@ -1741,6 +1742,7 @@ requires-dist = [
     { name = "torch", marker = "extra == 'nnll-36'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == 'nnll-56'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == 'nnll-62'", specifier = ">=2.6.0" },
+    { name = "torchvision", marker = "extra == 'nnll-09'", specifier = ">=0.21.0" },
     { name = "torchvision", marker = "extra == 'nnll-56'", specifier = ">=0.21.0" },
     { name = "torchvision", marker = "extra == 'nnll-62'", specifier = ">=0.21.0" },
     { name = "tqdm", marker = "extra == 'nnll-03'", specifier = ">=4.67.1" },
