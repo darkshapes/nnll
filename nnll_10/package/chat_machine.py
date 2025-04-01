@@ -1,10 +1,11 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
-from asyncio import Future
 import dspy
 
 from nnll_01 import debug_monitor, debug_message as dbug
+from nnll_15.constants import LibType
+
 # from pydantic import BaseModel
 
 
@@ -40,29 +41,30 @@ class ChainOfThought(dspy.Signature):
 
 
 @debug_monitor
-async def main(model: str, message: str):
-    model = dspy.LM(api_base="http://localhost:11434/api/chat", model=model, model_type="chat")
+async def chat_machine(model: str, message: str, library: LibType, **kwargs):
+    if library == LibType.OLLAMA:
+        kwargs = {
+            "model": f"ollama_chat/{model}",
+            "api_base": "http://localhost:11434/api/chat",
+            "model_type": "chat",
+        }
+    elif library == LibType.LM_STUDIO:
+        kwargs = {"model": model, "api_base": "http://localhost:1234/v1", "api_key": "lm-studio"}
+    elif library == LibType.HUB:
+        kwargs = {}
+
+    model = dspy.LM(**kwargs)
     dspy.settings.configure(lm=model, async_max_workers=8)
     generator = dspy.asyncify(dspy.Predict(BasicQA))
     streaminator = dspy.streamify(generator)
     async for chunk in streaminator(question=message, stream=True):
         try:
             if chunk is not None:
-                if isinstance(chunk, dspy.Prediction):
-                    yield chunk
-                else:
+                if not isinstance(chunk, dspy.Prediction):
                     chnk = chunk["choices"][0]["delta"]["content"]
-                    if chnk is not None:
-                        yield chnk
+                    yield chnk
+                else:
+                    dbug(chunk)
+                    break
         except AttributeError as error_log:
             dbug(error_log)
-
-
-@debug_monitor
-async def chat_machine(model, message):
-    async for chunk in main(model, message):
-        yield chunk
-
-
-# ["choices"][0]["delta"]["content"]  # Process chunks as they arrive
-# yield chunk if chunk is not none # Forward chunks for real-time streaming

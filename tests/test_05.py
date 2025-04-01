@@ -6,7 +6,8 @@
 import nnll_01
 from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
 from nnll_05 import lookup_function_for, resolve_prompt  # , split_sequence_by, main
-from nnll_14 import build_conversion_graph, label_edge_attrib_for, trace_objective  # , loop_in_feature_processes
+from nnll_14 import build_conversion_graph, label_edge_attrib_for, trace_objective
+from nnll_15.constants import LibType  # , loop_in_feature_processes
 from tests import test_14_draw_graph
 
 
@@ -16,7 +17,8 @@ def test_main():
 
     if "pytest" not in sys.modules:
         nx_graph = build_conversion_graph()
-        nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
+        nx_graph = label_edge_attrib_for(nx_graph, LibType.OLLAMA)
+        nx_graph = label_edge_attrib_for(nx_graph, LibType.HUB)
         nnll_01.debug_message(f"graph : {nx_graph}")
         # example user input
         content = {"text": "Test Prompt"}

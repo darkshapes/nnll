@@ -9,20 +9,10 @@ from typing import Dict, List, Tuple
 from pydantic import BaseModel, computed_field
 
 from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
+from nnll_15.constants import VALID_CONVERSIONS, VALID_TASKS, LibType
 
 # import open_webui
 # from package import response_panel
-
-
-VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d", "upscale_image"]
-OLLAMA_TASKS = {("image", "text"): ["mllama", "llava", "vllm"]}
-LMS_TASKS = {("text", "text"): ["llm"], ("image", "text"): [True]}
-HUB_TASKS = {
-    ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
-    ("text", "text"): ["chat", "conversational", "text-generation", "text2text-generation"],
-    ("text", "video"): ["video generation"],
-    ("speech", "text"): ["speech-translation", "speech-summarization", "automatic-speech-recognition"],
-}
 
 
 class RegistryEntry(BaseModel):
@@ -31,7 +21,7 @@ class RegistryEntry(BaseModel):
     model: str
     size: int
     tags: list[str]
-    library: str
+    library: LibType
     timestamp: int
     # tokenizer: None
 
@@ -44,13 +34,10 @@ class RegistryEntry(BaseModel):
         default_task = None
         library_tasks = {}
         processed_tasks = []
-        if self.library == "ollama":
-            library_tasks = OLLAMA_TASKS
+        library_tasks = VALID_TASKS[self.library]
+        if self.library == LibType.OLLAMA:
             default_task = ("text", "text")
-        elif self.library == "lms":
-            library_tasks = LMS_TASKS
-        elif self.library == "hub":
-            library_tasks = HUB_TASKS
+        elif self.library == LibType.HUB:
             pattern = re.compile(r"(\w+)-to-(\w+)")
             for tag in self.tags:
                 match = pattern.search(tag)
@@ -64,91 +51,75 @@ class RegistryEntry(BaseModel):
             processed_tasks.append(default_task)
         return processed_tasks
 
+    @classmethod
+    @debug_monitor
+    def from_model_data(cls, lib_type: LibType) -> list[tuple[str]]:  # model_data: tuple[frozenset[str]]
+        """
+        Create RegistryEntry instances based on source\n
+        Extract common model information and stack by newest model first for each conversion type.\n
+        :param lib_type: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
+        :return: A list of RegistryEntry objects containing model metadata relevant to execution\n
+        """
+        entries = []
+
+        if lib_type == LibType.OLLAMA:
+            from ollama import ListResponse, list as ollama_list
+
+            model_data: ListResponse = ollama_list()
+            for model in model_data.models:  # pylint:disable=no-member
+                entry = cls(
+                    model=f"ollama_chat/{model.model}",
+                    size=model.size.real,
+                    tags=[model.details.family],
+                    library=lib_type,
+                    timestamp=int(model.modified_at.timestamp()),
+                )
+                entries.append(entry)
+        elif lib_type == LibType.HUB:
+            from huggingface_hub import scan_cache_dir
+
+            model_data = scan_cache_dir()
+            from huggingface_hub import repocard
+
+            for repo in model_data.repos:
+                meta = repocard.RepoCard.load(repo.repo_id).data
+                tags = []
+                if hasattr(meta, "tags"):
+                    tags.extend(meta.tags)
+                if hasattr(meta, "pipeline_tag"):
+                    tags.append(meta.pipeline_tag)
+                if not tags:
+                    tags = ["unknown"]
+                entry = cls(
+                    model=repo.repo_id,
+                    size=repo.size_on_disk,
+                    tags=tags,
+                    library=lib_type,
+                    timestamp=int(repo.last_modified),
+                )
+                entries.append(entry)
+        elif lib_type == LibType.LM_STUDIO:
+            try:
+                import lmstudio as lms
+            except ImportError as error_log:
+                print("LMStudio not found")
+                nfo(error_log)
+
+            lms_client = lms.get_default_client()
+            lms_client.api_host = "localhost:1143"
+            model_data = lms.list_downloaded_models()
+        else:
+            dbug(f"Unsupported source: {lib_type}")
+            raise ValueError(f"Unsupported source: {lib_type}")
+
+        return sorted(entries, key=lambda x: x.timestamp, reverse=True)
+
 
 @debug_monitor
-def _extract_model_info(source: str, model_data: dict = None) -> RegistryEntry:
+def from_cache(lib_type: LibType) -> Dict[str, RegistryEntry]:
     """
-    Helper function to extract common model information.\n
-    Output stacked by newest model first for each conversion type.\n
-    :param source: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
-    :param model_data: Metadata of the local cache library of `source`
-    :return: A class object containing model metadata relevant to execution\n
+    Retrieve models from ollama server, local huggingface hub cache, !!! Incomplete! local lmstudio cache.
+    我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
-    cache_dir = []
-    cache_sizes = []
-    timestamp = []
-    model_tags = []
-    # tokenizer: None
-
-    if source == "ollama":
-        cache_dir = [f"ollama_chat/{model.model}" for model in model_data.models]
-        cache_sizes = [model.size.real for model in model_data.models]
-        timestamp = [int(model.modified_at.timestamp()) for model in model_data.models]
-        model_tags = [[model.details.family] for model in model_data.models]
-
-    elif source == "hub":
-        from huggingface_hub import repocard
-
-        cache_dir = [obj.repo_id for obj in model_data.repos]
-        cache_sizes = [obj.size_on_disk for obj in model_data.repos]
-        timestamp = [int(obj.last_modified) for obj in model_data.repos]
-        # tokenizer = [x.file_path for obj in model_data.repos for x in obj.revisions if "tokenizer.json" in str(x.file_path)]
-
-        metadata = [repocard.RepoCard.load(repo_name.repo_id) for repo_name in model_data.repos]
-        repo_details = [obj.data for obj in metadata]
-        for obj in repo_details:  # retrieve model types from repocard tags
-            current_tag = []
-            if hasattr(obj, "tags"):
-                current_tag.extend([*obj.tags])
-            if hasattr(obj, "pipeline_tag"):
-                current_tag.append(obj.pipeline_tag)
-            model_tags.append(current_tag if current_tag else ["unknown"])
-
-    else:
-        dbug(f"Unsupported source: {source}")
-        raise ValueError(f"Unsupported source: {source}")
-
-    models = []
-    for model, size, tasks, ts in zip(cache_dir, cache_sizes, model_tags, timestamp):
-        entry = RegistryEntry(model=model, size=size, tags=tasks, library=source, timestamp=ts)
-        if getattr(entry, "available_tasks", []) != [("default_task:", None)]:
-            models.append(entry)
-
-    dbug(models)
-    models.sort(key=lambda x: x.timestamp, reverse=True)
+    models = RegistryEntry.from_model_data(lib_type)
     return models
-
-
-@debug_monitor
-def from_ollama_cache() -> Dict[str, RegistryEntry]:
-    """Retrieve models from ollama server."""
-    from ollama import ListResponse, list as ollama_list
-
-    model_data: ListResponse = ollama_list()
-    return _extract_model_info("ollama", model_data)
-
-
-@debug_monitor
-def from_hf_hub_cache() -> Dict[str, RegistryEntry]:
-    """Retrieve models from local huggingface hub cache."""
-    from huggingface_hub import scan_cache_dir
-
-    model_data = scan_cache_dir()
-    return _extract_model_info("hub", model_data)
-
-
-def from_lms_cache() -> Dict[str, RegistryEntry]:
-    """!!! Incomplete! Retrieve models from local lmstudio cache.
-    我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。
-    LMStudio is not OSS, but contributions are welcome.
-    """
-    try:
-        import lmstudio as lms
-    except ImportError as error_log:
-        print("LMStudio not found")
-        nfo(error_log)
-
-    lms_client = lms.get_default_client()
-    lms_client.api_host = "localhost:1143"
-    model_data = lms.list_downloaded_models()
-    return _extract_model_info("lms", model_data)

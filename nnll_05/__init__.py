@@ -2,19 +2,18 @@
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
+
 from typing import Any
 import networkx as nx
 from nnll_01 import debug_monitor, info_message as nfo
-from nnll_11 import load_model
-from nnll_60 import JSONCache, CONFIG_PATH_NAMED
-from nnll_14 import trace_objective  # , loop_in_feature_processes
-
-mir_db = JSONCache(CONFIG_PATH_NAMED)
+from nnll_15.constants import mir_db, LibType
 
 
 @debug_monitor
 def resolve_prompt(content: Any = None) -> tuple[str, nx.Graph]:
-    """Assess prompt data streams, output primary source input\n
+    """Distil multi-prompt input streams into a single primary source\n
+    Use secondary streams for supplementary processes.\n
+    **TL;DR**: text prompts take precedence when available\n
     :param content: User-supplied input data
     :param target: User-supplied objective data state
     :return: `str` Initial conversion state\n\n
@@ -58,60 +57,73 @@ def split_sequence_by(delimiter: str = ".", sequence: str = "") -> tuple | None:
 @mir_db.decorator
 def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
     """
-    Find MIR id from known repo name and run generation\n
+    Find MIR URI from known repo name and retrieve its \n
     MIR data and call instructions autofilled by decorator\n
     :param known_repo: HuggingFace repo name
     :param mir_data: MIR URI reference file
     :return: `str` of the mir URI
     """
+    import importlib
 
     mir_arch = next(key for key, value in mir_data() if known_repo in value["repo"])
-    sequence = mir_data[mir_arch].get("constructor")
-    call_sequence = [split_sequence_by(".", seq) for seq in sequence]
-    module_names = [function[0] for function in call_sequence]
-    function_names = [function[-1] for function in call_sequence]
-    operations = zip(module_names, function_names)
-    return operations
+    sequence = mir_data[mir_arch].get("constructor", [])
+    call_sequence = [seq.split(".") for seq in sequence]
+    module_names, function_names = zip(*[(func[0], func[-1]) for func in call_sequence]) if call_sequence else ([], [])
+    modules = zip(module_names, function_names)
+    import_name = next(iter(modules))
+    module = importlib.import_module(modules)
+    function_call = getattr(module, module[import_name])
+    return function_call
 
 
 @debug_monitor
-def execute_path(nx_graph: nx.Graph, traced_path: list[tuple], prompt: Any) -> None:
-    """Create operating instructions from user input"""
-    import importlib
+def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
+    """Create operating instructions from user input
+    Trace the next hop along the path, collect all compatible models
+    Set current model based on weight and next available
+    """
+    registry_entries = []
+    if nx.has_path(nx_graph, traced_path[0], traced_path[1]):
+        registry_entries = [  # ruff : noqa
+            nx_graph[traced_path[i]][traced_path[i + 1]][hop]  #
+            for i in range(len(traced_path) - 1)  #
+            for hop in nx_graph[traced_path[i]][traced_path[i + 1]]  #
+        ]
+    return registry_entries
+
+
+def execute_path(traced_path: list[tuple], prompt: Any, registry_entries: dict) -> None:
+    """Execute on instructions selected previously"""
+    from nnll_11 import chat_machine
 
     output_map = {0: prompt}
     for i in range(len(traced_path) - 1):
-        nfo(nx_graph["text"])
-        registry_entry = nx_graph[traced_path[i]][traced_path[i + 1]]
-        nfo(registry_entry)
-        current_entry = registry_entry[next(iter(registry_entry))]
+        current_entry = registry_entries[next(iter(registry_entries))]
         current_model = current_entry.get("model_id")
         current_library = current_entry.get("library")
         nfo(f"current model : {current_model}")
-        if current_library == "hub":
-            operations = lookup_function_for(current_model)
-            import_name = next(iter(operations))
-            module = importlib.import_module(import_name)
-            func = getattr(module, module[import_name])
-            new_output = func(current_model, output_map[i])
+        if current_library == LibType.HUB:
+            function_call = lookup_function_for(current_model)
+            new_output = function_call(current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
-        elif current_library == "ollama":
-            chat_machine = load_model(current_model, current_library)
-            new_output = chat_machine.generate_response(output_map[i])
+        elif current_library == LibType.OLLAMA:
+            new_output = chat_machine(current_library, current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
-        elif current_library == "lmstudio":
-            chat_machine = load_model(current_model, current_library)
-            new_output = chat_machine.generate_response(output_map[i])
+        elif current_library == LibType.LM_STUDIO:
+            new_output = chat_machine(current_library, current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
     return output_map
 
 
 def main(nx_graph: nx.Graph, content: dict, target: str):
+    from nnll_14 import trace_objective  # , loop_in_feature_processes
+
     prompt_type = resolve_prompt(content)  # , aux_processes
     traced_path = trace_objective(nx_graph, prompt_type, target)
     if traced_path is not None:
+        registry_entries = pull_path_entries(nx_graph, traced_path)
         # if len(aux_processes) > 0:
         #     for process_type in aux_processes:  # temporarily add attribute to nx_graph
         #         nx_graph = loop_in_feature_processes(nx_graph, prompt_type, target)
-        response = execute_path(nx_graph, traced_path, content[prompt_type])
+        response = execute_path(traced_path, content[prompt_type], registry_entries)
         return response
