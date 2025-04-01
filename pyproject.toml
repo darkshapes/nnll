@@ -28,8 +28,11 @@ keywords = [
 
 dependencies = ["structlog>=25.2.0"]
 [project.optional-dependencies]
-
-nnll-03 = ["aiofiles>=24.1.0", "aiohttp>=3.11.13", "tqdm>=4.67.1"]
+nnll-03 = [
+    "aiofiles>=24.1.0",
+    "aiohttp>=3.9.5",
+    "tqdm>=4.67.1",
+]
 nnll-04 = ["gguf>=0.14.0", "llama-cpp-python>=0.3.8"]
 nnll-08 = ["numpy>=2.2.3", "torch>=2.6.0"]
 nnll-09 = ["torch>=2.6.0", "torchvision>=0.21.0", "transformers>=4.49.0"]
