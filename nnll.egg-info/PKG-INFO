@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev228+g522c0f0.d20250401
+Version: 0.1.dev229+gca0535f.d20250402
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -19,7 +19,7 @@ License-File: LICENSE
 Requires-Dist: structlog>=25.2.0
 Provides-Extra: nnll-03
 Requires-Dist: aiofiles>=24.1.0; extra == "nnll-03"
-Requires-Dist: aiohttp>=3.9.5; extra == "nnll-03"
+Requires-Dist: aiohttp<=3.11.13,>=3.9.5; extra == "nnll-03"
 Requires-Dist: tqdm>=4.67.1; extra == "nnll-03"
 Provides-Extra: nnll-04
 Requires-Dist: gguf>=0.14.0; extra == "nnll-04"
@@ -44,6 +44,10 @@ Requires-Dist: litellm>=1.65.0; extra == "nnll-10"
 Provides-Extra: nnll-11
 Requires-Dist: dspy>=2.6.13; extra == "nnll-11"
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-11"
+Provides-Extra: nnll-12
+Provides-Extra: nnll-13
+Requires-Dist: sounddevice>=0.5.1; extra == "nnll-13"
+Requires-Dist: textual-plotext>=1.0.1; extra == "nnll-13"
 Provides-Extra: nnll-14
 Requires-Dist: matplotlib>=3.10.1; extra == "nnll-14"
 Requires-Dist: networkx>=3.4.2; extra == "nnll-14"
@@ -203,4 +207,6 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 * Type Checking: pylance/pyright
 * Spelling     : typos vsc
 ```
-<br><br><br>
+<br>
+
+![Alt](https://repobeats.axiom.co/api/embed/13fd2c53953a777ae8583f620fa8bd014baadef1.svg "Repobeats analytics image")

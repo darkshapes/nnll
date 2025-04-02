@@ -86,4 +86,6 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 * Type Checking: pylance/pyright
 * Spelling     : typos vsc
 ```
-<br><br><br>
+<br>
+
+![Alt](https://repobeats.axiom.co/api/embed/13fd2c53953a777ae8583f620fa8bd014baadef1.svg "Repobeats analytics image")
