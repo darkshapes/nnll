@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev230+g101dbf8.d20250402
+Version: 0.1.dev232+g1cf2cd2.d20250402
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -203,6 +203,7 @@ Dynamic: license-file
 Some modules are full scripts and can be run from command line. These are written here:
 
 `astra`        - Experimental generative system<br>
+`nnll-hash`    - Hash the layer metadata from models within a directory and write out to console.<br>
 `nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
 <br>
 

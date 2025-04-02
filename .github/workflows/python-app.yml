@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set ENV
+        run:  echo "CMAKE_POLICY_VERSION_MINIMUM=3.5" >> $GITHUB_ENV
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -32,7 +34,8 @@ jobs:
           rm -rf venv
           python -m venv .venv
           source .venv/bin/activate
-          pip install --upgrade pip
+          python3 -m pip install --upgrade pip
+          python3 -m pip install meson
           pip install ".[dev]"
           cd tests
           pytest -v *.py

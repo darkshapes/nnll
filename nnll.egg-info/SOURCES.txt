@@ -119,4 +119,3 @@ tests/test_61.py
 tests/test_61_2.py
 tests/test_62.py
 tests/test_img.png
-tests/test_model_dict_hash.py
