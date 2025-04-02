@@ -26,7 +26,6 @@ nnll_10/__init__.py
 nnll_10/package/__init__.py
 nnll_10/package/__main__.py
 nnll_10/package/carousel.py
-nnll_10/package/chat_machine.py
 nnll_10/package/combo.tcss
 nnll_10/package/display_bar.py
 nnll_10/package/fold.py
@@ -39,14 +38,16 @@ nnll_10/package/tag_line.py
 nnll_10/package/token_counters.py
 nnll_10/package/voice_panel.py
 nnll_11/__init__.py
-nnll_11/__main__.py
 nnll_12/__init__.py
 nnll_12/__main__.py
 nnll_12/button.tcss
+nnll_13/__init__.py
 nnll_14/__init__.py
 nnll_15/__init__.py
 nnll_15/constants.py
 nnll_16/__init__.py
+nnll_17/__init__.py
+nnll_17/__main__.py
 nnll_18/__init__.py
 nnll_24/__init__.py
 nnll_25/__init__.py

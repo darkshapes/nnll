@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev228+g522c0f0.d20250401
+Version: 0.1.dev232+g1cf2cd2.d20250402
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: #// SPDX-License-Identifier: blessing
@@ -17,13 +17,22 @@ Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: structlog>=25.2.0
+Provides-Extra: nnll-02
+Requires-Dist: huggingface-hub>=0.29.3; extra == "nnll-02"
+Requires-Dist: litellm>=1.65.0; extra == "nnll-02"
 Provides-Extra: nnll-03
 Requires-Dist: aiofiles>=24.1.0; extra == "nnll-03"
-Requires-Dist: aiohttp>=3.9.5; extra == "nnll-03"
+Requires-Dist: aiohttp<=3.11.13,>=3.9.5; extra == "nnll-03"
 Requires-Dist: tqdm>=4.67.1; extra == "nnll-03"
 Provides-Extra: nnll-04
 Requires-Dist: gguf>=0.14.0; extra == "nnll-04"
 Requires-Dist: llama-cpp-python>=0.3.8; extra == "nnll-04"
+Provides-Extra: nnll-05
+Requires-Dist: networkx>=3.4.2; extra == "nnll-05"
+Provides-Extra: nnll-06
+Requires-Dist: litellm>=1.65.0; extra == "nnll-06"
+Requires-Dist: ollama>=0.4.7; extra == "nnll-06"
+Requires-Dist: tiktoken>=0.9.0; extra == "nnll-06"
 Provides-Extra: nnll-08
 Requires-Dist: numpy>=2.2.3; extra == "nnll-08"
 Requires-Dist: torch>=2.6.0; extra == "nnll-08"
@@ -44,10 +53,18 @@ Requires-Dist: litellm>=1.65.0; extra == "nnll-10"
 Provides-Extra: nnll-11
 Requires-Dist: dspy>=2.6.13; extra == "nnll-11"
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-11"
+Provides-Extra: nnll-12
+Requires-Dist: textual[syntax]>=2.1.2; extra == "nnll-12"
+Requires-Dist: networkx>=3.4.2; extra == "nnll-12"
+Requires-Dist: tree-sitter>=0.24.0; extra == "nnll-12"
+Provides-Extra: nnll-13
+Requires-Dist: sounddevice>=0.5.1; extra == "nnll-13"
+Requires-Dist: textual-plotext>=1.0.1; extra == "nnll-13"
 Provides-Extra: nnll-14
 Requires-Dist: matplotlib>=3.10.1; extra == "nnll-14"
 Requires-Dist: networkx>=3.4.2; extra == "nnll-14"
 Requires-Dist: textual>=2.1.2; extra == "nnll-14"
+Requires-Dist: tree-sitter>=0.24.0; extra == "nnll-14"
 Provides-Extra: nnll-15
 Requires-Dist: huggingface-hub[hf-transfer]>=0.29.1; extra == "nnll-15"
 Requires-Dist: ollama>=0.4.7; extra == "nnll-15"
@@ -83,12 +100,17 @@ Requires-Dist: torchvision>=0.21.0; extra == "nnll-62"
 Provides-Extra: nnll-64
 Requires-Dist: pillow>=11.1.0; extra == "nnll-64"
 Provides-Extra: all
+Requires-Dist: nnll[nnll_02]; extra == "all"
 Requires-Dist: nnll[nnll_03]; extra == "all"
 Requires-Dist: nnll[nnll_04]; extra == "all"
+Requires-Dist: nnll[nnll_05]; extra == "all"
+Requires-Dist: nnll[nnll_06]; extra == "all"
 Requires-Dist: nnll[nnll_08]; extra == "all"
 Requires-Dist: nnll[nnll_09]; extra == "all"
 Requires-Dist: nnll[nnll_10]; extra == "all"
 Requires-Dist: nnll[nnll_11]; extra == "all"
+Requires-Dist: nnll[nnll_12]; extra == "all"
+Requires-Dist: nnll[nnll_13]; extra == "all"
 Requires-Dist: nnll[nnll_14]; extra == "all"
 Requires-Dist: nnll[nnll_15]; extra == "all"
 Requires-Dist: nnll[nnll_16]; extra == "all"
@@ -181,6 +203,7 @@ Dynamic: license-file
 Some modules are full scripts and can be run from command line. These are written here:
 
 `astra`        - Experimental generative system<br>
+`nnll-hash`    - Hash the layer metadata from models within a directory and write out to console.<br>
 `nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
 <br>
 
@@ -203,4 +226,6 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 * Type Checking: pylance/pyright
 * Spelling     : typos vsc
 ```
-<br><br><br>
+<br>
+
+![Alt](https://repobeats.axiom.co/api/embed/13fd2c53953a777ae8583f620fa8bd014baadef1.svg "Repobeats analytics image")

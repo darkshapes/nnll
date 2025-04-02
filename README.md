@@ -64,6 +64,7 @@
 Some modules are full scripts and can be run from command line. These are written here:
 
 `astra`        - Experimental generative system<br>
+`nnll-hash`    - Hash the layer metadata from models within a directory and write out to console.<br>
 `nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
 <br>
 
@@ -86,4 +87,6 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 * Type Checking: pylance/pyright
 * Spelling     : typos vsc
 ```
-<br><br><br>
+<br>
+
+![Alt](https://repobeats.axiom.co/api/embed/13fd2c53953a777ae8583f620fa8bd014baadef1.svg "Repobeats analytics image")

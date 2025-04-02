@@ -4,7 +4,7 @@
 """Load model metadata"""
 
 # pylint: disable=import-outside-toplevel
-from nnll_01 import debug_monitor
+from nnll_01 import debug_monitor, debug_message as dbug, info_message as nfo
 
 
 class ModelTool:
@@ -12,10 +12,6 @@ class ModelTool:
 
     def __init__(self):
         self.read_method = None
-        from nnll_01 import debug_message, info_message as nfo
-
-        self.debug_message = debug_message
-        self.nfo = nfo
 
     @debug_monitor
     def read_metadata_from(self, file_path_named: str) -> dict:
@@ -37,11 +33,14 @@ class ModelTool:
             ".pth": self.metadata_from_pickletensor,
             ".ckpt": self.metadata_from_pickletensor,
         }
-        if extension in import_map:
+        if extension not in import_map:
+            dbug("Unsupported file extension: %s", f"{extension}. Silently ignoring")
+        else:
             self.read_method = import_map.get(extension)
             metadata = self.read_method(file_path_named)
-        else:
-            self.nfo(f"Unsupported file extension: {extension}")
+        if metadata is None:
+            nfo("Couldn't load model metadata for %s", file_path_named)
+            return None
         return metadata
 
     @debug_monitor
@@ -75,13 +74,13 @@ class ModelTool:
                 magic_number = file_contents_to.read(4)
                 version = struct.unpack("<I", file_contents_to.read(4))[0]
         except ValueError as error_log:
-            self.debug_message(f"Error reading GGUF header from {file_path_named}: {error_log}", tb=error_log.__traceback__)
+            dbug("Error reading GGUF header from %s", f"{file_path_named}: {error_log}", tb=error_log.__traceback__)
         else:
             if not magic_number and magic_number != self.GGUF_MAGIC_NUMBER:
-                self.nfo(f"Invalid GGUF magic number in '{file_path_named}'")
+                dbug("Invalid GGUF magic number in %s", file_path_named)
                 result = False
             elif version < 2:
-                self.nfo(f"Unsupported GGUF version {version} in '{file_path_named}'")
+                dbug("Unsupported GGUF version %s", version, file_path_named)
                 result = False
             elif magic_number == self.GGUF_MAGIC_NUMBER and version >= 2:
                 result = True
@@ -102,7 +101,7 @@ class ModelTool:
         try:  # method using gguf library, better for LDM conversions
             reader = GGUFReader(file_path_named, "r")  # obsolete in numpy 2, also slower
         except ValueError as error_log:
-            self.debug_message(f"Value error assembling GGUFReader >:V {error_log}", tb=error_log.__traceback__)
+            dbug("Value error assembling GGUFReader >:V %s", error_log, tb=error_log.__traceback__)
         else:
             arch = reader.fields.get("general.architecture")  # model type
             reader_data = {
@@ -114,7 +113,7 @@ class ModelTool:
                     general_name_data = general_name_raw.parts[general_name_raw.data[0]]
                     general_name = (str(bytes(general_name_data), encoding="utf-8"),)
                 except KeyError as error_log:
-                    self.debug_message(
+                    dbug(
                         "Failed to get expected field within model metadata: %s",
                         file_path_named,
                         general_name_raw,
@@ -185,7 +184,7 @@ class ModelTool:
             try:
                 metadata = self.create_llama_parser(file_path_named)
             except ValueError as error_log:
-                self.debug_message("Parsing .gguf file failed for %s", file_path_named, error_log, tb=error_log.__traceback__)
+                dbug("Parsing .gguf file failed for %s", file_path_named, error_log, tb=error_log.__traceback__)
         return metadata
 
     @debug_monitor
@@ -200,6 +199,8 @@ class ModelTool:
             file_metadata = self.attempt_file_open(file_path_named)
             if file_metadata is not None:
                 return file_metadata
+            return None
+        return None
 
     @debug_monitor
     def metadata_from_safetensors(self, file_path_named: str) -> dict:
@@ -211,33 +212,22 @@ class ModelTool:
         import struct
         import json
 
-        # huggingface_hub.HfApi.parse_safetensors_file_metadata
-        # from safetensors import safe_open
-        # try:
-        #     with safe_open(safetensors_file, framework="pt", device="cpu") as stfile:
-        #         model_weights = {}
-        #         for key in stfile.keys():
-        #             model_weights.setdefault(key,stfile.get_tensor(key))
-        #         model_weights.setdefault(metadata],stfile.metadata())
-        #     return model_weights
-        # except KeyError as error_log:
-        # pass
-
         assembled_data = {}
         with open(file_path_named, "rb") as file_contents_to:
-            first_8_bytes = file_contents_to.read(8)
-            length_of_header = struct.unpack("<Q", first_8_bytes)[0]
-            header_data = file_contents_to.read(length_of_header)
-            header_data = header_data.decode("utf-8", errors="strict")
-            header_data = header_data.strip()
-            header_data = json.loads(f"{header_data}")
-            assembled_data = header_data.copy()
-            if assembled_data.get("__metadata__"):
-                try:
-                    assembled_data.pop("__metadata__")
-                except KeyError as error_log:
-                    self.debug_message("Couldnt remove '__metadata__' from header data. %s", header_data, error_log, tb=error_log.__traceback__)
-            # metadata_field = dict(header_data).get("__metadata__", False)
-            # metadata_field = json.loads(str(metadata_field).replace("'", '"'))
+            try:
+                length_of_header = struct.unpack("<Q", file_contents_to.read(8))[0]
+                header_data = file_contents_to.read(length_of_header)
+                header_data = json.loads(header_data.decode("utf-8", errors="strict"))
+            except json.JSONDecodeError as error_log:
+                dbug("Failed to read json from file : %s", file_path_named, error_log, tb=error_log.__traceback__)
+            else:
+                assembled_data = header_data.copy()
+                if assembled_data.get("__metadata__"):
+                    try:
+                        assembled_data.pop("__metadata__")
+                    except KeyError as error_log:
+                        dbug("Couldnt remove '__metadata__' from header data. %s", header_data, error_log, tb=error_log.__traceback__)
+                # metadata_field = dict(header_data).get("__metadata__", False)
+                # metadata_field = json.loads(str(metadata_field).replace("'", '"'))
 
             return assembled_data

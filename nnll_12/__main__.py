@@ -1,11 +1,14 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal, VerticalScroll
-from textual.widgets import Button, Static, RichLog, ListView, ListItem, Label
+from textual.containers import Horizontal, VerticalScroll, Vertical, VerticalGroup
+from textual.widgets import Button, Static, RichLog, ListView, ListItem, Label, TextArea
 import networkx as nx
+
 from nnll_05 import pull_path_entries
+from nnll_10.package.voice_panel import VoicePanel
 from nnll_14 import build_conversion_graph, label_edge_attrib_for, trace_objective
 from nnll_15.constants import LibType
 
@@ -24,7 +27,14 @@ class ButtonsApp(App[str]):
                 Static("4. Target", classes="header"),
                 ListView(id="end_points"),
             ),
-            RichLog(id="results_panel", highlight=True, markup=True),
+            VerticalGroup(
+                RichLog(id="results_panel", highlight=True, markup=True, wrap=True),
+            ),
+            Vertical(
+                TextArea("", id="prompt_pane"),
+                VoicePanel(id="speech_pane"),
+                TextArea("", id="response_pane", read_only=True),
+            ),
         )
 
     def on_ready(self):

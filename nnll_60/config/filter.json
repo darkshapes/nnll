@@ -1,4 +1,31 @@
 {
+    "layer_hash": {
+        "sdxl": {
+            "base": "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef",
+            "pony_diffusion": "d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16",
+            "animagine": "31164c11db41b007f15c94651a8b1fa4d24097c18782d20fabe13c59ee07aa3a",
+            "illustrious": "c4a8d365e7fe07c6dbdd52be922aa6dc23215142342e3e7f8f967f1a123a6982"
+        },
+        "flux": {
+            "dev": [
+                "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",
+                "20d47474da0714979e543b6f21bd12be5b5f721119c4277f364a29e329e931b9"
+            ],
+            "hybrid": [
+                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443",
+                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443"
+            ],
+            "schnell": [
+                "ef5c9cd1ebe6e3be5e8b1347eca0a6f0b138986c71220a7f1c2c14f29d01beed"
+            ]
+        },
+        "sd3": {
+            "large": [
+                "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465",
+                "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465"
+            ]
+        }
+    },
     "layer_type": {
         "modelspec": {
             "blocks": [
