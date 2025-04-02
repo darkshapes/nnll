@@ -1,12 +1,26 @@
 {
-    "layer_hash": {
-        "sdxl": {
-            "base": "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef",
-            "pony_diffusion": "d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16",
-            "animagine": "31164c11db41b007f15c94651a8b1fa4d24097c18782d20fabe13c59ee07aa3a",
-            "illustrious": "c4a8d365e7fe07c6dbdd52be922aa6dc23215142342e3e7f8f967f1a123a6982"
+    "layer_256": {
+        "stable-diffusion-xl": {
+            "base": [
+                "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"
+            ],
+            "pony_diffusion": [
+                "d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16"
+            ],
+            "animagine": [
+                "31164c11db41b007f15c94651a8b1fa4d24097c18782d20fabe13c59ee07aa3a"
+            ],
+            "illustrious": [
+                "c4a8d365e7fe07c6dbdd52be922aa6dc23215142342e3e7f8f967f1a123a6982"
+            ],
+            "refiner": [
+                "8c2d0d32cff5a74786480bbaa932ee504bb140f97efdd1a3815f14a610cf6e4a"
+            ],
+            "turbo": [
+                "fc94481f0c52b21c5ac1fdade8d9c5b210f7239253f86ef21e6198fe393ed60e"
+            ]
         },
-        "flux": {
+        "flux-1": {
             "dev": [
                 "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",
                 "20d47474da0714979e543b6f21bd12be5b5f721119c4277f364a29e329e931b9"
@@ -17,17 +31,189 @@
             ],
             "schnell": [
                 "ef5c9cd1ebe6e3be5e8b1347eca0a6f0b138986c71220a7f1c2c14f29d01beed"
-            ]
+            ],
+            "mini": "e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"
         },
-        "sd3": {
+        "stable-diffusion-3": {
             "large": [
-                "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465",
                 "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465"
-            ]
+            ],
+            "medium": [
+                "dee29a467c44cff413fcf1c2dda0b31f5f0a4e093029a8e5a05140f40ae061ee"
+            ],
+            "gguf": [
+                "e7eddc3cd09ccf7c9c03ceef70bbcd91d44d46673857d37c3abfe4e6ee240a96"
+            ],
+            "playground_2.5": {
+                "base": [
+                    "a6f31493ceeb51c88c5239188b9078dc64ba66d3fc5958ad48c119115b06120c"
+                ],
+                "aesthetic": [
+                    "fe2e9edf7e3923a80e64c2552139d8bae926cc3b028ca4773573a6ba60e67c20",
+                    "d4813e9f984aa76cb4ac9bf0972d55442923292d276e97e95cb2f49a57227843"
+                ]
+            },
+            "stable-cascade": {
+                "stage-c": [
+                    "2b6986954d9d2b0c702911504f78f5021843bd7050bb10444d70fa915cb495ea",
+                    "2aa5a461c4cd0e2079e81554081854a2fa01f9b876d7124c8fff9bf1308b9df7",
+                    "ce474fd5da12f1d465a9d236d61ea7e98458c1b9d58d35bb8412b2acb9594f08",
+                    "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
+                    "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147"
+                ],
+                "stage-b": [
+                    "fde5a91a908e8cb969f97bcd20e852fb028cc039a19633b0e1559ae41edeb16f",
+                    "24fa8b55d12bf904878b7f2cda47c04c1a92da702fe149e28341686c080dfd4f",
+                    "a7c96afb54e60386b7d077bf3f00d04596f4b877d58e6a577f0e1a08dc4a0190",
+                    "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
+                    "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64"
+                ]
+            }
+        },
+        "file_256": {
+            "taesd": {
+                "stable-diffusion-3": [
+                    "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
+                ],
+                "stable-diffusion-xl": [
+                    "ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"
+                ],
+                "stable-diffusion-1": [
+                    "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
+                ],
+                "flux-1": [
+                    "927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"
+                ]
+            },
+            "lora": {
+                "dmd": {
+                    "dmd2_sdxl_4step_lora_fp16.safetensors": "b3d9173815a4b595991c3a7a0e0e63ad821080f314a0b2a3cc31ecd7fcf2cbb8",
+                    "dmd2_sdxl_4step_lora.safetensors": "a374289e9446d7f14d2037c4b3770756b7b52c292142a691377c3c755010a1bb"
+                },
+                "dpo": {
+                    "dpo-sdxl-comfyui.safetensors": "666f71a833fc41229ec7e8a264fb7b0fcb8bf47a80e366ae7486c18f38ec9fc0",
+                    "dpo-sdxl-turbo-comfyui.safetensors": "6b1dcbfb234d7b6000948b5b95ccebc8f903450ce2ba1b50bc3456987c9087ad"
+                },
+                "flash": {
+                    "flash-pixart-a.safetensors": "99ef037fe3c1fb6d6bbefdbb85ad60df434fcc0577d34c768d752d60cf69681b",
+                    "flash-sd.safetensors": "99353444c1a0f40719a1b3037049dbd24800317979a73c312025c05af3574a5f",
+                    "flash-sdxl.diffusers.safetensors": "afe2ca6e27c4c6087f50ef42772c45d7b0efbc471b76e422492403f9cae724d7",
+                    "flash_sd3.adapter_model.safetensors": "85fce13c36e3739aa42930f745eb9fceb6c53d53fb17e2a687e3234c1a58ee15",
+                },
+                "turbo": {
+                    "flux1_turbo_alpha_lora.safetensors": "77f7523a5e9c3da6cfc730c6b07461129fa52997ea06168e9ed5312228aa0bff",
+                    "sd_xl_turbo_lora_v1-128dim.safetensors": "a599c42a9f4f7494c7f410dbc0fd432cf0242720509e9d52fa41aac7a88d1b69",
+                    "lora_sd3.5m_turbo_8steps.safetensors": "fe37e611192cc232c805e10dda70b86586f3857338625faf4b24125034796d9e"
+                },
+                "hyper": {
+                    "stable-diffusion-3": {
+                        "cfg": {
+                            "16": "5b4d0b99d58deb811bdbbe521a06f4dbf56a2e9148ff3211c594e0502b656bc9",
+                            "4": "0ee4e529abd17b06d4295e3bb91c0d4ddae393afad86b2b43c4f5eeb9e401602",
+                            "8": "fc6a3e73e14ed11e21e4820e960d7befcffe7e333850ada9545f239e9aa6027e"
+                        }
+                    },
+                    "flux-1": {
+                        "16": "6461f67dfc1a967ae60344c3b3f350877149ccab758c273cc37f5e8a87b5842e",
+                        "8": "e0ab0fdf569cd01a382f19bd87681f628879dea7ad51fe5a3799b6c18c7b2d03"
+                    },
+                    "stable-diffusion": {
+                        "cfg": {
+                            "12": "64b98437383537cd968fda6f87a05c33160ece9c79ff4757949a1e212ff78361",
+                            "8": "f6123d5b950d5250ab6c33600e27f4dcf71b3099ebf888685e01e9e8117ce482"
+                        },
+                        "1": "a04fd9a535c1e56d38f7590ee72a13fd5ca0409853b4fff021e5a9482cf1ca3b",
+                        "2": "2f26dcc1d883feb07557a552315baae2ca2a04ac08556b08a355a244547e8c3a",
+                        "4": "c5dd058616461ed5053e2b14eec4dbe3fa0eea3b13688642f6d6c80ea2ba5958",
+                        "8": "91fc3186236e956d64dbb4357f2e120c69b968b78af7d2db9884a5ca74d3cd13"
+                    },
+                    "stable-diffusion-xl": {
+                        "cfg": {
+                            "12": "0b97f447b5878323a28fbe7c51ba7acebd21f4d77552ba77b04b11c8911825b6",
+                            "8": "55b51334c85061afff5eff7c550b61963c8b8607a5868bbe4f26db49374719b1",
+                        },
+                        "1": "c912df184c5116792d2c604d26c6bc2aa916685f4a793755255cda1c43a3c78a",
+                        "2": "69b25c0187ced301c3603c599c0bc509ac99b8ac34db89a2aecc3d5f77a35187",
+                        "4s": "12f81a27d00a751a40d68fd15597091896c5a90f3bd632fb6c475607cbdad76e",
+                        "8": "ca689190e8c46038550384b5675488526cfe5a40d35f82b27acb75c100f417c1"
+                    }
+                },
+                "lcm": {
+                    "stable-diffusion": "8f90d840e075ff588a58e22c6586e2ae9a6f7922996ee6649a7f01072333afe4",
+                    "stable-diffusion-xl": "a764e6859b6e04047cd761c08ff0cee96413a8e004c9f07707530cd776b19141",
+                    "ssd-1b": "7adaaa69db6f011058a19fd1d5315fdf19ef79fcd513cdab30e173833fd5c59b",
+                    "lcm.safetensors": "eaecb24a1cda4411eab67275b1d991071216ac93693e8fa0c9226c9df0386232",
+                    "vega": "9b6e8cd833fa205eaeeed391ca623a6f2546e447470bd1c5dcce3fa8d2f26afb"
+                },
+                "pcm": {
+                    "stable-diffusion-xl": {
+                        "lcm": "0365f6107250a4fed1b83e8ae6a070065e026a2ba54bff65f55a50284232bbe6",
+                        "cfg": {
+                            "16": [
+                                "04ea827435d5750e63d113dc509174b4f6e8a069ff8f91970c3d25299c10b1f8",
+                                "7eb353b2abcaabab6251ba4e17d6cbe2e763feb0674b0f950555552212b44621"
+                            ],
+                            "4": [
+                                "a85cf70ac16ed42011630a5cd6b5927722cb7c40a2107eff85e2670f9a38c893",
+                                "9f7f13bb019925eacd89aeff678e4fd831f7b60245b986855dff6634aee4eba9"
+                            ],
+                            "8": [
+                                "3b9c970a3e4c0e182931e71b3f769c1956f16c6b06db98b4d67236790d4d0b1d",
+                                "7f04ba8911b4c25ef2c7cbf74abcb6daa3b4f0e4bc6a03896bdae7601f2f180b"
+                            ]
+                        },
+                        "16": [
+                            "13fb038025ce9dad93b8ee1b67fc81bac8affb59a77b67d408d286e0b0365a1d",
+                            "3442eff271aa3b60a094fd6f9169d03e49e4051044a974f6fcf690507959191f"
+                        ],
+                        "2": [
+                            "242cbe4695fe3f2e248faa71cf53f2ccbf248a316973e4b2f38ab9e34f35a5ab",
+                            "e1f600491bb8e0cd94f41144321e44fdb2cb346447f31e71f6e53f1c24cccfbf"
+                        ],
+                        "4": [
+                            "d0bf40a7f280829195563486bec7253f043a06b1f218602b20901c367641023e",
+                            "212150d7953627fb89df99aad579d6763645a1cb2ef26b19fee8b398d5e5ff4d"
+                        ],
+                        "8": [
+                            "e80fcf46d15f4d3821d3d9611bdb3022a4a8b647b2536833b168d317a91e4f74",
+                            "56ed9dc9f51f4bb0d6172e13b7947f215c347fc0da341c8951b2c12b9507d09e"
+                        ]
+                    },
+                    "stable-diffusion-3": {
+                        "2": "8a45878ecc34e53855fe21146cb6ef32682053b7c4eacc013be89fb08c4c19d8",
+                        "4": "9444a5cead551c56c4d1c455ce829ba9f96f01fbcca31294277e0862a6a15b76",
+                        "4shift3": "e365902c208cbc0456ca5e7c41a490f637c15f3f7b98691cbba21f96a8c960b4",
+                        "stochastic": "3550fa018cd0b60d9e36ac94c31b30f27e402d3855ed63e47668bb181b35a0ad"
+                    },
+                    "stable-diffusion": {
+                        "lcm": "b80b27dd6504f1c3a7637237dda86bc7e26fa5766da30c4fc853c0a1d46bad31",
+                        "cfg": {
+                            "16": "8f605ffde3616592deb37ed8c6bacb83fe98963c1fd0883c2a4f93787098aa45",
+                            "4": "fa6acb94f11dba3bf4120af5a12e3c88cd2b9572d43ec1a6fb04eede9f32829e",
+                            "8": "bff3d4499718b61455b0757b5f8d98fe23e73a768b538c82ecf91c693b69dbcd"
+                        },
+                        "17": "c7ac2fa3df3a5b7080ebe63f259ab13630014f104c93c3c706d77b05cc48506b",
+                        "2": "4c5f27a727d12146de4b1d987cee3343bca89b085d12b03c45297af05ce88ef4",
+                        "4": "29278bc86274fdfc840961e3c250758ff5e2dc4666d940f103e78630d5b879d3",
+                        "8": "41a7f0b966d18f643d16c4401f0b5ef6b9ef7362c20e17128322f17874709107"
+                    }
+                },
+                "slam": {
+                    "slam-lora-sdxl.safetensors": "22569a946b0db645aa3b8eb782c674c8e726a7cc0d655887c21fecf6dfe6ad91"
+                },
+                "spo": {
+                    "spo-sd-v1-5_4k-p_10ep_lora_diffusers.safetensors": "1be130c5be2de0beacadd3bf0bafe3bedd7e7a380729932a1e369fb29efa86f4",
+                    "spo_sdxl_10ep_4k-data_lora_diffusers.safetensors": "0b9896f30d29daa5eedcfc9e7ad03304df6efc5114508f6ca9c328c0b4f057df"
+                },
+                "tcd": {
+                    "tcd-sd15.safetensors": "eaecb24a1cda4411eab67275b1d991071216ac93693e8fa0c9226c9df0386232",
+                    "tcd-sdxl.safetensors": "2c777bc60abf41d3eb0fe405d23d73c280a020eea5adf97a82a141592c33feba"
+                }
+            }
         }
     },
     "layer_type": {
-        "modelspec": {
+        "sai": {
             "blocks": [
                 "clip_l",
                 "clip_g",
@@ -98,29 +284,25 @@
     },
     "lora": {
         "flash": "base_model.model.",
-        "hyper-sd3": "21.norm1_context",
+        "hyper-stable-diffusion-3": "21.norm1_context",
         "pcm": "mid_"
     },
     "tae": {
         "taesd-sd1": {
-            "file_size": 9793292,
-            "hash": "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
+            "file_size": 9793292
         },
-        "taesd-sdxl-base": {
+        "taesd-stable-diffusion-xl": {
             "blocks": [
                 " decoder.layers"
             ],
-            "file_size": 9793292,
-            "hash": "ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"
+            "file_size": 9793292
         },
-        "taesd-flux": {
-            "file_size": 9848636,
-            "hash": "927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"
+        "taesd-flux-1": {
+            "file_size": 9848636
         },
         "tensors": 134,
-        "taesd-sd3": {
-            "file_size": 9848636,
-            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
+        "taesd-stable-diffusion-3": {
+            "file_size": 9848636
         }
     },
     "unet": {
@@ -184,7 +366,7 @@
                 "model.diffusion_model.output_blocks.9"
             ]
         },
-        "sdxl-refiner": "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'",
+        "stable-diffusion-xl-refiner": "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'",
         "lumina-mgpt": {
             "blocks": "model.embed_tokens.weight"
         },
@@ -204,14 +386,14 @@
             ],
             "tensors": 2516
         },
-        "flux-1": {
+        "flux-1-1": {
             "blocks": [
                 "double_blocks.12.txt_mod.lin.weight",
                 "add_q_proj.weight",
                 "single_transformer_blocks.9.norm.linear.weight"
             ]
         },
-        "sd35": {
+        "stable-diffusion-35": {
             "blocks": [
                 "model.diffusion_model.joint_blocks.",
                 "blocks.11.ff.net.2.weight",
@@ -219,7 +401,7 @@
                 "transformer_blocks.31.norm1_context.linear.weight"
             ]
         },
-        "sdxl-base": {
+        "stable-diffusion-xl-base": {
             "blocks": [
                 "logit_scale",
                 "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight",
@@ -274,7 +456,7 @@
         "sd1": {
             "blocks": "running_mean"
         },
-        "flux": {
+        "flux-1": {
             "blocks": [
                 "encoder.down.3.block.1.norm1.bias",
                 ".nin_shortcut.bias",
@@ -290,7 +472,7 @@
             ],
             "tensors": 122
         },
-        "sdxl-base": {
+        "stable-diffusion-xl-base": {
             "blocks": "encoder.mid_block.resnets.0.conv2.weight",
             "shapes": [
                 512,
@@ -300,7 +482,7 @@
             ],
             "tensors": 248
         },
-        "sd3": {
+        "stable-diffusion-3": {
             "blocks": "encoder.mid_block.resnets.0.conv2.weight",
             "shapes": [
                 512,

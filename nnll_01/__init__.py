@@ -213,6 +213,11 @@ def debug_message(*args, **kwargs):
 
 
 os.makedirs("log", exist_ok=True)
+log_folder = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "log",
+)
+os.makedirs(log_folder, exist_ok=True)
 
 
 def main():
