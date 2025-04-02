@@ -1510,7 +1510,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev229+gca0535f.d20250402"
+version = "0.1.dev230+g101dbf8.d20250402"
 source = { editable = "." }
 dependencies = [
     { name = "structlog" },
@@ -1538,6 +1538,7 @@ all = [
     { name = "sounddevice" },
     { name = "textual", extra = ["syntax"] },
     { name = "textual-plotext" },
+    { name = "tiktoken" },
     { name = "toml" },
     { name = "torch" },
     { name = "torchvision" },
@@ -1573,6 +1574,7 @@ dev = [
     { name = "textual", extra = ["syntax"] },
     { name = "textual-dev" },
     { name = "textual-plotext" },
+    { name = "tiktoken" },
     { name = "toml" },
     { name = "torch" },
     { name = "torchvision" },
@@ -1580,6 +1582,10 @@ dev = [
     { name = "transformers" },
     { name = "tree-sitter" },
     { name = "viztracer" },
+]
+nnll-02 = [
+    { name = "huggingface-hub" },
+    { name = "litellm" },
 ]
 nnll-03 = [
     { name = "aiofiles" },
@@ -1589,6 +1595,14 @@ nnll-03 = [
 nnll-04 = [
     { name = "gguf" },
     { name = "llama-cpp-python" },
+]
+nnll-05 = [
+    { name = "networkx" },
+]
+nnll-06 = [
+    { name = "litellm" },
+    { name = "ollama" },
+    { name = "tiktoken" },
 ]
 nnll-08 = [
     { name = "numpy" },
@@ -1614,6 +1628,11 @@ nnll-11 = [
     { name = "dspy" },
     { name = "pydantic" },
 ]
+nnll-12 = [
+    { name = "networkx" },
+    { name = "textual", extra = ["syntax"] },
+    { name = "tree-sitter" },
+]
 nnll-13 = [
     { name = "sounddevice" },
     { name = "textual-plotext" },
@@ -1622,6 +1641,7 @@ nnll-14 = [
     { name = "matplotlib" },
     { name = "networkx" },
     { name = "textual" },
+    { name = "tree-sitter" },
 ]
 nnll-15 = [
     { name = "huggingface-hub", extra = ["hf-transfer"] },
@@ -1686,20 +1706,30 @@ requires-dist = [
     { name = "dspy", marker = "extra == 'nnll-11'", specifier = ">=2.6.13" },
     { name = "gguf", marker = "extra == 'nnll-04'", specifier = ">=0.14.0" },
     { name = "hidiffusion", marker = "extra == 'nnll-56'", specifier = ">=0.1.10" },
+    { name = "huggingface-hub", marker = "extra == 'nnll-02'", specifier = ">=0.29.3" },
     { name = "huggingface-hub", extras = ["hf-transfer"], marker = "extra == 'nnll-15'", specifier = ">=0.29.1" },
     { name = "huggingface-hub", extras = ["hf-transfer"], marker = "extra == 'nnll-44'", specifier = ">=0.29.1" },
     { name = "huggingface-hub", extras = ["hf-transfer"], marker = "extra == 'nnll-45'", specifier = ">=0.29.1" },
+    { name = "litellm", marker = "extra == 'nnll-02'", specifier = ">=1.65.0" },
+    { name = "litellm", marker = "extra == 'nnll-06'", specifier = ">=1.65.0" },
     { name = "litellm", marker = "extra == 'nnll-10'", specifier = ">=1.65.0" },
     { name = "llama-cpp-python", marker = "extra == 'nnll-04'", specifier = ">=0.3.8" },
     { name = "matplotlib", marker = "extra == 'nnll-14'", specifier = ">=3.10.1" },
+    { name = "networkx", marker = "extra == 'nnll-05'", specifier = ">=3.4.2" },
+    { name = "networkx", marker = "extra == 'nnll-12'", specifier = ">=3.4.2" },
     { name = "networkx", marker = "extra == 'nnll-14'", specifier = ">=3.4.2" },
     { name = "nnll", extras = ["all"], marker = "extra == 'dev'" },
+    { name = "nnll", extras = ["nnll-02"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-03"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-04"], marker = "extra == 'all'" },
+    { name = "nnll", extras = ["nnll-05"], marker = "extra == 'all'" },
+    { name = "nnll", extras = ["nnll-06"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-08"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-09"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-10"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-11"], marker = "extra == 'all'" },
+    { name = "nnll", extras = ["nnll-12"], marker = "extra == 'all'" },
+    { name = "nnll", extras = ["nnll-13"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-14"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-15"], marker = "extra == 'all'" },
     { name = "nnll", extras = ["nnll-16"], marker = "extra == 'all'" },
@@ -1716,6 +1746,7 @@ requires-dist = [
     { name = "nnll", extras = ["nnll-64"], marker = "extra == 'all'" },
     { name = "numpy", marker = "extra == 'nnll-08'", specifier = ">=2.2.3" },
     { name = "numpy", marker = "extra == 'nnll-10'", specifier = ">=2.2.3" },
+    { name = "ollama", marker = "extra == 'nnll-06'", specifier = ">=0.4.7" },
     { name = "ollama", marker = "extra == 'nnll-10'", specifier = ">=0.4.7" },
     { name = "ollama", marker = "extra == 'nnll-15'", specifier = ">=0.4.7" },
     { name = "pillow", marker = "extra == 'nnll-48'", specifier = ">=11.1.0" },
@@ -1736,9 +1767,11 @@ requires-dist = [
     { name = "structlog", specifier = ">=25.2.0" },
     { name = "textual", marker = "extra == 'nnll-14'", specifier = ">=2.1.2" },
     { name = "textual", extras = ["syntax"], marker = "extra == 'nnll-10'", specifier = ">=2.1.2" },
+    { name = "textual", extras = ["syntax"], marker = "extra == 'nnll-12'", specifier = ">=2.1.2" },
     { name = "textual-dev", marker = "extra == 'dev'", specifier = ">=1.7.0" },
     { name = "textual-plotext", marker = "extra == 'nnll-10'", specifier = ">=1.0.1" },
     { name = "textual-plotext", marker = "extra == 'nnll-13'", specifier = ">=1.0.1" },
+    { name = "tiktoken", marker = "extra == 'nnll-06'", specifier = ">=0.9.0" },
     { name = "toml", marker = "extra == 'nnll-48'", specifier = ">=0.10.2" },
     { name = "torch", marker = "extra == 'nnll-08'", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == 'nnll-09'", specifier = ">=2.6.0" },
@@ -1754,6 +1787,8 @@ requires-dist = [
     { name = "tqdm", marker = "extra == 'nnll-03'", specifier = ">=4.67.1" },
     { name = "transformers", marker = "extra == 'nnll-09'", specifier = ">=4.49.0" },
     { name = "tree-sitter", marker = "extra == 'nnll-10'", specifier = ">=0.24.0" },
+    { name = "tree-sitter", marker = "extra == 'nnll-12'", specifier = ">=0.24.0" },
+    { name = "tree-sitter", marker = "extra == 'nnll-14'", specifier = ">=0.24.0" },
     { name = "viztracer", marker = "extra == 'dev'", specifier = ">=1.0.3" },
 ]
 

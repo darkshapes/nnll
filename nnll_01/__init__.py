@@ -16,6 +16,34 @@ from datetime import datetime
 import viztracer
 
 
+def use_nouveau_theme():
+    """Set a a midnight blue and dark purple theme to console logs"""
+    from rich import style
+    from rich.theme import Theme
+
+    NOUVEAU: Theme = Theme(
+        {
+            "logging.level.notset": style.Style(dim=True),  # level ids
+            "logging.level.debug": style.Style(color="magenta3"),
+            "logging.level.info": style.Style(color="blue_violet"),
+            "logging.level.warning": style.Style(color="gold3"),
+            "logging.level.error": style.Style(color="dark_orange3", bold=True),
+            "logging.level.critical": style.Style(color="deep_pink4", bold=True, reverse=True),
+            "logging.keyword": style.Style(bold=True, color="cyan", dim=True),
+            "log.path": style.Style(dim=True, color="royal_blue1"),  # line number
+            "repr.str": style.Style(color="sky_blue3", dim=True),
+            "json.str": style.Style(color="gray53", italic=False, bold=False),
+            "log.message": style.Style(color="steel_blue1"),  # variable name, normal strings
+            "repr.tag_start": style.Style(color="white"),  # class name tag
+            "repr.tag_end": style.Style(color="white"),  # class name tag
+            "repr.tag_contents": style.Style(color="deep_sky_blue4"),  # class readout
+            "repr.ellipsis": style.Style(color="purple4"),
+            "log.level": style.Style(color="gray37"),
+        }
+    )
+    return NOUVEAU
+
+
 def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
     """
     Configure and launch *structured* logger integration
@@ -139,8 +167,36 @@ def debug_monitor(func: Callable = None) -> Callable:
     return wrapper
 
 
+def info_stream():
+    from rich.console import Console
+    from rich.logging import RichHandler
+    from logging import StreamHandler, Formatter, getLogger
+    from logging import root
+    from sys import stderr as sys_stderr
+
+    console_out = Console(stderr=True, theme=use_nouveau_theme())
+    log_handler = RichHandler(console=console_out)
+    if log_handler is None:
+        log_handler = StreamHandler(sys_stderr)
+        log_handler.propagate = False
+    formatter = Formatter(
+        fmt="%(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    log_handler.setFormatter(formatter)
+    info_obj = getLogger(name="nfo")
+    info_obj.setLevel(INFO)
+    info_obj.addHandler(log_handler)
+    return info_obj
+
+
+info_obj = info_stream()
+
+
 def info_message(*args, **kwargs):
     """Info log output"""
+
+    info_obj.info("%s", f"{args}")
     logger_obj.info(
         "%s",
         type_ain=type(args),

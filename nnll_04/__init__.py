@@ -216,7 +216,8 @@ class ModelTool:
         with open(file_path_named, "rb") as file_contents_to:
             try:
                 length_of_header = struct.unpack("<Q", file_contents_to.read(8))[0]
-                header_data = json.loads(length_of_header.decode(errors="strict"))
+                header_data = file_contents_to.read(length_of_header)
+                header_data = json.loads(header_data.decode("utf-8", errors="strict"))
             except json.JSONDecodeError as error_log:
                 dbug("Failed to read json from file : %s", file_path_named, error_log, tb=error_log.__traceback__)
             else:

@@ -12,7 +12,7 @@ from nnll_15.constants import LibType
 #     """Answer questions with short factoid answers."""
 
 #     question = dspy.InputField()
-#     answer = dspy.OutputField(desc="often between 60 and 90 words and maximum 10000 character code blocks")
+#     answer = dspy.OutputField()
 
 
 # class ChainOfThought(dspy.Signature):
@@ -25,26 +25,26 @@ class LLMInput(BaseModel):
     """Simple input query fields for chat models including previous contexts"""
 
     context: str = Field(description="The context for the question")
-    query: str = Field(description="The question to be answered")
+    query: str = Field(description="The message to respond to")
 
 
 class LLMOutput(BaseModel):
     """Simple output fields for chat models
-    Incl. confidence metric and 60-90 word/10k character code limits"""
+    Incl. confidence metric"""
 
-    answer: str = Field(description="The answer for the question, often between 60 and 90 words and maximum 10000 character code blocks")
-    confidence: float = Field(ge=0, le=1, description="The confidence score for the answer")
+    reply: str = Field(description="The response to the question")
+    confidence: float = Field(
+        ge=0.0,
+        le=1.0,
+        description="Mean numeric value of conflicting predicates and cognitive dissonance for prediction per word.",
+    )
 
 
 class BasicQAHistory(dspy.Signature):
-    """Answer questions with short factoid answers."""
+    """Reply with short responses within 60-90 word/10k character code limits"""
 
     message: LLMInput = dspy.InputField()
-    response: LLMOutput = dspy.OutputField()
-
-
-# class SigType(BaseModel):
-#     QA: BasicQAHistory = BasicQAHistory
+    response: LLMOutput = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
 
 
 class ChatMachineWithMemory(dspy.Module):
@@ -52,7 +52,7 @@ class ChatMachineWithMemory(dspy.Module):
     Defaults to 5 question history, 4 max workers, and `BasicQAHistory` query"""
 
     @debug_monitor
-    def __init__(self, max_workers: int = 4, memory_size: int = 5, signature: dspy.Signature = BasicQAHistory):
+    def __init__(self, memory_size: int = 5, signature: dspy.Signature = BasicQAHistory):
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
         Does not load any models until forward pass
@@ -62,12 +62,11 @@ class ChatMachineWithMemory(dspy.Module):
         super().__init__()
         self.memory = []
         self.memory_size = memory_size
-        self.max_workers = max_workers
         generator = dspy.asyncify(dspy.Predict(signature))
         self.completion = dspy.streamify(generator)
 
     @debug_monitor
-    async def forward(self, api_config: dict, message: str):
+    async def forward(self, api_config: dict, message: str, max_workers=4):
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration
@@ -76,36 +75,28 @@ class ChatMachineWithMemory(dspy.Module):
         :return: yields response in chunks
         """
         model = dspy.LM(**api_config)
-        dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-        self.memory.append(message)
-        if len(self.memory) > self.memory_size:
-            self.memory.pop(0)
+        dspy.settings.configure(lm=model, async_max_workers=max_workers)
         combined_context = " ".join(self.memory)
+        self.memory.append(message)
+        if len(self.memory) == self.memory_size:
+            self.memory.pop(0)
         async for chunk in self.completion(message={"context": combined_context, "query": message}, stream=True):
             yield chunk
 
 
-async def start_machine(max_workers: int = 8, memory_size: int = 5, signature: dspy.Signature = BasicQAHistory):
-    """
-    Instantiate chat completion method based on library\n
-    :param memory_size: Session chat history to retain for context
-    :param signature: The type of dspy.Signature to use for completion
-    :return: An instance of ChatMachineWithHistory
-    """
-    machine = ChatMachineWithMemory(memory_size=memory_size, max_workers=max_workers, signature=signature)
-    return machine
+machine = ChatMachineWithMemory(memory_size=5, signature=BasicQAHistory)
 
 
 @debug_monitor
-async def chat_machine(library: LibType, machine: dspy.Module, message: str, model: str):
+async def chat_machine(model: str, message: str, library: LibType, max_workers=8):
     """
     Load model into chat completion method based on library and run query\n
-    :param model: The model to reply with
-    :param message: The text to send the model
-    :param library: API type to use to fulfill request
-    :param machine: Module to run query through
-    :return: Yields stream of `str` data in chunks
+    :param model: The model to create a reply with the question
+    :param variable: description
+    :param variable: description
+    :return: output
     """
+
     if library == LibType.OLLAMA:
         model = {"model": f"ollama_chat/{model}", "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}
     elif library == LibType.LM_STUDIO:
@@ -114,7 +105,7 @@ async def chat_machine(library: LibType, machine: dspy.Module, message: str, mod
         model = {"model": f"huggingface/{model}"}  # , api_base="https://localhost:xxxx/address:port/sdbx/placeholder"}
     elif library == LibType.VLLM:
         model = {"model": f"hosted_vllm/{model}", "api_base": "http://localhost:8000/chat/completions"}
-    async for chunk in machine.forward(api_config=model, message=message):
+    async for chunk in machine.forward(api_config=model, message=message, max_workers=max_workers):
         try:
             if chunk is not None:
                 if isinstance(chunk, dspy.Prediction):

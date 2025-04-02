@@ -46,6 +46,8 @@ nnll_14/__init__.py
 nnll_15/__init__.py
 nnll_15/constants.py
 nnll_16/__init__.py
+nnll_17/__init__.py
+nnll_17/__main__.py
 nnll_18/__init__.py
 nnll_24/__init__.py
 nnll_25/__init__.py
@@ -117,3 +119,4 @@ tests/test_61.py
 tests/test_61_2.py
 tests/test_62.py
 tests/test_img.png
+tests/test_model_dict_hash.py

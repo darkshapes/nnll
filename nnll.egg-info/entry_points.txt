@@ -1,3 +1,4 @@
 [console_scripts]
 astra = nnll_10.package:main
+nnll-hash = nnll_17:main
 nnll-parse = nnll_36:main
