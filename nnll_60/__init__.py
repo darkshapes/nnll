@@ -4,6 +4,7 @@
 
 import os
 
+HASH_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "hashes.json")
 CONFIG_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "config.json")
 CHAIN_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "hyperchain.json")
 
@@ -16,7 +17,7 @@ class JSONCache:
         ```
         cache_manager = JSONCache("path/to/file.json")
 
-        @cache_manager.decorator`
+        @cache_manager.decorator
         #def docstring_demo_func(data):
             print(data)
         ```

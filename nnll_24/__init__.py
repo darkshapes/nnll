@@ -5,6 +5,7 @@
 
 
 from nnll_01 import debug_monitor
+from nnll_33 import ValueComparison
 
 
 class KeyTrail:
@@ -22,7 +23,6 @@ class KeyTrail:
         :param attributes: `dict` Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
         :return: `list` The path of keys through the target `dict` leading to a matching subtree, or None if no match is found.
         """
-        from nnll_33 import ValueComparison
 
         compare = ValueComparison()
 

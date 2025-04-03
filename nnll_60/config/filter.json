@@ -1,33 +1,6 @@
 {
-    "layer_hash": {
-        "sdxl": {
-            "base": "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef",
-            "pony_diffusion": "d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16",
-            "animagine": "31164c11db41b007f15c94651a8b1fa4d24097c18782d20fabe13c59ee07aa3a",
-            "illustrious": "c4a8d365e7fe07c6dbdd52be922aa6dc23215142342e3e7f8f967f1a123a6982"
-        },
-        "flux": {
-            "dev": [
-                "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",
-                "20d47474da0714979e543b6f21bd12be5b5f721119c4277f364a29e329e931b9"
-            ],
-            "hybrid": [
-                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443",
-                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443"
-            ],
-            "schnell": [
-                "ef5c9cd1ebe6e3be5e8b1347eca0a6f0b138986c71220a7f1c2c14f29d01beed"
-            ]
-        },
-        "sd3": {
-            "large": [
-                "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465",
-                "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465"
-            ]
-        }
-    },
     "layer_type": {
-        "modelspec": {
+        "sai": {
             "blocks": [
                 "clip_l",
                 "clip_g",
@@ -98,29 +71,25 @@
     },
     "lora": {
         "flash": "base_model.model.",
-        "hyper-sd3": "21.norm1_context",
+        "hyper-stable-diffusion-3": "21.norm1_context",
         "pcm": "mid_"
     },
     "tae": {
         "taesd-sd1": {
-            "file_size": 9793292,
-            "hash": "db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"
+            "file_size": 9793292
         },
-        "taesd-sdxl-base": {
+        "taesd-stable-diffusion-xl": {
             "blocks": [
                 " decoder.layers"
             ],
-            "file_size": 9793292,
-            "hash": "ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"
+            "file_size": 9793292
         },
-        "taesd-flux": {
-            "file_size": 9848636,
-            "hash": "927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"
+        "taesd-flux-1": {
+            "file_size": 9848636
         },
         "tensors": 134,
-        "taesd-sd3": {
-            "file_size": 9848636,
-            "hash": "6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"
+        "taesd-stable-diffusion-3": {
+            "file_size": 9848636
         }
     },
     "unet": {
@@ -184,7 +153,7 @@
                 "model.diffusion_model.output_blocks.9"
             ]
         },
-        "sdxl-refiner": "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'",
+        "stable-diffusion-xl-refiner": "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'",
         "lumina-mgpt": {
             "blocks": "model.embed_tokens.weight"
         },
@@ -204,14 +173,14 @@
             ],
             "tensors": 2516
         },
-        "flux-1": {
+        "flux-1-1": {
             "blocks": [
                 "double_blocks.12.txt_mod.lin.weight",
                 "add_q_proj.weight",
                 "single_transformer_blocks.9.norm.linear.weight"
             ]
         },
-        "sd35": {
+        "stable-diffusion-35": {
             "blocks": [
                 "model.diffusion_model.joint_blocks.",
                 "blocks.11.ff.net.2.weight",
@@ -219,7 +188,7 @@
                 "transformer_blocks.31.norm1_context.linear.weight"
             ]
         },
-        "sdxl-base": {
+        "stable-diffusion-xl-base": {
             "blocks": [
                 "logit_scale",
                 "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight",
@@ -274,7 +243,7 @@
         "sd1": {
             "blocks": "running_mean"
         },
-        "flux": {
+        "flux-1": {
             "blocks": [
                 "encoder.down.3.block.1.norm1.bias",
                 ".nin_shortcut.bias",
@@ -290,7 +259,7 @@
             ],
             "tensors": 122
         },
-        "sdxl-base": {
+        "stable-diffusion-xl-base": {
             "blocks": "encoder.mid_block.resnets.0.conv2.weight",
             "shapes": [
                 512,
@@ -300,7 +269,7 @@
             ],
             "tensors": 248
         },
-        "sd3": {
+        "stable-diffusion-3": {
             "blocks": "encoder.mid_block.resnets.0.conv2.weight",
             "shapes": [
                 512,

@@ -5,6 +5,7 @@
 
 # pylint: disable=import-outside-toplevel
 from nnll_01 import debug_monitor, debug_message as dbug, info_message as nfo
+from pathlib import Path
 
 
 class ModelTool:
@@ -12,6 +13,14 @@ class ModelTool:
 
     def __init__(self):
         self.read_method = None
+        self.import_map = {
+            ".safetensors": self.attempt_file_open,
+            ".sft": self.attempt_file_open,
+            ".gguf": self.attempt_file_open,
+            ".pt": self.metadata_from_pickletensor,
+            ".pth": self.metadata_from_pickletensor,
+            ".ckpt": self.metadata_from_pickletensor,
+        }
 
     @debug_monitor
     def read_metadata_from(self, file_path_named: str) -> dict:
@@ -21,22 +30,14 @@ class ModelTool:
         :return: `dict` a dictionary including the metadata header and external file attributes\n
         (model_header, disk_size, file_name, file_extension)
         """
-        from pathlib import Path
 
         metadata = None
         extension = Path(file_path_named).suffix
-        import_map = {
-            ".safetensors": self.metadata_from_safetensors,
-            ".sft": self.metadata_from_safetensors,
-            ".gguf": self.metadata_from_gguf,
-            ".pt": self.metadata_from_pickletensor,
-            ".pth": self.metadata_from_pickletensor,
-            ".ckpt": self.metadata_from_pickletensor,
-        }
-        if extension not in import_map:
+
+        if extension not in self.import_map:
             dbug("Unsupported file extension: %s", f"{extension}. Silently ignoring")
         else:
-            self.read_method = import_map.get(extension)
+            self.read_method = self.import_map.get(extension)
             metadata = self.read_method(file_path_named)
         if metadata is None:
             nfo("Couldn't load model metadata for %s", file_path_named)
@@ -154,17 +155,20 @@ class ModelTool:
                 "general.name",
                 "general.architecture",
             ]
-            for key in name_keys:
-                value = parser.metadata.get(key)
-                if value is not None:
-                    llama_data.setdefault("name", value)
-                    break
+            try:
+                for key in name_keys:
+                    value = parser.metadata.get(key)
+                    if value is not None:
+                        llama_data.setdefault("name", value)
+                        break
 
-            # Determine the dtype from parser.scores.dtype, if available
-            scores_dtype = getattr(parser.scores, "dtype", None)
-            if scores_dtype is not None:
-                llama_data.setdefault("dtype", scores_dtype.name)  # e.g., 'float32'
-            # file_metadata = {UpField.METADATA: llama_data, DownField.LAYER_DATA: EmptyField.PLACEHOLDER}
+                # Determine the dtype from parser.scores.dtype, if available
+                scores_dtype = getattr(parser.scores, "dtype", None)
+                if scores_dtype is not None:
+                    llama_data.setdefault("dtype", scores_dtype.name)  # e.g., 'float32'
+                # file_metadata = {UpField.METADATA: llama_data, DownField.LAYER_DATA: EmptyField.PLACEHOLDER}
+            except ValueError as error_log:
+                dbug("Parsing file failed for %s", file_path_named, error_log, tb=error_log.__traceback__)
 
         return llama_data
 
@@ -177,30 +181,16 @@ class ModelTool:
         :return: A `dict` with the header data prepared to read
         """
         metadata = None
-        metadata = self.create_gguf_reader(file_path_named)
-        if metadata:
-            pass
+        if Path(file_path_named).suffix in [".safetensors", ".sft"]:
+            metadata = self.metadata_from_safetensors(file_path_named)
+            if not metadata or len(metadata) == 1:
+                metadata = self.metadata_from_safe_open(file_path_named)
         else:
-            try:
+            if self.gguf_check(file_path_named):
+                metadata = self.create_gguf_reader(file_path_named)
+            if not metadata or len(metadata) == 1:
                 metadata = self.create_llama_parser(file_path_named)
-            except ValueError as error_log:
-                dbug("Parsing .gguf file failed for %s", file_path_named, error_log, tb=error_log.__traceback__)
         return metadata
-
-    @debug_monitor
-    def metadata_from_gguf(self, file_path_named: str) -> dict:
-        """
-        Collect metadata from a gguf file header\n
-        :param file_path_named: `str` the full path to the file being opened
-        :return: `dict` the key value pair structure found in the file
-        """
-
-        if self.gguf_check(file_path_named):
-            file_metadata = self.attempt_file_open(file_path_named)
-            if file_metadata is not None:
-                return file_metadata
-            return None
-        return None
 
     @debug_monitor
     def metadata_from_safetensors(self, file_path_named: str) -> dict:
@@ -220,6 +210,7 @@ class ModelTool:
                 header_data = json.loads(header_data.decode("utf-8", errors="strict"))
             except json.JSONDecodeError as error_log:
                 dbug("Failed to read json from file : %s", file_path_named, error_log, tb=error_log.__traceback__)
+
             else:
                 assembled_data = header_data.copy()
                 if assembled_data.get("__metadata__"):
@@ -231,3 +222,18 @@ class ModelTool:
                 # metadata_field = json.loads(str(metadata_field).replace("'", '"'))
 
             return assembled_data
+
+    @debug_monitor
+    def metadata_from_safe_open(self, file_path_named: str) -> dict:
+        """
+        Collect metadata from a safetensors file header.\n
+        This method is less performant than `struct`\n
+        :param file_path_named: `str` the full path to the file being opened
+        :return: `dict` the key value pair structure found in the file
+        """
+        from safetensors import safe_open
+
+        with safe_open(file_path_named, framework="pt", device="cpu") as layer_content:
+            metadata = {key: layer_content.get_tensor(key).shape for key in layer_content}
+            # metadata = layer_content.metadata()
+        return metadata
