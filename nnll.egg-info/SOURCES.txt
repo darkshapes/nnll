@@ -55,6 +55,7 @@ nnll_26/__init__.py
 nnll_27/__init__.py
 nnll_29/__init__.py
 nnll_30/__init__.py
+nnll_31/__init__.py
 nnll_33/__init__.py
 nnll_36/__init__.py
 nnll_39/__init__.py
@@ -73,6 +74,7 @@ nnll_59/__init__.py
 nnll_60/__init__.py
 nnll_60/config/config.json
 nnll_60/config/filter.json
+nnll_60/config/hashes.json
 nnll_60/config/huggingface.json
 nnll_60/config/hyperchain.json
 nnll_60/config/mir.json

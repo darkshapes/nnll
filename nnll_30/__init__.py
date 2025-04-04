@@ -3,24 +3,34 @@
 
 # pylint: disable=import-outside-toplevel
 
-from nnll_01 import debug_monitor
+from typing import Any
 
 
-@debug_monitor
-def write_json_file(file_path: str, file_name: str, data, mode: str = "w"):
+def write_json_file(folder_path_named: str, file_name: str, data: Any, mode: str = "tw") -> None:
+    """Save a file to disk as UTF8 JSON
+    :param folder_path_named: The location to save
+    :param file_name: A file name to save with
+    :param data: The content to save
+    :param mode: Type of open to use
+    :returns: Dictionary of json data
+    """
     import os
     import json
 
     if ".json" not in file_name:
         file_name += ".json"
-    document = os.path.join(file_path, os.path.basename(file_name))
+    document = os.path.join(folder_path_named, os.path.basename(file_name))
     with open(document, mode, encoding="UTF-8") as i:
         json.dump(data, i, ensure_ascii=False, indent=4, sort_keys=False)
 
 
-@debug_monitor
-def read_json_file(file_path: str, mode="r"):
+def read_json_file(file_path_absolute: str, mode="tr") -> dict:
+    """Open json file as UTF8 JSON
+    :param file_path_absolute: Location of the file
+    :param mode: Type of read to use
+    :returns: Dictionary of json data
+    """
     import json
 
-    with open(file_path, mode, encoding="UTF-8") as f:
+    with open(file_path_absolute, mode, encoding="UTF-8") as f:
         return json.load(f)

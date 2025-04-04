@@ -1,13 +1,18 @@
 ### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-from nnll_01 import debug_monitor, info_message as nfo
+from nnll_01 import info_message as nfo
 from nnll_60 import JSONCache, HASH_PATH_NAMED
 
 cache_manager = JSONCache(HASH_PATH_NAMED)
 
 
-def hash_layers_or_files(folder_path: str, mode: str = "layer"):
+def hash_layers_or_files(folder_path: str, layer: bool = True) -> dict[str:str]:
+    """Compute model hashes from a folder, send to console and store\n
+    :param folder_path: Location of model files to scan
+    :param layer: Hash layer names or file contents, defaults to layer
+    :return: `dict` Map of hashes(k) to filenames(v)
+    """
     import os
     from nnll_04 import ModelTool
     from nnll_44 import compute_hash_for
@@ -22,7 +27,7 @@ def hash_layers_or_files(folder_path: str, mode: str = "layer"):
         if Path(file_name).suffix.lower() in [".safetensors", ".sft", ".gguf"]:
             file_path_named = os.path.join(folder_path, file_name)
             file_size = os.path.getsize(file_path_named)  # 1GB
-            if mode != "layer" or file_size < 1e9:
+            if layer is False or file_size < 1e9:
                 hex_value = compute_hash_for(file_path_named=file_path_named)
                 hash_values.setdefault(hex_value, file_path_named)
                 nfo(f"'{file_name}' : '{hex_value}'")
@@ -34,36 +39,46 @@ def hash_layers_or_files(folder_path: str, mode: str = "layer"):
     return hash_values
 
 
-def check_model_identity(known_hash: dict, hex_value: str, attributes: dict | None = None) -> bool:
+def identify_model(database: dict[dict | list | str | int], unknown: str) -> str | None:
     """
-    Iteratively structure unpacked hash values into reference pattern, then feed a equivalence check.\n
-    :param known_hash: `dict` A dictionary of hash values known to identify models
-    :param unpacked_metadata: `dict` Values from the unknown files
-    :param attributes: `dict` Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
-    :return: `bool` Whether or not the values from the model header and tensors were found inside pattern_details\n
+    Compare known values to foreign values\n
+    :param database: A dictionary of content known to identify models
+    :param unknown: A portion of metadata to compare to
+    :param ignore_key: Optional additional metadata, such as tensor count and file_size (None will bypass necessity of these matches)
+    :return: `str` Name of a matching identity, or None\n
     """
-    for mir_name, data in known_hash.items():
-        nfo(f"islist, {type(data)}")
-        if isinstance(data, list):
-            for known in data:
-                nfo(f"{hex_value} == {known} ??")
-                if known == hex_value:
-                    return mir_name
+    for category in database:
+        if isinstance(database.get(category), list):
+            for sig in database.get(category):
+                cat = [category for sig in database.get(category) if unknown in sig]
+                if cat:
+                    return cat
+
+        # should be able to expand this for use with
+        if isinstance(database.get(category), dict) and any((known == unknown for known in sig) for _, sig in database.get(category).items()):
+            return category
+    return None
 
 
 @cache_manager.decorator
 def compare_hash_values(hash_values: dict, data: dict):
+    """
+    Orchestrate process to determine model identifiers.
+    :param hash_values: known hash values
+    :param data: _description_
+    :return: _description_
+    """
     import os
     from tqdm.auto import tqdm
 
     model_id = {}
     for hex_value, file_path_named in tqdm(hash_values.items(), total=len(hash_values), position=0, leave=True):
-        known_hash = ""
+        known_hashes = ""
         if os.path.getsize(file_path_named) > 1e9:  # 1GB
-            known_hash = data.get("layer_256")
-        if not known_hash:
-            known_hash = data.get("file_256")
-        trail = check_model_identity(known_hash, hex_value)
+            known_hashes = data.get("layer_256")
+        if not known_hashes:
+            known_hashes = data.get("file_256")
+        trail = identify_model(known_hashes, hex_value)
         nfo(trail)
         if trail:
             model_id.setdefault(hex_value, trail)
@@ -74,21 +89,23 @@ def compare_hash_values(hash_values: dict, data: dict):
 # tqdm it
 
 
-@debug_monitor
 def main():
     """Parse arguments to feed to dict header reader"""
     import argparse
 
     # Set up argument parser
-    parser = argparse.ArgumentParser(description="Output the hash of a state dict or file from all model files at [path] to the console", epilog="Example: nnll-hash '~/Downloads/models/images'")
+    parser = argparse.ArgumentParser(
+        description="Output the hashes of model state dicts or files from [path] to console",
+        epilog="Example: nnll-hash '~/Downloads/models/'",
+    )
     parser.add_argument("-m", "--mode", help="Change mode to calculate hash for the whole file", action="store_true")
     parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=".")
 
     args = parser.parse_args()
     if args.mode:
-        expression = {"path": args.path, "mode": "file"}
+        expression = {"path": args.path, "layer": False}
     else:
-        expression = {"path": args.path, "mode": "layer"}
+        expression = {"path": args.path, "layer": True}
 
     hash_values = hash_layers_or_files(**expression)
     nfo(hash_values)

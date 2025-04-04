@@ -28,23 +28,19 @@ class LLMInput(BaseModel):
     query: str = Field(description="The message to respond to")
 
 
-class LLMOutput(BaseModel):
-    """Simple output fields for chat models
-    Incl. confidence metric"""
+# class LLMOutput(BaseModel):
+#     """Simple output fields for chat models
+#     Incl. confidence metric"""
 
-    reply: str = Field(description="The response to the question")
-    confidence: float = Field(
-        ge=0.0,
-        le=1.0,
-        description="Mean numeric value of conflicting predicates and cognitive dissonance for prediction per word.",
-    )
+#     reply: str = Field(description="The response to the question")
+#     # confidence: float = Field(ge=0.0, le=1.0, description="The confidence score for the reply (absolute certainty is impossible).")  # Alternatively : ""Mean numeric value of conflicting predicates and cognitive dissonance for prediction per word."
 
 
 class BasicQAHistory(dspy.Signature):
     """Reply with short responses within 60-90 word/10k character code limits"""
 
     message: LLMInput = dspy.InputField()
-    response: LLMOutput = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
+    response = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
 
 
 class ChatMachineWithMemory(dspy.Module):
@@ -109,7 +105,8 @@ async def chat_machine(model: str, message: str, library: LibType, max_workers=8
         try:
             if chunk is not None:
                 if isinstance(chunk, dspy.Prediction):
-                    yield chunk
+                    pass
+                    # yield str(chunk)
                 else:
                     chnk = chunk["choices"][0]["delta"]["content"]
                     if chnk is not None:

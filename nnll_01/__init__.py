@@ -197,14 +197,14 @@ def info_message(*args, **kwargs):
     """Info log output"""
 
     info_obj.info("%s", f"{args}")
-    logger_obj.info(
-        "%s",
-        type_ain=type(args),
-        ain=args,
-        type_kin=type(kwargs),
-        kin=kwargs,
-        stack_info=True,
-    )
+    # logger_obj.info(
+    #     "%s",
+    #     type_ain=type(args),
+    #     ain=args,
+    #     type_kin=type(kwargs),
+    #     kin=kwargs,
+    #     stack_info=True,
+    # )
 
 
 def debug_message(*args, **kwargs):

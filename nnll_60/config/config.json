@@ -1,7 +1,7 @@
 {
     "save_folder_path_absolute": "/Users/unauthorized/Documents/Combo/02/",
     "weight_map_locations": {
-        "repo": "https://huggingface.co/exdysa/metadata/",
+        "repo": "https://huggingface.co/exdysa/mir/",
         "unet": "transformer/diffusion_pytorch_model.safetensors.index.json",
         "text_encoder": "text_encoder/model.safetensors.index.json",
         "text_encoder_2": "text_encoder_2/model.safetensors.index.json",
@@ -15,7 +15,7 @@
         "text": [],
         "video": []
     },
-    "cogview-3": {
+    "model.dit.cogview-3": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/CogView3-Plus-3B",
         "repo": "THUDM/CogView3-Plus-3B",
         "defaults": {
@@ -27,7 +27,7 @@
         "torch_dtype": "torch.bfloat16",
         "constructor": "image"
     },
-    "kolors": {
+    "model.unet.kolors": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/Kolors-diffusers",
         "repo": "Kwai-Kolors/Kolors-diffusers",
         "defaults": {
@@ -38,7 +38,7 @@
         "pipe_name": "KolorsPipeline",
         "constructor": "image"
     },
-    "lumina-2": {
+    "model.dit.lumina-2": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/Lumina-Image-2.0",
         "repo": "Alpha-VLLM/Lumina-Image-2.0",
         "defaults": {
@@ -51,8 +51,8 @@
         "torch_dtype": "torch.bfloat16",
         "constructor": "image"
     },
-    "stable-diffusion-1": {},
-    "stable-diffusion-xl-base": {
+    "model.unet.stable-diffusion": {},
+    "model.unet.stable-diffusion-xl:base": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/stable-diffusion-xl-base-1.0",
         "repo": "stabilityai/stable-diffusion-xl-base-1.0",
         "unet": {
@@ -77,7 +77,7 @@
         "config": "/Users/unauthorized/Documents/GitHub/darkshapes/combo/sd_sdxl_base.yaml",
         "constructor": "image"
     },
-    "stable-diffusionl-xl-refiner": {
+    "model.unet.stable-diffusionl-xl:refiner": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/stable-diffusion-xl-refiner-1.0",
         "repo": "stabilityai/stable-diffusion-xl-refiner-1.0",
         "unet": {
@@ -90,32 +90,32 @@
         },
         "constructor": "image"
     },
-    "stable-diffusion-3": {
+    "model.dit.stable-diffusion-3": {
         "repo": "stabilityai/stable-diffusion-3.5-large",
         "repo_alt": "stabilityai/stable-diffusion-3.5-medium",
         "constructor": "image"
     },
-    "flux-1-dev": {
+    "model.dit.flux-1:dev": {
         "repo": "black-forest-labs/FLUX.1-dev",
         "repo_alt": "cocktailpeanut/xulf-d/",
         "constructor": "image"
     },
-    "flux-1-schnell": {
+    "model.dit.flux-1:schnell": {
         "repo": "black-forest-labs/FLUX.1-schnell",
         "repo_alt": "cocktailpeanut/xulf-s/",
         "unet": {},
         "constructor": "image"
     },
-    "pixart-sigma": {
+    "model.dit.pixart-sigma": {
         "local": "/Users/unauthorized/Downloads/models/image_synthesis/PixArt-Sigma-XL-2-1024-MS",
         "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
         "pipe_name": "PixArtSigmaPipeline",
         "constructor": "image"
     },
-    "dmd": {
+    "model.lora.dmd": {
         "solver": "LCMScheduler",
         "solver_kwargs": {},
-        "stable-diffusion-xl-base": {
+        "stable-diffusion-xl:base": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/dmd/dmd2_sdxl_4step_lora.safetensors",
             "repo": "tianweiy/DMD2/",
             "defaults": {
@@ -130,14 +130,14 @@
             }
         }
     },
-    "dpo": {
+    "model.lora.dpo": {
         "solver": "DPMSolverMultistepScheduler",
         "solver_kwargs": {
             "algorithm_type": "sde-dpmsolver++",
             "use_karras_sigmas": true,
             "order": 2
         },
-        "stable-diffusion-xl-base": {
+        "stable-diffusion-xl:base": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/dpo/dpo-sdxl-comfyui.safetensors",
             "repo": "radames/sdxl-DPO-LoRA",
             "defaults": {
@@ -146,10 +146,10 @@
             }
         }
     },
-    "flash": {
+    "model.lora.flash": {
         "solver": "lcm",
         "solver_kwargs": {},
-        "stable-diffusion-xl-base": {
+        "stable-diffusion-xl:base": {
             "repo": "jasperai/flash-sdxl"
         },
         "pixart-alpha": {
@@ -158,7 +158,7 @@
         "stable-diffusion-3": {
             "repo": "jasperai/flash-sd3"
         },
-        "stable-diffusion-1": {
+        "stable-diffusion": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/flash/flash-sd.safetensors",
             "repo": "jasperai/flash-sd",
             "defaults": {
@@ -167,12 +167,12 @@
             }
         }
     },
-    "hyper": {
-        "stable-diffusion-xl-base": {
+    "model.lora.hyper": {
+        "stable-diffusion-xl:base": {
             "repo": "ByteDance/Hyper-SD",
             "fuse": 1.0
         },
-        "flux-1-dev": {
+        "flux-1:dev": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/hyper/Hyper-FLUX.1-dev-16steps-lora.safetensors",
             "repo": "ByteDance/Hyper-SD",
             "fuse": 0.125
@@ -181,11 +181,11 @@
             "repo": "ByteDance/Hyper-SD",
             "fuse": 0.125
         },
-        "stable-diffusion-1": {
+        "stable-diffusion": {
             "repo": "ByteDance/Hyper-SD"
         }
     },
-    "lcm": {
+    "model.lora.lcm": {
         "defaults": {
             "num_inference_steps": 8
         },
@@ -193,7 +193,7 @@
         "solver_kwargs": {
             "timestep_spacing": "trailing"
         },
-        "stable-diffusion-xl-base": {
+        "stable-diffusion-xl:base": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/lcm/lcm.safetensors",
             "repo": "latent-consistency/lcm-lora-sdxl",
             "fuse": 1.0
@@ -204,12 +204,12 @@
         "vega": {
             "repo": "segmind/Segmind-VegaRT"
         },
-        "stable-diffusion-1": {
+        "stable-diffusion": {
             "repo": "latent-consistency/lcm-lora-sdv1-5"
         }
     },
-    "lightning": {
-        "stable-diffusion-xl-base": {
+    "model.lora.lightning": {
+        "stable-diffusion-xl:base": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/lightning/sdxl_lightning_4step_lora.safetensors",
             "repo": "ByteDance/SDXL-Lightning",
             "defaults": {
@@ -218,20 +218,20 @@
             }
         }
     },
-    "pcm": {
-        "stable-diffusion-xl-base": {
+    "model.lora.pcm": {
+        "stable-diffusion-xl:base": {
             "repo": "wangfuyun/PCM_Weights"
         },
-        "stable-diffusion-1": {
+        "stable-diffusion": {
             "repo": "wangfuyun/PCM_Weights"
         }
     },
-    "slam": {
+    "model.lora.slam": {
         "solver": "LCMScheduler",
         "solver_kwargs": {
             "timestep_spacing": "trailing"
         },
-        "stable-diffusion-xl-base": {
+        "stable-diffusion-xl:base": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/slam/slam-lora-sdxl.safetensors",
             "repo": "alimama-creative/slam-lora-sdxl/",
             "defaults": {
@@ -239,19 +239,19 @@
                 "guidance_scale": 1
             }
         },
-        "stable-diffusion-1": {
+        "stable-diffusion": {
             "repo": "alimama-creative/slam-sd1.5"
         }
     },
-    "spo": {
-        "stable-diffusion-xl-base": {
+    "model.lora.spo": {
+        "stable-diffusion-xl:base": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/spo/spo_sdxl_10ep_4k-data_lora_diffusers.safetensors",
             "repo": "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA",
             "defaults": {
                 "guidance_scale": 5.0
             }
         },
-        "stable-diffusion-1": {
+        "stable-diffusion": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/spo/spo-sd-v1-5_4k-p_10ep_lora_diffusers.safetensors",
             "repo": "SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA",
             "defaults": {
@@ -259,10 +259,10 @@
             }
         }
     },
-    "tcd": {
+    "model.lora.tcd": {
         "solver": "TCDScheduler",
         "solver_kwargs": {},
-        "stable-diffusion-xl-base": {
+        "stable-diffusion-xl:base": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/tcd/tcd-sdxl.safetensors",
             "repo": "h1t/TCD-SDXL-LoRA",
             "defaults": {
@@ -271,12 +271,12 @@
                 "eta": 0.3
             }
         },
-        "stable-diffusion-1": {
+        "stable-diffusion": {
             "repo": "h1t/TCD-SD15-LoRA"
         }
     },
-    "turbo": {
-        "flux-1-dev": {
+    "model.lora.turbo": {
+        "flux-1:dev": {
             "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/turbo/flux1_turbo_alpha_lora.safetensors",
             "repo": "alimama-creative/FLUX.1-Turbo-Alpha",
             "defaults": {

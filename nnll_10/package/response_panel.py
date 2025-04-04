@@ -1,6 +1,7 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+
 from textual import work
 from textual.reactive import reactive
 from textual.widgets import TextArea
@@ -21,7 +22,7 @@ class ResponsePanel(TextArea):
     is_generating: reactive[bool] = reactive(False)
 
     def on_mount(self) -> None:
-        self.language = "markdown"
+        # self.language = "markdown"
         # nx_graph = build_conversion_graph()
         # self.nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
         # self.target_options = set([edge[1] for edge in nx_graph.edges])  # endpoints, as in : (_,'text')[1]
@@ -47,6 +48,8 @@ class ResponsePanel(TextArea):
                 self.scroll_cursor_visible(center=True, animate=True)
                 self.scroll_end(animate=True)
                 self.insert(chunk)
+        except GeneratorExit as error_log:
+            dbug(error_log)
         except RuntimeError as error_log:
             dbug(error_log)
         except AttributeError as error_log:

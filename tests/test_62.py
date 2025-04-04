@@ -42,7 +42,7 @@ class TestConstructPipeline(unittest.TestCase):
     def test_create_pipeline_from_single_file(self, mock_from_single_file, mock_isfile):
         """Test pipeline creation from a single file"""
         mock_from_single_file.return_value = "mock_pipe"
-        pipe, repo, settings = self.pipeline.create_pipeline("stable-diffusion-xl-base")
+        pipe, repo, settings = self.pipeline.create_pipeline("model.unet.stable-diffusion-xl:base")
 
         mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
         self.assertEqual(pipe, "mock_pipe")
@@ -56,7 +56,7 @@ class TestConstructPipeline(unittest.TestCase):
         mock_from_pretrained.return_value = "mock_pipe"
 
         with self.assertRaises(NotImplementedError):
-            self.pipeline.create_pipeline("stable-diffusion-xl-base")
+            self.pipeline.create_pipeline("model.unet.stable-diffusion-xl:base")
 
         mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
 
@@ -70,7 +70,7 @@ class TestConstructPipeline(unittest.TestCase):
             mock_scheduler_class.return_value = mock_scheduler_instance
 
             construct_pipeline = ConstructPipeline()
-            pipe, repo, kwargs = construct_pipeline.add_lora("lcm", "stable-diffusion-xl-base", mock_pipe)
+            pipe, repo, kwargs = construct_pipeline.add_lora("model.lora.lcm", "model.unet.stable-diffusion-xl:base", mock_pipe)
 
             # Validate pipe modification
             mock_scheduler_class.assert_called_once_with({"timestep_spacing": "trailing"})
@@ -85,7 +85,7 @@ class TestConstructPipeline(unittest.TestCase):
         mock_pipe = MagicMock()
 
         construct_pipeline = ConstructPipeline()
-        pipe, repo, kwargs = construct_pipeline.add_lora("spo", "stable-diffusion-xl-base", mock_pipe)
+        pipe, repo, kwargs = construct_pipeline.add_lora("model.lora.spo", "model.unet.stable-diffusion-xl:base", mock_pipe)
 
         self.assertEqual(repo, "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA")
         pipe.load_lora_weights.assert_called_once_with("SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA", adapter_name="SPO-SDXL_4k-p_10ep_LoRA")
