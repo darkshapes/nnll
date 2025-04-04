@@ -65,7 +65,8 @@ Some modules are full scripts and can be run from command line. These are writte
 
 `astra`        - Experimental generative system<br>
 `nnll-hash`    - Hash the layer metadata from models within a directory and write out to console.<br>
-`nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual .json files.<br>
+`nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual JSON files.<br>
+`nnll-find`    - Search a local directory of model layer files (HuggingFace🤗 index.json, JSON from `nnll-parse`)<br>
 <br>
 
 Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
@@ -86,6 +87,7 @@ Each module contains 1-5 functions or 1-2 classes and its own test routines. The
 * Linting      : ruff/pylint
 * Type Checking: pylance/pyright
 * Spelling     : typos vsc
+* Docstrings   : sphinx
 ```
 <br>
 

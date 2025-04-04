@@ -2,7 +2,7 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
-"""區塊鏈儲存 Blockchain storage"""
+"""區塊鏈儲存 Linked-list storage"""
 
 # pylint:disable=line-too-long, import-outside-toplevel
 

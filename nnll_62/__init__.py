@@ -48,6 +48,7 @@ class ConstructPipeline:
         import os
         import diffusers
 
+        # print(self.construct)
         arch_data = self.construct[architecture]
         # repo = arch_data.get("local")
         repo = None
@@ -77,9 +78,11 @@ class ConstructPipeline:
         """
         import os
         import diffusers
+        from pathlib import Path
 
         lora_data = self.construct[lora]
-        arch_data = lora_data.get(architecture)
+
+        arch_data = lora_data.get(Path(architecture).suffix[1:])
         solver = lora_data.get("solver")
         if solver:
             scheduler_class = getattr(diffusers, solver)
