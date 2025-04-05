@@ -26,14 +26,16 @@ class ButtonsApp(App[str]):
                 ListView(id="start_points"),
                 Static("4. Target", classes="header"),
                 ListView(id="end_points"),
-            ),
-            VerticalGroup(
-                RichLog(id="results_panel", highlight=True, markup=True, wrap=True),
+                Static("5. Type", classes="header"),
+                ListView(id="type"),
             ),
             Vertical(
                 TextArea("", id="prompt_pane"),
                 VoicePanel(id="speech_pane"),
                 TextArea("", id="response_pane", read_only=True),
+            ),
+            VerticalGroup(
+                RichLog(id="results_panel", highlight=True, markup=True, wrap=True),
             ),
         )
 

@@ -1,5 +1,4 @@
 {
-    "save_folder_path_absolute": "/Users/unauthorized/Documents/Combo/02/",
     "weight_map_locations": {
         "repo": "https://huggingface.co/exdysa/mir/",
         "unet": "transformer/diffusion_pytorch_model.safetensors.index.json",
@@ -13,10 +12,11 @@
         ],
         "speech": [],
         "text": [],
-        "video": []
+        "video": [],
+        "3d": [],
+        "svg": []
     },
     "model.dit.cogview-3": {
-        "local": "/Users/unauthorized/Downloads/models/image_synthesis/CogView3-Plus-3B",
         "repo": "THUDM/CogView3-Plus-3B",
         "defaults": {
             "height": 1024,
@@ -28,7 +28,6 @@
         "constructor": "image"
     },
     "model.unet.kolors": {
-        "local": "/Users/unauthorized/Downloads/models/image_synthesis/Kolors-diffusers",
         "repo": "Kwai-Kolors/Kolors-diffusers",
         "defaults": {
             "negative_prompt": "",
@@ -39,7 +38,6 @@
         "constructor": "image"
     },
     "model.dit.lumina-2": {
-        "local": "/Users/unauthorized/Downloads/models/image_synthesis/Lumina-Image-2.0",
         "repo": "Alpha-VLLM/Lumina-Image-2.0",
         "defaults": {
             "height": 1024,
@@ -53,16 +51,10 @@
     },
     "model.unet.stable-diffusion": {},
     "model.unet.stable-diffusion-xl:base": {
-        "local": "/Users/unauthorized/Downloads/models/image_synthesis/stable-diffusion-xl-base-1.0",
         "repo": "stabilityai/stable-diffusion-xl-base-1.0",
         "unet": {
-            "weight_map": "weight_maps/stable-diffusion-xl-base.json"
+            "weight_map": "weight_maps/model.unet.stable-diffusion-xl:base.json"
         },
-        "sai_modelspec": "/Users/unauthorized/Downloads/models/image/guofeng42fp16.3SbT.safetensors",
-        "vae": [
-            "/Users/unauthorized/Downloads/models/image_synthesis/sdxl-vae-fp16-fix",
-            "/Users/unauthorized/Downloads/models/image/flatpiecexlVAE_baseonA1579.safetensors"
-        ],
         "pipe_name": "StableDiffusionXLPipeline",
         "pipe_name_alt": "DiffusionPipeline",
         "pipe_name_i2i": "StableDiffusionXLImg2ImgPipeline",
@@ -74,11 +66,9 @@
             "denoising_end": 0.8,
             "output_type": "latent"
         },
-        "config": "/Users/unauthorized/Documents/GitHub/darkshapes/combo/sd_sdxl_base.yaml",
         "constructor": "image"
     },
     "model.unet.stable-diffusionl-xl:refiner": {
-        "local": "/Users/unauthorized/Downloads/models/image_synthesis/stable-diffusion-xl-refiner-1.0",
         "repo": "stabilityai/stable-diffusion-xl-refiner-1.0",
         "unet": {
             "weight_map": "weight_maps/stable-diffusion-xl-refiner.json"
@@ -107,7 +97,6 @@
         "constructor": "image"
     },
     "model.dit.pixart-sigma": {
-        "local": "/Users/unauthorized/Downloads/models/image_synthesis/PixArt-Sigma-XL-2-1024-MS",
         "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
         "pipe_name": "PixArtSigmaPipeline",
         "constructor": "image"
@@ -116,7 +105,6 @@
         "solver": "LCMScheduler",
         "solver_kwargs": {},
         "stable-diffusion-xl:base": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/dmd/dmd2_sdxl_4step_lora.safetensors",
             "repo": "tianweiy/DMD2/",
             "defaults": {
                 "num_inference_steps": 4,
@@ -138,7 +126,6 @@
             "order": 2
         },
         "stable-diffusion-xl:base": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/dpo/dpo-sdxl-comfyui.safetensors",
             "repo": "radames/sdxl-DPO-LoRA",
             "defaults": {
                 "guidance_scale": 7.5,
@@ -159,7 +146,6 @@
             "repo": "jasperai/flash-sd3"
         },
         "stable-diffusion": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/flash/flash-sd.safetensors",
             "repo": "jasperai/flash-sd",
             "defaults": {
                 "num_inference_steps": 4,
@@ -173,7 +159,6 @@
             "fuse": 1.0
         },
         "flux-1:dev": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/hyper/Hyper-FLUX.1-dev-16steps-lora.safetensors",
             "repo": "ByteDance/Hyper-SD",
             "fuse": 0.125
         },
@@ -194,7 +179,6 @@
             "timestep_spacing": "trailing"
         },
         "stable-diffusion-xl:base": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/lcm/lcm.safetensors",
             "repo": "latent-consistency/lcm-lora-sdxl",
             "fuse": 1.0
         },
@@ -210,7 +194,6 @@
     },
     "model.lora.lightning": {
         "stable-diffusion-xl:base": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/lightning/sdxl_lightning_4step_lora.safetensors",
             "repo": "ByteDance/SDXL-Lightning",
             "defaults": {
                 "num_inference_steps": 4,
@@ -232,7 +215,6 @@
             "timestep_spacing": "trailing"
         },
         "stable-diffusion-xl:base": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/slam/slam-lora-sdxl.safetensors",
             "repo": "alimama-creative/slam-lora-sdxl/",
             "defaults": {
                 "num_inference_steps": 4,
@@ -245,14 +227,12 @@
     },
     "model.lora.spo": {
         "stable-diffusion-xl:base": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/spo/spo_sdxl_10ep_4k-data_lora_diffusers.safetensors",
             "repo": "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA",
             "defaults": {
                 "guidance_scale": 5.0
             }
         },
         "stable-diffusion": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/spo/spo-sd-v1-5_4k-p_10ep_lora_diffusers.safetensors",
             "repo": "SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA",
             "defaults": {
                 "guidance_scale": 7.5
@@ -263,7 +243,6 @@
         "solver": "TCDScheduler",
         "solver_kwargs": {},
         "stable-diffusion-xl:base": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/tcd/tcd-sdxl.safetensors",
             "repo": "h1t/TCD-SDXL-LoRA",
             "defaults": {
                 "num_inference_steps": 4,
@@ -277,7 +256,6 @@
     },
     "model.lora.turbo": {
         "flux-1:dev": {
-            "local": "/Users/unauthorized/Downloads/models/image_synthesis/lora/turbo/flux1_turbo_alpha_lora.safetensors",
             "repo": "alimama-creative/FLUX.1-Turbo-Alpha",
             "defaults": {
                 "guidance_scale": 3.5,
