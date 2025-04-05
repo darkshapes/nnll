@@ -61,6 +61,8 @@ nnll_36/__init__.py
 nnll_39/__init__.py
 nnll_40/__init__.py
 nnll_41/__init__.py
+nnll_42/__init__.py
+nnll_43/__init__.py
 nnll_44/__init__.py
 nnll_45/__init__.py
 nnll_45/test_src.py
@@ -75,7 +77,7 @@ nnll_60/__init__.py
 nnll_60/config/config.json
 nnll_60/config/filter.json
 nnll_60/config/hashes.json
-nnll_60/config/huggingface.json
+nnll_60/config/hf_map.json
 nnll_60/config/hyperchain.json
 nnll_60/config/mir.json
 nnll_60/config/precisions.json

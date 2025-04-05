@@ -6,7 +6,7 @@ import unittest
 import os
 from tempfile import TemporaryDirectory
 
-from nnll_41 import trace_file_structure
+from nnll_41 import trace_project_structure
 
 
 class TestTraceFileStructure(unittest.TestCase):
@@ -14,17 +14,20 @@ class TestTraceFileStructure(unittest.TestCase):
 
     def test_with_multiple_indicators(self):
         with TemporaryDirectory() as tmpdir:
-            os.makedirs(os.path.join(tmpdir, "folder1"))
-            os.makedirs(os.path.join(tmpdir, "folder2"))
+            parent_dir_1 = "nnll_1"
+            parent_dir_2 = "nnll_2"
+            file_name = "indicator.txt"
+            os.makedirs(os.path.join(tmpdir, parent_dir_1))
+            os.makedirs(os.path.join(tmpdir, parent_dir_2))
 
-            with open(os.path.join(tmpdir, "folder1", "indicator.txt"), "w", encoding="UTF-8") as _:
+            with open(os.path.join(tmpdir, parent_dir_1, file_name), "w", encoding="UTF-8") as _:
                 pass
 
-            with open(os.path.join(tmpdir, "folder2", "indicator.txt"), "w", encoding="UTF-8") as _:
+            with open(os.path.join(tmpdir, parent_dir_2, file_name), "w", encoding="UTF-8") as _:
                 pass
-            print(tmpdir)
-            result = trace_file_structure(tmpdir, r".*folder.*")
-            expected = [os.path.join(tmpdir, d) for d in ["folder1", "folder2"]]
+            # print(tmpdir)
+            result = trace_project_structure(tmpdir)
+            expected = [tmpdir, os.path.join(tmpdir, parent_dir_1), os.path.join(tmpdir, parent_dir_2)]
             self.assertListEqual(result, sorted(expected))
 
 

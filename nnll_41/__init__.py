@@ -3,11 +3,12 @@
 
 # pylint: disable=import-outside-toplevel
 
+from tkinter import N
 from nnll_01 import debug_monitor
 
 
 @debug_monitor
-def trace_file_structure(walk_path: str, indicator=r".*nnll.*") -> list:
+def trace_project_structure(walk_path: str) -> list:
     """
     Find all module based on local file/folder structure\n
     :param indicator: Regex for segment of relevant module files or folders
@@ -16,12 +17,11 @@ def trace_file_structure(walk_path: str, indicator=r".*nnll.*") -> list:
     import os
     import re
 
-    indicator_pattern = re.compile(indicator)
-    active_directories = []
-    for root, directories, files in os.walk(walk_path):
-        for path in directories:
-            if indicator_pattern.match(path) or [any(indicator_pattern.match(f)) for f in files]:
-                active_directories.append(os.path.join(root, path))
-    active_directories.sort()
-    print(active_directories)
-    return active_directories
+    ignore_list = ["tests", "log", ".venv", ".git", ".pytest_cache", ".github", "nnll.egg-info"]
+    project_directories = []
+    for root, _, _ in os.walk(walk_path):
+        if any(parent in ignore_list for parent in root.split(os.sep)):
+            continue  # for dir in os.path.split(root)
+        project_directories.append(root)
+    project_directories.sort()
+    return project_directories
