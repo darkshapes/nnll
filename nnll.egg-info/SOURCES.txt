@@ -75,6 +75,7 @@ nnll_56/__init__.py
 nnll_59/__init__.py
 nnll_60/__init__.py
 nnll_60/config/config.json
+nnll_60/config/config.toml
 nnll_60/config/filter.json
 nnll_60/config/hashes.json
 nnll_60/config/hf_map.json
@@ -114,6 +115,8 @@ tests/test_34.py
 tests/test_36.py
 tests/test_39.py
 tests/test_41.py
+tests/test_42.py
+tests/test_43.py
 tests/test_44.py
 tests/test_46.py
 tests/test_48.py

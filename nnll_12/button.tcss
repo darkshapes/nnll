@@ -5,6 +5,9 @@ Button {
 Horizontal > VerticalScroll {
     width: 24;
 }
+Vertical {
+    width: 40%
+}
 
 .header {
     margin: 1 0 0 2;
