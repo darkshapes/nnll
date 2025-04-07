@@ -14,7 +14,7 @@ from textual_plotext import PlotextPlot
 
 
 class VoicePanel(PlotextPlot):  # (PlotWidget)
-    """Create an unselectable display element"""
+    """Create an unselectable waveform display element"""
 
     ALLOW_SELECT = False
     audio = [0]
@@ -23,7 +23,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
     sample_len: reactive[float] = reactive(0.0, recompose=True)
     BINDINGS = [
         Binding("alt+bk", "erase_audio()", "del"),
-        Binding("ent", "record_audio()", "◉", priority=True),
+        Binding("enter", "record_audio()", "◉", priority=True),
         Binding("space", "play_audio()", "▶︎", priority=True),
     ]
 
