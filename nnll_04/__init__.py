@@ -4,8 +4,11 @@
 """Load model metadata"""
 
 # pylint: disable=import-outside-toplevel
-from nnll_01 import debug_monitor, debug_message as dbug, info_message as nfo
 from pathlib import Path
+
+from nnll_01 import debug_message as dbug
+from nnll_01 import debug_monitor
+from nnll_01 import info_message as nfo
 
 
 class ModelTool:
@@ -199,8 +202,8 @@ class ModelTool:
         :param file_path_named: `str` the full path to the file being opened
         :return: `dict` the key value pair structure found in the file
         """
-        import struct
         import json
+        import struct
 
         assembled_data = {}
         with open(file_path_named, "rb") as file_contents_to:

@@ -67,13 +67,7 @@ class RegistryEntry(BaseModel):
 
             model_data: ListResponse = ollama_list()
             for model in model_data.models:  # pylint:disable=no-member
-                entry = cls(
-                    model=f"ollama_chat/{model.model}",
-                    size=model.size.real,
-                    tags=[model.details.family],
-                    library=lib_type,
-                    timestamp=int(model.modified_at.timestamp()),
-                )
+                entry = cls(model=f"ollama_chat/{model.model}", size=model.size.real, tags=[model.details.family], library=lib_type, timestamp=int(model.modified_at.timestamp()))
                 entries.append(entry)
         elif lib_type == LibType.HUB:
             from huggingface_hub import scan_cache_dir
@@ -90,13 +84,7 @@ class RegistryEntry(BaseModel):
                     tags.append(meta.pipeline_tag)
                 if not tags:
                     tags = ["unknown"]
-                entry = cls(
-                    model=repo.repo_id,
-                    size=repo.size_on_disk,
-                    tags=tags,
-                    library=lib_type,
-                    timestamp=int(repo.last_modified),
-                )
+                entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=lib_type, timestamp=int(repo.last_modified))
                 entries.append(entry)
         elif lib_type == LibType.LM_STUDIO:
             try:

@@ -10,25 +10,37 @@ from nnll_10.package.token_counters import tk_count
 class DisplayBar(DataTable):
     """Thin instant user feedback display"""
 
+    UNIT1 = "chr /   "  # Display Bar Units
+    UNIT2 = "tkn / "
+    UNIT3 = "″"
+    unit_labels = [UNIT1, UNIT2, UNIT3]
+
     token_prefix = "ollama_chat/"
     duration: reactive[float] = reactive(0.0, recompose=True)
 
     def on_mount(self):
+        rows: list[tuple] = [
+            (0, 0, 0, 0),
+            (f"     0{self.UNIT1}", f"0{self.UNIT2}", f"0.0{self.UNIT3}", " "),
+        ]
+        # self = self.query_one("#display_bar")
+        self.add_columns(*rows[0])
+        self.add_rows(rows[1:])
         self.show_header = False
         self.show_row_labels = False
         self.cursor_type = None
 
     @work(exclusive=True)
-    async def calculate_tokens(self, model, message, unit_labels):
+    async def calculate_tokens(self, model, message):
         """Live display of tokens and characters"""
         token_count = tk_count(model, message)
         character_count = len(message)
-        self.update_cell_at((0, 0), f"     {character_count}{unit_labels[0]}")
-        self.update_cell_at((0, 1), f"{token_count}{unit_labels[1]}")
-        self.update_cell_at((0, 2), f"{self.duration}{unit_labels[2]}")
+        self.update_cell_at((0, 0), f"     {character_count}{self.unit_labels[0]}")
+        self.update_cell_at((0, 1), f"{token_count}{self.unit_labels[1]}")
+        self.update_cell_at((0, 2), f"{self.duration}{self.unit_labels[2]}")
 
     @work(exclusive=True)
-    async def calculate_audio(self, duration, unit_labels):
+    async def calculate_audio(self, duration):
         """Live display of sound recording length"""
         self.duration = duration if duration > 0.0 else 0.0
-        self.update_cell_at((0, 2), f"{self.duration}{unit_labels[2]}", update_width=True)
+        self.update_cell_at((0, 2), f"{self.duration}{self.unit_labels[2]}", update_width=True)

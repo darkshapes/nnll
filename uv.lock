@@ -1510,10 +1510,11 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev237+gc557c88.d20250404"
+version = "0.1.dev247+g2db6aed.d20250405"
 source = { editable = "." }
 dependencies = [
     { name = "structlog" },
+    { name = "viztracer" },
 ]
 
 [package.optional-dependencies]
@@ -1535,6 +1536,7 @@ all = [
     { name = "pydantic" },
     { name = "pydantic-core" },
     { name = "rich" },
+    { name = "safetensors" },
     { name = "sounddevice" },
     { name = "textual", extra = ["syntax"] },
     { name = "textual-plotext" },
@@ -1570,6 +1572,7 @@ dev = [
     { name = "pytest-trio" },
     { name = "rich" },
     { name = "ruff" },
+    { name = "safetensors" },
     { name = "sounddevice" },
     { name = "textual", extra = ["syntax"] },
     { name = "textual-dev" },
@@ -1595,6 +1598,7 @@ nnll-03 = [
 nnll-04 = [
     { name = "gguf" },
     { name = "llama-cpp-python" },
+    { name = "safetensors" },
 ]
 nnll-05 = [
     { name = "networkx" },
@@ -1762,6 +1766,7 @@ requires-dist = [
     { name = "pytest-trio", marker = "extra == 'dev'", specifier = ">=0.8.0" },
     { name = "rich", marker = "extra == 'nnll-10'", specifier = ">=13.9.4" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.7" },
+    { name = "safetensors", marker = "extra == 'nnll-04'", specifier = ">=0.5.3" },
     { name = "sounddevice", marker = "extra == 'nnll-10'", specifier = ">=0.5.1" },
     { name = "sounddevice", marker = "extra == 'nnll-13'", specifier = ">=0.5.1" },
     { name = "structlog", specifier = ">=25.2.0" },
@@ -1789,6 +1794,7 @@ requires-dist = [
     { name = "tree-sitter", marker = "extra == 'nnll-10'", specifier = ">=0.24.0" },
     { name = "tree-sitter", marker = "extra == 'nnll-12'", specifier = ">=0.24.0" },
     { name = "tree-sitter", marker = "extra == 'nnll-14'", specifier = ">=0.24.0" },
+    { name = "viztracer", specifier = ">=1.0.3" },
     { name = "viztracer", marker = "extra == 'dev'", specifier = ">=1.0.3" },
 ]
 

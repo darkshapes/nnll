@@ -11,6 +11,8 @@ from nnll_01 import debug_monitor
 
 class Carousel(DataTable):
     content_cell: reactive[int] = reactive(0.0)
+    arrow_up = "▲ "
+    arrow_down = " ▼"
 
     def on_mount(self) -> None:
         self.show_header = False
@@ -36,6 +38,6 @@ class Carousel(DataTable):
         """Translate scroll events into datatable cursor movement"""
         coordinate = int(round(self.content_cell))
         self.move_cursor(row=coordinate, column=0)
-        key_name = self.get_cell_at((coordinate, 0))
-        current_content = content.get(key_name)
+        # key_name = self.get_cell_at((coordinate, 0))
+        current_content = self.get_cell_at((coordinate, 0))  # content.get(key_name)
         return current_content

@@ -5,7 +5,8 @@
 
 from typing import Any
 import networkx as nx
-from nnll_01 import debug_monitor, info_message as nfo
+from nnll_01 import debug_monitor
+from nnll_01 import info_message as nfo
 from nnll_15.constants import mir_db, LibType
 
 
