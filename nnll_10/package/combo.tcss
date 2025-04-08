@@ -123,30 +123,31 @@ SidebarLeft, SidebarRight {
         border: round $focus-surface;
     }
 }
-#response_panel, #tag_line, {
+#response_panel, #output_tag, {
     scrollbar-size: $invisible-scrollbar;
 
 }
 
 #display_bar {
+    color: $panel-lighten-1;
     scrollbar-size: $invisible-scrollbar;
     background: $negative-space 7%;
     &:blur {
-        color: $panel-darken-3;
+        color: $panel-lighten-1;
     }
     &:hover {
-        color: $panel-darken-3;
+        color: $panel-lighten-1;
     }
     &:focus {
-        color: $panel-lighten-1;
+        color: $sunken-text;
     }
 }
 
-#tag_line {
+#output_tag {
     margin: 0 2;
 }
 
-#tag_line, #input_tag {
+#output_tag, #input_tag {
     hatch: $hatch-border $main-background;
     border: none;
     overflow: hidden;

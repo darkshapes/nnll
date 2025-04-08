@@ -10,22 +10,16 @@ from textual.widgets import TextArea
 # from nnll_05 import lookup_function_for, loop_in_feature_processes, resolve_prompt
 from nnll_01 import debug_message as dbug
 from nnll_11 import chat_machine
-# from nnll_10.package.chat_machine import chat_machine
-# from nnll_14 import build_conversion_graph, label_edge_attrib_for, trace_objective
 
 
 class ResponsePanel(TextArea):
     """Machine response field"""
 
-    # nx_graph: Dict = None
-    # target_options: tuple = ()
     is_generating: reactive[bool] = reactive(False)
 
     def on_mount(self) -> None:
-        # self.language = "markdown"
-        # nx_graph = build_conversion_graph()
-        # self.nx_graph = label_edge_attrib_for(nx_graph, 1, 1)
-        # self.target_options = set([edge[1] for edge in nx_graph.edges])  # endpoints, as in : (_,'text')[1]
+        self.language = "markdown"
+
         self.read_only = True
         self.soft_wrap = True
 
