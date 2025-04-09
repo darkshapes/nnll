@@ -20,7 +20,7 @@ from nnll_01 import debug_message as dbug
 from nnll_01 import debug_monitor
 from nnll_05 import pull_path_entries
 from nnll_13 import VoicePanel
-from nnll_14 import build_conversion_graph, label_edge_attrib_for, trace_objective
+from nnll_14 import calculate_graph, trace_objective
 from nnll_15.constants import GenTypeC, GenTypeCText, LibType
 from nnll_19 import MessagePanel
 from nnll_20 import ResponsePanel
@@ -83,7 +83,7 @@ class ButtonsApp(App[str]):
         build_button = self.query_one("#build")
         if self.hover_name == "build":
             # event.stop()
-            self.nx_graph = build_conversion_graph()
+            self.nx_graph = calculate_graph()
             results_panel.write(f"Created {self.nx_graph}")
             start_points = self.query_one("#start_points")
             end_points = self.query_one("#end_points")
@@ -91,8 +91,6 @@ class ButtonsApp(App[str]):
                 results_panel.write("Missing step: Build graph")
                 build_button.variant = "warning"
             elif not start_points.children and not end_points.children:
-                self.nx_graph = label_edge_attrib_for(self.nx_graph, LibType.OLLAMA)
-                self.nx_graph = label_edge_attrib_for(self.nx_graph, LibType.HUB)
                 available_conversions = {edge[1] for edge in self.nx_graph.edges}
                 start_points.extend([ListItem(Label(f"{edge}"), id=f"{edge}") for edge in available_conversions])
                 available_conversions = {edge[0] for edge in self.nx_graph.edges}
@@ -157,7 +155,7 @@ class ButtonsApp(App[str]):
         if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
             event.prevent_default()
             message = self.query_one("#message_panel").text
-            audio_sample = self.query_one("#voice_panel").audio
+            # audio_sample = self.query_one("#voice_panel").audio
             # image_sample = self.query_one("#image_panel").file_name # probably drag and drop this
             # content = {
             #     "text": message if message and len(message) > 0 else None,
@@ -184,7 +182,7 @@ class ButtonsApp(App[str]):
         """Clear the input on the focused panel"""
         if self.query_one("#voice_panel").has_focus:
             self.query_one("#voice_panel").erase_audio()
-            self.pass_audio_to_tokenizer()
+            # self.pass_audio_to_tokenizer()
         elif self.query_one("#message_panel").has_focus:
             self.query_one("#message_panel").erase_message()
 

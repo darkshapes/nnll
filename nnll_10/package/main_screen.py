@@ -3,6 +3,7 @@
 
 """Auto-Orienting Split screen"""
 
+from collections import defaultdict
 from textual import events, on, work
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -14,8 +15,9 @@ from textual.widget import Widget
 from textual.widgets import Static, ContentSwitcher
 
 from nnll_01 import debug_monitor
-from nnll_14 import calculate_graph
+from nnll_05 import pull_path_entries
 from nnll_10.package.message_panel import MessagePanel
+from nnll_14 import calculate_graph
 
 
 class Fold(Screen[bool]):
@@ -33,16 +35,11 @@ class Fold(Screen[bool]):
         Binding("`", "scribe_response", "✎", priority=True),  # Send to LLM
     ]
 
-    display_bar: Widget
-    input_tag: Widget
-    message_panel: Widget
-    output_tag: Widget
-    panel_swap: Widget
-    responsive_display: Container
-    response_panel: Widget
-    voice_panel: Widget
-
+    foldr = defaultdict(dict)
     nx_graph = calculate_graph()
+    traced_path: list = []
+    regitry_entries: list = []
+    next_model: str = ""
     input_map = {
         "text": "message_panel",
         "image": "message_panel",
@@ -88,15 +85,25 @@ class Fold(Screen[bool]):
     @work(exclusive=True)
     async def on_mount(self):
         """Class function, query all at once"""
-        self.input_tag = self.query_one("#input_tag")
-        self.output_tag = self.query_one("#output_tag")
-        self.message_panel = self.query_one("#message_panel")
-        self.response_panel = self.query_one("#response_panel")
-        self.voice_panel = self.query_one("#voice_panel")
-        self.display_bar = self.query_one("#display_bar")
-        self.panel_swap = self.query_one(ContentSwitcher)
-        self.responsive_display = self.query_one("#responsive_display")
+        self.foldr["db"] = self.query_one("#display_bar")
+        self.foldr["it"] = self.query_one("#input_tag")
+        self.foldr["mp"] = self.query_one("#message_panel")
+        self.foldr["ot"] = self.query_one("#output_tag")  # type : ignore
+        self.foldr["ps"] = self.query_one(ContentSwitcher)
+        self.foldr["rd"] = self.query_one("#responsive_display")
+        self.foldr["rp"] = self.query_one("#response_panel")
+        self.foldr["vp"] = self.query_one("#voice_panel")
         # id_name = self.input_tag.highlight_link_id
+
+    @work(exclusive=True)
+    async def on_focus(self, event: events.Focus):
+        from nnll_14 import trace_objective
+
+        in_type = self.foldr["it"].get_cell_at((int(round(self.foldr["it"].content_cell)), 1))
+        out_type = self.foldr["ot"].get_cell_at((int(round(self.foldr["it"].content_cell)), 1))
+        self.traced_path = trace_objective(nx_graph=self.nx_graph, source=in_type, target=out_type)
+        self.registry_entries = pull_path_entries(self.nx_graph, self.traced_path)
+        self.next_model = next(iter([x["entry"].model for x in list(self.registry_entries)]))
 
     @work(exclusive=True)
     async def _on_key(self, event: events.Key):
@@ -105,20 +112,19 @@ class Fold(Screen[bool]):
         if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
             event.prevent_default()
             self.machine_handoff()
-        elif event.key == "escape" and "active" in self.output_tag.classes:
+        elif event.key == "escape" and "active" in self.foldr["ot"].classes:
             self.cancel_generation()
         elif (hasattr(event, "character") and event.character == "\r") or event.key == "enter":
             self.alternate_panel("voice_panel", 1)
-            self.voice_panel.record_audio()
+            self.foldr["vp"].record_audio()
             self.pass_audio_to_tokenizer()
         elif (hasattr(event, "character") and event.character == " ") or event.key == "space":
             self.alternate_panel("voice_panel", 1)
-            self.voice_panel.play_audio()
+            self.foldr["vp"].play_audio()
         elif (event.name) == "ctrl_w" or event.key == "ctrl+w":
             self.clear_input()
-        elif (hasattr(event, "character") and event.character == "\x7f") or event.key == "backspace":
-            if not self.response_panel.has_focus:
-                self.alternate_panel("message_panel", 0)
+        elif not self.foldr["rp"].has_focus and ((hasattr(event, "character") and event.character == "\x7f") or event.key == "backspace"):
+            self.alternate_panel("message_panel", 0)
 
     @debug_monitor
     def _on_mouse_scroll_down(self, event: events.MouseScrollUp) -> None:
@@ -127,13 +133,13 @@ class Fold(Screen[bool]):
         Trigger scroll at 1/10th intensity when menu has focus
         :param event: Event data for the trigger"""
 
-        if self.responsive_display.has_focus_within != self.response_panel.has_focus:
+        if self.foldr["rd"].has_focus_within != self.foldr["rp"].has_focus:
             event.prevent_default()
-            self.output_tag.emulate_scroll_down(ceiling=len(self.output_tag.target_options))
-        elif self.input_tag.has_focus:
+            self.foldr["ot"].emulate_scroll_down()
+        elif self.foldr["it"].has_focus:
             event.prevent_default()
-            class_name = self.input_tag.emulate_scroll_down(ceiling=len(self.input_tag.target_options))
-            self.panel_swap.current = self.input_map.get(class_name)
+            class_name = self.foldr["it"].emulate_scroll_down()
+            self.foldr["ps"].current = self.input_map.get(class_name)
 
     @debug_monitor
     def _on_mouse_scroll_up(self, event: events.MouseScrollUp) -> None:
@@ -142,54 +148,54 @@ class Fold(Screen[bool]):
         Trigger scroll at 1/10th intensity when menu has focus
         :param event: Event data for the trigger"""
 
-        if self.responsive_display.has_focus_within != self.response_panel.has_focus:
+        if self.foldr["rd"].has_focus_within != self.foldr["rp"].has_focus:
             event.prevent_default()
-            self.output_tag.emulate_scroll_up()
-        elif self.input_tag.has_focus:
+            self.foldr["ot"].emulate_scroll_up()
+        elif self.foldr["it"].has_focus:
             event.prevent_default()
-            class_name = self.input_tag.emulate_scroll_up()
-            self.panel_swap.current = self.input_map.get(class_name)
+            class_name = self.foldr["it"].emulate_scroll_up()
+            self.foldr["ps"].current = self.input_map.get(class_name)
 
     @work(exclusive=True)
     @on(MessagePanel.Changed, "#message_panel")
     async def pass_text_to_tokenizer(self) -> None:
         """Transmit info to token calculation"""
-        # message = self.message_panel.text
-        # self.display_bar.calculate_tokens(self.current_model, message, self.unit_labels)
+        message = self.foldr["mp"].text
+        self.foldr["db"].calculate_tokens(self.next_model, message)
 
     @work(exclusive=True)
     async def pass_audio_to_tokenizer(self) -> None:
         """Transmit audio to sample length"""
-        duration = self.voice_panel.calculate_sample_length()
-        self.display_bar.calculate_audio(duration)
+        duration = self.foldr["vp"].calculate_sample_length()
+        self.foldr["db"].calculate_audio(duration)
 
     @work(exclusive=True)
     async def machine_handoff(self) -> None:
         """Provide prompts to generative processing endpoint"""
         content = {
-            "text": self.message_panel.text,
-            "audio": self.voice_panel.audio,
+            "text": self.foldr["mp"].text,
+            "audio": self.foldr["vp"].audio,
             # "attachment": self.message_panel.file # drag and drop from external window
             # "image": self.image_panel.image #  active image feed from cam / import screen
         }
-        self.output_tag.add_class("active")
-        self.response_panel.scribe_response(self.nx_graph, content, target=self.output_tag.target_options)
-        self.output_tag.set_classes(["output_tag"])
+        self.foldr["ot"].add_class("active")
+        self.foldr["rp"].scribe_response(self.nx_graph, content, target=self.foldr["ot"].target_options)
+        self.foldr["ot"].set_classes(["output_tag"])
 
     @work(exclusive=True)
     async def cancel_generation(self) -> None:
         """Stop the processing of a model"""
-        self.response_panel.workers.cancel_all()
-        self.output_tag.set_classes("output_tag")
+        self.foldr["rp"].workers.cancel_all()
+        self.foldr["ot"].set_classes("output_tag")
 
     @work(exclusive=True)
     async def clear_input(self) -> None:
         """Clear the input on the focused panel"""
-        if self.voice_panel.has_focus:
-            self.voice_panel.erase_audio()
+        if self.foldr["vp"].has_focus:
+            self.foldr["vp"].erase_audio()
             self.pass_audio_to_tokenizer()
-        elif self.message_panel.has_focus:
-            self.message_panel.erase_message()
+        elif self.foldr["mp"].has_focus:
+            self.foldr["mp"].erase_message()
 
     @work(exclusive=True)
     async def alternate_panel(self, id_name: str, y_coordinate: int) -> None:
@@ -197,8 +203,8 @@ class Fold(Screen[bool]):
         :param id_name: The panel to switch to
         :param y_coordinate: _description_
         """
-        self.input_tag.scroll_to(x=1, y=y_coordinate, force=True, immediate=True, on_complete=self.input_tag.refresh)
-        self.panel_swap.current = id_name
+        self.foldr["it"].scroll_to(x=1, y=y_coordinate, force=True, immediate=True, on_complete=self.foldr["it"].refresh)
+        self.foldr["ps"].current = id_name
 
 
 class ResponsiveLeftTop(Container):

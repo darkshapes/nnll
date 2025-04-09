@@ -20,7 +20,7 @@ def calculate_graph() -> nx.Graph:
     nx_graph = nx.MultiDiGraph()
     nx_graph.add_nodes_from(VALID_CONVERSIONS)
     registry_entries = from_cache()
-    nfo(registry_entries)
+    # nfo(registry_entries)
     for model in registry_entries:
         nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
     return nx_graph

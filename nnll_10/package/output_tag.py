@@ -17,6 +17,6 @@ class OutputTag(Carousel):
 
         self.target_options = {edge[0] for edge in nx_graph.edges}
         self.add_columns("0", "1", "2")
-        self.add_rows([self.up, row.strip(), self.dwn] for row in self.target_options)
+        self.add_rows([self.up.strip(), row.strip(), self.dwn.strip()] for row in self.target_options)
         self.cursor_foreground_priority = "css"
         self.cursor_background_priority = "css"

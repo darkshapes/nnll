@@ -3,28 +3,33 @@
 
 
 from enum import Enum
+from sys import modules as sys_modules
 from typing import Annotated, Callable, Optional
 
 from pydantic import BaseModel, Field
+
+from nnll_01 import debug_message as dbug
+from nnll_01 import debug_monitor
+from nnll_01 import info_message as nfo
 from nnll_60 import CONFIG_PATH_NAMED, JSONCache
-from sys import modules as sys_modules
 
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 api_names: list = ["ollama", "huggingface_hub", "lmstudio", "vllm"]
 
 
+@debug_monitor
 def _check_and_import():
     """Check if the module is available. If not, try to import it dynamically.
     Returns True if the module is successfully imported or already available, False otherwise."""
-    from nnll_01 import info_message as nfo
 
     for api in api_names:
         try:
             __import__(api)
             # setattr(LibType, api_libtype.get(api), True)
         except ImportError as error_log:
-            nfo(f"Unsupported source: {api}", error_log)
+            nfo("Unsupported source: %s", f"{api} [ignorable]")
+            dbug(error_log)
             # setattr(LibType, api_libtype.get(api), False)
 
 
@@ -38,7 +43,7 @@ class LibType(Enum):
     HUB: int = (1, api_names[1] in sys_modules)
     VLLM: int = (2, api_names[2] in sys_modules)
     LM_STUDIO: int = (3, api_names[3] in sys_modules)
-    # Cortex : Identical to OpenAI, http://localhost:39281
+    # CORTEX : Identical to OpenAI, http://localhost:39281
 
 
 example_str = ("function_name", "import.function_name")
@@ -84,7 +89,7 @@ class GenTypeE(BaseModel):
     text: GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
 
 
-VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d", "upscale_image"]
+VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d render", "vector graphic", "upscale_image"]
 
 VALID_TASKS = {
     LibType.OLLAMA: {
