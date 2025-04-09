@@ -148,6 +148,7 @@ SidebarLeft, SidebarRight {
 }
 
 #output_tag, #input_tag {
+    color: $background-lighten-3;
     width: auto;
     hatch: $hatch-border $main-background;
     border: none;

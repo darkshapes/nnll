@@ -43,6 +43,7 @@ class RegistryEntry(BaseModel):
                 match = pattern.search(tag)
                 if match and all(group in VALID_CONVERSIONS for group in match.groups()):
                     processed_tasks.append((match.group(1), match.group(2)))
+        # placeholder for VLLM/LMSTUDIO Libraries
         for tag in self.tags:
             for (graph_src, graph_dest), tags in library_tasks.items():
                 if tag in tags and (graph_src, graph_dest) not in processed_tasks:
@@ -53,8 +54,8 @@ class RegistryEntry(BaseModel):
 
     @classmethod
     @debug_monitor
-    def from_model_data(cls, lib_type: LibType) -> list[tuple[str]]:  # model_data: tuple[frozenset[str]]
-        """
+    def from_model_data(cls) -> list[tuple[str]]:  # lib_type: LibType) model_data: tuple[frozenset[str]]
+        """# todo - split into dependency-specific implementations
         Create RegistryEntry instances based on source\n
         Extract common model information and stack by newest model first for each conversion type.\n
         :param lib_type: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
@@ -62,58 +63,54 @@ class RegistryEntry(BaseModel):
         """
         entries = []
 
-        if lib_type == LibType.OLLAMA:
+        if LibType.OLLAMA:
             try:
-                from ollama import ListResponse, list as ollama_list
+                from ollama import ListResponse, list as ollama_list  # type: ignore
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
                 return
-            else:
-                model_data: ListResponse = ollama_list()
-                for model in model_data.models:  # pylint:disable=no-member
-                    entry = cls(model=f"ollama_chat/{model.model}", size=model.size.real, tags=[model.details.family], library=lib_type, timestamp=int(model.modified_at.timestamp()))
-                    entries.append(entry)
+            model_data: ListResponse = ollama_list()
+            for model in model_data.models:  # pylint:disable=no-member
+                entry = cls(model=f"ollama_chat/{model.model}", size=model.size.real, tags=[model.details.family], library=LibType.OLLAMA, timestamp=int(model.modified_at.timestamp()))
+                entries.append(entry)
 
-        elif lib_type == LibType.HUB:
+        if LibType.HUB:
             try:
-                from huggingface_hub import scan_cache_dir, repocard
+                from huggingface_hub import scan_cache_dir, repocard  # type: ignore
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
                 return
-            else:
-                model_data = scan_cache_dir()
-                for repo in model_data.repos:
-                    meta = repocard.RepoCard.load(repo.repo_id).data
-                    tags = []
-                    if hasattr(meta, "tags"):
-                        tags.extend(meta.tags)
-                    if hasattr(meta, "pipeline_tag"):
-                        tags.append(meta.pipeline_tag)
-                    if not tags:
-                        tags = ["unknown"]
-                    entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=lib_type, timestamp=int(repo.last_modified))
-                    entries.append(entry)
-        elif lib_type == LibType.LM_STUDIO:
+
+            model_data = scan_cache_dir()
+            for repo in model_data.repos:
+                meta = repocard.RepoCard.load(repo.repo_id).data
+                tags = []
+                if hasattr(meta, "tags"):
+                    tags.extend(meta.tags)
+                if hasattr(meta, "pipeline_tag"):
+                    tags.append(meta.pipeline_tag)
+                if not tags:
+                    tags = ["unknown"]
+                entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
+                entries.append(entry)
+        if LibType.LM_STUDIO:
             try:
-                from lmstudio import get_default_client, list_downloaded_models
-            except (ModuleNotFoundError, ImportError) as error_log:
-                dbug(error_log)
-                return
-            else:
+                from lmstudio import get_default_client, list_downloaded_models  # type: ignore
+
                 lms_client = get_default_client()
                 lms_client.api_host = "localhost:1143"
                 model_data = list_downloaded_models()
-        elif lib_type == LibType.VLLM:
-            try:
-                import vllm
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
-                return
-            else:
-                return
-        else:
-            dbug(f"Unsupported source: {lib_type}")
-            raise ValueError(f"Unsupported source: {lib_type}")
+
+        if LibType.VLLM:
+            try:
+                import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+        # else:
+        #     nfo("Unsupported source")
+        #     raise ValueError("Unsupported source")
 
         return sorted(entries, key=lambda x: x.timestamp, reverse=True)
 
@@ -121,13 +118,9 @@ class RegistryEntry(BaseModel):
 @debug_monitor
 def from_cache() -> Dict[str, RegistryEntry]:
     """
-    Retrieve models from ollama server, local huggingface hub cache, !!! Incomplete! local lmstudio cache.
+    Retrieve models from ollama server, local huggingface hub cache, !!! Incomplete! local lmstudio cache & vllm.
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
-    api_names = [LibType[f"{api}"] for api in dir(LibType) if not api.startswith("__")]
-    dbug(api_names)
-    for api in api_names:
-        if api.value[1] is True:
-            dbug(api_names)
-            models = RegistryEntry.from_model_data(api)
+    models = None
+    models = RegistryEntry.from_model_data()
     return models

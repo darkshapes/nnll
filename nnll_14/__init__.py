@@ -4,7 +4,7 @@
 # pylint: disable=import-outside-toplevel
 
 import networkx as nx
-from nnll_01 import debug_monitor
+from nnll_01 import debug_monitor, info_message as nfo
 
 
 @debug_monitor
@@ -20,6 +20,7 @@ def calculate_graph() -> nx.Graph:
     nx_graph = nx.MultiDiGraph()
     nx_graph.add_nodes_from(VALID_CONVERSIONS)
     registry_entries = from_cache()
+    nfo(registry_entries)
     for model in registry_entries:
         nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
     return nx_graph
@@ -43,7 +44,7 @@ def trace_objective(nx_graph: nx.Graph, source: str, target: str):
         else:
             model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
             if len(model_path) == 1:
-                model_path.append(target)
+                model_path.append(target)  # this behaviour likely to change in future
     return model_path
 
 

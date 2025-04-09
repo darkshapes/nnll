@@ -35,7 +35,7 @@ class ResponsePanel(TextArea):
         self.move_cursor(self.document.end, center=True)
 
         try:
-            async for chunk in main(graph=nx_graph, content=message, target=target):
+            async for chunk in main(nx_graph=nx_graph, content=message, target=target):
                 # todo : allow user selection between cursor jumps
                 self.move_cursor(self.document.end)
                 self.scroll_cursor_visible(center=True, animate=True)
