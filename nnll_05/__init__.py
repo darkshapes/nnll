@@ -93,7 +93,7 @@ def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
     return registry_entries
 
 
-def execute_path(traced_path: list[tuple], prompt: Any, registry_entries: dict) -> None:
+async def execute_path(traced_path: list[tuple], prompt: Any, registry_entries: dict) -> Any:
     """Execute on instructions selected previously"""
     from nnll_11 import chat_machine
 
@@ -110,13 +110,13 @@ def execute_path(traced_path: list[tuple], prompt: Any, registry_entries: dict) 
         elif current_library == LibType.OLLAMA:
             new_output = chat_machine(current_library, current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
-        elif current_library == LibType.LM_STUDIO:
+        elif current_library == LibType.LMSTUDIO:
             new_output = chat_machine(current_library, current_model, output_map[i])
             output_map.setdefault(i + 1, new_output)
-    return output_map
+    yield output_map
 
 
-def main(nx_graph: nx.Graph, content: dict, target: str):
+async def main(nx_graph: nx.Graph, content: dict, target: str) -> Any:
     from nnll_14 import trace_objective  # , loop_in_feature_processes
 
     prompt_type = resolve_prompt(content)  # , aux_processes
@@ -126,5 +126,4 @@ def main(nx_graph: nx.Graph, content: dict, target: str):
         # if len(aux_processes) > 0:
         #     for process_type in aux_processes:  # temporarily add attribute to nx_graph
         #         nx_graph = loop_in_feature_processes(nx_graph, prompt_type, target)
-        response = execute_path(traced_path, content[prompt_type], registry_entries)
-        return response
+        yield execute_path(traced_path, content[prompt_type], registry_entries)

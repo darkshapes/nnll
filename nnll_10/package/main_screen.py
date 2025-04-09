@@ -7,24 +7,19 @@ from rich.highlighter import ReprHighlighter
 from textual import events, on, work
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Container, Horizontal
+from textual.containers import Container
+
 from textual.reactive import reactive
 from textual.screen import Screen
-from textual.widgets import ContentSwitcher, Footer, Static
-
+from textual.widget import Widget
+from textual.widgets import Static, ContentSwitcher
 
 from nnll_01 import debug_monitor
-from nnll_10.package.display_bar import DisplayBar
-from nnll_10.package.input_tag import InputTag
+from nnll_14 import calculate_graph
 from nnll_10.package.message_panel import MessagePanel
-from nnll_10.package.output_tag import OutputTag
-from nnll_10.package.response_panel import ResponsePanel
-from nnll_10.package.voice_panel import VoicePanel
-from nnll_14 import build_conversion_graph, label_edge_attrib_for  # , trace_objective
-from nnll_15.constants import LibType
 
 
-class Fold(Screen):
+class Fold(Screen[bool]):
     """Orienting display Horizontal
     Main interface container"""
 
@@ -36,27 +31,39 @@ class Fold(Screen):
     TEXT = """"""
 
     BINDINGS = [
-        Binding("`", "scribe_response", "go", priority=True),  # Send to LLM
         Binding("bk", "", "⌨️"),
         Binding("alt+bk", "clear_input", "del"),
         Binding("ent", "start_recording", "◉", priority=True),
         Binding("space", "play", "▶︎", priority=True),
         Binding("escape", "cancel_generation", "◼︎ / ⏏︎"),  # Cancel response
+        Binding("`", "scribe_response", "✎", priority=True),  # Send to LLM
     ]
 
-    nx_graph = None
-    target_options: reactive[set] = reactive({})
+    nx_graph = calculate_graph()
+    target_options: reactive[list] = reactive([])
     hilite = ReprHighlighter()
     input_map = {
         "text": "message_panel",
-        "speech": "voice_panel",
         "image": "message_panel",
+        "speech": "voice_panel",
     }
+    display_bar: Widget
+    input_tag: Widget
+    message_panel: Widget
+    output_tag: Widget
+    responsive_display: Container
+    response_panel: Widget
+    voice_panel: Widget
 
     def compose(self) -> ComposeResult:
         """Create widgets"""
-        # self.calculate_graph()
-        self.calculate_graph()
+        from textual.containers import Horizontal
+        from textual.widgets import Footer
+        from nnll_10.package.display_bar import DisplayBar
+        from nnll_10.package.input_tag import InputTag
+        from nnll_10.package.output_tag import OutputTag
+        from nnll_10.package.response_panel import ResponsePanel
+        from nnll_10.package.voice_panel import VoicePanel
 
         yield Footer(id="footer")
         with Horizontal(id="app-grid", classes="app-grid-horizontal"):
@@ -73,19 +80,31 @@ class Fold(Screen):
                     yield OutputTag(id="output_tag", classes="output_tag")
             yield ResponsiveRightBottom(id="right-frame")
 
+    @work(exclusive=True)
+    async def on_mount(self):
+        self.input_tag = self.query_one("#input_tag")
+        self.output_tag = self.query_one("#output_tag")
+        self.message_panel = self.query_one("#message_panel")
+        self.response_panel = self.query_one("#response_panel")
+        self.voice_panel = self.query_one("#voice_panel")
+        self.display_bar = self.query_one("#display_bar")
+        self.panel_swap = self.query_one(ContentSwitcher)
+        self.responsive_display = self.query_one("#responsive_display")
+        # id_name = self.input_tag.highlight_link_id
+        # self.panel_swap.current = id_name if id_name != "image" else "text"
+
+    # def on_ready(self):
+
     @work(exit_on_error=False)
     async def on_resize(self, event=events.Resize):
         """Fit shape to screen"""
-        display = self.query_one("#app-grid")
+        self.display = self.query_one("#app-grid")
         width = event.container_size.width
         height = event.container_size.height
         if width / 2 >= height:  # Screen is wide
-            display.set_classes("app-grid-horizontal")
+            self.display.set_classes("app-grid-horizontal")
         elif width / 2 < height:  # Screen is tall
-            display.set_classes("app-grid-vertical")
-
-    # @work
-    # async def on_ready(self) -> None:
+            self.display.set_classes("app-grid-vertical")
 
     @work(exclusive=True)
     async def _on_key(self, event: events.Key):
@@ -93,105 +112,96 @@ class Fold(Screen):
         if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
             event.prevent_default()
             model_path = f"{self.target_options}"
-            # target = self.query_one("#output_tag").target
-            message = self.query_one("#message_panel").text
-            # audio_sample = self.query_one("#voice_panel").audio
-            # image_sample = self.query_one("#image_panel").file_name # probably drag and drop this
+            target = self.output_tag.target
+            message = self.message_panel.text
+            # audio_sample = self.voice_panel.audio
+            # image_sample = self.image_panel.file_name # probably drag and drop this
             # content = {
             #     "text": message if message and len(message) > 0 else None,
             #     "audio": audio_sample if audio_sample and len(audio_sample) > 0 else None,
             #     "image": image_sample if image_sample and len(image_sample) > 0 else None,
             # }
-            self.query_one("#output_tag").add_class("active")
-            response_panel = self.query_one("#response_panel")
-            response_panel.scribe_response(model_path, message)  # , content, target)
-            self.query_one("#output_tag").set_classes(["output_tag"])
-        elif event.key == "escape":  # self.query_one("#responsive_input").has_focus_within and
-            # self.query_one("#response_panel").focus()
+            self.output_tag.add_class("active")
+            self.response_panel.scribe_response(self.nx_graph, message)  # , content, target)
+            self.output_tag.set_classes(["output_tag"])
+        elif event.key == "escape":
             self.cancel_generation()
         elif (hasattr(event, "character") and event.character == "\r") or event.key == "enter":
             self.alternate_panel("voice_panel", 1)
-            voice_panel = self.query_one("#voice_panel")
-            voice_panel.record_audio()
+            self.voice_panel.record_audio()
             self.pass_audio_to_tokenizer()
         elif (hasattr(event, "character") and event.character == " ") or event.key == "space":
             self.alternate_panel("voice_panel", 1)
-            self.query_one("#voice_panel").play_audio()
+            self.voice_panel.play_audio()
         elif (event.name) == "ctrl_w" or event.key == "ctrl+w":
             self.clear_input()
         elif (hasattr(event, "character") and event.character == "\x7f") or event.key == "backspace":
-            if not self.query_one("#response_panel").has_focus:
+            if not self.response_panel.has_focus:
                 self.alternate_panel("message_panel", 0)
 
     @work(exclusive=True)
     @on(MessagePanel.Changed, "#message_panel")
     async def pass_text_to_tokenizer(self) -> None:
         """Transmit info to token calculation"""
-        message = self.query_one("#message_panel").text
-        # self.current_model = self.query_one("#output_tag").current_model
-        # self.query_one("#display_bar").calculate_tokens(self.current_model, message)
+        message = self.message_panel.text
 
     @work(exclusive=True)
     async def pass_audio_to_tokenizer(self) -> None:
         """Transmit audio to sample length"""
-        sample_length = len(self.query_one("#voice_panel").audio)
-        sample_frequency = self.query_one("#voice_panel").sample_freq
-        duration = float(sample_length / sample_frequency) if sample_length > 1 else 0.0
-        self.query_one("#display_bar").calculate_audio(duration)
+        duration = self.voice_panel.calculate_sample_length()
+        self.display_bar.calculate_audio(duration)
 
     @debug_monitor
     def _on_mouse_scroll_down(self, event: events.MouseScrollUp) -> None:
-        """Determine tag_name focus by negative space, then trigger scroll down at 1/10th intensity"""
-        if self.query_one("#responsive_display").has_focus_within != self.query_one("#response_panel").has_focus:
+        """Translate scroll events into datatable cursor movement
+        Trigger scroll at 1/10th intensity when menu has focus
+        :param event: Event data for the trigger"""
+
+        if self.responsive_display.has_focus_within != self.response_panel.has_focus:
             event.prevent_default()
-            output_tag = self.query_one("#output_tag")
-            self.target_options = output_tag.emulate_scroll_down(output_tag.target_options)
-        elif self.query_one("#input_tag").has_focus:
+            self.target_options = self.output_tag.emulate_scroll_down(len(self.output_tag.target_options))
+        elif self.input_tag.has_focus:
             event.prevent_default()
-            input_tag = self.query_one("#input_tag")
-            class_name = input_tag.emulate_scroll_down(input_tag.target_options)
-            self.query_one(ContentSwitcher).current = self.input_map.get(class_name)
+            class_name = self.input_tag.emulate_scroll_down(len(self.input_tag.target_options))
+            self.panel_swap.current = self.input_map.get(class_name)
 
     @debug_monitor
     def _on_mouse_scroll_up(self, event: events.MouseScrollUp) -> None:
-        """Determine tag_name focus by negative space, then trigger scroll down at 1/10th intensity"""
-        if self.query_one("#responsive_display").has_focus_within != self.query_one("#response_panel").has_focus:
+        """Translate scroll events into datatable cursor movement
+        Trigger scroll at 1/10th intensity when menu has focus
+        :param event: Event data for the trigger"""
+
+        if self.responsive_display.has_focus_within != self.response_panel.has_focus:
             event.prevent_default()
-            output_tag = self.query_one("#output_tag")
-            self.target_options = output_tag.emulate_scroll_up(output_tag.target_options)
-        elif self.query_one("#input_tag").has_focus:
+            self.target_options = self.output_tag.emulate_scroll_up()
+        elif self.input_tag.has_focus:
             event.prevent_default()
-            input_tag = self.query_one("#input_tag")
-            class_name = input_tag.emulate_scroll_up(input_tag.target_options)
-            self.query_one(ContentSwitcher).current = self.input_map.get(class_name)
+            class_name = self.input_tag.emulate_scroll_up()
+            self.panel_swap.current = self.input_map.get(class_name)
 
     @work(exclusive=True)
     async def cancel_generation(self) -> None:
         """Stop the processing of a model"""
-        self.query_one("#response_panel").workers.cancel_all()
-        self.query_one("#output_tag").set_classes("output_tag")
+        self.response_panel.workers.cancel_all()
+        self.output_tag.set_classes("output_tag")
 
     @work(exclusive=True)
-    async def clear_input(self):
+    async def clear_input(self) -> None:
         """Clear the input on the focused panel"""
-        if self.query_one("#voice_panel").has_focus:
-            self.query_one("#voice_panel").erase_audio()
+        if self.voice_panel.has_focus:
+            self.voice_panel.erase_audio()
             self.pass_audio_to_tokenizer()
-        elif self.query_one("#message_panel").has_focus:
-            self.query_one("#message_panel").erase_message()
+        elif self.message_panel.has_focus:
+            self.message_panel.erase_message()
 
     @work(exclusive=True)
-    async def alternate_panel(self, id_name, y_coordinate):
-        input_tag = self.query_one("#input_tag")
-        input_tag.scroll_to(x=0, y=y_coordinate, force=True, immediate=True, on_complete=input_tag.refresh)
-        self.query_one(ContentSwitcher).current = id_name
-        # self.query_one("#voice_panel").focus()
-
-    def calculate_graph(self):
-        self.nx_graph = build_conversion_graph()
-        self.nx_graph = label_edge_attrib_for(self.nx_graph, LibType.HUB)
-        self.nx_graph = label_edge_attrib_for(self.nx_graph, LibType.OLLAMA)
-        return self.nx_graph
+    async def alternate_panel(self, id_name: str, y_coordinate: int) -> None:
+        """Switch between text input and audio input
+        :param id_name: The panel to switch to
+        :param y_coordinate: _description_
+        """
+        self.input_tag.scroll_to(x=0, y=y_coordinate, force=True, immediate=True, on_complete=self.input_tag.refresh)
+        self.panel_swap.current = id_name
 
 
 class ResponsiveLeftTop(Container):

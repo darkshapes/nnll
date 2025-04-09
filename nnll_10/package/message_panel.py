@@ -8,7 +8,7 @@ from textual.widgets import TextArea
 
 class MessagePanel(TextArea):
     def on_mount(self):
-        self.cursor_blink = False
+        self.cursor_blink = True
 
     @work(exclusive=True)
     async def erase_message(self):

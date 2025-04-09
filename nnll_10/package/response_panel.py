@@ -7,8 +7,8 @@ from textual.reactive import reactive
 from textual.widgets import TextArea
 # import networkx as nx
 
-# from nnll_05 import lookup_function_for, loop_in_feature_processes, resolve_prompt
 from nnll_01 import debug_message as dbug
+from nnll_05 import main
 from nnll_11 import chat_machine
 
 
@@ -24,9 +24,8 @@ class ResponsePanel(TextArea):
         self.soft_wrap = True
 
     @work(group="chat")
-    async def scribe_response(self, model: str, message: dict[str]) -> None:
+    async def scribe_response(self, nx_graph: dict, message: dict[str], target: str) -> None:
         """Write a text response to current widget"""
-        from nnll_15 import LibType
 
         self.is_generating = True
         self.move_cursor(self.document.end)
@@ -36,7 +35,7 @@ class ResponsePanel(TextArea):
         self.move_cursor(self.document.end, center=True)
 
         try:
-            async for chunk in chat_machine(library=LibType.OLLAMA, message=message, model=model):
+            async for chunk in main(graph=nx_graph, content=message, target=target):
                 # todo : allow user selection between cursor jumps
                 self.move_cursor(self.document.end)
                 self.scroll_cursor_visible(center=True, animate=True)

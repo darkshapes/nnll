@@ -95,7 +95,7 @@ async def chat_machine(model: str, message: str, library: LibType, max_workers=8
 
     if library == LibType.OLLAMA:
         model = {"model": f"ollama_chat/{model}", "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}
-    elif library == LibType.LM_STUDIO:
+    elif library == LibType.LMSTUDIO:
         model = {"model": f"lm_studio/{model}", "api_base": "http://localhost:1234/v1", "api_key": "lm-studio"}
     elif library == LibType.HUB:
         model = {"model": f"huggingface/{model}"}  # , api_base="https://localhost:xxxx/address:port/sdbx/placeholder"}

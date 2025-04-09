@@ -1,5 +1,5 @@
 import networkx as nx
-from nnll_14 import label_edge_attrib_for, build_conversion_graph
+from nnll_14 import calculate_graph
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -7,9 +7,7 @@ from nnll_15.constants import LibType
 
 
 def draw_matplot_labeled(nx_graph: nx.Graph) -> None:
-    nx_graph = build_conversion_graph()
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.OLLAMA)
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.HUB)
+    nx_graph = calculate_graph()
     path = nx.bidirectional_shortest_path(nx_graph, "text", "image")
     path_edges = list(zip(path, path[1:]))
     edge_colors = ["red" if edge in path_edges or tuple(reversed(edge)) in path_edges else "black" for edge in nx_graph.edges()]
@@ -24,9 +22,7 @@ def draw_matplot_labeled(nx_graph: nx.Graph) -> None:
 
 
 def draw_matplot_circular() -> None:
-    nx_graph = build_conversion_graph()
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.OLLAMA)
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.HUB)
+    nx_graph = calculate_graph()
     path = nx.bidirectional_shortest_path(nx_graph, "image", "speech")
     path_edges = list(zip(path, path[1:]))
     edge_colors = ["red" if edge in path_edges or tuple(reversed(edge)) in path_edges else "black" for edge in nx_graph.edges()]

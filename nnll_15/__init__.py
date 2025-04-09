@@ -63,39 +63,54 @@ class RegistryEntry(BaseModel):
         entries = []
 
         if lib_type == LibType.OLLAMA:
-            from ollama import ListResponse, list as ollama_list
+            try:
+                from ollama import ListResponse, list as ollama_list
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+                return
+            else:
+                model_data: ListResponse = ollama_list()
+                for model in model_data.models:  # pylint:disable=no-member
+                    entry = cls(model=f"ollama_chat/{model.model}", size=model.size.real, tags=[model.details.family], library=lib_type, timestamp=int(model.modified_at.timestamp()))
+                    entries.append(entry)
 
-            model_data: ListResponse = ollama_list()
-            for model in model_data.models:  # pylint:disable=no-member
-                entry = cls(model=f"ollama_chat/{model.model}", size=model.size.real, tags=[model.details.family], library=lib_type, timestamp=int(model.modified_at.timestamp()))
-                entries.append(entry)
         elif lib_type == LibType.HUB:
-            from huggingface_hub import scan_cache_dir
-
-            model_data = scan_cache_dir()
-            from huggingface_hub import repocard
-
-            for repo in model_data.repos:
-                meta = repocard.RepoCard.load(repo.repo_id).data
-                tags = []
-                if hasattr(meta, "tags"):
-                    tags.extend(meta.tags)
-                if hasattr(meta, "pipeline_tag"):
-                    tags.append(meta.pipeline_tag)
-                if not tags:
-                    tags = ["unknown"]
-                entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=lib_type, timestamp=int(repo.last_modified))
-                entries.append(entry)
+            try:
+                from huggingface_hub import scan_cache_dir, repocard
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+                return
+            else:
+                model_data = scan_cache_dir()
+                for repo in model_data.repos:
+                    meta = repocard.RepoCard.load(repo.repo_id).data
+                    tags = []
+                    if hasattr(meta, "tags"):
+                        tags.extend(meta.tags)
+                    if hasattr(meta, "pipeline_tag"):
+                        tags.append(meta.pipeline_tag)
+                    if not tags:
+                        tags = ["unknown"]
+                    entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=lib_type, timestamp=int(repo.last_modified))
+                    entries.append(entry)
         elif lib_type == LibType.LM_STUDIO:
             try:
-                import lmstudio as lms
-            except ImportError as error_log:
-                print("LMStudio not found")
-                nfo(error_log)
-
-            lms_client = lms.get_default_client()
-            lms_client.api_host = "localhost:1143"
-            model_data = lms.list_downloaded_models()
+                from lmstudio import get_default_client, list_downloaded_models
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+                return
+            else:
+                lms_client = get_default_client()
+                lms_client.api_host = "localhost:1143"
+                model_data = list_downloaded_models()
+        elif lib_type == LibType.VLLM:
+            try:
+                import vllm
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+                return
+            else:
+                return
         else:
             dbug(f"Unsupported source: {lib_type}")
             raise ValueError(f"Unsupported source: {lib_type}")
@@ -104,10 +119,15 @@ class RegistryEntry(BaseModel):
 
 
 @debug_monitor
-def from_cache(lib_type: LibType) -> Dict[str, RegistryEntry]:
+def from_cache() -> Dict[str, RegistryEntry]:
     """
     Retrieve models from ollama server, local huggingface hub cache, !!! Incomplete! local lmstudio cache.
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
-    models = RegistryEntry.from_model_data(lib_type)
+    api_names = [LibType[f"{api}"] for api in dir(LibType) if not api.startswith("__")]
+    dbug(api_names)
+    for api in api_names:
+        if api.value[1] is True:
+            dbug(api_names)
+            models = RegistryEntry.from_model_data(api)
     return models

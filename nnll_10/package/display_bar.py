@@ -15,7 +15,6 @@ class DisplayBar(DataTable):
     UNIT3 = "″"
     unit_labels = [UNIT1, UNIT2, UNIT3]
 
-    token_prefix = "ollama_chat/"
     duration: reactive[float] = reactive(0.0, recompose=True)
 
     def on_mount(self):
@@ -23,7 +22,6 @@ class DisplayBar(DataTable):
             (0, 0, 0, 0),
             (f"     0{self.UNIT1}", f"0{self.UNIT2}", f"0.0{self.UNIT3}", " "),
         ]
-        # self = self.query_one("#display_bar")
         self.add_columns(*rows[0])
         self.add_rows(rows[1:])
         self.show_header = False
