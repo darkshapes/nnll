@@ -148,6 +148,7 @@ SidebarLeft, SidebarRight {
 }
 
 #output_tag, #input_tag {
+    width: auto;
     hatch: $hatch-border $main-background;
     border: none;
     overflow: hidden;
@@ -182,7 +183,6 @@ SidebarLeft, SidebarRight {
 #input_tag {
     margin-bottom: 0;
     margin-left: 2;
-    width: auto;
     padding: 0;
     border: none;
     background: $top-surface;

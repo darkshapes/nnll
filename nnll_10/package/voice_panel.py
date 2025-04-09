@@ -62,11 +62,10 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
         self.plt.clear_data()
         self.audio = [0]
 
-    # @work(exclusive=True)
-    # async def calculate_sample_length(self):
-    #     sample_len = float(len(self.audio) / self.sample_freq)
-    #     self.sample_len = sample_len
-    #     self.refresh()
+    def calculate_sample_length(self):
+        sample_length = len(self.audio)
+        duration = float(sample_length / self.sample_freq) if sample_length > 1 else 0.0
+        return duration
 
     # from textual_plot import PlotWidget, HiResMode
     # to use PlotWidget

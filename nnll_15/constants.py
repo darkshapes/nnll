@@ -7,21 +7,37 @@ from typing import Annotated, Callable, Optional
 
 from pydantic import BaseModel, Field
 from nnll_60 import CONFIG_PATH_NAMED, JSONCache
+from sys import modules as sys_modules
 
 mir_db = JSONCache(CONFIG_PATH_NAMED)
+
+api_names: list = ["ollama", "huggingface_hub", "lmstudio", "vllm"]
+
+
+def _check_and_import():
+    """Check if the module is available. If not, try to import it dynamically.
+    Returns True if the module is successfully imported or already available, False otherwise."""
+    from nnll_01 import info_message as nfo
+
+    for api in api_names:
+        try:
+            __import__(api)
+            # setattr(LibType, api_libtype.get(api), True)
+        except ImportError as error_log:
+            nfo(f"Unsupported source: {api}", error_log)
+            # setattr(LibType, api_libtype.get(api), False)
+
+
+_check_and_import()
 
 
 class LibType(Enum):
     """API library constants"""
 
-    OLLAMA: int = 0
-    HUB: int = 1
-    VLLM: int = 2
-    LM_STUDIO: int = 3
-
-
-# z-dimension is graphics hardware / available memory
-# see 'nnll_13 sys_cap/spec_writer in 0.1.dev132'
+    OLLAMA: int = (0, api_names[0] in sys_modules)
+    HUB: int = (1, api_names[1] in sys_modules)
+    VLLM: int = (2, api_names[2] in sys_modules)
+    LM_STUDIO: int = (3, api_names[3] in sys_modules)
 
 
 example_str = ("function_name", "import.function_name")

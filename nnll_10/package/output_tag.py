@@ -8,7 +8,7 @@ from nnll_10.package.carousel import Carousel
 
 
 class OutputTag(Carousel):
-    """Tag for showing output method"""
+    """Populate Output types list"""
 
     nx_graph: dict
     target_options: reactive[dict] = reactive({})

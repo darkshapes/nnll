@@ -67,3 +67,4 @@ log/
 tests/log
 .env
 result.json
+textual.log
