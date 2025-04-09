@@ -38,6 +38,7 @@ class LibType(Enum):
     HUB: int = (1, api_names[1] in sys_modules)
     VLLM: int = (2, api_names[2] in sys_modules)
     LM_STUDIO: int = (3, api_names[3] in sys_modules)
+    # Cortex : Identical to OpenAI, http://localhost:39281
 
 
 example_str = ("function_name", "import.function_name")
