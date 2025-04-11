@@ -3,10 +3,13 @@
 from textual import work
 from textual.widgets import TextArea
 
+
 # from nnll_01 import debug_monitor
 
 
 class MessagePanel(TextArea):
+    """User entry field"""
+
     def on_mount(self):
         self.cursor_blink = True
 

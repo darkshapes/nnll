@@ -148,3 +148,4 @@ ignore-overlong-task-comments = true
 
 [tool.typos]
 files.extend-exclude = ["^tests/.*$", "test.*$"]
+default.extend-words = {"ot" = "ot"}

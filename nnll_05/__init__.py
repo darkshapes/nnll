@@ -7,41 +7,36 @@ from typing import Any
 import networkx as nx
 from nnll_01 import debug_monitor
 from nnll_01 import info_message as nfo
-from nnll_15.constants import mir_db, LibType
+from nnll_60 import CONFIG_PATH_NAMED, JSONCache
+from nnll_15.constants import LibType
+
+mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 
 @debug_monitor
-def resolve_prompt(content: Any = None) -> tuple[str, nx.Graph]:
+def label_key_prompt(message: dict, mode_in: str) -> str:
     """Distil multi-prompt input streams into a single primary source\n
     Use secondary streams for supplementary processes.\n
     **TL;DR**: text prompts take precedence when available\n
-    :param content: User-supplied input data
-    :param target: User-supplied objective data state
+    :param message: User-supplied input data
+    :param source: User-supplied origin data state
     :return: `str` Initial conversion state\n\n
     ```
     dict       medium   data
             ,-text     str|dict
             '-image    array
-    content-'-speech   array
+    message-'-speech   array
             '-video    array
             '-music    array
     ```
     """
-    prompt_type = None
-    aux_processes = []
-    if not content.get("text", 0) or len(content.get("text")) == 0:
-        for medium, data in content.items():
-            if data and len(data) > 1:
-                prompt_type = str(medium)
-    else:
-        prompt_type = "text"
-        test_content = content.copy()
-        test_content.pop("text")
-        for medium, data in test_content.items():
-            if data and len(data) > 1:
-                print(f"medium : {medium}")
-                aux_processes.append(medium)
-    return prompt_type  # , aux_processes
+    if not mode_in:
+        if not message["text"]:
+            mode_in = next(iter([mode_in for mode_in in message if mode_in is not None and len(mode_in) > 1]))
+        else:
+            mode_in = "text"
+
+    return message.get(mode_in)
 
 
 @debug_monitor
@@ -56,7 +51,7 @@ def split_sequence_by(delimiter: str = ".", sequence: str = "") -> tuple | None:
 
 
 @mir_db.decorator
-def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
+async def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
     """
     Find MIR URI from known repo name and retrieve its \n
     MIR data and call instructions autofilled by decorator\n
@@ -84,7 +79,7 @@ def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
     Set current model based on weight and next available
     """
     registry_entries = []
-    if nx.has_path(nx_graph, traced_path[0], traced_path[1]):
+    if traced_path is not None and nx.has_path(nx_graph, traced_path[0], traced_path[1]):
         registry_entries = [  # ruff : noqa
             nx_graph[traced_path[i]][traced_path[i + 1]][hop]  #
             for i in range(len(traced_path) - 1)  #
@@ -93,37 +88,35 @@ def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
     return registry_entries
 
 
-async def execute_path(traced_path: list[tuple], prompt: Any, registry_entries: dict) -> Any:
-    """Execute on instructions selected previously"""
-    from nnll_11 import chat_machine
+# async def machine_intent(message: Any, registry_entries: dict, coordinates_path: dict) -> Any:
+#     """Execute on instructions selected previously"""
+#     from nnll_11 import chat
 
-    output_map = {0: prompt}
-    for i in range(len(traced_path) - 1):
-        current_entry = registry_entries[next(iter(registry_entries))]
-        current_model = current_entry.get("model_id")
-        current_library = current_entry.get("library")
-        nfo(f"current model : {current_model}")
-        if current_library == LibType.HUB:
-            function_call = lookup_function_for(current_model)
-            new_output = function_call(current_model, output_map[i])
-            output_map.setdefault(i + 1, new_output)
-        elif current_library == LibType.OLLAMA:
-            new_output = chat_machine(current_library, current_model, output_map[i])
-            output_map.setdefault(i + 1, new_output)
-        elif current_library == LibType.LMSTUDIO:
-            new_output = chat_machine(current_library, current_model, output_map[i])
-            output_map.setdefault(i + 1, new_output)
-    yield output_map
+#     label_prompt = label_key_prompt(message, mode_in=next(iter(coordinates_path)))
+#     output_map = [label_prompt]
+#     mode_hops = len(coordinates_path) - 1
+#     nfo(mode_hops)
+#     for i in range(mode_hops):
+#         current_coords = next(iter(registry_entries)).get("entry")
+#         nfo(f"current model : {current_coords}")
+#         current_model = current_coords.model
+#         current_library = current_coords.library
+#         nfo(f"current model : {current_model}")
+#         if current_library == LibType.HUB:
+#             args = (current_model, output_map[i])
+#             nfo(f"hub {current_model, current_library, output_map}")
+#             output_map.append(((lookup_function_for(current_model), args)))
+#         elif current_library == LibType.OLLAMA or current_library == LibType.LM_STUDIO or current_library == LibType.VLLM:
+#             nfo(f"chat {current_model, current_library, output_map}")
+#             output_map.append((chat.forward, {"message": output_map[i], "model": current_model, "library": current_library, "max_workers": 8}))
+#     return output_map
 
 
-async def main(nx_graph: nx.Graph, content: dict, target: str) -> Any:
-    from nnll_14 import trace_objective  # , loop_in_feature_processes
+# yield chat_machine(model=current_model, message=output_map[i], library=current_library)
 
-    prompt_type = resolve_prompt(content)  # , aux_processes
-    traced_path = trace_objective(nx_graph, prompt_type, target)
-    if traced_path is not None:
-        registry_entries = pull_path_entries(nx_graph, traced_path)
-        # if len(aux_processes) > 0:
-        #     for process_type in aux_processes:  # temporarily add attribute to nx_graph
-        #         nx_graph = loop_in_feature_processes(nx_graph, prompt_type, target)
-        yield execute_path(traced_path, content[prompt_type], registry_entries)
+# rxaligned
+# self.traced_path = trace_objective(nx_graph=self.nx_graph, mode_in=in_type, mode_out=out_type)
+# self.registry_entries = pull_path_entries(self.nx_graph, self.traced_path
+# if len(aux_processes) > 0:
+#     for process_type in aux_processes:  # temporarily add attribute to nx_graph
+#         nx_graph = loop_in_feature_processes(nx_graph, prompt_type, mode_out)

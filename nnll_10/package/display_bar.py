@@ -1,8 +1,10 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+from typing import Callable
 from textual import work
 from textual.reactive import reactive
+from textual.screen import Screen
 from textual.widgets import DataTable
 from nnll_10.package.token_counters import tk_count
 
@@ -14,7 +16,6 @@ class DisplayBar(DataTable):
     UNIT2 = "tkn / "
     UNIT3 = "″"
     unit_labels = [UNIT1, UNIT2, UNIT3]
-
     duration: reactive[float] = reactive(0.0, recompose=True)
 
     def on_mount(self):
@@ -29,9 +30,9 @@ class DisplayBar(DataTable):
         self.cursor_type = None
 
     @work(exclusive=True)
-    async def calculate_tokens(self, model, message):
+    async def calculate_tokens(self, tokenizer_model: str, message: str):
         """Live display of tokens and characters"""
-        token_count = tk_count(model, message)
+        token_count = await tk_count(tokenizer_model, message)
         character_count = len(message)
         self.update_cell_at((0, 0), f"     {character_count}{self.unit_labels[0]}")
         self.update_cell_at((0, 1), f"{token_count}{self.unit_labels[1]}")

@@ -11,8 +11,7 @@ from unittest import mock
 # import matplotlib.pyplot as plt
 import pytest
 from nnll_14 import calculate_graph
-from nnll_15 import VALID_CONVERSIONS
-from nnll_15.constants import LibType
+from nnll_15.constants import VALID_CONVERSIONS
 
 
 class Model:
@@ -262,7 +261,7 @@ def test_create_graph(mock_ollama_data, mock_hub_data):
 # {['text']:                    { model name: model path} }     { ['speech']}
 
 
-# bidirectional_shortest_path(G, source, target)
+# bidirectional_shortest_path(G, mode_in, mode_out)
 
 # G.add_edges_from[(2, 3, {"weight": 3.1415})] #add edge with attribute
 # G.add_nodes_from([(4, {"color": "red"}), (5, {"color": "green"})]) #add node with attribute

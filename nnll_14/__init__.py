@@ -3,8 +3,9 @@
 
 # pylint: disable=import-outside-toplevel
 
+# from typing import NamedTuple
 import networkx as nx
-from nnll_01 import debug_monitor, info_message as nfo
+from nnll_01 import debug_monitor, info_message as nfo  # , debug_message as dbug
 
 
 @debug_monitor
@@ -20,31 +21,35 @@ def calculate_graph() -> nx.Graph:
     nx_graph = nx.MultiDiGraph()
     nx_graph.add_nodes_from(VALID_CONVERSIONS)
     registry_entries = from_cache()
-    nfo(registry_entries)
-    for model in registry_entries:
-        nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
-    return nx_graph
+    # nfo(registry_entries)
+    if registry_entries:
+        for model in registry_entries:
+            nx_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
+        return nx_graph
+    else:
+        nfo("Registry error, graph attributes not applied")
+        return nx_graph
 
 
 @debug_monitor
-def trace_objective(nx_graph: nx.Graph, source: str, target: str):
-    """Find a valid path from current state (source) to designated state (target)\n
+def trace_objective(nx_graph: nx.Graph, mode_in: str, mode_out: str):
+    """Find a valid path from current state (mode_in) to designated state (mode_out)\n
     :param nx_graph: Model graph to use for tracking operation order
-    :param source: Input prompt type or starting state/states
-    :param target: The user-selected ending-state
-    :return: An iterator for the edges forming a way towards the target, or Note"""
+    :param mode_in: Input prompt type or starting state/states
+    :param mode_out: The user-selected ending-state
+    :return: An iterator for the edges forming a way towards the mode out, or Note"""
 
     model_path = None
-    if nx.has_path(nx_graph, source, target):  # Ensure path exists (otherwise 'bidirectional' may loop infinitely)
-        if source == target and source != "text":
-            original_target = target  # Solve case of non-text self-loop edge being incomplete transformation
-            target = "text"
-            model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
-            model_path.append(original_target)
+    if nx.has_path(nx_graph, mode_in, mode_out):  # Ensure path exists (otherwise 'bidirectional' may loop infinitely)
+        if mode_in == mode_out and mode_in != "text":
+            orig_mode_out = mode_out  # Solve case of non-text self-loop edge being incomplete transformation
+            mode_out = "text"
+            model_path = nx.bidirectional_shortest_path(nx_graph, mode_in, mode_out)
+            model_path.append(orig_mode_out)
         else:
-            model_path = nx.bidirectional_shortest_path(nx_graph, source, target)
+            model_path = nx.bidirectional_shortest_path(nx_graph, mode_in, mode_out)
             if len(model_path) == 1:
-                model_path.append(target)  # this behaviour likely to change in future
+                model_path.append(mode_out)  # this behaviour likely to change in future
     return model_path
 
 

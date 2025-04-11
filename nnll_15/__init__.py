@@ -8,7 +8,7 @@
 from typing import Dict, List, Tuple
 from pydantic import BaseModel, computed_field
 
-from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
+from nnll_01 import debug_message as dbug, debug_monitor  # , info_message as nfo
 from nnll_15.constants import VALID_CONVERSIONS, VALID_TASKS, LibType
 
 # import open_webui
@@ -83,7 +83,11 @@ class RegistryEntry(BaseModel):
 
             model_data = scan_cache_dir()
             for repo in model_data.repos:
-                meta = repocard.RepoCard.load(repo.repo_id).data
+                try:
+                    meta = repocard.RepoCard.load(repo.repo_id).data
+                except ValueError as error_log:
+                    dbug(error_log)
+                    continue
                 tags = []
                 if hasattr(meta, "tags"):
                     tags.extend(meta.tags)
