@@ -35,9 +35,7 @@ def draw_matplot_circular() -> None:
 
 
 def draw_matplot_graphviz() -> None:
-    nx_graph = build_conversion_graph()
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.OLLAMA)
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.HUB)
+    nx_graph = calculate_graph()
     path = nx.bidirectional_shortest_path(nx_graph, "image", "speech")
     path_edges = list(zip(path, path[1:]))
     edge_colors = ["red" if edge in path_edges or tuple(reversed(edge)) in path_edges else "black" for edge in nx_graph.edges()]
@@ -48,9 +46,7 @@ def draw_matplot_graphviz() -> None:
 
 
 def draw_matplot_weights() -> None:
-    nx_graph = build_conversion_graph()
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.OLLAMA)
-    nx_graph = label_edge_attrib_for(nx_graph, LibType.HUB)
+    nx_graph = calculate_graph()
     pos = nx.spring_layout(nx_graph, scale=20, k=3 / np.sqrt(nx_graph.order()))
     nx.draw(nx_graph, pos=pos, node_color="lightblue", with_labels=True, node_size=500)
     labels = nx.get_edge_attributes(nx_graph, "weight")

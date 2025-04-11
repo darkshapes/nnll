@@ -5,7 +5,7 @@
 # import networkx as nx
 import nnll_01
 from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
-from nnll_05 import lookup_function_for, resolve_prompt  # , split_sequence_by, main
+from nnll_05 import lookup_function_for, label_key_prompt  # , split_sequence_by, main
 from nnll_14 import calculate_graph, trace_objective
 from nnll_15.constants import LibType  # , loop_in_feature_processes
 from tests import test_14_draw_graph
@@ -21,7 +21,7 @@ def test_main():
         # example user input
         content = {"text": "Test Prompt"}
         target = "text"
-        prompt_type = resolve_prompt(content)  # , aux_processes =
+        prompt_type = label_key_prompt(content, mode_in="text")  # , aux_processes =
         traced_path = trace_objective(nx_graph, prompt_type, target)
         dbug(f"traced_path : {traced_path}")
         if traced_path is not None:

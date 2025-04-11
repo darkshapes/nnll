@@ -4,7 +4,7 @@
 import dspy
 from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, debug_message as dbug
+from nnll_01 import debug_monitor, debug_message as dbug, info_message as nfo
 from nnll_15.constants import LibType
 
 
@@ -43,6 +43,27 @@ class BasicQAHistory(dspy.Signature):
     response = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
 
 
+@debug_monitor
+async def get_api(model: str, library: LibType):
+    """
+    Load model into chat completion method based on library and run query\n
+    :param model: The model to create a reply with the question
+    :param variable: description
+    :param variable: description
+    :return: output
+    """
+    model_api = {}
+    if library == LibType.OLLAMA:
+        model_api = {"model": model, "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}  # ollama_chat/
+    elif library == LibType.LM_STUDIO:
+        model_api = {"model": model, "api_base": "http://localhost:1234/v1", "api_key": "lm-studio"}  # lm_studio/
+    elif library == LibType.HUB:
+        model_api = {"model": model}  # api_base="https://localhost:xxxx/address:port/sdbx/placeholder"} # huggingface/
+    elif library == LibType.VLLM:
+        model_api = {"model": model, "api_base": "http://localhost:8000/chat/completions"}  # hosted_vllm/
+    return model_api
+
+
 class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `BasicQAHistory` query"""
@@ -62,7 +83,7 @@ class ChatMachineWithMemory(dspy.Module):
         self.completion = dspy.streamify(generator)
 
     @debug_monitor
-    async def forward(self, api_config: dict, message: str, max_workers=4):
+    async def forward(self, message: str, model: str, library: LibType, max_workers=4):
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration
@@ -70,6 +91,7 @@ class ChatMachineWithMemory(dspy.Module):
         :param max_workers: Maximum number of async processes
         :return: yields response in chunks
         """
+        api_config = get_api(model, library)
         model = dspy.LM(**api_config)
         dspy.settings.configure(lm=model, async_max_workers=max_workers)
         combined_context = " ".join(self.memory)
@@ -78,38 +100,7 @@ class ChatMachineWithMemory(dspy.Module):
             self.memory.pop(0)
         async for chunk in self.completion(message={"context": combined_context, "query": message}, stream=True):
             yield chunk
+        # async for chunk in chat.forward(api_config={"model": , "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}, message=message, max_workers=8):
 
 
-machine = ChatMachineWithMemory(memory_size=5, signature=BasicQAHistory)
-
-
-@debug_monitor
-async def chat_machine(model: str, message: str, library: LibType, max_workers=8):
-    """
-    Load model into chat completion method based on library and run query\n
-    :param model: The model to create a reply with the question
-    :param variable: description
-    :param variable: description
-    :return: output
-    """
-
-    if library == LibType.OLLAMA:
-        model = {"model": f"ollama_chat/{model}", "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}
-    elif library == LibType.LMSTUDIO:
-        model = {"model": f"lm_studio/{model}", "api_base": "http://localhost:1234/v1", "api_key": "lm-studio"}
-    elif library == LibType.HUB:
-        model = {"model": f"huggingface/{model}"}  # , api_base="https://localhost:xxxx/address:port/sdbx/placeholder"}
-    elif library == LibType.VLLM:
-        model = {"model": f"hosted_vllm/{model}", "api_base": "http://localhost:8000/chat/completions"}
-    async for chunk in machine.forward(api_config=model, message=message, max_workers=max_workers):
-        try:
-            if chunk is not None:
-                if isinstance(chunk, dspy.Prediction):
-                    pass
-                    # yield str(chunk)
-                else:
-                    chnk = chunk["choices"][0]["delta"]["content"]
-                    if chnk is not None:
-                        yield chnk
-        except AttributeError as error_log:
-            dbug(error_log)
+chat = ChatMachineWithMemory(memory_size=5, signature=BasicQAHistory)

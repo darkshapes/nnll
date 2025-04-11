@@ -10,7 +10,7 @@ Horizontal > VerticalScroll {
     width: 24;
 }
 Vertical {
-    width: 15%;
+    width: 41vw;
     margin: 0;
     padding: 0;
 }

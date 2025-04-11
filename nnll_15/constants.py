@@ -15,7 +15,7 @@ from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
-api_names: list = ["ollama", "huggingface_hub", "lmstudio", "vllm"]
+API_NAMES: list = ["ollama", "huggingface_hub", "lmstudio", "vllm"]
 
 
 @debug_monitor
@@ -23,12 +23,12 @@ def _check_and_import():
     """Check if the module is available. If not, try to import it dynamically.
     Returns True if the module is successfully imported or already available, False otherwise."""
 
-    for api in api_names:
+    for api in API_NAMES:
         try:
             __import__(api)
             # setattr(LibType, api_libtype.get(api), True)
         except ImportError as error_log:
-            nfo("Unsupported source: %s", f"{api} [ignorable]")
+            nfo("|Ignorable| Source unavailable:", f"{api}")
             dbug(error_log)
             # setattr(LibType, api_libtype.get(api), False)
 
@@ -39,11 +39,12 @@ _check_and_import()
 class LibType(Enum):
     """API library constants"""
 
-    OLLAMA: int = (0, api_names[0] in sys_modules)
-    HUB: int = (1, api_names[1] in sys_modules)
-    VLLM: int = (2, api_names[2] in sys_modules)
-    LM_STUDIO: int = (3, api_names[3] in sys_modules)
+    OLLAMA: int = (0, API_NAMES[0] in sys_modules)
+    HUB: int = (1, API_NAMES[1] in sys_modules)
+    VLLM: int = (2, API_NAMES[2] in sys_modules)
+    LM_STUDIO: int = (3, API_NAMES[3] in sys_modules)
     # CORTEX : Identical to OpenAI, http://localhost:39281
+    # LLAMAFILE  : "http://localhost:8080/v1  api_key = "sk-no-key-required"
 
 
 example_str = ("function_name", "import.function_name")

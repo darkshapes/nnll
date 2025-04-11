@@ -8,6 +8,8 @@ from textual.widgets import TextArea
 
 
 class MessagePanel(TextArea):
+    """User entry field"""
+
     def on_mount(self):
         self.cursor_blink = True
 
