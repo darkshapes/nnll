@@ -68,3 +68,5 @@ tests/log
 .env
 result.json
 textual.log
+.VSCodeCounter/
+textual.log

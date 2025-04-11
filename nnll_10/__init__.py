@@ -39,6 +39,11 @@ class IntentProcessor:
             raise ValueError("Coordinates not plotted.")
 
     @debug_monitor
+    async def confirm_model_waypoints(self):
+        if not self.registry_entries:
+            raise ValueError("Registry not populated.")
+
+    @debug_monitor
     def derive_coordinates_path(self, mode_in: str, mode_out: str):
         """
         Derive the coordinates path based on traced objectives.

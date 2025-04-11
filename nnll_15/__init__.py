@@ -83,7 +83,11 @@ class RegistryEntry(BaseModel):
 
             model_data = scan_cache_dir()
             for repo in model_data.repos:
-                meta = repocard.RepoCard.load(repo.repo_id).data
+                try:
+                    meta = repocard.RepoCard.load(repo.repo_id).data
+                except ValueError as error_log:
+                    dbug(error_log)
+                    continue
                 tags = []
                 if hasattr(meta, "tags"):
                     tags.extend(meta.tags)

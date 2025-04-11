@@ -4,7 +4,7 @@
 import dspy
 from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, debug_message as dbug, info_message as nfo
+from nnll_01 import debug_monitor, debug_message as dbug  # , info_message as nfo
 from nnll_15.constants import LibType
 
 
@@ -44,24 +44,23 @@ class BasicQAHistory(dspy.Signature):
 
 
 @debug_monitor
-async def get_api(model: str, library: LibType):
+async def get_api(model: str, library: LibType) -> dict:
     """
     Load model into chat completion method based on library and run query\n
     :param model: The model to create a reply with the question
-    :param variable: description
-    :param variable: description
-    :return: output
+    :param library: API Library to use
+    :return: Arguments to pass to the LM constructor
     """
-    model_api = {}
+
     if library == LibType.OLLAMA:
-        model_api = {"model": model, "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}  # ollama_chat/
+        model = {"model": model, "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}  # ollama_chat/
     elif library == LibType.LM_STUDIO:
-        model_api = {"model": model, "api_base": "http://localhost:1234/v1", "api_key": "lm-studio"}  # lm_studio/
+        model = {"model": model, "api_base": "http://localhost:1234/v1", "api_key": "lm-studio"}  # lm_studio/
     elif library == LibType.HUB:
-        model_api = {"model": model}  # api_base="https://localhost:xxxx/address:port/sdbx/placeholder"} # huggingface/
+        model = {"model": model}  # api_base="https://localhost:xxxx/address:port/sdbx/placeholder"} # huggingface/
     elif library == LibType.VLLM:
-        model_api = {"model": model, "api_base": "http://localhost:8000/chat/completions"}  # hosted_vllm/
-    return model_api
+        model = {"model": model, "api_base": "http://localhost:8000/chat/completions"}  # hosted_vllm/
+    return model
 
 
 class ChatMachineWithMemory(dspy.Module):
@@ -91,16 +90,28 @@ class ChatMachineWithMemory(dspy.Module):
         :param max_workers: Maximum number of async processes
         :return: yields response in chunks
         """
-        api_config = get_api(model, library)
-        model = dspy.LM(**api_config)
-        dspy.settings.configure(lm=model, async_max_workers=max_workers)
-        combined_context = " ".join(self.memory)
-        self.memory.append(message)
-        if len(self.memory) == self.memory_size:
-            self.memory.pop(0)
-        async for chunk in self.completion(message={"context": combined_context, "query": message}, stream=True):
-            yield chunk
-        # async for chunk in chat.forward(api_config={"model": , "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}, message=message, max_workers=8):
+        from nnll_05 import lookup_function_for
 
-
-chat = ChatMachineWithMemory(memory_size=5, signature=BasicQAHistory)
+        if library == LibType.HUB:
+            constructor = await lookup_function_for(model)
+            async for chunk in constructor(model):
+                yield chunk
+        else:
+            api_kwargs = await get_api(model=model, library=library)
+            model = dspy.LM(**api_kwargs)
+            dspy.settings.configure(lm=model, async_max_workers=max_workers)
+            combined_context = " ".join(self.memory)
+            message = message["text"]
+            self.memory.append(message)
+            if len(self.memory) == self.memory_size:
+                self.memory.pop(0)
+            async for chunk in self.completion(message={"context": combined_context, "query": message}, stream=True):
+                try:
+                    if chunk is not None:
+                        if isinstance(chunk, dspy.Prediction):
+                            pass
+                            # yield str(chunk)
+                        else:
+                            yield chunk["choices"][0]["delta"]["content"]
+                except (GeneratorExit, RuntimeError, AttributeError) as error_log:
+                    dbug(error_log)  # consider threading user selection between cursor jumps

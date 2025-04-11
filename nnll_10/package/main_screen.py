@@ -33,7 +33,7 @@ class Fold(Screen[bool]):
         Binding("ent", "start_recording", "◉", priority=True),  # Start audio prompt
         Binding("space", "play", "▶︎", priority=True),  # Listen to prompt audio
         Binding("escape", "cancel_generation", "◼︎ / ⏏︎"),  # Cancel response
-        Binding("`", "send_tx", "✎", priority=True),  # Send to LLM
+        Binding("`", "loop_sender", "✎", priority=True),  # Send to LLM
     ]
 
     foldr: dict = defaultdict(dict)
@@ -108,7 +108,7 @@ class Fold(Screen[bool]):
         """Textual API event trigger, Suppress/augment default key actions to trigger keybindings"""
         if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
             event.prevent_default()
-            self.send_tx()
+            self.walk_intent()
         elif event.key == "escape" and "active" in self.foldr["ot"].classes:
             self.cancel_generation()
         elif (hasattr(event, "character") and event.character == "\r") or event.key == "enter":
@@ -166,10 +166,12 @@ class Fold(Screen[bool]):
         self.foldr["db"].calculate_audio(duration)
 
     # @work(exclusive=True)
-    def ready_tx(self, mode_io_only: bool = False) -> None:
+    def ready_tx(self, mode_io_only: bool = False, mode_in: str = None, mode_out: str = None) -> None:
         """Retrieve graph"""
-        mode_in = self.foldr["ot"].get_cell_at((int(round(self.foldr["it"].content_cell)), 1))
-        mode_out = self.foldr["ot"].get_cell_at((int(round(self.foldr["ot"].content_cell)), 1))
+        if not mode_in:
+            mode_in = self.foldr["ot"].get_cell_at((int(round(self.foldr["it"].content_cell)), 1))
+        if not mode_out:
+            mode_out = self.foldr["ot"].get_cell_at((int(round(self.foldr["ot"].content_cell)), 1))
         mode_io = {"mode_in": mode_in, "mode_out": mode_out}
         if mode_io_only:
             return mode_io
@@ -184,33 +186,42 @@ class Fold(Screen[bool]):
         return message
 
     @work(exclusive=True)
-    async def send_tx(self) -> Any:
-        """Transfer path and message to generative processing endpoint"""
-
-        self.foldr["rp"].insert("\n---\n")
-        self.foldr["ot"].add_class("active")
-        from nnll_05 import machine_intent
-        import dspy
+    async def walk_intent(self):
+        """Provided the coordinates in the intent processor, follow the list of in and out methods"""
 
         message = self.ready_tx()
         await self.intent_processor.confirm_available_graph()
         await self.intent_processor.confirm_coordinates_path()
-        entries = self.intent_processor.registry_entries
         coordinates = self.intent_processor.coordinates_path
-        output_map = machine_intent(message=message, registry_entries=entries, coordinates_path=coordinates)
-        # async for chunk in
-        #     try:
-        #         if chunk is not None:
-        #             if isinstance(chunk, dspy.Prediction):
-        #                 pass
-        #                 # yield str(chunk)
-        #             else:
-        #                 chnk = chunk["choices"][0]["delta"]["content"]
-        #                 if chnk is not None:
-        #                     self.foldr["rp"].insert(chnk)
-        #         except (GeneratorExit, RuntimeError, AttributeError) as error_log:
-        #             dbug(error_log)  # consider threading user selection between cursor jumps
-        # self.foldr["ot"].set_classes(["output_tag"])
+        hop_length = len(coordinates) - 1
+        self.ready_tx()
+        for i in range(hop_length):
+            await self.intent_processor.confirm_coordinates_path()
+            await self.intent_processor.confirm_model_waypoints()
+            if i + 1 == hop_length:
+                self.send_tx(message=message)
+            else:
+                message = self.send_tx(message=message, last_hop=False)
+                self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
+
+    @work(exclusive=True)
+    async def send_tx(self, message: dict, last_hop=True) -> None:
+        """Transfer path and message to generative processing endpoint"""
+
+        from nnll_11 import ChatMachineWithMemory, BasicQAHistory
+
+        entries = self.intent_processor.registry_entries
+        current_coords = next(iter(entries)).get("entry")
+        chat = ChatMachineWithMemory(memory_size=5, signature=BasicQAHistory)
+        self.foldr["rp"].insert("\n---\n")
+        self.foldr["ot"].add_class("active")
+        if last_hop:
+            async for chunk in chat.forward(message=message, model=current_coords.model, library=current_coords.library, max_workers=8):
+                if chunk is not None:
+                    self.foldr["rp"].insert(chunk)
+            self.foldr["ot"].set_classes(["output_tag"])
+        else:
+            return chat.forward(message=message, model=current_coords.model, library=current_coords.library, max_workers=8)
 
     @work(exclusive=True)
     async def cancel_generation(self) -> None:

@@ -5,8 +5,6 @@
 import os
 import sys
 
-from nnll_10 import IntentProcessor
-
 sys.path.append(os.getcwd())
 
 import networkx as nx
@@ -20,12 +18,15 @@ from textual.widgets import Button, Label, ListItem, ListView, RichLog, Static
 from nnll_01 import debug_message as dbug
 from nnll_01 import debug_monitor
 from nnll_05 import pull_path_entries
+from nnll_10 import IntentProcessor
+from nnll_10.package.response_panel import ResponsePanel
 from nnll_10.package.token_counters import tk_count
 from nnll_13 import VoicePanel
 from nnll_14 import calculate_graph, trace_objective
 from nnll_15.constants import GenTypeC, GenTypeCText, LibType
 from nnll_19 import MessagePanel
-from nnll_20 import ResponsePanel
+
+# from nnll_20 import ResponsePanel
 
 
 class ButtonsApp(App[str]):
@@ -85,8 +86,8 @@ class ButtonsApp(App[str]):
         build_button = self.query_one("#build")
         if self.hover_name == "build":
             # event.stop()
-            intent_processor = IntentProcessor
-            self.nx_graph = calculate_graph()
+            self.nx_graph = IntentProcessor()
+            self.nx_graph.calculate_intent_graph()
             results_panel.write(f"Created {self.nx_graph}")
             start_points = self.query_one("#start_points")
             end_points = self.query_one("#end_points")
@@ -95,9 +96,9 @@ class ButtonsApp(App[str]):
                 results_panel.write("Missing step: Build graph")
                 build_button.variant = "warning"
             elif not start_points.children and not end_points.children:
-                available_conversions = {edge[1] for edge in self.nx_graph.edges}
+                available_conversions = {edge[1] for edge in self.nx_graph.intent_graph.edges}
                 start_points.extend([ListItem(Label(f"{edge}"), id=f"{edge}") for edge in available_conversions])
-                available_conversions = {edge[0] for edge in self.nx_graph.edges}
+                available_conversions = {edge[0] for edge in self.nx_graph.intent_graph.edges}
                 end_points.extend([ListItem(Label(f"{edge}"), id=f"{edge}") for edge in available_conversions])
                 build_button.variant = "success"
                 results_panel.write(f"Attributes added to {self.nx_graph}")
@@ -136,12 +137,12 @@ class ButtonsApp(App[str]):
             results_panel.write(self.gen_type)
 
         if start_type is not None and end_type is not None:
-            self.traced_path = trace_objective(nx_graph=self.nx_graph, mode_in=start_type, mode_out=end_type)
-            results_panel.write(self.traced_path)
-            self.registry_entries = pull_path_entries(self.nx_graph, self.traced_path)
-            self.tokenizer = next(iter(x["entry"].model for x in self.registry_entries))
+            self.nx_graph.derive_coordinates_path(mode_in=start_type, mode_out=end_type)
+            results_panel.write(self.nx_graph.coordinates_path)
+            self.nx_graph.define_model_waypoints()
+            self.tokenizer = next(iter(self.nx_graph.model_names))
             self.query_one("#response_panel").insert(f"{str(self.tokenizer)}\n")
-            results_panel.write([x["entry"].model for x in list(self.registry_entries)])
+            results_panel.write([x["entry"].model for x in list(self.nx_graph.registry_entries)])
             convert_type = self.query_one("#convert_type")
             all_fields = GenTypeCText.model_fields | GenTypeC.model_fields
             convert_type.remove_children(ListItem)
@@ -163,24 +164,6 @@ class ButtonsApp(App[str]):
         token_count = await tk_count(self.tokenizer, message)
         response_panel.clear()
         response_panel.insert(f"{str(self.tokenizer)}\n{str(token_count)}")
-        # if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
-        #     event.prevent_default()
-        #     message = self.query_one("#message_panel").text
-        #     # audio_sample = self.query_one("#voice_panel").audio
-        #     # image_sample = self.query_one("#image_panel").file_name # probably drag and drop this
-        #     # content = {
-        #     #     "text": message if message and len(message) > 0 else None,
-        #     #     "audio": audio_sample if audio_sample and len(audio_sample) > 0 else None,
-        #     #     "image": image_sample if image_sample and len(image_sample) > 0 else None,
-        #     # }
-        #     # self.traced_path("", id="response_pane", read_only=True),
-        #     self.query_one("#tag_line").add_class("active")
-        #     response_panel = self.query_one("#response_panel")
-        #     response_panel.scribe_response(self.traced_path, message)  # , content, target)
-        #     self.query_one("#tag_line").set_classes(["tag_line"])
-        # elif event.key == "escape":  # self.query_one("#responsive_input").has_focus_within and
-        #     # self.query_one("#response_panel").focus()
-        #     self.cancel_generation()
 
     @work(exclusive=True)
     async def cancel_generation(self) -> None:

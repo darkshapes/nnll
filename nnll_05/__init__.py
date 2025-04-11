@@ -51,7 +51,7 @@ def split_sequence_by(delimiter: str = ".", sequence: str = "") -> tuple | None:
 
 
 @mir_db.decorator
-def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
+async def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
     """
     Find MIR URI from known repo name and retrieve its \n
     MIR data and call instructions autofilled by decorator\n
@@ -88,28 +88,28 @@ def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
     return registry_entries
 
 
-async def machine_intent(message: Any, registry_entries: dict, coordinates_path: dict) -> Any:
-    """Execute on instructions selected previously"""
-    from nnll_11 import chat
+# async def machine_intent(message: Any, registry_entries: dict, coordinates_path: dict) -> Any:
+#     """Execute on instructions selected previously"""
+#     from nnll_11 import chat
 
-    label_prompt = label_key_prompt(message, mode_in=next(iter(coordinates_path)))
-    output_map = [label_prompt]
-    mode_hops = len(coordinates_path) - 1
-    nfo(mode_hops)
-    for i in range(mode_hops):
-        current_coords = next(iter(registry_entries)).get("entry")
-        nfo(f"current model : {current_coords}")
-        current_model = current_coords.model
-        current_library = current_coords.library
-        nfo(f"current model : {current_model}")
-        if current_library == LibType.HUB:
-            args = (current_model, output_map[i])
-            nfo(f"hub {current_model, current_library, output_map}")
-            output_map.append(((lookup_function_for(current_model), args)))
-        elif current_library == LibType.OLLAMA or current_library == LibType.LM_STUDIO or current_library == LibType.VLLM:
-            nfo(f"chat {current_model, current_library, output_map}")
-            output_map.append((chat.forward, {"message": output_map[i], "model": current_model, "library": current_library, "max_workers": 8}))
-    return output_map
+#     label_prompt = label_key_prompt(message, mode_in=next(iter(coordinates_path)))
+#     output_map = [label_prompt]
+#     mode_hops = len(coordinates_path) - 1
+#     nfo(mode_hops)
+#     for i in range(mode_hops):
+#         current_coords = next(iter(registry_entries)).get("entry")
+#         nfo(f"current model : {current_coords}")
+#         current_model = current_coords.model
+#         current_library = current_coords.library
+#         nfo(f"current model : {current_model}")
+#         if current_library == LibType.HUB:
+#             args = (current_model, output_map[i])
+#             nfo(f"hub {current_model, current_library, output_map}")
+#             output_map.append(((lookup_function_for(current_model), args)))
+#         elif current_library == LibType.OLLAMA or current_library == LibType.LM_STUDIO or current_library == LibType.VLLM:
+#             nfo(f"chat {current_model, current_library, output_map}")
+#             output_map.append((chat.forward, {"message": output_map[i], "model": current_model, "library": current_library, "max_workers": 8}))
+#     return output_map
 
 
 # yield chat_machine(model=current_model, message=output_map[i], library=current_library)
