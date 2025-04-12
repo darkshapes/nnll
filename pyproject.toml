@@ -112,8 +112,8 @@ dev = [
 ]
 
 [project.scripts]
-zodiac     = "nnll_10.package:__init__"
-astra      = "nnll_12.__main__"
+zodiac     = "nnll_10.package.__init__:main"
+astra      = "nnll_12:__main__"
 nnll-find  = "nnll_31:main"
 nnll-hash  = "nnll_17:main"
 nnll-index = "nnll_43:main"
