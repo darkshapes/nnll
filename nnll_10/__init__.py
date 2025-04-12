@@ -3,8 +3,14 @@
 
 # pylint: disable=import-outside-toplevel
 
-import networkx as nx
 
+import sys
+import os
+
+# pylint:disable=import-outside-toplevel
+sys.path.append(os.getcwd())
+
+import networkx as nx
 from nnll_01 import debug_monitor, info_message as nfo
 # from nnll_15.constants import ModeType
 
