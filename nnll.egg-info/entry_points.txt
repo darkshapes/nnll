@@ -1,6 +1,7 @@
 [console_scripts]
-astra = nnll_10.package:main
+astra = nnll_12.__main__:__main__
 nnll-find = nnll_31:main
 nnll-hash = nnll_17:main
 nnll-index = nnll_43:main
 nnll-parse = nnll_36:main
+zodiac = nnll_10.package:__init__
