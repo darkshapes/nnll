@@ -1,6 +1,9 @@
 # #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 # #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+
+
+
 $min-height: 3;
 #  #dedede;
 # #000000;
@@ -12,32 +15,32 @@ $min-height: 3;
  # rgb(28, 26, 26)
 # rgb(31, 0, 65)
 # surfaces
-$negative-space:    $background-darken-3;
-$main-background:   $background;
-$top-surface:       $surface;
-$focus-surface:     $foreground;
+$negative-space: $background-darken-3;
+$main-background: $background;
+$top-surface: $surface;
+$focus-surface: $foreground;
 
 # text
-$sunken-text:      $background-lighten-3;
-$raised-text:      $foreground-darken-3; # $secondary;
-$hover-focus:      $foreground;
+$sunken-text: $background-lighten-3;
+$raised-text: $foreground-darken-3; # $secondary;
+$hover-focus: $foreground;
 
 
 # layout
-$layout-type:         grid;
+$layout-type: grid;
 $centre-frame-margin: 0 1 0 1;
-$vertical-grid:       1 3;
-$horizontal-grid:     3 1;
-$proportions:         0.7fr 4.5fr 0.7fr;
+$vertical-grid: 1 3;
+$horizontal-grid: 3 1;
+$proportions: 0.7fr 4.5fr 0.7fr;
 $vertical-proportions: 0.6fr 5fr 0.55fr;
-$grid-fraction:       1fr;
+$grid-fraction: 1fr;
 $invisible-scrollbar: 0 0;
-$margin-size:         0;
+$margin-size: 0;
 
 # alignment
-$title-align:      left;
-$border-shape:     round;
-$hatch-border:     horizontal;
+$title-align: left;
+$border-shape: round;
+$hatch-border: horizontal;
 $hatch-align: left;
 
 # color
@@ -45,7 +48,10 @@ $message-panel-subtitle: $raised-text;
 $selection-background: $focus-surface;
 
 
-
+#seam {
+    align: left top;
+    content-align-horizontal: left;
+}
 #footer {
     background: $main-background;
 }
@@ -74,7 +80,86 @@ $selection-background: $focus-surface;
 
 }
 
+#selectah {
+    color: $sunken-text;
+    border: vkey $focus-surface;
+    margin-top: -1;
+    margin-left: 60;
+    width: 100%;
+    height: 3;
+    align: right top;
+    content-align: right top;
+    color: $background-lighten-3;
+    scrollbar-size: $invisible-scrollbar;
+    Static#label {
+        width: 1fr;
+        height: auto;
+        color: $sunken-text;
+        background: transparent;
+        &:focus {
+            color: $foreground-darken-1;
+        }
+        &:hover {
+            color: $foreground-darken-1;
+        }
+    }
+    &.-has-value Static#label {
+        color: $background-lighten-3;
+    }
+    &:blur {
+        color: $sunken-text;
+        border: vkey $negative-space 7%;
+    }
+    &:focus {
+        border: vkey $focus-surface;
+    }
+    &:hover {
+        color: $sunken-text;
+        border: vkey $focus-surface;
+    }
+    SelectCurrent {
+        color: $sunken-text;
+        scrollbar-size: 0 0;
+        background:$negative-space 7%;
+        border: round $focus-surface;
+        &:blur {
+            color: $sunken-text;
+            border:none;
+        }
+        &:hover {
+            color: $sunken-text;
+            border:none;
+        }
+        &:focus {
+            color: $sunken-text;
+            border:none;
+        }
+    }
+    SelectOverlay {
+        color: $sunken-text;
+        overlay: screen;
+        scrollbar-size: 0 0;
+        background:$negative-space 7%;
+        border: round $focus-surface;
 
+        &:hover {
+            color: $sunken-text;
+            overflow: hidden;
+            border: round $focus-surface;
+            scrollbar-size: $invisible-scrollbar;
+        }
+        &.active {
+            color: $sunken-text;
+            scrollbar-size: 0 0;
+            background: $negative-space 7%;
+            border: round $focus-surface;
+            overflow: hidden;
+        }
+        &.blur {
+            border: round $focus-surface;
+        }
+    }
+}
 #top-frame, #bottom-frame, #left-frame, #right-frame {
     background: $negative-space;
 }
@@ -117,6 +202,9 @@ SidebarLeft, SidebarRight {
 }
 
 #response_panel {
+    width: 100%;
+    margin: 0 0;
+    height: 100%;
     border: round $main-background;
     hatch: $hatch-align $main-background;
     &:focus-within {
@@ -130,6 +218,12 @@ SidebarLeft, SidebarRight {
 
 #display_bar {
     color: $panel-lighten-1;
+    margin: 0 0;
+    padding: 0 0;
+    height: 1;
+    width: 50%;
+    layer: above;
+    content-align: left top;
     scrollbar-size: $invisible-scrollbar;
     background: $negative-space 7%;
     &:blur {
