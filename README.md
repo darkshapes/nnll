@@ -64,7 +64,7 @@
 Some modules are full scripts and can be run from command line. These are written here:
 
 `zodiac`        - Experimental generative system<br>
-`astra`        - Experimental generative system<br>
+`astra`        - Live diagnostic console<br>
 `nnll-hash`    - Hash the layer metadata from models within a directory and write out to console.<br>
 `nnll-parse`   - Process metadata headers from a model file or directory of models and write out to individual JSON files.<br>
 `nnll-find`    - Search a local directory of model layer files (HuggingFace🤗 index.json, JSON from `nnll-parse`)<br>

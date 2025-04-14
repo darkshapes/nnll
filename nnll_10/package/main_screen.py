@@ -3,8 +3,9 @@
 
 """Auto-Orienting Split screen"""
 
+import os
 from collections import defaultdict
-from typing import Any, Callable
+from typing import Callable  # , Any
 from textual import events, on, work
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -14,11 +15,13 @@ from textual.reactive import reactive
 from textual.screen import Screen
 
 # from textual.widget import Widget
-from textual.widgets import Static, ContentSwitcher
+from textual.widgets import Static, ContentSwitcher, Select  # , DataTable
 
-from nnll_01 import debug_monitor, info_message as nfo, debug_message as dbug
+from nnll_01 import debug_monitor  # , debug_message as dbug  #  info_message as nfo,
 from nnll_10.package.message_panel import MessagePanel
 from nnll_10 import IntentProcessor
+from nnll_10.package.input_tag import InputTag
+from nnll_10.package.output_tag import OutputTag
 
 
 class Fold(Screen[bool]):
@@ -49,25 +52,32 @@ class Fold(Screen[bool]):
         from textual.containers import Horizontal
         from textual.widgets import Footer
         from nnll_10.package.display_bar import DisplayBar
-        from nnll_10.package.input_tag import InputTag
-        from nnll_10.package.output_tag import OutputTag
+
         from nnll_10.package.response_panel import ResponsePanel
         from nnll_10.package.voice_panel import VoicePanel
 
         self.intent_processor = IntentProcessor()
         self.intent_processor.calculate_intent_graph()
-
+        self.ready_tx(io_only=True, mode_in="text", mode_out="text")
         yield Footer(id="footer")
         with Horizontal(id="app-grid", classes="app-grid-horizontal"):
             yield ResponsiveLeftTop(id="left-frame")
-            with Container(id="centre-frame"):
-                with Container(id="responsive_input"):
+            with Container(id="centre-frame"):  # 3:1:3 ratio
+                with Container(id="responsive_input"):  # 3:
                     with ContentSwitcher(id="panel_swap", initial="message_panel"):
                         yield MessagePanel("""""", id="message_panel", max_checkpoints=100)
                         yield VoicePanel(id="voice_panel")
                     yield InputTag(id="input_tag", classes="input_tag")
-                yield DisplayBar(id="display_bar")
-                with Container(id="responsive_display"):
+                with Container(id="seam"):
+                    yield Select(
+                        id="selectah",
+                        classes="selectah_tag",
+                        allow_blank=False,
+                        prompt="Models For Task",
+                        options=[(os.path.basename(x), x) for x in self.intent_processor.model_names],
+                    )
+                    yield DisplayBar(id="display_bar")  # 1:
+                with Container(id="responsive_display"):  #
                     yield ResponsePanel("\n", id="response_panel", language="markdown")
                     yield OutputTag(id="output_tag", classes="output_tag")
             yield ResponsiveRightBottom(id="right-frame")
@@ -83,7 +93,7 @@ class Fold(Screen[bool]):
         self.foldr["rd"] = self.query_one("#responsive_display")
         self.foldr["rp"] = self.query_one("#response_panel")
         self.foldr["vp"] = self.query_one("#voice_panel")
-        self.ready_tx()
+        self.foldr["sl"] = self.query_one("#selectah")
         # id_name = self.input_tag.highlight_link_id
 
     @work(exit_on_error=False)
@@ -136,6 +146,8 @@ class Fold(Screen[bool]):
             event.prevent_default()
             mode_name = self.foldr["it"].emulate_scroll_down()
             self.foldr["ps"].current = self.input_map.get(mode_name)
+        self.ready_tx(io_only=True)
+        self.query_one("#selectah").set_options([(os.path.basename(x), x) for x in self.intent_processor.model_names])
 
     @debug_monitor
     def _on_mouse_scroll_up(self, event: events.MouseScrollUp) -> None:
@@ -150,8 +162,10 @@ class Fold(Screen[bool]):
             event.prevent_default()
             mode_name = self.foldr["it"].emulate_scroll_up()
             self.foldr["ps"].current = self.input_map.get(mode_name)
+        self.ready_tx(io_only=True)
+        self.query_one("#selectah").set_options([(os.path.basename(x), x) for x in self.intent_processor.model_names])
 
-    @work(exclusive=True)
+    # @work(exclusive=True)
     @on(MessagePanel.Changed, "#message_panel")
     async def tx_text_to_tokenizer(self) -> None:
         """Transmit info to token calculation"""
@@ -166,17 +180,16 @@ class Fold(Screen[bool]):
         self.foldr["db"].calculate_audio(duration)
 
     # @work(exclusive=True)
-    def ready_tx(self, mode_io_only: bool = False, mode_in: str = None, mode_out: str = None) -> None:
+    def ready_tx(self, io_only: bool = False, mode_in: str = None, mode_out: str = None) -> None:
         """Retrieve graph"""
         if not mode_in:
-            mode_in = self.foldr["ot"].get_cell_at((int(round(self.foldr["it"].content_cell)), 1))
+            mode_in = self.foldr["it"].get_cell_at((self.foldr["it"].current_row, 1))
         if not mode_out:
-            mode_out = self.foldr["ot"].get_cell_at((int(round(self.foldr["ot"].content_cell)), 1))
-        mode_io = {"mode_in": mode_in, "mode_out": mode_out}
-        if mode_io_only:
-            return mode_io
-        self.intent_processor.derive_coordinates_path(**mode_io)
+            mode_out = self.foldr["ot"].get_cell_at((self.foldr["ot"].current_row, 1))
+        self.intent_processor.derive_coordinates_path(mode_in=mode_in, mode_out=mode_out)
         self.intent_processor.define_model_waypoints()
+        if io_only:
+            return
         message = {
             "text": self.foldr["mp"].text,
             "audio": self.foldr["vp"].audio,

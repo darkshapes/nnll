@@ -21,19 +21,30 @@ from nnll_15.constants import LibType
 #     # ChainOfThought("question -> answer")
 
 
-class LLMInput(BaseModel):
-    """Simple input query fields for chat models including previous contexts"""
-
-    context: str = Field(description="The context for the question")
-    query: str = Field(description="The message to respond to")
-
-
 # class LLMOutput(BaseModel):
 #     """Simple output fields for chat models
 #     Incl. confidence metric"""
 
 #     reply: str = Field(description="The response to the question")
 #     # confidence: float = Field(ge=0.0, le=1.0, description="The confidence score for the reply (absolute certainty is impossible).")  # Alternatively : ""Mean numeric value of conflicting predicates and cognitive dissonance for prediction per word."
+
+
+# dspy.Image.from_file
+# dspy.Image.from_PIL
+
+
+class PictureSignature(dspy.Signature):
+    """Output the dog breed of the dog in the image."""
+
+    image_1: dspy.Image = dspy.InputField(desc="An image of a dog")
+    answer: str = dspy.OutputField(desc="The dog breed of the dog in the image")
+
+
+class LLMInput(BaseModel):
+    """Simple input query fields for chat models including previous contexts"""
+
+    context: str = Field(description="The context for the question")
+    query: str = Field(description="The message to respond to")
 
 
 class BasicQAHistory(dspy.Signature):
@@ -78,7 +89,7 @@ class ChatMachineWithMemory(dspy.Module):
         super().__init__()
         self.memory = []
         self.memory_size = memory_size
-        generator = dspy.asyncify(dspy.Predict(signature))
+        generator = dspy.asyncify(dspy.Predict(signature))  # this should only be used in the case of text
         self.completion = dspy.streamify(generator)
 
     @debug_monitor
@@ -115,3 +126,12 @@ class ChatMachineWithMemory(dspy.Module):
                             yield chunk["choices"][0]["delta"]["content"]
                 except (GeneratorExit, RuntimeError, AttributeError) as error_log:
                     dbug(error_log)  # consider threading user selection between cursor jumps
+
+
+# class DPicture(dspy.Module):
+#     def __init__(self) -> None:
+#         super().__init__()
+#         self.predictor = dspy.ChainOfThought(PictureSignature)
+
+#     def __call__(self, **kwargs):
+#         return self.predictor(**kwargs)
