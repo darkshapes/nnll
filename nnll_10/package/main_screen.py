@@ -205,20 +205,22 @@ class Fold(Screen[bool]):
         }
         return message
 
+    @work(exclusive=True)
     async def walk_intent(self, send=True) -> None:
         """Provided the coordinates in the intent processor, follow the list of in and out methods"""
         if send:
             message = self.ready_tx()
         await self.intent_processor.confirm_available_graph()
+        await self.intent_processor.confirm_coordinates_path()
         coordinates = self.intent_processor.coordinates_path
         if not coordinates:
             coordinates = ["text", "text"]
         hop_length = len(coordinates) - 1
         for i in range(hop_length):
             if i + 1 < hop_length:
+                await self.intent_processor.confirm_coordinates_path()
+                await self.intent_processor.confirm_model_waypoints()
                 if send:
-                    await self.intent_processor.confirm_coordinates_path()
-                    await self.intent_processor.confirm_model_waypoints()
                     message = self.send_tx(message=message, last_hop=False)
                     self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
                 else:
@@ -227,7 +229,7 @@ class Fold(Screen[bool]):
                     self.intent_processor.model_names.extend(old_model_names)
 
             elif send:
-                message = self.send_tx(message=message)
+                self.send_tx(message=message)
 
     @work(exclusive=True)
     async def send_tx(self, message: dict, last_hop=True) -> None:
