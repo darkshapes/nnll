@@ -68,15 +68,16 @@ class Fold(Screen[bool]):
                         yield MessagePanel("""""", id="message_panel", max_checkpoints=100)
                         yield VoicePanel(id="voice_panel")
                     yield InputTag(id="input_tag", classes="input_tag")
-                with Container(id="seam"):
+                with Horizontal(id="seam"):
+                    yield DisplayBar(id="display_bar")  # 1:
                     yield Select(
                         id="selectah",
-                        classes="selectah_tag",
+                        classes="selectah",
                         allow_blank=False,
-                        prompt="Models For Task",
+                        prompt="Model options:",
+                        type_to_search=True,
                         options=[(os.path.basename(x), x) for x in self.intent_processor.model_names],
                     )
-                    yield DisplayBar(id="display_bar")  # 1:
                 with Container(id="responsive_display"):  #
                     yield ResponsePanel("\n", id="response_panel", language="markdown")
                     yield OutputTag(id="output_tag", classes="output_tag")
@@ -111,7 +112,7 @@ class Fold(Screen[bool]):
     async def on_focus(self, event: events.Focus):
         """Textual API event, refresh pathing"""
         if event.control in ["input_tag", "output_tag", "panel_swap"]:
-            self.ready_tx()
+            self.ready_tx(io_only=True)
 
     @work(exclusive=True)
     async def _on_key(self, event: events.Key):
@@ -139,15 +140,18 @@ class Fold(Screen[bool]):
         Trigger scroll at 1/10th intensity when menu has focus
         :param event: Event data for the trigger"""
 
-        if self.foldr["rd"].has_focus_within != self.foldr["rp"].has_focus:
+        scroll_delta = [self.foldr["it"].current_cell, self.foldr["ot"].current_cell]
+        if self.foldr["rd"].has_focus_within != self.foldr["rp"].has_focus and not self.foldr["sl"].has_focus:
             event.prevent_default()
             self.foldr["ot"].emulate_scroll_down()
         elif self.foldr["it"].has_focus:
             event.prevent_default()
             mode_name = self.foldr["it"].emulate_scroll_down()
             self.foldr["ps"].current = self.input_map.get(mode_name)
-        self.ready_tx(io_only=True)
-        self.query_one("#selectah").set_options([(os.path.basename(x), x) for x in self.intent_processor.model_names])
+        if scroll_delta != [self.foldr["it"].current_cell, self.foldr["ot"].current_cell]:
+            self.ready_tx(io_only=True)
+            self.walk_intent(send=False)
+            self.query_one("#selectah").set_options([(os.path.basename(x), x) for x in self.intent_processor.model_names])
 
     @debug_monitor
     def _on_mouse_scroll_up(self, event: events.MouseScrollUp) -> None:
@@ -155,23 +159,26 @@ class Fold(Screen[bool]):
         Trigger scroll at 1/10th intensity when menu has focus
         :param event: Event data for the trigger"""
 
-        if self.foldr["rd"].has_focus_within != self.foldr["rp"].has_focus:
+        scroll_delta = [self.foldr["it"].current_cell, self.foldr["ot"].current_cell]
+        if self.foldr["rd"].has_focus_within != self.foldr["rp"].has_focus and not self.foldr["sl"].has_focus:
             event.prevent_default()
             self.foldr["ot"].emulate_scroll_up()
         elif self.foldr["it"].has_focus:
             event.prevent_default()
             mode_name = self.foldr["it"].emulate_scroll_up()
             self.foldr["ps"].current = self.input_map.get(mode_name)
-        self.ready_tx(io_only=True)
-        self.query_one("#selectah").set_options([(os.path.basename(x), x) for x in self.intent_processor.model_names])
+        if scroll_delta != [self.foldr["it"].current_cell, self.foldr["ot"].current_cell]:
+            self.ready_tx(io_only=True)
+            self.walk_intent(send=False)
+            self.query_one("#selectah").set_options([(os.path.basename(x), x) for x in self.intent_processor.model_names])
 
     # @work(exclusive=True)
     @on(MessagePanel.Changed, "#message_panel")
     async def tx_text_to_tokenizer(self) -> None:
         """Transmit info to token calculation"""
         message = self.foldr["mp"].text
-        next_model = next(iter(self.intent_processor.model_names))
-        self.foldr["db"].calculate_tokens(next_model, message=message)
+        next_model = next(iter(self.intent_processor.registry_entries)).get("entry")
+        self.foldr["db"].calculate_tokens(next_model.model, message=message)
 
     @work(exclusive=True)
     async def tx_audio_to_tokenizer(self) -> None:
@@ -189,7 +196,7 @@ class Fold(Screen[bool]):
         self.intent_processor.derive_coordinates_path(mode_in=mode_in, mode_out=mode_out)
         self.intent_processor.define_model_waypoints()
         if io_only:
-            return
+            return None
         message = {
             "text": self.foldr["mp"].text,
             "audio": self.foldr["vp"].audio,
@@ -198,24 +205,29 @@ class Fold(Screen[bool]):
         }
         return message
 
-    @work(exclusive=True)
-    async def walk_intent(self):
+    async def walk_intent(self, send=True) -> None:
         """Provided the coordinates in the intent processor, follow the list of in and out methods"""
-
-        message = self.ready_tx()
+        if send:
+            message = self.ready_tx()
         await self.intent_processor.confirm_available_graph()
-        await self.intent_processor.confirm_coordinates_path()
         coordinates = self.intent_processor.coordinates_path
+        if not coordinates:
+            coordinates = ["text", "text"]
         hop_length = len(coordinates) - 1
-        self.ready_tx()
         for i in range(hop_length):
-            await self.intent_processor.confirm_coordinates_path()
-            await self.intent_processor.confirm_model_waypoints()
-            if i + 1 == hop_length:
-                self.send_tx(message=message)
-            else:
-                message = self.send_tx(message=message, last_hop=False)
-                self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
+            if i + 1 < hop_length:
+                if send:
+                    await self.intent_processor.confirm_coordinates_path()
+                    await self.intent_processor.confirm_model_waypoints()
+                    message = self.send_tx(message=message, last_hop=False)
+                    self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
+                else:
+                    old_model_names = self.intent_processor.model_names if self.intent_processor.model_names else []
+                    self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2], io_only=True)
+                    self.intent_processor.model_names.extend(old_model_names)
+
+            elif send:
+                message = self.send_tx(message=message)
 
     @work(exclusive=True)
     async def send_tx(self, message: dict, last_hop=True) -> None:
@@ -223,8 +235,7 @@ class Fold(Screen[bool]):
 
         from nnll_11 import ChatMachineWithMemory, BasicQAHistory
 
-        entries = self.intent_processor.registry_entries
-        current_coords = next(iter(entries)).get("entry")
+        current_coords = next(iter(self.intent_processor.registry_entries)).get("entry")
         chat = ChatMachineWithMemory(memory_size=5, signature=BasicQAHistory)
         self.foldr["rp"].insert("\n---\n")
         self.foldr["ot"].add_class("active")

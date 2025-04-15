@@ -20,6 +20,7 @@ class IntentProcessor:
     coordinates_path: dict = None
     registry_entries: dict = None
     model_names: dict = None
+    additional_model_names: dict = None
 
     def __init__(self):
         """
