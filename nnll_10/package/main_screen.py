@@ -17,7 +17,7 @@ from textual.screen import Screen
 # from textual.widget import Widget
 from textual.widgets import Static, ContentSwitcher, Select  # , DataTable
 
-from nnll_01 import debug_monitor, info_message as nfo  # , debug_message as dbug  #
+from nnll_01 import debug_monitor, info_message as nfo, debug_message as dbug
 from nnll_10.package.message_panel import MessagePanel
 from nnll_10 import IntentProcessor
 from nnll_10.package.input_tag import InputTag
@@ -76,8 +76,8 @@ class Fold(Screen[bool]):
                         classes="selectah",
                         allow_blank=False,
                         prompt="Model options:",
+                        options=self.intent_processor.model_names,
                         type_to_search=True,
-                        options=[x for x in self.intent_processor.model_names],
                     )
                 with Container(id="responsive_display"):  #
                     yield ResponsePanel("\n", id="response_panel", language="markdown")
@@ -101,37 +101,51 @@ class Fold(Screen[bool]):
     @work(exit_on_error=False)
     async def on_resize(self, event=events.Resize) -> None:
         """Textual API, scale/orientation screen responsivity"""
-        display = self.query_one("#app-grid")
-        width = event.container_size.width
-        height = event.container_size.height
-        if width / 2 >= height:  # Screen is wide
-            display.set_classes("app-grid-horizontal")
-        elif width / 2 < height:  # Screen is tall
-            display.set_classes("app-grid-vertical")
+        if self.confirm_widgets_ready():
+            display = self.query_one("#app-grid")
+            width = event.container_size.width
+            height = event.container_size.height
+            if width / 2 >= height:  # Screen is wide
+                display.set_classes("app-grid-horizontal")
+            elif width / 2 < height:  # Screen is tall
+                display.set_classes("app-grid-vertical")
 
     @work(exclusive=True)
     async def on_focus(self, event: events.Focus) -> None:
         """Textual API event, refresh pathing"""
-        if event.control in ["input_tag", "output_tag", "panel_swap"]:
-            self.ready_tx()
-
-    @on(Select.Changed)
-    def select_changed(self, event: Select.Changed) -> None:
-        if hasattr(self.ui["sl"], "is_mounted"):
-            self.intent_processor.toggle_weight(selection=os.path.basename(event.control.selection))
+        if event.control in ["input_tag", "output_tag", "panel_swap", "message_panel"]:
             self.ready_tx()
             self.walk_intent()
-            if self.intent_processor.confirm_model_waypoints():
-                self.ui["sl"].set_options([x for x in self.intent_processor.model_names])
 
-    @work(exclusive=True)
-    @on(events.Click, "#selectah")
-    async def on_click(self) -> None:
-        """Expand panel immediately when clicked in terminal"""
-        if not self.ui["sl"].expanded:
-            self.ui["sl"].expanded = True
-        else:
-            self.ui["sl"].expanded = False
+    @debug_monitor
+    def confirm_widgets_ready(self):
+        try:
+            assert hasattr(self.ui["sl"], "is_mounted")
+        except AssertionError as error_log:
+            dbug(error_log)
+            return False
+        return True
+
+    @work(exclusive=True, group="on_change")
+    @on(Select.Changed)
+    async def select_changed(self, event: Select.Changed) -> None:
+        if self.confirm_widgets_ready() and self.ui["sl"].has_focus:
+            await self.intent_processor.toggle_weight(selection=os.path.basename(event.control.selection))
+            self.ready_tx()
+            if self.intent_processor.confirm_available_graph() and self.intent_processor.confirm_coordinates_path():
+                self.walk_intent()
+                if await self.intent_processor.confirm_model_waypoints():
+                    self.ui["sl"].set_options(self.intent_processor.model_names)
+
+    # # @work(exclusive=True)
+    # @on(events.Click, "#selectah")
+    # async def on_click(self) -> None:
+    #     """Expand panel immediately when clicked in terminal"""
+    #     if self.confirm_widgets_ready():
+    #         if not self.ui["sl"].expanded:
+    #             self.ui["sl"].expanded = True
+    #         else:
+    #             self.ui["sl"].expanded = False
 
     @work(exclusive=True)
     async def _on_key(self, event: events.Key) -> None:
@@ -139,7 +153,8 @@ class Fold(Screen[bool]):
         if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
             event.prevent_default()
             self.ready_tx(io_only=False)
-            self.walk_intent(send=True)
+            if self.intent_processor.confirm_available_graph() and self.intent_processor.confirm_coordinates_path():
+                self.walk_intent(send=True)
         elif event.key == "escape" and "active" in self.ui["ot"].classes:
             self.cancel_generation()
         elif (hasattr(event, "character") and event.character == "\r") or event.key == "enter":
@@ -171,7 +186,6 @@ class Fold(Screen[bool]):
         if scroll_delta != [self.ui["it"].current_cell, self.ui["ot"].current_cell]:
             self.ready_tx()
             self.walk_intent()
-            self.query_one("#selectah").set_options([x for x in self.intent_processor.model_names])
 
     @debug_monitor
     def _on_mouse_scroll_up(self, event: events.MouseScrollUp) -> None:
@@ -190,7 +204,6 @@ class Fold(Screen[bool]):
         if scroll_delta != [self.ui["it"].current_cell, self.ui["ot"].current_cell]:
             self.ready_tx()
             self.walk_intent()
-            self.query_one("#selectah").set_options([x for x in self.intent_processor.model_names])
 
     # @work(exclusive=True)
     @on(MessagePanel.Changed, "#message_panel")
@@ -214,40 +227,37 @@ class Fold(Screen[bool]):
         if not mode_out:
             mode_out = self.ui["ot"].get_cell_at((self.ui["ot"].current_row, 1))
         self.intent_processor.derive_coordinates_path(mode_in=mode_in, mode_out=mode_out)
-        if io_only:
-            return None
-        self.media_pkg = {
-            "text": self.ui["mp"].text,
-            "audio": self.ui["vp"].audio,
-            # "attachment": self.message_panel.file # drag and drop from external window
-            # "image": self.image_panel.image #  active video feed / screenshot / import file
-        }
+        self.intent_processor.define_model_waypoints()
+        if not io_only:
+            self.media_pkg = {
+                "text": self.ui["mp"].text,
+                "audio": self.ui["vp"].audio,
+                # "attachment": self.message_panel.file # drag and drop from external window
+                # "image": self.image_panel.image #  active video feed / screenshot / import file
+            }
 
-    @work(exclusive=True)
-    async def walk_intent(self, send=False) -> None:
+    # @work(exclusive=True)
+    def walk_intent(self, send=False) -> None:
         """Provided the coordinates in the intent processor, follow the list of in and out methods"""
-        if send:
-            self.ready_tx(io_only=False)
-        await self.intent_processor.confirm_available_graph()
-        await self.intent_processor.confirm_coordinates_path()
         coordinates = self.intent_processor.coordinates_path
         if not coordinates:
             coordinates = ["text", "text"]
         hop_length = len(coordinates) - 1
         for i in range(hop_length):
-            if i + 1 < hop_length:
-                await self.intent_processor.confirm_coordinates_path()
-                await self.intent_processor.confirm_model_waypoints()
-                if send:
-                    self.media_pkg = self.send_tx(last_hop=False)
-                    self.ready_tx(io_only=False, mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
-                else:
-                    old_model_names = self.intent_processor.model_names if self.intent_processor.model_names else []
-                    self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
-                    self.intent_processor.model_names.extend(old_model_names)
+            if self.intent_processor.confirm_coordinates_path() and self.intent_processor.confirm_model_waypoints():
+                if i + 1 < hop_length:
+                    if send:
+                        self.media_pkg = self.send_tx(last_hop=False)
+                        self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
+                    else:
+                        old_model_names = self.intent_processor.model_names if self.intent_processor.model_names else []
+                        # nfo(old_model_names, "walk_intent")
+                        self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
+                        self.intent_processor.model_names.extend(old_model_names)
+                        # nfo(self.intent_processor.model_names)
 
-            elif send:
-                self.send_tx()
+                elif send:
+                    self.send_tx()
 
     @work(exclusive=True)
     async def send_tx(self, last_hop=True) -> None:
@@ -260,6 +270,7 @@ class Fold(Screen[bool]):
         self.ui["rp"].insert("\n---\n")
         self.ui["ot"].add_class("active")
         if last_hop:
+            nfo(current_coords)
             async for chunk in chat.forward(media_pkg=self.media_pkg, model=current_coords.model, library=current_coords.library, max_workers=8):
                 if chunk is not None:
                     self.ui["rp"].insert(chunk)

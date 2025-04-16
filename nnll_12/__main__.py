@@ -135,7 +135,7 @@ class ButtonsApp(App[str]):
             results_panel.write(self.gen_type)
 
         if start_type is not None and end_type is not None:
-            self.intent_processor.derive_coordinates_path(mode_in=start_type, mode_out=end_type, define=False)
+            self.intent_processor.derive_coordinates_path(mode_in=start_type, mode_out=end_type)
             results_panel.write(self.intent_processor.coordinates_path)
             self.intent_processor.define_model_waypoints()
             self.tokenizer = next(iter(self.intent_processor.model_names))

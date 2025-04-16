@@ -6,14 +6,13 @@
 
 import sys
 import os
-from typing import Callable
 
 
 # pylint:disable=import-outside-toplevel
 sys.path.append(os.getcwd())
 
 import networkx as nx
-from nnll_01 import debug_monitor, info_message as nfo
+from nnll_01 import debug_monitor, info_message as nfo, debug_message as dbug
 
 # from nnll_15.constants import ModeType
 from nnll_15 import RegistryEntry
@@ -40,22 +39,34 @@ class IntentProcessor:
         return self.intent_graph
 
     @debug_monitor
-    async def confirm_available_graph(self) -> None:
-        if not self.intent_graph:
-            raise ValueError("Intent graph not calculated.")
+    def confirm_available_graph(self) -> None:
+        try:
+            assert self.intent_graph is not None
+        except AssertionError as error_log:
+            dbug(error_log)
+            return False
+        return True
 
     @debug_monitor
-    async def confirm_coordinates_path(self) -> None:
-        if not self.coordinates_path:
-            raise ValueError("Coordinates not plotted.")
+    def confirm_coordinates_path(self) -> None:
+        try:
+            assert self.coordinates_path is not None
+        except AssertionError as error_log:
+            dbug(error_log)
+            return False
+        return True
 
     @debug_monitor
     async def confirm_model_waypoints(self) -> None:
-        if not self.registry_entries:
-            raise ValueError("Registry not populated.")
+        try:
+            assert self.registry_entries is not None
+        except AssertionError as error_log:
+            dbug(error_log)
+            return False
+        return True
 
     @debug_monitor
-    def derive_coordinates_path(self, mode_in: str, mode_out: str, define=True) -> None:
+    def derive_coordinates_path(self, mode_in: str, mode_out: str) -> None:
         """
         Derive the coordinates path based on traced objectives.
         :param prompt_type: If provided, will use this. Otherwise, resolves from content.
@@ -64,8 +75,6 @@ class IntentProcessor:
 
         self.confirm_available_graph()
         self.coordinates_path = trace_objective(self.intent_graph, mode_in=mode_in, mode_out=mode_out)
-        if define:
-            self.define_model_waypoints()
 
     @debug_monitor
     def define_model_waypoints(self) -> None:
@@ -74,33 +83,37 @@ class IntentProcessor:
         self.confirm_available_graph()
         self.confirm_coordinates_path()
         self.registry_entries = pull_path_entries(self.intent_graph, self.coordinates_path)
-        self.registry_entries = sorted(self.registry_entries, key=lambda x: x["weight"])
         self.model_names = []
-        temp_model_names = []
-        for entry in self.registry_entries:
-            model_name = entry["entry"].model
-            if int(entry.get("weight")) == 0:
-                self.model_names.append((f"*{os.path.basename(model_name)}", model_name))
+        self.registry_entries = sorted(self.registry_entries, key=lambda x: x["weight"])
+        nfo([x["weight"] for x in self.registry_entries])
+        for registry in self.registry_entries:
+            model_name = registry["entry"].model
+            if int(registry.get("weight")) == 0:
+                self.model_names.insert(0, (f"*{os.path.basename(model_name)}", model_name))
             else:
-                temp_model_names.append((os.path.basename(model_name), model_name))
-        self.model_names.extend(temp_model_names)
-        nfo(vars(self), dir(self))
+                self.model_names.append((os.path.basename(model_name), model_name))
 
     @debug_monitor
-    def toggle_weight(self, selection: str, base_weight=1.0, index_num=0) -> None:
+    async def toggle_weight(self, selection: str, base_weight=1.0, index_num=0) -> None:
         """Determine entry edge, determine index, then adjust weight"""
         entry = [reg_entry for reg_entry in self.intent_graph.edges(data=True) if selection in reg_entry[2].get("entry").model]
-        atlas = self.intent_graph[entry[0][0]][entry[0][1]]
-        for num in atlas:
-            if selection in atlas[num].get("entry").model:
+        edge_data = self.intent_graph[entry[0][0]][entry[0][1]]
+        nfo("entry :", entry, "edge_data :", edge_data)
+        for num in edge_data:
+            if selection in edge_data[num].get("entry").model:
                 index_num = num
-                base_weight = atlas[index_num].get("weight")
-        if int(base_weight) == 0:
-            self.intent_graph[entry[0][0]][entry[0][1]][index_num]["weight"] = base_weight + 0.1
-        else:
-            self.intent_graph[entry[0][0]][entry[0][1]][index_num]["weight"] = base_weight - 0.1
+                base_weight = entry[0][2].get("weight")
+                # model_name = entry[0][2].get("entry").model
+                if int(base_weight) == 0:
+                    self.intent_graph[entry[0][0]][entry[0][1]][index_num]["weight"] = base_weight + 0.1
+                else:
+                    self.intent_graph[entry[0][0]][entry[0][1]][index_num]["weight"] = base_weight - 0.1
+                    # index_name = (os.path.basename(model_name), model_name)
+                    # self.model_names.insert(self.model_names.index(index_name), (f"*{os.path.basename(model_name)}", model_name))
+        nfo("Weight changed for: ", entry[0][2].get("entry").model, f"model # {index_num}")
+        dbug("Confirm :", self.intent_graph[entry[0][0]][entry[0][1]])
 
-            # [reg_id[2] for reg_id in self.intent_graph.edges(data=True) if selection in reg_id[2].get("entry").model]
+        # [reg_id[2] for reg_id in self.intent_graph.edges(data=True) if selection in reg_id[2].get("entry").model]
         # right = left - weight_value
         # if weight_value
         #     pass
