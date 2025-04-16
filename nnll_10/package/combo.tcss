@@ -45,7 +45,8 @@ $hatch-align: left;
 
 # color
 $message-panel-subtitle: $raised-text;
-$selection-background: $focus-surface;
+$selection-bg: $foreground;
+$selection-fg: $background;
 
 
 
@@ -91,17 +92,18 @@ $selection-background: $focus-surface;
     height: 2;
     margin: 0 1;
     padding: -1 0;
-    overflow-y: hidden;
-    overflow-x: hidden;
+    overflow: hidden;
     text-align: end;
     # align: right top;
     width: 100%;
     layer: above;
+    text-wrap:nowrap;
     Static#label {
         min-width: 10;
         &:blur {
             color: $sunken-text;
             text-align: end;
+
         }
         &:focus {
             border: none;
@@ -110,24 +112,20 @@ $selection-background: $focus-surface;
         &:hover {
             color: $foreground-darken-1;
         }
+        &.-selected {
+            background: $selection-bg;
+        }
     }
     SelectCurrent {
         background:$negative-space 7%;
+        color: $sunken-text;
         border:none;
-        &:blur {
-
-            color: $sunken-text;
-            border:none;
-
-        }
+        overflow: hidden;
         &:hover {
             color: $raised-text;
         }
         .arrow {
             color: $sunken-text;
-            &:blur {
-                color: $sunken-text;
-            }
             &:hover {
                 color: $raised-text;
             }
@@ -137,24 +135,35 @@ $selection-background: $focus-surface;
         text-align: end;
         content-align: right top;
         background:$negative-space 7%;
-        &:focus {
-            text-align: right;
-            content-align: right top;
-            align: right top;
+        text-wrap: nowrap;
+        &.-selected {
+            background: $selection-bg;
         }
     }
     SelectOverlay {
+
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-align: end;
         color: $sunken-text;
         overlay: screen;
         scrollbar-size: 0 0;
         background: $negative-space 7%;
         border: vkey $background-lighten-3;
-        &:focus {
-            text-align: right;
-            content-align: right middle;
-            align: right top;
+        &.-selected {
+            background: $selection-bg;
+        }
+        & > .option-list--option-selected {
+
+                background: $selection-bg;
+                color: $selection-fg;
+        }
+        & > .option-list--option {
+            text-wrap:nowrap;
+            overflow: hidden;
         }
         & > .option-list--option-highlighted {
+            overflow: hidden;
             background: $accent 75%;
             text-style: none;
         }
@@ -187,7 +196,8 @@ SidebarLeft, SidebarRight {
     border-subtitle-color: $background-lighten-3;
     scrollbar-size: $invisible-scrollbar;
     .text-area--selection {
-        background: $selection-background;
+        background: $selection-bg;
+        color: $selection-fg;
     }
     &:hover {
         border-subtitle-color: $foreground-darken-1;

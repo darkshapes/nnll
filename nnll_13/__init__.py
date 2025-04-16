@@ -73,15 +73,3 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
         sample_len = float(len(self.audio) / self.sample_freq)
         self.sample_len = sample_len
         self.refresh()
-
-    # from textual_plot import PlotWidget, HiResMode
-    # to use PlotWidget
-    # self.clear()
-    # self.set_xticks([])
-    # self.set_yticks([])
-    # self.set_xlabel("")
-    # self.set_ylabel("")
-    # self.set_styles("background: #333333;")
-    # self.scatter([i for i in range(0, len(self.audio))], self.audio[:, 0], hires_mode=HiResMode.BRAILLE, marker_style="purple")
-
-    # self.clear()

@@ -15,22 +15,20 @@ from textual.containers import Horizontal, Vertical, VerticalGroup, VerticalScro
 from textual.reactive import reactive
 from textual.widgets import Button, Label, ListItem, ListView, RichLog, Static
 
-from nnll_01 import debug_message as dbug
+from nnll_01 import debug_message as dbug, info_message as nfo
 from nnll_01 import debug_monitor
-from nnll_05 import pull_path_entries
 from nnll_10 import IntentProcessor
 from nnll_10.package.response_panel import ResponsePanel
 from nnll_10.package.token_counters import tk_count
 from nnll_13 import VoicePanel
-from nnll_14 import calculate_graph, trace_objective
-from nnll_15.constants import GenTypeC, GenTypeCText, LibType
+from nnll_15.constants import GenTypeC, GenTypeCText
 from nnll_19 import MessagePanel
 
 # from nnll_20 import ResponsePanel
 
 
 class ButtonsApp(App[str]):
-    nx_graph: nx.Graph = None
+    intent_processor: nx.Graph = None
     hover_name: reactive[str] = reactive("")
     start_id: reactive[str] = reactive(None)
     end_id: reactive[str] = reactive(None)
@@ -86,22 +84,22 @@ class ButtonsApp(App[str]):
         build_button = self.query_one("#build")
         if self.hover_name == "build":
             # event.stop()
-            self.nx_graph = IntentProcessor()
-            self.nx_graph.calculate_intent_graph()
-            results_panel.write(f"Created {self.nx_graph}")
+            self.intent_processor = IntentProcessor()
+            self.intent_processor.calculate_intent_graph()
+            results_panel.write(f"Created {self.intent_processor}")
             start_points = self.query_one("#start_points")
             end_points = self.query_one("#end_points")
 
-            if not self.nx_graph:
+            if not self.intent_processor:
                 results_panel.write("Missing step: Build graph")
                 build_button.variant = "warning"
             elif not start_points.children and not end_points.children:
-                available_conversions = {edge[1] for edge in self.nx_graph.intent_graph.edges}
+                available_conversions = {edge[1] for edge in self.intent_processor.intent_graph.edges}
                 start_points.extend([ListItem(Label(f"{edge}"), id=f"{edge}") for edge in available_conversions])
-                available_conversions = {edge[0] for edge in self.nx_graph.intent_graph.edges}
+                available_conversions = {edge[0] for edge in self.intent_processor.intent_graph.edges}
                 end_points.extend([ListItem(Label(f"{edge}"), id=f"{edge}") for edge in available_conversions])
                 build_button.variant = "success"
-                results_panel.write(f"Attributes added to {self.nx_graph}")
+                results_panel.write(f"Attributes added to {self.intent_processor}")
             else:
                 build_button.variant = "warning"
                 results_panel.write("Attributes already added to graph")
@@ -137,12 +135,15 @@ class ButtonsApp(App[str]):
             results_panel.write(self.gen_type)
 
         if start_type is not None and end_type is not None:
-            self.nx_graph.derive_coordinates_path(mode_in=start_type, mode_out=end_type)
-            results_panel.write(self.nx_graph.coordinates_path)
-            self.nx_graph.define_model_waypoints()
-            self.tokenizer = next(iter(self.nx_graph.model_names))
+            self.intent_processor.derive_coordinates_path(mode_in=start_type, mode_out=end_type, define=False)
+            results_panel.write(self.intent_processor.coordinates_path)
+            self.intent_processor.define_model_waypoints()
+            self.tokenizer = next(iter(self.intent_processor.model_names))
+            nfo(self.intent_processor.intent_graph.nodes(data=True))
+            nfo([*self.intent_processor.intent_graph.edges(data=True)])
+
             self.query_one("#response_panel").insert(f"{str(self.tokenizer)}\n")
-            results_panel.write([x["entry"].model for x in list(self.nx_graph.registry_entries)])
+            results_panel.write([x["entry"].model for x in list(self.intent_processor.registry_entries)])
             convert_type = self.query_one("#convert_type")
             all_fields = GenTypeCText.model_fields | GenTypeC.model_fields
             convert_type.remove_children(ListItem)

@@ -21,7 +21,7 @@ class Carousel(DataTable):
     current_cell = "text"
     current_row = 0
     y_coord = 1
-    scroll_counter = 5
+    scroll_counter = 10
 
     def on_mount(self) -> None:
         self.show_header = False
