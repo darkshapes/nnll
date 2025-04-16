@@ -45,13 +45,11 @@ $hatch-align: left;
 
 # color
 $message-panel-subtitle: $raised-text;
-$selection-background: $focus-surface;
+$selection-bg: $foreground;
+$selection-fg: $background;
 
 
-#seam {
-    align: left top;
-    content-align-horizontal: left;
-}
+
 #footer {
     background: $main-background;
 }
@@ -79,84 +77,95 @@ $selection-background: $focus-surface;
     keyline: none;
 
 }
-
+#seam {
+    layout: grid;
+    grid-size: 2 1;
+    grid-columns: 60fr 60fr;
+    keyline: none;
+    border: none;
+    background:$negative-space 7%;
+    height: 1;
+}
 #selectah {
     color: $sunken-text;
-    border: vkey $focus-surface;
-    margin-top: -1;
-    margin-left: 60;
+    border: vkey $negative-space 7%;
+    height: 2;
+    margin: 0 1;
+    padding: -1 0;
+    overflow: hidden;
+    text-align: end;
+    # align: right top;
     width: 100%;
-    height: 3;
-    align: right top;
-    content-align: right top;
-    color: $background-lighten-3;
-    scrollbar-size: $invisible-scrollbar;
+    layer: above;
+    text-wrap:nowrap;
     Static#label {
-        width: 1fr;
-        height: auto;
-        color: $sunken-text;
-        background: transparent;
-        &:focus {
-            color: $foreground-darken-1;
-        }
-        &:hover {
-            color: $foreground-darken-1;
-        }
-    }
-    &.-has-value Static#label {
-        color: $background-lighten-3;
-    }
-    &:blur {
-        color: $sunken-text;
-        border: vkey $negative-space 7%;
-    }
-    &:focus {
-        border: vkey $focus-surface;
-    }
-    &:hover {
-        color: $sunken-text;
-        border: vkey $focus-surface;
-    }
-    SelectCurrent {
-        color: $sunken-text;
-        scrollbar-size: 0 0;
-        background:$negative-space 7%;
-        border: round $focus-surface;
+        min-width: 10;
         &:blur {
             color: $sunken-text;
-            border:none;
-        }
-        &:hover {
-            color: $sunken-text;
-            border:none;
+            text-align: end;
+
         }
         &:focus {
+            border: none;
+            color: $foreground-darken-1;
+        }
+        &:hover {
+            color: $foreground-darken-1;
+        }
+        &.-selected {
+            background: $selection-bg;
+        }
+    }
+    SelectCurrent {
+        background:$negative-space 7%;
+        color: $sunken-text;
+        border:none;
+        overflow: hidden;
+        &:hover {
+            color: $raised-text;
+        }
+        .arrow {
             color: $sunken-text;
-            border:none;
+            &:hover {
+                color: $raised-text;
+            }
+        }
+    }
+    &.-expanded {
+        text-align: end;
+        content-align: right top;
+        background:$negative-space 7%;
+        text-wrap: nowrap;
+        &.-selected {
+            background: $selection-bg;
         }
     }
     SelectOverlay {
+
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-align: end;
         color: $sunken-text;
         overlay: screen;
         scrollbar-size: 0 0;
-        background:$negative-space 7%;
-        border: round $focus-surface;
+        background: $negative-space 7%;
+        border: vkey $background-lighten-3;
+        &.-selected {
+            background: $selection-bg;
+        }
+        & > .option-list--option-selected {
 
-        &:hover {
-            color: $sunken-text;
-            overflow: hidden;
-            border: round $focus-surface;
-            scrollbar-size: $invisible-scrollbar;
+                background: $selection-bg;
+                color: $selection-fg;
         }
-        &.active {
-            color: $sunken-text;
-            scrollbar-size: 0 0;
-            background: $negative-space 7%;
-            border: round $focus-surface;
+        & > .option-list--option {
+            text-wrap:nowrap;
             overflow: hidden;
         }
-        &.blur {
-            border: round $focus-surface;
+        & > .option-list--option-highlighted {
+            overflow: hidden;
+            background: $accent 75%;
+            text-style: none;
         }
     }
 }
@@ -187,7 +196,8 @@ SidebarLeft, SidebarRight {
     border-subtitle-color: $background-lighten-3;
     scrollbar-size: $invisible-scrollbar;
     .text-area--selection {
-        background: $selection-background;
+        background: $selection-bg;
+        color: $selection-fg;
     }
     &:hover {
         border-subtitle-color: $foreground-darken-1;
@@ -221,11 +231,15 @@ SidebarLeft, SidebarRight {
     margin: 0 0;
     padding: 0 0;
     height: 1;
-    width: 50%;
-    layer: above;
+    min-width: 10;
     content-align: left top;
+    align: left top;
+    text-align: start;
+    width: 100%;
+    layer: above;
+    overflow: hidden;
     scrollbar-size: $invisible-scrollbar;
-    background: $negative-space 7%;
+    background:  $negative-space 7%;
     &:blur {
         color: $panel-lighten-1;
     }
@@ -264,6 +278,7 @@ SidebarLeft, SidebarRight {
     &:focus {
         .datatable--cursor {
             color: $foreground;
+            text-style: none;
             background: $top-surface;
         }
     }

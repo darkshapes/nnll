@@ -8,31 +8,6 @@ from nnll_01 import debug_monitor, debug_message as dbug  # , info_message as nf
 from nnll_15.constants import LibType
 
 
-# class BasicQA(dspy.Signature):
-#     """Answer questions with short factoid answers."""
-
-#     question = dspy.InputField()
-#     answer = dspy.OutputField()
-
-
-# class ChainOfThought(dspy.Signature):
-#     question = dspy.InputField()
-#     answer = dspy.OutputField(desc="often between 30 and 50 words")
-#     # ChainOfThought("question -> answer")
-
-
-# class LLMOutput(BaseModel):
-#     """Simple output fields for chat models
-#     Incl. confidence metric"""
-
-#     reply: str = Field(description="The response to the question")
-#     # confidence: float = Field(ge=0.0, le=1.0, description="The confidence score for the reply (absolute certainty is impossible).")  # Alternatively : ""Mean numeric value of conflicting predicates and cognitive dissonance for prediction per word."
-
-
-# dspy.Image.from_file
-# dspy.Image.from_PIL
-
-
 class PictureSignature(dspy.Signature):
     """Output the dog breed of the dog in the image."""
 
@@ -93,7 +68,7 @@ class ChatMachineWithMemory(dspy.Module):
         self.completion = dspy.streamify(generator)
 
     @debug_monitor
-    async def forward(self, message: str, model: str, library: LibType, max_workers=4):
+    async def forward(self, media_pkg: str, model: str, library: LibType, max_workers=4):
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration
@@ -112,11 +87,11 @@ class ChatMachineWithMemory(dspy.Module):
             model = dspy.LM(**api_kwargs)
             dspy.settings.configure(lm=model, async_max_workers=max_workers)
             combined_context = " ".join(self.memory)
-            message = message["text"]
-            self.memory.append(message)
+            text = media_pkg["text"]
+            self.memory.append(media_pkg)
             if len(self.memory) == self.memory_size:
                 self.memory.pop(0)
-            async for chunk in self.completion(message={"context": combined_context, "query": message}, stream=True):
+            async for chunk in self.completion(message={"context": combined_context, "query": text}, stream=True):
                 try:
                     if chunk is not None:
                         if isinstance(chunk, dspy.Prediction):
@@ -126,12 +101,3 @@ class ChatMachineWithMemory(dspy.Module):
                             yield chunk["choices"][0]["delta"]["content"]
                 except (GeneratorExit, RuntimeError, AttributeError) as error_log:
                     dbug(error_log)  # consider threading user selection between cursor jumps
-
-
-# class DPicture(dspy.Module):
-#     def __init__(self) -> None:
-#         super().__init__()
-#         self.predictor = dspy.ChainOfThought(PictureSignature)
-
-#     def __call__(self, **kwargs):
-#         return self.predictor(**kwargs)

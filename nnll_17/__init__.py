@@ -85,10 +85,6 @@ def compare_hash_values(hash_values: dict, data: dict):
     return model_id
 
 
-# put matching keys into index folder
-# tqdm it
-
-
 def main():
     """Parse arguments to feed to dict header reader"""
     import argparse

@@ -71,7 +71,13 @@ class RegistryEntry(BaseModel):
                 return
             model_data: ListResponse = ollama_list()
             for model in model_data.models:  # pylint:disable=no-member
-                entry = cls(model=f"ollama_chat/{model.model}", size=model.size.real, tags=[model.details.family], library=LibType.OLLAMA, timestamp=int(model.modified_at.timestamp()))
+                entry = cls(
+                    model=f"ollama_chat/{model.model}",
+                    size=model.size.real,
+                    tags=[model.details.family],
+                    library=LibType.OLLAMA,
+                    timestamp=int(model.modified_at.timestamp()),
+                )
                 entries.append(entry)
 
         if LibType.HUB:
@@ -97,7 +103,7 @@ class RegistryEntry(BaseModel):
                     tags = ["unknown"]
                 entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
                 entries.append(entry)
-        if LibType.LM_STUDIO:
+        if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
             try:
                 from lmstudio import get_default_client, list_downloaded_models  # type: ignore
 
@@ -107,7 +113,7 @@ class RegistryEntry(BaseModel):
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
 
-        if LibType.VLLM:
+        if LibType.VLLM:  # placeholder
             try:
                 import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
             except (ModuleNotFoundError, ImportError) as error_log:
