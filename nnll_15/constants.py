@@ -15,7 +15,7 @@ from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
-API_NAMES: list = ["ollama", "huggingface_hub", "lmstudio", "vllm"]
+API_NAMES: list = ["ollama", "huggingface_hub", "lmstudio", "vllm", "llamafile"]
 
 
 @debug_monitor
@@ -43,6 +43,7 @@ class LibType(Enum):
     HUB: int = (1, API_NAMES[1] in sys_modules)
     VLLM: int = (2, API_NAMES[2] in sys_modules)
     LM_STUDIO: int = (3, API_NAMES[3] in sys_modules)
+    LLAMAFILE: int = (4, API_NAMES[4] in sys_modules)
     # CORTEX : Identical to OpenAI, http://localhost:39281
     # LLAMAFILE  : "http://localhost:8080/v1  api_key = "sk-no-key-required"
 

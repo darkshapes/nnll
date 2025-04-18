@@ -20,9 +20,9 @@ from nnll_15 import RegistryEntry
 
 class IntentProcessor:
     intent_graph: nx.Graph = None
-    coordinates_path: list[str] = None
-    registry_entries: list[dict[RegistryEntry]] = None
-    model_names: list[tuple[str]] = None
+    coord_path: list[str] = None
+    ckpts: list[dict[RegistryEntry]] = None
+    models: list[tuple[str]] = None
     # additional_model_names: dict = None
 
     def __init__(self):
@@ -31,15 +31,26 @@ class IntentProcessor:
         """
 
     @debug_monitor
-    def calculate_intent_graph(self) -> None:
-        """Generate and store the intent graph."""
-        from nnll_14 import calculate_graph
+    def calc_graph(self) -> None:
+        """Generate graph of coordinate pairs from valid conversions\n
+        Model libraries are auto-detected from cache loading\n
+        :param nx_graph: Preassembled graph of models to label
+        :return: Graph modeling all current ML/AI tasks appended with model data"""
+        from nnll_15 import VALID_CONVERSIONS, from_cache
 
-        self.intent_graph = calculate_graph()
+        self.intent_graph = nx.MultiDiGraph()
+        self.intent_graph.add_nodes_from(VALID_CONVERSIONS)
+        registry_entries = from_cache()
+        if registry_entries:
+            for model in registry_entries:
+                self.intent_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)
+        else:
+            nfo("Registry error, graph attributes not applied")
         return self.intent_graph
 
     @debug_monitor
-    def confirm_available_graph(self) -> None:
+    def has_graph(self) -> None:
+        """Verify the graph has been created"""
         try:
             assert self.intent_graph is not None
         except AssertionError as error_log:
@@ -48,108 +59,127 @@ class IntentProcessor:
         return True
 
     @debug_monitor
-    def confirm_coordinates_path(self) -> None:
+    def has_path(self) -> None:
+        """Verify the path has been created"""
         try:
-            assert self.coordinates_path is not None
+            assert self.coord_path is not None
         except AssertionError as error_log:
             dbug(error_log)
             return False
         return True
 
     @debug_monitor
-    async def confirm_model_waypoints(self) -> None:
+    def has_ckpt(self) -> None:
+        """Verify the model checkpoints are known"""
         try:
-            assert self.registry_entries is not None
+            assert self.ckpts is not None
         except AssertionError as error_log:
             dbug(error_log)
             return False
         return True
 
     @debug_monitor
-    def derive_coordinates_path(self, mode_in: str, mode_out: str) -> None:
+    def set_path(self, mode_in: str, mode_out: str) -> None:
         """
-        Derive the coordinates path based on traced objectives.
-        :param prompt_type: If provided, will use this. Otherwise, resolves from content.
+        Find a valid path from current state (mode_in) to designated state (mode_out)\n
+        :param mode_in: Input prompt type or starting state/states
+        :param mode_out: The user-selected ending-state
+        :return: An iterator for the edges forming a way towards the mode out, or Note
         """
-        from nnll_14 import trace_objective
 
-        self.confirm_available_graph()
-        self.coordinates_path = trace_objective(self.intent_graph, mode_in=mode_in, mode_out=mode_out)
+        self.has_graph()
+        if nx.has_path(self.intent_graph, mode_in, mode_out):  # Ensure path exists (otherwise 'bidirectional' may loop infinitely)
+            if mode_in == mode_out and mode_in != "text":
+                orig_mode_out = mode_out  # Solve case of non-text self-loop edge being incomplete transformation
+                mode_out = "text"
+                self.coord_path = nx.bidirectional_shortest_path(self.intent_graph, mode_in, mode_out)
+                self.coord_path.append(orig_mode_out)
+            else:
+                self.coord_path = nx.bidirectional_shortest_path(self.intent_graph, mode_in, mode_out)
+                if len(self.coord_path) == 1:
+                    self.coord_path.append(mode_out)  # this behaviour likely to change in future
 
     @debug_monitor
-    def define_model_waypoints(self) -> None:
+    def set_ckpts(self) -> None:
         from nnll_05 import pull_path_entries
 
-        self.confirm_available_graph()
-        self.confirm_coordinates_path()
-        self.registry_entries = pull_path_entries(self.intent_graph, self.coordinates_path)
-        self.model_names = []
-        self.registry_entries = sorted(self.registry_entries, key=lambda x: x["weight"])
-        nfo([x["weight"] for x in self.registry_entries])
-        for registry in self.registry_entries:
-            model_name = registry["entry"].model
-            if int(registry.get("weight")) == 0:
-                self.model_names.insert(0, (f"*{os.path.basename(model_name)}", model_name))
+        self.has_graph()
+        self.has_path()
+        self.ckpts = pull_path_entries(self.intent_graph, self.coord_path)
+        self.models = []
+        nfo(self.ckpts)
+        self.ckpts = sorted(self.ckpts, key=lambda x: x["weight"])
+        nfo([x["weight"] for x in self.ckpts])
+        for registry in self.ckpts:
+            model = registry["entry"].model
+            weight = registry.get("weight")
+            if weight != 1.0:
+                self.models.insert(0, (f"*{os.path.basename(model)}", model))
+                nfo("adjusted model :", f"*{os.path.basename(model)}", weight)
             else:
-                self.model_names.append((os.path.basename(model_name), model_name))
+                self.models.append((os.path.basename(model), model))
+                # nfo("model : ", model, weight)
+        self.models = sorted(self.models, key=lambda x: "*" in x)
 
     @debug_monitor
-    async def toggle_weight(self, selection: str, base_weight=1.0, index_num=0) -> None:
+    def edit_weight(self, selection: str, mode_in: str, mode_out: str) -> None:
         """Determine entry edge, determine index, then adjust weight"""
-        entry = [reg_entry for reg_entry in self.intent_graph.edges(data=True) if selection in reg_entry[2].get("entry").model]
-        edge_data = self.intent_graph[entry[0][0]][entry[0][1]]
-        nfo("entry :", entry, "edge_data :", edge_data)
-        for num in edge_data:
-            if selection in edge_data[num].get("entry").model:
-                index_num = num
-                base_weight = entry[0][2].get("weight")
-                # model_name = entry[0][2].get("entry").model
-                if int(base_weight) == 0:
-                    self.intent_graph[entry[0][0]][entry[0][1]][index_num]["weight"] = base_weight + 0.1
-                else:
-                    self.intent_graph[entry[0][0]][entry[0][1]][index_num]["weight"] = base_weight - 0.1
-                    # index_name = (os.path.basename(model_name), model_name)
-                    # self.model_names.insert(self.model_names.index(index_name), (f"*{os.path.basename(model_name)}", model_name))
-        nfo("Weight changed for: ", entry[0][2].get("entry").model, f"model # {index_num}")
-        dbug("Confirm :", self.intent_graph[entry[0][0]][entry[0][1]])
+        reg_entries = [nbrdict for n, nbrdict in self.intent_graph.adjacency()]
+        index = [x for x in reg_entries[0][mode_out] if selection in reg_entries[0][mode_out][x].get("entry").model]
+        model = reg_entries[0][mode_out][index[0]].get("entry").model
+        weight = reg_entries[0][mode_out][index[0]].get("weight")
+        nfo(model, index, weight)
+        if weight < 1.0:
+            self.intent_graph[mode_in][mode_out][index[0]]["weight"] = weight + 0.1
+        else:
+            self.intent_graph[mode_in][mode_out][index[0]]["weight"] = weight - 0.1
+        nfo("Weight changed for: ", self.intent_graph[mode_in][mode_out][index[0]]["entry"].model, f"model # {index[0]}")
+        self.set_ckpts()
+        dbug("Confirm :", self.intent_graph[mode_in][mode_out])
 
-        # [reg_id[2] for reg_id in self.intent_graph.edges(data=True) if selection in reg_id[2].get("entry").model]
-        # right = left - weight_value
-        # if weight_value
-        #     pass
 
-        # left = int(weight_value)
-        # right = left - weight_value
+# model_name = entry[2].get("entry").model
+# index_name = (os.path.basename(model_name), model_name)
+# self.model_names.insert(self.model_names.index(index_name), (f"*{os.path.basename(model_name)}", model_name))
+# what should happen next is setckpts
 
-    # # def check_weights(self, entry: str) -> None:
+# [reg_id[2] for reg_id in self.intent_graph.edges(data=True) if selection in reg_id[2].get("entry").model]
+# right = left - weight_value
+# if weight_value
+#     pass
 
-    # registry_data = [reg_id[2].get('entry').model for reg_id in self.intent_graph.edges(data=True).model if 'ibm' in reg_id[2].get('entry').model]
+# left = int(weight_value)
+# right = left - weight_value
 
-    # def
-    # add weight
-    # check weight
+# # def check_weights(self, entry: str) -> None:
 
-    # async def walk_intent(self, send: bool = False, composer: Callable = None, processor: Callable = None) -> None:
-    #     """Provided the coordinates in the intent processor, follow the list of in and out methods"""
-    #     await self.confirm_available_graph()
-    #     await self.confirm_coordinates_path()
-    #     coordinates = self.coordinates_path
-    #     if not coordinates:
-    #         coordinates = ["text", "text"]
-    #     hop_length = len(coordinates) - 1
-    #     for i in range(hop_length):
-    #         if i + 1 < hop_length:
-    #             await self.confirm_coordinates_path()
-    #             await self.confirm_model_waypoints()
-    #             if send:
-    #                 await processor(last_hop=False)
-    #                 composer(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
-    #             else:
-    #                 old_model_names = self.model_names if self.model_names else []
-    #                 composer(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2], io_only=True)
-    #                 self.model_names.extend(old_model_names)
+# registry_data = [reg_id[2].get('entry').model for reg_id in self.intent_graph.edges(data=True).model if 'ibm' in reg_id[2].get('entry').model]
 
-    #         elif send:
-    #             await self.confirm_coordinates_path()
-    #             await self.confirm_model_waypoints()
-    #             processor()
+# def
+# add weight
+# check weight
+
+# async def walk_intent(self, send: bool = False, composer: Callable = None, processor: Callable = None) -> None:
+#     """Provided the coordinates in the intent processor, follow the list of in and out methods"""
+#     await self.confirm_available_graph()
+#     await self.confirm_coordinates_path()
+#     coordinates = self.coordinates_path
+#     if not coordinates:
+#         coordinates = ["text", "text"]
+#     hop_length = len(coordinates) - 1
+#     for i in range(hop_length):
+#         if i + 1 < hop_length:
+#             await self.confirm_coordinates_path()
+#             await self.confirm_model_waypoints()
+#             if send:
+#                 await processor(last_hop=False)
+#                 composer(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
+#             else:
+#                 old_model_names = self.model_names if self.model_names else []
+#                 composer(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2], io_only=True)
+#                 self.model_names.extend(old_model_names)
+
+#         elif send:
+#             await self.confirm_coordinates_path()
+#             await self.confirm_model_waypoints()
+#             processor()

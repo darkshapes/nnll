@@ -1,34 +1,38 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+# pylint: disable=pointless-statement
+from typing import Any
 import dspy
 from pydantic import BaseModel, Field
+from sympy import Basic
 
 from nnll_01 import debug_monitor, debug_message as dbug  # , info_message as nfo
 from nnll_15.constants import LibType
 
 
+ps_sysprompt = "Provide x for Y"
+bqa_sysprompt = "Reply with short responses within 60-90 word/10k character code limits"
+ps_infield_tag = "An image of x"
+ps_outfield_tag = "The nature of the x in the image."
+ps_edit_message = "Edited input image of the dog with a yellow hat."
+
+
 class PictureSignature(dspy.Signature):
-    """Output the dog breed of the dog in the image."""
-
-    image_1: dspy.Image = dspy.InputField(desc="An image of a dog")
-    answer: str = dspy.OutputField(desc="The dog breed of the dog in the image")
-
-
-class LLMInput(BaseModel):
-    """Simple input query fields for chat models including previous contexts"""
-
-    context: str = Field(description="The context for the question")
-    query: str = Field(description="The message to respond to")
+    f"""{ps_sysprompt}"""
+    image_input: dspy.Image = dspy.InputField(desc=ps_infield_tag)
+    answer: str = dspy.OutputField(desc=ps_outfield_tag)
+    image_output: dspy.Image = dspy.OutputField(desc=ps_edit_message)
 
 
-class BasicQAHistory(dspy.Signature):
-    """Reply with short responses within 60-90 word/10k character code limits"""
+class QASignature(dspy.Signature):
+    f"""{bqa_sysprompt}"""
 
-    message: LLMInput = dspy.InputField()
-    response = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
+    message: str = dspy.InputField(desc="The message to respond to")
+    answer = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
 
 
+# signature: dspy.Signature = BasicQAHistory
 @debug_monitor
 async def get_api(model: str, library: LibType) -> dict:
     """
@@ -46,29 +50,33 @@ async def get_api(model: str, library: LibType) -> dict:
         model = {"model": model}  # api_base="https://localhost:xxxx/address:port/sdbx/placeholder"} # huggingface/
     elif library == LibType.VLLM:
         model = {"model": model, "api_base": "http://localhost:8000/chat/completions"}  # hosted_vllm/
+    if library == LibType.LLAMAFILE:
+        model = {"model": model, "api_base": "http://localhost:8080/v1", "api_key": "sk-no-key-required"}
     return model
+
+
+# fact_checking = dspy.ChainOfThought('claims -> verdicts: list[bool]')
+# fact_checking(claims=["Python was released in 1991.", "Python is a compiled language."])
 
 
 class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
-    Defaults to 5 question history, 4 max workers, and `BasicQAHistory` query"""
+    Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
 
     @debug_monitor
-    def __init__(self, memory_size: int = 5, signature: dspy.Signature = BasicQAHistory):
+    def __init__(self, sig: dspy.Signature = QASignature, streaming=True) -> None:
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
         Does not load any models until forward pass
-        :param memory_size: The length of the memory
         :param signature: The format of messages sent to the model
         """
         super().__init__()
-        self.memory = []
-        self.memory_size = memory_size
-        generator = dspy.asyncify(dspy.Predict(signature))  # this should only be used in the case of text
+        self.streaming = streaming
+        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
         self.completion = dspy.streamify(generator)
 
     @debug_monitor
-    async def forward(self, media_pkg: str, model: str, library: LibType, max_workers=4):
+    async def forward(self, tx_data: str, model: str, library: LibType, max_workers=4) -> Any:
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration
@@ -86,17 +94,14 @@ class ChatMachineWithMemory(dspy.Module):
             api_kwargs = await get_api(model=model, library=library)
             model = dspy.LM(**api_kwargs)
             dspy.settings.configure(lm=model, async_max_workers=max_workers)
-            combined_context = " ".join(self.memory)
-            text = media_pkg["text"]
-            self.memory.append(media_pkg)
-            if len(self.memory) == self.memory_size:
-                self.memory.pop(0)
-            async for chunk in self.completion(message={"context": combined_context, "query": text}, stream=True):
+            async for chunk in self.completion(message=tx_data["text"], stream=self.streaming):
                 try:
                     if chunk is not None:
                         if isinstance(chunk, dspy.Prediction):
-                            pass
-                            # yield str(chunk)
+                            if not self.streaming:
+                                yield chunk.answer  # the final, processed output
+                            else:
+                                pass
                         else:
                             yield chunk["choices"][0]["delta"]["content"]
                 except (GeneratorExit, RuntimeError, AttributeError) as error_log:

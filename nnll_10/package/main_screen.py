@@ -10,18 +10,20 @@ from textual import events, on, work
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import Container
-
+from textual.message import Message
 from textual.reactive import reactive
 from textual.screen import Screen
 
 # from textual.widget import Widget
-from textual.widgets import Static, ContentSwitcher, Select  # , DataTable
+from textual.widgets import Static, ContentSwitcher  # , DataTable
+
 
 from nnll_01 import debug_monitor, info_message as nfo, debug_message as dbug
 from nnll_10.package.message_panel import MessagePanel
 from nnll_10 import IntentProcessor
 from nnll_10.package.input_tag import InputTag
 from nnll_10.package.output_tag import OutputTag
+from nnll_10.package.selectah import Selectah
 
 
 class Fold(Screen[bool]):
@@ -40,8 +42,10 @@ class Fold(Screen[bool]):
     ]
 
     ui: dict = defaultdict(dict)
-    intent_processor: reactive[Callable] = reactive(None)
-    media_pkg: dict = {}
+    int_proc: reactive[Callable] = reactive(None)
+    # model_names = [("model", 0), ("x", 0)]
+    tx_data: dict = {}
+    counter = 0
     input_map: dict = {
         "text": "message_panel",
         "image": "message_panel",
@@ -57,8 +61,8 @@ class Fold(Screen[bool]):
         from nnll_10.package.response_panel import ResponsePanel
         from nnll_10.package.voice_panel import VoicePanel
 
-        self.intent_processor = IntentProcessor()
-        self.intent_processor.calculate_intent_graph()
+        self.int_proc = IntentProcessor()
+        self.int_proc.calc_graph()
         self.ready_tx(mode_in="text", mode_out="text")
         yield Footer(id="footer")
         with Horizontal(id="app-grid", classes="app-grid-horizontal"):
@@ -71,12 +75,11 @@ class Fold(Screen[bool]):
                     yield InputTag(id="input_tag", classes="input_tag")
                 with Horizontal(id="seam"):
                     yield DisplayBar(id="display_bar")  # 1:
-                    yield Select(
+                    yield Selectah(
                         id="selectah",
                         classes="selectah",
-                        allow_blank=False,
-                        prompt="Model options:",
-                        options=self.intent_processor.model_names,
+                        prompt=os.path.basename(next(iter(self.int_proc.models))[0]),
+                        options=self.int_proc.models,
                         type_to_search=True,
                     )
                 with Container(id="responsive_display"):  #
@@ -96,12 +99,14 @@ class Fold(Screen[bool]):
         self.ui["rp"] = self.query_one("#response_panel")
         self.ui["vp"] = self.query_one("#voice_panel")
         self.ui["sl"] = self.query_one("#selectah")
+        self.ready_tx()
+        self.walk_intent()
         # id_name = self.input_tag.highlight_link_id
 
     @work(exit_on_error=False)
     async def on_resize(self, event=events.Resize) -> None:
         """Textual API, scale/orientation screen responsivity"""
-        if self.confirm_widgets_ready():
+        if self.is_ui_ready():
             display = self.query_one("#app-grid")
             width = event.container_size.width
             height = event.container_size.height
@@ -110,15 +115,9 @@ class Fold(Screen[bool]):
             elif width / 2 < height:  # Screen is tall
                 display.set_classes("app-grid-vertical")
 
-    @work(exclusive=True)
-    async def on_focus(self, event: events.Focus) -> None:
-        """Textual API event, refresh pathing"""
-        if event.control in ["input_tag", "output_tag", "panel_swap", "message_panel"]:
-            self.ready_tx()
-            self.walk_intent()
-
     @debug_monitor
-    def confirm_widgets_ready(self):
+    def is_ui_ready(self):
+        """Confirm UI is active"""
         try:
             assert hasattr(self.ui["sl"], "is_mounted")
         except AssertionError as error_log:
@@ -126,26 +125,17 @@ class Fold(Screen[bool]):
             return False
         return True
 
-    @work(exclusive=True, group="on_change")
-    @on(Select.Changed)
-    async def select_changed(self, event: Select.Changed) -> None:
-        if self.confirm_widgets_ready() and self.ui["sl"].has_focus:
-            await self.intent_processor.toggle_weight(selection=os.path.basename(event.control.selection))
+    @on(events.Focus)
+    def on_focus(self, event: events.Focus) -> None:
+        """Textual API event, refresh pathing"""
+        if self.ui["sl"].has_focus and self.ui["sl"].expanded:
             self.ready_tx()
-            if self.intent_processor.confirm_available_graph() and self.intent_processor.confirm_coordinates_path():
-                self.walk_intent()
-                if await self.intent_processor.confirm_model_waypoints():
-                    self.ui["sl"].set_options(self.intent_processor.model_names)
+            self.walk_intent()
+            self.ui["sl"].prompt = next(iter(self.int_proc.models))[0]
 
-    # # @work(exclusive=True)
-    # @on(events.Click, "#selectah")
-    # async def on_click(self) -> None:
-    #     """Expand panel immediately when clicked in terminal"""
-    #     if self.confirm_widgets_ready():
-    #         if not self.ui["sl"].expanded:
-    #             self.ui["sl"].expanded = True
-    #         else:
-    #             self.ui["sl"].expanded = False
+        #         selection = next(iter(self.graph.models))[1]
+        # else:
+        #     selection = self.selection
 
     @work(exclusive=True)
     async def _on_key(self, event: events.Key) -> None:
@@ -153,21 +143,22 @@ class Fold(Screen[bool]):
         if (hasattr(event, "character") and event.character == "`") or event.key == "grave_accent":
             event.prevent_default()
             self.ready_tx(io_only=False)
-            if self.intent_processor.confirm_available_graph() and self.intent_processor.confirm_coordinates_path():
+            if self.int_proc.has_graph() and self.int_proc.has_path():
                 self.walk_intent(send=True)
-        elif event.key == "escape" and "active" in self.ui["ot"].classes:
-            self.cancel_generation()
+        elif event.key == "escape" and "active" in self.ui["sl"].classes:
+            Message.stop(True)
+            self.stop_gen()
         elif (hasattr(event, "character") and event.character == "\r") or event.key == "enter":
-            self.alternate_panel("voice_panel", 1)
+            self.flip_panel("voice_panel", 1)
             self.ui["vp"].record_audio()
-            self.tx_audio_to_tokenizer()
+            self.audio_to_token()
         elif (hasattr(event, "character") and event.character == " ") or event.key == "space":
-            self.alternate_panel("voice_panel", 1)
+            self.flip_panel("voice_panel", 1)
             self.ui["vp"].play_audio()
         elif (event.name) == "ctrl_w" or event.key == "ctrl+w":
             self.clear_input()
         elif not self.ui["rp"].has_focus and ((hasattr(event, "character") and event.character == "\x7f") or event.key == "backspace"):
-            self.alternate_panel("message_panel", 0)
+            self.flip_panel("message_panel", 0)
 
     @debug_monitor
     def _on_mouse_scroll_down(self, event: events.MouseScrollUp) -> None:
@@ -181,11 +172,14 @@ class Fold(Screen[bool]):
             self.ui["ot"].emulate_scroll_down()
         elif self.ui["it"].has_focus:
             event.prevent_default()
-            mode_name = self.ui["it"].emulate_scroll_down()
-            self.ui["ps"].current = self.input_map.get(mode_name)
+            mode_in_name = self.ui["it"].emulate_scroll_down()
+            self.ui["ps"].current = self.input_map.get(mode_in_name)
         if scroll_delta != [self.ui["it"].current_cell, self.ui["ot"].current_cell]:
             self.ready_tx()
             self.walk_intent()
+            self.ui["sl"].mode_in = self.ui["it"].current_cell
+            self.ui["sl"].mode_out = self.ui["ot"].current_cell
+            self.ui["sl"].prompt = next(iter(self.int_proc.models))[0]
 
     @debug_monitor
     def _on_mouse_scroll_up(self, event: events.MouseScrollUp) -> None:
@@ -204,17 +198,20 @@ class Fold(Screen[bool]):
         if scroll_delta != [self.ui["it"].current_cell, self.ui["ot"].current_cell]:
             self.ready_tx()
             self.walk_intent()
+            self.ui["sl"].mode_in = self.ui["it"].current_cell
+            self.ui["sl"].mode_out = self.ui["ot"].current_cell
+            self.ui["sl"].prompt = next(iter(self.int_proc.models))[0]
 
     # @work(exclusive=True)
     @on(MessagePanel.Changed, "#message_panel")
-    async def tx_text_to_tokenizer(self) -> None:
+    async def txt_to_token(self) -> None:
         """Transmit info to token calculation"""
         message = self.ui["mp"].text
-        next_model = next(iter(self.intent_processor.registry_entries)).get("entry")
-        self.ui["db"].calculate_tokens(next_model.model, message=message)
+        next_model = next(iter(self.int_proc.models))[1]
+        self.ui["db"].calculate_tokens(next_model, message=message)
 
     @work(exclusive=True)
-    async def tx_audio_to_tokenizer(self) -> None:
+    async def audio_to_token(self) -> None:
         """Transmit audio to sample length"""
         duration = self.ui["vp"].calculate_sample_length()
         self.ui["db"].calculate_audio(duration)
@@ -226,10 +223,10 @@ class Fold(Screen[bool]):
             mode_in = self.ui["it"].get_cell_at((self.ui["it"].current_row, 1))
         if not mode_out:
             mode_out = self.ui["ot"].get_cell_at((self.ui["ot"].current_row, 1))
-        self.intent_processor.derive_coordinates_path(mode_in=mode_in, mode_out=mode_out)
-        self.intent_processor.define_model_waypoints()
+        self.int_proc.set_path(mode_in=mode_in, mode_out=mode_out)
+        self.int_proc.set_ckpts()
         if not io_only:
-            self.media_pkg = {
+            self.tx_data = {
                 "text": self.ui["mp"].text,
                 "audio": self.ui["vp"].audio,
                 # "attachment": self.message_panel.file # drag and drop from external window
@@ -239,48 +236,61 @@ class Fold(Screen[bool]):
     # @work(exclusive=True)
     def walk_intent(self, send=False) -> None:
         """Provided the coordinates in the intent processor, follow the list of in and out methods"""
-        coordinates = self.intent_processor.coordinates_path
-        if not coordinates:
-            coordinates = ["text", "text"]
-        hop_length = len(coordinates) - 1
-        for i in range(hop_length):
-            if self.intent_processor.confirm_coordinates_path() and self.intent_processor.confirm_model_waypoints():
-                if i + 1 < hop_length:
-                    if send:
-                        self.media_pkg = self.send_tx(last_hop=False)
-                        self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
-                    else:
-                        old_model_names = self.intent_processor.model_names if self.intent_processor.model_names else []
-                        # nfo(old_model_names, "walk_intent")
-                        self.ready_tx(mode_in=coordinates[i + 1], mode_out=coordinates[i + 2])
-                        self.intent_processor.model_names.extend(old_model_names)
-                        # nfo(self.intent_processor.model_names)
+        coords = self.int_proc.coord_path
+        if not coords:
+            coords = ["text", "text"]
+        hops = len(coords) - 1
+        for i in range(hops):
+            if i + 1 < hops:
+                if send:
+                    self.tx_data = self.send_tx(last_hop=False)
+                    self.ready_tx(mode_in=coords[i + 1], mode_out=coords[i + 2])
+                else:
+                    old_models = self.int_proc.models if self.int_proc.models else []
+                    dbug(old_models, "walk_intent")
+                    self.ready_tx(mode_in=coords[i + 1], mode_out=coords[i + 2])
+                    self.int_proc.models.extend(old_models)
+                    self.model_names = self.int_proc.models
+                    dbug(self.int_proc.models)
 
-                elif send:
-                    self.send_tx()
+            elif send:
+                self.send_tx()
 
     @work(exclusive=True)
     async def send_tx(self, last_hop=True) -> None:
         """Transfer path and promptmedia to generative processing endpoint"""
 
-        from nnll_11 import ChatMachineWithMemory, BasicQAHistory
+        from nnll_11 import ChatMachineWithMemory, QASignature
 
-        current_coords = next(iter(self.intent_processor.registry_entries)).get("entry")
-        chat = ChatMachineWithMemory(memory_size=5, signature=BasicQAHistory)
+        ckpt = self.ui["sl"].selection
+        if ckpt is None:
+            ckpt = next(iter(self.int_proc.ckpts))[1]
+        chat = ChatMachineWithMemory(sig=QASignature)
+        self.ui["rp"].on_text_area_changed()
         self.ui["rp"].insert("\n---\n")
-        self.ui["ot"].add_class("active")
+        self.ui["sl"].add_class("active")
         if last_hop:
-            nfo(current_coords)
-            async for chunk in chat.forward(media_pkg=self.media_pkg, model=current_coords.model, library=current_coords.library, max_workers=8):
+            nfo(ckpt)
+            async for chunk in chat.forward(
+                tx_data=self.tx_data,
+                model=ckpt.model,
+                library=ckpt.library,
+                max_workers=8,
+            ):
                 if chunk is not None:
                     self.ui["rp"].insert(chunk)
-            self.ui["ot"].set_classes(["output_tag"])
+            self.ui["sl"].set_classes(["selectah"])
         else:
-            self.media_pkg = chat.forward(media_pkg=self.media_pkg, model=current_coords.model, library=current_coords.library, max_workers=8)
+            self.tx_data = chat.forward(
+                tx_data=self.tx_data,
+                model=ckpt.model,
+                library=ckpt.library,
+                max_workers=8,
+            )
 
     @work(exclusive=True)
-    async def cancel_generation(self) -> None:
-        """Stop the processing of a model"""
+    async def stop_gen(self) -> None:
+        """Cancel the inference processing of a model"""
         self.ui["rp"].workers.cancel_all()
         self.ui["ot"].set_classes("output_tag")
 
@@ -289,17 +299,17 @@ class Fold(Screen[bool]):
         """Clear the input on the focused panel"""
         if self.ui["vp"].has_focus:
             self.ui["vp"].erase_audio()
-            self.tx_audio_to_tokenizer()
+            self.audio_to_token()
         elif self.ui["mp"].has_focus:
             self.ui["mp"].erase_message()
 
     @work(exclusive=True)
-    async def alternate_panel(self, id_name: str, y_coordinate: int) -> None:
+    async def flip_panel(self, id_name: str, y_coord: int) -> None:
         """Switch between text input and audio input
         :param id_name: The panel to switch to
         :param y_coordinate: _description_
         """
-        self.ui["it"].scroll_to(x=1, y=y_coordinate, force=True, immediate=True, on_complete=self.ui["it"].refresh)
+        self.ui["it"].scroll_to(x=1, y=y_coord, force=True, immediate=True, on_complete=self.ui["it"].refresh)
         self.ui["ps"].current = id_name
 
 

@@ -3,7 +3,7 @@
 
 # pylint: disable=missing-module-docstring, disable=missing-class-docstring
 
-from textual import work, events
+from textual import work, events, on
 from textual.app import App
 from textual.binding import Binding
 from textual.reactive import reactive
@@ -15,8 +15,6 @@ from nnll_10.package.main_screen import Fold  # pylint: disable=import-error
 
 
 class Combo(App):
-    """Machine Accelerated Intelligent Network"""
-
     SCREENS = {"fold": Fold}
     CSS_PATH = "combo.tcss"
     BINDINGS = [Binding("escape", "safe_exit", "◼︎ / ⏏︎")]  # Cancel response
@@ -31,6 +29,7 @@ class Combo(App):
         self.theme = "flexoki"
 
     @work(exit_on_error=True)
+    @on(events.Key)
     async def _on_key(self, event: events.Key):
         """Window for triggering key bindings"""
         if event.key not in ["escape", "ctrl+left_square_brace"]:
