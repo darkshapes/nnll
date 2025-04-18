@@ -116,6 +116,25 @@ $selection-fg: $background;
             background: $selection-bg;
         }
     }
+    &.active {
+        Static#label {
+            &:blur {
+                color: $accent;
+                text-align: end;
+
+            }
+            &:focus {
+                color: $accent;
+            }
+            &:hover {
+                color: $accent;
+            }
+            &.-selected {
+                color: $accent;
+                background: $selection-bg;
+            }
+        }
+    }
     SelectCurrent {
         background:$negative-space 7%;
         color: $sunken-text;
@@ -143,7 +162,8 @@ $selection-fg: $background;
     SelectOverlay {
 
         text-wrap: nowrap;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: scroll;
         text-align: end;
         color: $sunken-text;
         overlay: screen;
@@ -279,12 +299,6 @@ SidebarLeft, SidebarRight {
         .datatable--cursor {
             color: $foreground;
             text-style: none;
-            background: $top-surface;
-        }
-    }
-    &.active {
-        .datatable--cursor {
-            color: $foreground;
             background: $top-surface;
         }
     }

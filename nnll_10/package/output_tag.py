@@ -13,10 +13,12 @@ class OutputTag(Carousel):
     target_options: reactive[set] = reactive({})
 
     def on_mount(self):
-        graph_edges = self.query_ancestor(Screen).intent_processor.intent_graph.edges
+        scrn = self.query_ancestor(Screen)
+        if scrn.int_proc.has_graph():
+            graph_edges = scrn.int_proc.intent_graph.edges
 
-        self.target_options = sorted({edge[0] for edge in graph_edges}, key=len)
-        self.add_columns("0", "1", "2")
-        self.add_rows([self.up.strip(), row.strip(), self.dwn.strip()] for row in self.target_options)
-        self.cursor_foreground_priority = "css"
-        self.cursor_background_priority = "css"
+            self.target_options = sorted({edge[0] for edge in graph_edges}, key=len)
+            self.add_columns("0", "1", "2")
+            self.add_rows([self.up.strip(), row.strip(), self.dwn.strip()] for row in self.target_options)
+            self.cursor_foreground_priority = "css"
+            self.cursor_background_priority = "css"

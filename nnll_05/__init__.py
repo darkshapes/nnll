@@ -14,32 +14,6 @@ mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 
 @debug_monitor
-def label_key_prompt(message: dict, mode_in: str) -> str:
-    """Distil multi-prompt input streams into a single primary source\n
-    Use secondary streams for supplementary processes.\n
-    **TL;DR**: text prompts take precedence when available\n
-    :param message: User-supplied input data
-    :param source: User-supplied origin data state
-    :return: `str` Initial conversion state\n\n
-    ```
-    dict       medium   data
-            ,-text     str|dict
-            '-image    array
-    message-'-speech   array
-            '-video    array
-            '-music    array
-    ```
-    """
-    if not mode_in:
-        if not message["text"]:
-            mode_in = next(iter([mode_in for mode_in in message if mode_in is not None and len(mode_in) > 1]))
-        else:
-            mode_in = "text"
-
-    return message.get(mode_in)
-
-
-@debug_monitor
 def split_sequence_by(delimiter: str = ".", sequence: str = "") -> tuple | None:
     """Divide a string into an import module and a function
     :param delimiter: The separator between component identities
@@ -86,6 +60,32 @@ def pull_path_entries(nx_graph: nx.Graph, traced_path: list[tuple]) -> None:
             for hop in nx_graph[traced_path[i]][traced_path[i + 1]]  #
         ]
     return registry_entries
+
+
+# @debug_monitor
+# def label_key_prompt(message: dict, mode_in: str) -> str:
+#     """Distil multi-prompt input streams into a single primary source\n
+#     Use secondary streams for supplementary processes.\n
+#     **TL;DR**: text prompts take precedence when available\n
+#     :param message: User-supplied input data
+#     :param source: User-supplied origin data state
+#     :return: `str` Initial conversion state\n\n
+#     ```
+#     dict       medium   data
+#             ,-text     str|dict
+#             '-image    array
+#     message-'-speech   array
+#             '-video    array
+#             '-music    array
+#     ```
+#     """
+#     if not mode_in:
+#         if not message["text"]:
+#             mode_in = next(iter([mode_in for mode_in in message if mode_in is not None and len(mode_in) > 1]))
+#         else:
+#             mode_in = "text"
+
+#     return message.get(mode_in)
 
 
 # async def machine_intent(message: Any, registry_entries: dict, coordinates_path: dict) -> Any:
