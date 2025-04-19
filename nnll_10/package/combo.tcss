@@ -80,48 +80,33 @@ $selection-fg: $background;
 #seam {
     layout: grid;
     grid-size: 2 1;
-    grid-columns: 60fr 60fr;
+    grid-columns: 60fr 30fr;
     keyline: none;
     border: none;
     background:$negative-space 7%;
     height: 1;
+    text-wrap: nowrap;
 }
 #selectah {
     color: $sunken-text;
-    border: vkey $negative-space 7%;
     height: 2;
     margin: 0 1;
     padding: -1 0;
     overflow: hidden;
     text-align: end;
-    # align: right top;
     width: 100%;
     layer: above;
-    text-wrap:nowrap;
-    Static#label {
-        min-width: 10;
-        &:blur {
-            color: $sunken-text;
-            text-align: end;
-
-        }
-        &:focus {
-            border: none;
-            color: $foreground-darken-1;
-        }
-        &:hover {
-            color: $foreground-darken-1;
-        }
-        &.-selected {
-            background: $selection-bg;
-        }
+    text-overflow: ellipsis;
+    &:focus {
+        background: white 10%;
     }
     &.active {
         Static#label {
+            text-overflow:ellipsis;
+            overflow-x: hidden;
             &:blur {
                 color: $accent;
                 text-align: end;
-
             }
             &:focus {
                 color: $accent;
@@ -129,57 +114,87 @@ $selection-fg: $background;
             &:hover {
                 color: $accent;
             }
-            &.-selected {
-                color: $accent;
-                background: $selection-bg;
-            }
-        }
-    }
-    SelectCurrent {
-        background:$negative-space 7%;
-        color: $sunken-text;
-        border:none;
-        overflow: hidden;
-        &:hover {
-            color: $raised-text;
-        }
-        .arrow {
-            color: $sunken-text;
-            &:hover {
-                color: $raised-text;
-            }
         }
     }
     &.-expanded {
+
+        color: $raised-text;
         text-align: end;
         content-align: right top;
         background:$negative-space 7%;
-        text-wrap: nowrap;
+        overflow-x: hidden;
+        &.-selected {
+            background: $selection-bg;
+
+        }
+    }
+    Static#label {
+        min-width: 10;
+        text-overflow:ellipsis;
+        overflow: hidden;
+        &:blur {
+            color: $sunken-text;
+            text-align: end;
+        }
+        &:focus {
+            color: $raised-text;
+        }
+        &:hover {
+            color: $foreground-darken-1;
+        }
         &.-selected {
             background: $selection-bg;
         }
     }
-    SelectOverlay {
 
-        text-wrap: nowrap;
+
+    SelectCurrent {
+        background:$negative-space 7%;
+        border: vkey $focus-surface;
+        color: $raised-text;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: vkey $surface;
+
+        &:blur {
+            border: vkey $surface;
+        }
+        &:hover {
+            color: $raised-text;
+        }
+        &:focus {
+            color: $background-lighten-3;
+        }
+        .arrow {
+            color: $sunken-text;
+        }
+    }
+    SelectOverlay {
+        text-overflow:ellipsis;
+        border: vkey $negative-space 7%;
         overflow-x: hidden;
         overflow-y: scroll;
         text-align: end;
         color: $sunken-text;
         overlay: screen;
-        scrollbar-size: 0 0;
+        scrollbar-size: 0 1;
+        scrollbar-background: $negative-space 7%;
+        scrollbar-background-active: $negative-space 7%;
+        scrollbar-color: $panel;
+        scrollbar-color-active: $focus-surface;
+        scrollbar-color-hover: $background-lighten-3;
         background: $negative-space 7%;
-        border: vkey $background-lighten-3;
         &.-selected {
+            overflow: hidden;
             background: $selection-bg;
+            border: vkey $background-lighten-3;
         }
         & > .option-list--option-selected {
-
+            overflow: hidden;
                 background: $selection-bg;
                 color: $selection-fg;
         }
         & > .option-list--option {
-            text-wrap:nowrap;
             overflow: hidden;
         }
         & > .option-list--option-highlighted {
@@ -223,7 +238,6 @@ SidebarLeft, SidebarRight {
         border-subtitle-color: $foreground-darken-1;
     }
     &:focus {
-        border: none;
         border: $border-shape $focus-surface;
         border-subtitle-color: $foreground;
     }

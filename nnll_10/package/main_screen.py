@@ -16,6 +16,7 @@ from textual.screen import Screen
 
 # from textual.widget import Widget
 from textual.widgets import Static, ContentSwitcher  # , DataTable
+from textual.widget import Widget
 
 
 from nnll_01 import debug_monitor, info_message as nfo, debug_message as dbug
@@ -46,6 +47,7 @@ class Fold(Screen[bool]):
     # model_names = [("model", 0), ("x", 0)]
     tx_data: dict = {}
     counter = 0
+    hover_name: reactive[str] = reactive("")
     input_map: dict = {
         "text": "message_panel",
         "image": "message_panel",
@@ -126,16 +128,11 @@ class Fold(Screen[bool]):
         return True
 
     @on(events.Focus)
-    def on_focus(self, event: events.Focus) -> None:
-        """Textual API event, refresh pathing"""
-        if self.ui["sl"].has_focus and self.ui["sl"].expanded:
+    async def on_focus(self, event=events.Focus):
+        if event.control.id == "selectah":
             self.ready_tx()
             self.walk_intent()
             self.ui["sl"].prompt = next(iter(self.int_proc.models))[0]
-
-        #         selection = next(iter(self.graph.models))[1]
-        # else:
-        #     selection = self.selection
 
     @work(exclusive=True)
     async def _on_key(self, event: events.Key) -> None:
@@ -264,7 +261,7 @@ class Fold(Screen[bool]):
 
         ckpt = self.ui["sl"].selection
         if ckpt is None:
-            ckpt = next(iter(self.int_proc.ckpts))[1]
+            ckpt = next(iter(self.int_proc.ckpts)).get("entry")
         chat = ChatMachineWithMemory(sig=QASignature)
         self.ui["rp"].on_text_area_changed()
         self.ui["rp"].insert("\n---\n")

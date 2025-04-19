@@ -30,13 +30,13 @@ def seed_planter(seed, deterministic=True) -> int:
 
     torch.manual_seed(seed)
     random.seed(seed)
-    if torch.cuda.is_available() is True:
-        if deterministic is True:
+    if torch.cuda.is_available():
+        if deterministic:
             return {"torch.backends.cudnn.deterministic": "True", "torch.backends.cudnn.benchmark": "False"}
         return torch.cuda.manual_seed(seed), torch.cuda.manual_seed_all(seed)
-    elif torch.backends.mps.is_available() is True:
+    elif torch.backends.mps.is_available():
         return torch.mps.manual_seed(seed)
-    elif torch.xpu.is_available() is True:
+    elif torch.xpu.is_available():
         return torch.xpu.manual_seed(seed)
 
 

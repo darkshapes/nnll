@@ -9,7 +9,7 @@ from textual.reactive import reactive
 
 from textual_plotext import PlotextPlot
 
-# from nnll_01 import debug_monitor
+from nnll_01 import info_message as nfo  # , debug_monitor
 
 
 class VoicePanel(PlotextPlot):  # (PlotWidget)
@@ -54,7 +54,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
             sd.play(self.audio, samplerate=self.sample_freq)
             sd.wait()
         except TypeError as error_log:
-            print(error_log)
+            nfo(error_log)
 
     @work(exclusive=True)
     async def erase_audio(self):
