@@ -10,7 +10,7 @@ from textual.reactive import reactive
 
 from textual_plotext import PlotextPlot
 
-# from nnll_01 import debug_monitor
+from nnll_01 import info_message as nfo  # , debug_monitor
 
 
 class VoicePanel(PlotextPlot):  # (PlotWidget)
@@ -51,7 +51,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
         self.plt.xfrequency("0", "0")
         self.plt.yfrequency("0", "0")
         self.plt.scatter(self.audio[:, 0], marker="braille", color=(128, 0, 255))
-        self.calculate_sample_length()
+        self.time_audio()
 
     @work(exclusive=True)
     async def play_audio(self):
@@ -60,7 +60,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
             sd.play(self.audio, samplerate=self.sample_freq)
             sd.wait()
         except TypeError as error_log:
-            print(error_log)
+            nfo(error_log)
 
     @work(exclusive=True)
     async def erase_audio(self):
@@ -69,7 +69,7 @@ class VoicePanel(PlotextPlot):  # (PlotWidget)
         self.audio = [0]
 
     @work(exclusive=True)
-    async def calculate_sample_length(self):
+    async def time_audio(self):
         sample_len = float(len(self.audio) / self.sample_freq)
         self.sample_len = sample_len
         self.refresh()

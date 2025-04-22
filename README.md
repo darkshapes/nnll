@@ -9,9 +9,9 @@
 * Extracting and classifying metadata from images/models
 * Consumer-grade GPU/CPU inference optimization
 * Misc UX/UI Experimentation
-* 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM<br><br>
+* 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
+* :shipit: <br><br>
 
-# :shipit:
 [![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
 ![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>

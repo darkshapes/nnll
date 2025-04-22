@@ -1,7 +1,7 @@
-structlog>=25.2.0
-viztracer>=1.0.3
+nnll_01
 
 [all]
+nnll[nnll_01]
 nnll[nnll_02]
 nnll[nnll_03]
 nnll[nnll_04]
@@ -50,7 +50,6 @@ tqdm>=4.67.1
 
 [nnll-04]
 gguf>=0.14.0
-llama-cpp-python>=0.3.8
 safetensors>=0.5.3
 
 [nnll-05]
@@ -146,3 +145,7 @@ torchvision>=0.21.0
 
 [nnll-64]
 pillow>=11.1.0
+
+[nnll_01]
+structlog>=25.2.0
+viztracer>=1.0.3
