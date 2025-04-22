@@ -26,8 +26,9 @@ keywords = [
     "torch",
 ]
 
-dependencies = ["structlog>=25.2.0", "viztracer>=1.0.3"]
+dependencies = ["nnll_01"]
 [project.optional-dependencies]
+nnll_01 = ["structlog>=25.2.0", "viztracer>=1.0.3"]
 nnll-02 = ["huggingface-hub>=0.29.3", "litellm>=1.65.0"]
 nnll-03 = ["aiofiles>=24.1.0", "aiohttp>=3.9.5, <=3.11.13", "tqdm>=4.67.1"]
 nnll-04 = ["gguf>=0.14.0", "safetensors>=0.5.3"]
@@ -73,6 +74,7 @@ nnll-56 = ["hidiffusion>=0.1.10", "torch>=2.6.0", "torchvision>=0.21.0"]
 nnll-62 = ["diffusers>=0.32.2", "torch>=2.6.0", "torchvision>=0.21.0"]
 nnll-64 = ["pillow>=11.1.0"]
 all = [
+    "nnll[nnll_01]",
     "nnll[nnll_02]",
     "nnll[nnll_03]",
     "nnll[nnll_04]",
@@ -112,7 +114,6 @@ dev = [
 ]
 
 [project.scripts]
-zodiac     = "nnll_10.package.__init__:main"
 astra      = "nnll_12:__main__"
 nnll-find  = "nnll_31:main"
 nnll-hash  = "nnll_17:main"
