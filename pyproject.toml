@@ -26,7 +26,6 @@ keywords = [
     "torch",
 ]
 
-dependencies = ["nnll_01"]
 [project.optional-dependencies]
 nnll_01 = ["structlog>=25.2.0", "viztracer>=1.0.3"]
 nnll-02 = ["huggingface-hub>=0.29.3", "litellm>=1.65.0"]
