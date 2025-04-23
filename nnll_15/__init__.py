@@ -65,21 +65,22 @@ class RegistryEntry(BaseModel):
 
         if LibType.OLLAMA:
             try:
-                from ollama import ListResponse, list as ollama_list  # type: ignore
+                from ollama import ListResponse, list as ollama_list
+
+                model_data: ListResponse = ollama_list()  # type: ignore
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
                 return
-            model_data: ListResponse = ollama_list()
-            for model in model_data.models:  # pylint:disable=no-member
-                entry = cls(
-                    model=f"ollama_chat/{model.model}",
-                    size=model.size.real,
-                    tags=[model.details.family],
-                    library=LibType.OLLAMA,
-                    timestamp=int(model.modified_at.timestamp()),
-                )
-                entries.append(entry)
-
+            else:
+                for model in model_data.models:  # pylint:disable=no-member
+                    entry = cls(
+                        model=f"ollama_chat/{model.model}",
+                        size=model.size.real,
+                        tags=[model.details.family],
+                        library=LibType.OLLAMA,
+                        timestamp=int(model.modified_at.timestamp()),
+                    )
+                    entries.append(entry)
         if LibType.HUB:
             try:
                 from huggingface_hub import scan_cache_dir, repocard  # type: ignore

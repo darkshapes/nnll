@@ -15,7 +15,7 @@ from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
-API_NAMES: list = ["ollama", "huggingface_hub", "lmstudio", "vllm", "llamafile"]
+API_NAMES: list = ["cortex", "ollama", "huggingface_hub", "lmstudio", "vllm", "llamafile"]
 
 
 @debug_monitor
