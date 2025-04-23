@@ -68,7 +68,7 @@ class RegistryEntry(BaseModel):
                 from ollama import ListResponse, list as ollama_list
 
                 model_data: ListResponse = ollama_list()  # type: ignore
-            except (ModuleNotFoundError, ImportError) as error_log:
+            except (ConnectionError, ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
                 return
             else:
