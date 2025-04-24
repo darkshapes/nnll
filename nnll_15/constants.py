@@ -16,6 +16,7 @@ from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 # Order is important for this list since it is used for LibType below
+#                   0                1              2           3           4       5
 API_NAMES: list = ["ollama", "huggingface_hub", "lmstudio", "cortex", "llamafile", "vllm"]
 
 
@@ -25,7 +26,6 @@ def check_and_import() -> Tuple[bool]:
     Returns True if the module is successfully imported or already available, False otherwise."""
 
     import requests
-    from requests.exceptions import ConnectionError
     import json
     from urllib3.exceptions import NewConnectionError, MaxRetryError
 
@@ -33,23 +33,36 @@ def check_and_import() -> Tuple[bool]:
     llamafile_server: bool = False
     for api in API_NAMES:
         if api == "cortex":
-            response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(3, 3))
-            if response is not None:
-                try:
+            try:
+                response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(3, 3))
+                if response is not None:
                     data = response.json()
-                except (json.decoder.JSONDecodeError, ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-                    continue
-                if data.get("result") == "OK":
-                    cortex_server = True
+                    if data.get("result") == "OK":
+                        cortex_server = True
+            except (
+                json.decoder.JSONDecodeError,
+                requests.exceptions.ConnectionError,
+                ConnectionRefusedError,
+                MaxRetryError,
+                NewConnectionError,
+            ):
+                continue
+
         elif api == "llamafile":
-            response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
-            if response is not None:
-                try:
+            try:
+                response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
+                if response is not None:
                     data = response.json()
-                except (json.decoder.JSONDecodeError, ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-                    continue
-                if data.get("result") == "OK":
-                    llamafile_server = True
+                    if data.get("result") == "OK":
+                        llamafile_server = True
+            except (
+                json.decoder.JSONDecodeError,
+                requests.exceptions.ConnectionError,
+                ConnectionRefusedError,
+                MaxRetryError,
+                NewConnectionError,
+            ):
+                continue
 
         try:
             __import__(api)
