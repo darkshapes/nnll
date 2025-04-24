@@ -134,8 +134,11 @@ class GenTypeE(BaseModel):
 VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d render", "vector graphic", "upscale_image"]
 
 VALID_TASKS = {
+    LibType.CORTEX: {
+        ("text", "text"): ["text"],
+    },
     LibType.OLLAMA: {
-        ("image", "text"): ["mllama", "llava", "vllm"],
+        ("text", "text"): ["mllama", "llava", "vllm"],
     },
     LibType.LM_STUDIO: {
         ("image", "text"): [True],
