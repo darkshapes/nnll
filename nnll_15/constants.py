@@ -25,6 +25,7 @@ def check_and_import() -> Tuple[bool]:
     Returns True if the module is successfully imported or already available, False otherwise."""
 
     import requests
+    import json
 
     cortex_server: bool = False
     llamafile_server: bool = False
@@ -32,13 +33,19 @@ def check_and_import() -> Tuple[bool]:
         if api == "cortex":
             response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(3, 3))
             if response is not None:
-                data = response.json()
+                try:
+                    data = response.json()
+                except json.decoder.JSONDecodeError:
+                    continue
                 if data.get("result") == "OK":
                     cortex_server = True
         elif api == "llamafile":
             response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
             if response is not None:
-                data = response.json()
+                try:
+                    data = response.json()
+                except json.decoder.JSONDecodeError:
+                    continue
                 if data.get("result") == "OK":
                     llamafile_server = True
 
