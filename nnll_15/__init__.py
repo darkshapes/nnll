@@ -112,9 +112,9 @@ class RegistryEntry(BaseModel):
                 entry = cls(
                     model=f"openai/{model_data.get('model')}",
                     size=model_data.get("size", 0),
-                    tags=model_data.get("modalities", "text"),
+                    tags=[str(model_data.get(key="modalities", default="text"))],
                     library=LibType.CORTEX,
-                    timestamp=datetime.timestamp(datetime.now()),  # no api for this data in cortex
+                    timestamp=int(datetime.timestamp(datetime.now())),  # no api for time data in cortex
                 )
                 entries.append(entry)
         if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
