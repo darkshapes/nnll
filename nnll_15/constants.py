@@ -31,14 +31,16 @@ def check_and_import() -> Tuple[bool]:
     for api in API_NAMES:
         if api == "cortex":
             response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(3, 3))
-            data = response.json()
-            if data.get("result") == "OK":
-                cortex_server = True
+            if response is not None:
+                data = response.json()
+                if data.get("result") == "OK":
+                    cortex_server = True
         elif api == "llamafile":
             response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
-            data = response.json()
-            if data.get("result") == "OK":
-                llamafile_server = True
+            if response is not None:
+                data = response.json()
+                if data.get("result") == "OK":
+                    llamafile_server = True
 
         try:
             __import__(api)
