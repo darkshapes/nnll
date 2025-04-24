@@ -25,7 +25,9 @@ def check_and_import() -> Tuple[bool]:
     Returns True if the module is successfully imported or already available, False otherwise."""
 
     import requests
+    from requests.exceptions import ConnectionError
     import json
+    from urllib3.exceptions import NewConnectionError, MaxRetryError
 
     cortex_server: bool = False
     llamafile_server: bool = False
@@ -35,7 +37,7 @@ def check_and_import() -> Tuple[bool]:
             if response is not None:
                 try:
                     data = response.json()
-                except json.decoder.JSONDecodeError:
+                except (json.decoder.JSONDecodeError, ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
                     continue
                 if data.get("result") == "OK":
                     cortex_server = True
@@ -44,7 +46,7 @@ def check_and_import() -> Tuple[bool]:
             if response is not None:
                 try:
                     data = response.json()
-                except json.decoder.JSONDecodeError:
+                except (json.decoder.JSONDecodeError, ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
                     continue
                 if data.get("result") == "OK":
                     llamafile_server = True
