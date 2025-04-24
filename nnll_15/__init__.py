@@ -102,31 +102,37 @@ class RegistryEntry(BaseModel):
                         tags = ["unknown"]
                     entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
                     entries.append(entry)
-        if LibType.CORTEX:
-            import requests
-            from datetime import datetime
+        # if LibType.CORTEX:
+        #     import json
+        #     import requests
+        #     from urllib3.exceptions import NewConnectionError, MaxRetryError
+        #     from datetime import datetime
 
-            response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
-            model = response.json()
-            for model_data in model["data"]:
-                entry = cls(
-                    model=f"openai/{model_data.get('model')}",
-                    size=model_data.get("size", 0),
-                    tags=[str(model_data.get("modalities", "text"))],
-                    library=LibType.CORTEX,
-                    timestamp=int(datetime.timestamp(datetime.now())),  # no api for time data in cortex
-                )
-                entries.append(entry)
-        if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
-            try:
-                from lmstudio import get_default_client, list_downloaded_models  # type: ignore
-            except (ModuleNotFoundError, ImportError) as error_log:
-                dbug(error_log)
-        if LibType.VLLM:  # placeholder
-            try:
-                import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
-            except (ModuleNotFoundError, ImportError) as error_log:
-                dbug(error_log)
+        #     try:
+        #         response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
+        #     except (json.decoder.JSONDecodeError, requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
+        #         dbug(error_log)
+        #     else:
+        #         model = response.json()
+        #         for model_data in model["data"]:
+        #             entry = cls(
+        #                 model=f"openai/{model_data.get('model')}",
+        #                 size=model_data.get("size", 0),
+        #                 tags=[str(model_data.get("modalities", "text"))],
+        #                 library=LibType.CORTEX,
+        #                 timestamp=int(datetime.timestamp(datetime.now())),  # no api for time data in cortex
+        #             )
+        #             entries.append(entry)
+        # if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
+        #     try:
+        #         from lmstudio import get_default_client, list_downloaded_models  # type: ignore
+        #     except (ModuleNotFoundError, ImportError) as error_log:
+        #         dbug(error_log)
+        # if LibType.VLLM:  # placeholder
+        #     try:
+        #         import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
+        #     except (ModuleNotFoundError, ImportError) as error_log:
+        #         dbug(error_log)
         # else:
         #     nfo("Unsupported source")
         #     raise ValueError("Unsupported source")
