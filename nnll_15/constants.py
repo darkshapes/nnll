@@ -4,7 +4,7 @@
 
 from enum import Enum
 from sys import modules as sys_modules
-from typing import Annotated, Callable, Optional
+from typing import Annotated, Callable, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
@@ -15,15 +15,31 @@ from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
-API_NAMES: list = ["ollama", "huggingface_hub", "lmstudio", "vllm", "llamafile"]
+# Order is important for this list since it is used for LibType below
+API_NAMES: list = ["ollama", "huggingface_hub", "lmstudio", "cortex", "llamafile", "vllm"]
 
 
 @debug_monitor
-def _check_and_import():
+def check_and_import() -> Tuple[bool]:
     """Check if the module is available. If not, try to import it dynamically.
     Returns True if the module is successfully imported or already available, False otherwise."""
 
+    import requests
+
+    cortex_server: bool = False
+    llamafile_server: bool = False
     for api in API_NAMES:
+        if api == "cortex":
+            response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(3, 3))
+            data = response.json()
+            if data.get("result") == "OK":
+                cortex_server = True
+        elif api == "llamafile":
+            response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
+            data = response.json()
+            if data.get("result") == "OK":
+                llamafile_server = True
+
         try:
             __import__(api)
             # setattr(LibType, api_libtype.get(api), True)
@@ -31,9 +47,10 @@ def _check_and_import():
             nfo("|Ignorable| Source unavailable:", f"{api}")
             dbug(error_log)
             # setattr(LibType, api_libtype.get(api), False)
+    return cortex_server, llamafile_server
 
 
-_check_and_import()
+cortex_server, llamafile_server = check_and_import()
 
 
 class LibType(Enum):
@@ -41,11 +58,10 @@ class LibType(Enum):
 
     OLLAMA: int = (0, API_NAMES[0] in sys_modules)
     HUB: int = (1, API_NAMES[1] in sys_modules)
-    VLLM: int = (2, API_NAMES[2] in sys_modules)
-    LM_STUDIO: int = (3, API_NAMES[3] in sys_modules)
-    LLAMAFILE: int = (4, API_NAMES[4] in sys_modules)
-    # CORTEX : Identical to OpenAI, http://localhost:39281
-    # LLAMAFILE  : "http://localhost:8080/v1  api_key = "sk-no-key-required"
+    LM_STUDIO: int = (2, API_NAMES[2] in sys_modules)
+    CORTEX: int = (3, cortex_server)
+    LLAMAFILE: int = (4, llamafile_server)
+    VLLM: int = (5, API_NAMES[5] in sys_modules)
 
 
 example_str = ("function_name", "import.function_name")

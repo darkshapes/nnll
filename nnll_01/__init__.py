@@ -138,30 +138,30 @@ def debug_monitor(func: Callable = None) -> Callable:
 
             return return_data
         except Exception as error_log:
-            file_name = f".nnll_trace{datetime.now().strftime('%Y%m%d%_H.%M.%S.%f')}.json"
-            assembled_path = os.path.join("log", file_name)
+            # file_name = f".nnll_trace{datetime.now().strftime('%Y%m%d%_H.%M.%S.%f')}.json"
+            # assembled_path = os.path.join("log", file_name)
 
-            tracer = viztracer.VizTracer()
-            tracer.start()
-            logger_obj.debug(
-                {
-                    "Exception": {
-                        "exc_info": error_log,
-                        "filename": func.__module__,
-                        "pathname": Path(func.__module__).cwd(),
-                        "func_name": func.__name__,
-                        "process": os.getppid(),
-                        "thread": get_native_id(),
-                        **{"ain_type": type(args), "ain": args if args else {}},
-                        **{"kin_type": type(kwargs), "kin": kwargs if kwargs else {}},
-                        "locals": locals(),
-                        "globals": globals(),
-                    }
-                }
-            )
-            # Re-raise the exception to propagate it
-            tracer.stop()
-            tracer.save(output_file=assembled_path)
+            # tracer = viztracer.VizTracer()
+            # tracer.start()
+            # logger_obj.debug(
+            #     {
+            #         "Exception": {
+            #             "exc_info": error_log,
+            #             "filename": func.__module__,
+            #             "pathname": Path(func.__module__).cwd(),
+            #             "func_name": func.__name__,
+            #             "process": os.getppid(),
+            #             "thread": get_native_id(),
+            #             **{"ain_type": type(args), "ain": args if args else {}},
+            #             **{"kin_type": type(kwargs), "kin": kwargs if kwargs else {}},
+            #             "locals": locals(),
+            #             "globals": globals(),
+            #         }
+            #     }
+            # )
+            # # Re-raise the exception to propagate it
+            # tracer.stop()
+            # tracer.save(output_file=assembled_path)
             raise error_log
 
     return wrapper

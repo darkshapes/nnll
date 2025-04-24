@@ -35,7 +35,7 @@ class RegistryEntry(BaseModel):
         library_tasks = {}
         processed_tasks = []
         library_tasks = VALID_TASKS[self.library]
-        if self.library == LibType.OLLAMA:
+        if self.library == LibType.OLLAMA or self.library == LibType.CORTEX:
             default_task = ("text", "text")
         elif self.library == LibType.HUB:
             pattern = re.compile(r"(\w+)-to-(\w+)")
@@ -65,54 +65,63 @@ class RegistryEntry(BaseModel):
 
         if LibType.OLLAMA:
             try:
-                from ollama import ListResponse, list as ollama_list  # type: ignore
-            except (ModuleNotFoundError, ImportError) as error_log:
-                dbug(error_log)
-                return
-            model_data: ListResponse = ollama_list()
-            for model in model_data.models:  # pylint:disable=no-member
-                entry = cls(
-                    model=f"ollama_chat/{model.model}",
-                    size=model.size.real,
-                    tags=[model.details.family],
-                    library=LibType.OLLAMA,
-                    timestamp=int(model.modified_at.timestamp()),
-                )
-                entries.append(entry)
+                from ollama import ListResponse, list as ollama_list
 
+                model_data: ListResponse = ollama_list()  # type: ignore
+            except (ConnectionError, ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+            else:
+                for model in model_data.models:  # pylint:disable=no-member
+                    entry = cls(
+                        model=f"ollama_chat/{model.model}",
+                        size=model.size.real,
+                        tags=[model.details.family],
+                        library=LibType.OLLAMA,
+                        timestamp=int(model.modified_at.timestamp()),
+                    )
+                    entries.append(entry)
         if LibType.HUB:
             try:
                 from huggingface_hub import scan_cache_dir, repocard  # type: ignore
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
-                return
+            else:
+                model_data = scan_cache_dir()
+                for repo in model_data.repos:
+                    try:
+                        meta = repocard.RepoCard.load(repo.repo_id).data
+                    except ValueError as error_log:
+                        dbug(error_log)
+                        continue
+                    tags = []
+                    if hasattr(meta, "tags"):
+                        tags.extend(meta.tags)
+                    if hasattr(meta, "pipeline_tag"):
+                        tags.append(meta.pipeline_tag)
+                    if not tags:
+                        tags = ["unknown"]
+                    entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
+                    entries.append(entry)
+        if LibType.CORTEX:
+            import requests
+            from datetime import datetime
 
-            model_data = scan_cache_dir()
-            for repo in model_data.repos:
-                try:
-                    meta = repocard.RepoCard.load(repo.repo_id).data
-                except ValueError as error_log:
-                    dbug(error_log)
-                    continue
-                tags = []
-                if hasattr(meta, "tags"):
-                    tags.extend(meta.tags)
-                if hasattr(meta, "pipeline_tag"):
-                    tags.append(meta.pipeline_tag)
-                if not tags:
-                    tags = ["unknown"]
-                entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
+            response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
+            model = response.json()
+            for model_data in model["data"]:
+                entry = cls(
+                    model=f"openai/{model_data.get('model')}",
+                    size=model_data.get("size", 0),
+                    tags=[model_data.get("modalities", ["text", "text"])],
+                    library=LibType.CORTEX,
+                    timestamp=datetime.timestamp(datetime.now()),  # no api for this data in cortex
+                )
                 entries.append(entry)
         if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
             try:
                 from lmstudio import get_default_client, list_downloaded_models  # type: ignore
-
-                lms_client = get_default_client()
-                lms_client.api_host = "localhost:1143"
-                model_data = list_downloaded_models()
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
-
         if LibType.VLLM:  # placeholder
             try:
                 import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
