@@ -35,7 +35,7 @@ class RegistryEntry(BaseModel):
         library_tasks = {}
         processed_tasks = []
         library_tasks = VALID_TASKS[self.library]
-        if self.library == LibType.OLLAMA:
+        if self.library == LibType.OLLAMA or self.library == LibType.CORTEX:
             default_task = ("text", "text")
         elif self.library == LibType.HUB:
             pattern = re.compile(r"(\w+)-to-(\w+)")
@@ -70,7 +70,6 @@ class RegistryEntry(BaseModel):
                 model_data: ListResponse = ollama_list()  # type: ignore
             except (ConnectionError, ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
-                pass
             else:
                 for model in model_data.models:  # pylint:disable=no-member
                     entry = cls(
@@ -86,7 +85,6 @@ class RegistryEntry(BaseModel):
                 from huggingface_hub import scan_cache_dir, repocard  # type: ignore
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
-                pass
             else:
                 model_data = scan_cache_dir()
                 for repo in model_data.repos:
@@ -104,37 +102,31 @@ class RegistryEntry(BaseModel):
                         tags = ["unknown"]
                     entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
                     entries.append(entry)
-        if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
-            try:
-                from lmstudio import get_default_client, list_downloaded_models  # type: ignore
-
-                lms_client = get_default_client()
-                lms_client.api_host = "localhost:1143"
-                model_data = list_downloaded_models()
-            except (ModuleNotFoundError, ImportError) as error_log:
-                dbug(error_log)
-                pass
-        if LibType.VLLM:  # placeholder
-            try:
-                import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
-            except (ModuleNotFoundError, ImportError) as error_log:
-                dbug(error_log)
         if LibType.CORTEX:
             import requests
             from datetime import datetime
 
             response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
             model = response.json()
-            for model in next(iter(model["data"])):
-                for model in model_data["data"]:  # pylint:disable=no-member
-                    entry = cls(
-                        model=f"openai/{model.get('model')}",
-                        size=model.get("size", 0),
-                        tags=[model.get("modalities", ["text", "text"])],
-                        library=LibType.CORTEX,
-                        timestamp=datetime.timestamp(datetime.now()),  # no api for this data in cortex
-                    )
-                    entries.append(entry)
+            for model_data in model["data"]:
+                entry = cls(
+                    model=f"openai/{model_data.get('model')}",
+                    size=model_data.get("size", 0),
+                    tags=[model_data.get("modalities", ["text", "text"])],
+                    library=LibType.CORTEX,
+                    timestamp=datetime.timestamp(datetime.now()),  # no api for this data in cortex
+                )
+                entries.append(entry)
+        if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
+            try:
+                from lmstudio import get_default_client, list_downloaded_models  # type: ignore
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+        if LibType.VLLM:  # placeholder
+            try:
+                import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
         # else:
         #     nfo("Unsupported source")
         #     raise ValueError("Unsupported source")
