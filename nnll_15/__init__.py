@@ -107,17 +107,21 @@ class RegistryEntry(BaseModel):
         if LibType.CORTEX:
             import json
             import requests
+            import httpcore
             from urllib3.exceptions import NewConnectionError, MaxRetryError
             from datetime import datetime
 
             try:
                 response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
             except (
+                httpcore.ConnectError,
                 json.decoder.JSONDecodeError,
                 requests.exceptions.ConnectionError,
                 ConnectionRefusedError,
                 MaxRetryError,
                 NewConnectionError,
+                TimeoutError,
+                OSError,
             ) as error_log:
                 dbug(error_log)
             else:
@@ -133,20 +137,34 @@ class RegistryEntry(BaseModel):
                     entries.append(entry)
         if LibType.LLAMAFILE:
             try:
-                from openai import OpenAI
+                import httpcore
+                from openai import OpenAI, APIConnectionError
             except (ModuleNotFoundError, ImportError) as error_log:
                 dbug(error_log)
             else:
-                model_data = OpenAI(base_url="http://localhost:8080/v1", api_key="sk-no-key-required")
-                for model in model_data.models.list().data:
-                    entry = cls(
-                        model=f"openai/{model.id}",
-                        size=0,
-                        tags=["text"],
-                        library=LibType.LLAMAFILE,
-                        timestamp=int(model.created),  # no api for time data in cortex
-                    )
-                    entries.append(entry)
+                try:
+                    model_data = OpenAI(base_url="http://localhost:8080/v1", api_key="sk-no-key-required")
+                    for model in model_data.models.list().data:
+                        entry = cls(
+                            model=f"openai/{model.id}",
+                            size=0,
+                            tags=["text"],
+                            library=LibType.LLAMAFILE,
+                            timestamp=int(model.created),  # no api for time data in cortex
+                        )
+                        entries.append(entry)
+                except (
+                    APIConnectionError,
+                    httpcore.ConnectError,
+                    json.decoder.JSONDecodeError,
+                    requests.exceptions.ConnectionError,
+                    ConnectionRefusedError,
+                    MaxRetryError,
+                    NewConnectionError,
+                    TimeoutError,
+                    OSError,
+                ) as error_log:
+                    dbug(error_log)
         if LibType.LM_STUDIO:
             try:
                 from lmstudio import list_downloaded_models  # pylint: disable=unused-import, # type: ignore
