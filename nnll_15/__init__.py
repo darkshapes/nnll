@@ -3,7 +3,7 @@
 
 """Register model types"""
 
-# pylint: disable=line-too-long, import-outside-toplevel
+# pylint: disable=line-too-long, import-outside-toplevel, protected-access
 
 from typing import Dict, List, Tuple
 from pydantic import BaseModel, computed_field
@@ -24,6 +24,7 @@ class RegistryEntry(BaseModel):
     library: LibType
     timestamp: int
     # tokenizer: None
+    # api: None
 
     @computed_field
     @property
@@ -43,7 +44,7 @@ class RegistryEntry(BaseModel):
                 match = pattern.search(tag)
                 if match and all(group in VALID_CONVERSIONS for group in match.groups()):
                     processed_tasks.append((match.group(1), match.group(2)))
-        # placeholder for VLLM/LMSTUDIO Libraries
+        # placeholder for VLLM Library
         for tag in self.tags:
             for (graph_src, graph_dest), tags in library_tasks.items():
                 if tag in tags and (graph_src, graph_dest) not in processed_tasks:
@@ -56,6 +57,7 @@ class RegistryEntry(BaseModel):
     @debug_monitor
     def from_model_data(cls) -> list[tuple[str]]:  # lib_type: LibType) model_data: tuple[frozenset[str]]
         """# todo - split into dependency-specific implementations
+        # absolutely needs to be refactored!!!!!
         Create RegistryEntry instances based on source\n
         Extract common model information and stack by newest model first for each conversion type.\n
         :param lib_type: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
@@ -102,37 +104,76 @@ class RegistryEntry(BaseModel):
                         tags = ["unknown"]
                     entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
                     entries.append(entry)
-        # if LibType.CORTEX:
-        #     import json
-        #     import requests
-        #     from urllib3.exceptions import NewConnectionError, MaxRetryError
-        #     from datetime import datetime
+        if LibType.CORTEX:
+            import json
+            import requests
+            from urllib3.exceptions import NewConnectionError, MaxRetryError
+            from datetime import datetime
 
-        #     try:
-        #         response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
-        #     except (json.decoder.JSONDecodeError, requests.exceptions.ConnectionError, ConnectionRefusedError, MaxRetryError, NewConnectionError):
-        #         dbug(error_log)
-        #     else:
-        #         model = response.json()
-        #         for model_data in model["data"]:
-        #             entry = cls(
-        #                 model=f"openai/{model_data.get('model')}",
-        #                 size=model_data.get("size", 0),
-        #                 tags=[str(model_data.get("modalities", "text"))],
-        #                 library=LibType.CORTEX,
-        #                 timestamp=int(datetime.timestamp(datetime.now())),  # no api for time data in cortex
-        #             )
-        #             entries.append(entry)
-        # if LibType.LM_STUDIO:  # doesn't populate RegitryEntry yet
-        #     try:
-        #         from lmstudio import get_default_client, list_downloaded_models  # type: ignore
-        #     except (ModuleNotFoundError, ImportError) as error_log:
-        #         dbug(error_log)
-        # if LibType.VLLM:  # placeholder
-        #     try:
-        #         import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
-        #     except (ModuleNotFoundError, ImportError) as error_log:
-        #         dbug(error_log)
+            try:
+                response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
+            except (
+                json.decoder.JSONDecodeError,
+                requests.exceptions.ConnectionError,
+                ConnectionRefusedError,
+                MaxRetryError,
+                NewConnectionError,
+            ) as error_log:
+                dbug(error_log)
+            else:
+                model = response.json()
+                for model_data in model["data"]:
+                    entry = cls(
+                        model=f"openai/{model_data.get('model')}",
+                        size=model_data.get("size", 0),
+                        tags=[str(model_data.get("modalities", "text"))],
+                        library=LibType.CORTEX,
+                        timestamp=int(datetime.timestamp(datetime.now())),  # no api for time data in cortex
+                    )
+                    entries.append(entry)
+        if LibType.LLAMAFILE:
+            try:
+                from openai import OpenAI
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+            else:
+                model_data = OpenAI(base_url="http://localhost:8080/v1", api_key="sk-no-key-required")
+                for model in model_data.models.list().data:
+                    entry = cls(
+                        model=f"openai/{model.id}",
+                        size=0,
+                        tags=["text"],
+                        library=LibType.LLAMAFILE,
+                        timestamp=int(model.created),  # no api for time data in cortex
+                    )
+                    entries.append(entry)
+        if LibType.LM_STUDIO:
+            try:
+                from lmstudio import list_downloaded_models  # pylint: disable=unused-import, # type: ignore
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
+            else:
+                # lms_client = get_default_client()
+                model_data = list_downloaded_models()
+                for model in model_data:  # pylint:disable=no-member
+                    tags = []
+                    if hasattr(model._data, "vision"):
+                        tags.extend("vision", model._data.vision)
+                    if hasattr(model._data, "trained_for_tool_use"):
+                        tags.append(("tool", model._data.trained_for_tool_use))
+                    entry = cls(
+                        model=f"lm_studio/{model.model_key}",
+                        size=model._data.size_bytes,
+                        tags=tags,
+                        library=LibType.LM_STUDIO,
+                        timestamp=int(model.modified_at.timestamp()),
+                    )
+                    entries.append(entry)
+        if LibType.VLLM:  # placeholder
+            try:
+                import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
         # else:
         #     nfo("Unsupported source")
         #     raise ValueError("Unsupported source")

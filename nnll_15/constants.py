@@ -140,9 +140,12 @@ VALID_TASKS = {
     LibType.OLLAMA: {
         ("text", "text"): ["mllama", "llava", "vllm"],
     },
+    LibType.LLAMAFILE: {
+        ("text", "text"): ["text"],
+    },
     LibType.LM_STUDIO: {
-        ("image", "text"): [True],
-        ("text", "text"): ["llm"],
+        ("image", "text"): [("vision", True)],
+        ("text", "text"): ["llm", ("tool", True)],
     },
     LibType.HUB: {
         ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
