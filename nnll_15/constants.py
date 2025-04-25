@@ -26,6 +26,7 @@ def check_and_import() -> Tuple[bool]:
     Returns True if the module is successfully imported or already available, False otherwise."""
 
     import requests
+    import httpcore
     import json
     from urllib3.exceptions import NewConnectionError, MaxRetryError
 
@@ -40,37 +41,50 @@ def check_and_import() -> Tuple[bool]:
                     if data.get("result") == "OK":
                         cortex_server = True
             except (
+                httpcore.ConnectError,
                 json.decoder.JSONDecodeError,
                 requests.exceptions.ConnectionError,
                 ConnectionRefusedError,
                 MaxRetryError,
                 NewConnectionError,
+                TimeoutError,
+                OSError,
             ):
                 continue
 
         elif api == "llamafile":
             try:
-                response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
-                if response is not None:
-                    data = response.json()
-                    if data.get("result") == "OK":
-                        llamafile_server = True
-            except (
-                json.decoder.JSONDecodeError,
-                requests.exceptions.ConnectionError,
-                ConnectionRefusedError,
-                MaxRetryError,
-                NewConnectionError,
-            ):
+                import openai
+            except (ModuleNotFoundError, ImportError) as error_log:
+                dbug(error_log)
                 continue
-
-        try:
-            __import__(api)
-            # setattr(LibType, api_libtype.get(api), True)
-        except ImportError as error_log:
-            nfo("|Ignorable| Source unavailable:", f"{api}")
-            dbug(error_log)
-            # setattr(LibType, api_libtype.get(api), False)
+            else:
+                try:
+                    response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
+                    if response is not None:
+                        data = response.json()
+                        if data.get("result") == "OK":
+                            llamafile_server = True
+                except (
+                    openai.APIConnectionError,
+                    httpcore.ConnectError,
+                    json.decoder.JSONDecodeError,
+                    requests.exceptions.ConnectionError,
+                    ConnectionRefusedError,
+                    MaxRetryError,
+                    NewConnectionError,
+                    TimeoutError,
+                    OSError,
+                ):
+                    continue
+        else:
+            try:
+                __import__(api)
+                # setattr(LibType, api_libtype.get(api), True)
+            except ImportError as error_log:
+                nfo("|Ignorable| Source unavailable:", f"{api}")
+                dbug(error_log)
+                # setattr(LibType, api_libtype.get(api), False)
     return cortex_server, llamafile_server
 
 
@@ -140,9 +154,12 @@ VALID_TASKS = {
     LibType.OLLAMA: {
         ("text", "text"): ["mllama", "llava", "vllm"],
     },
+    LibType.LLAMAFILE: {
+        ("text", "text"): ["text"],
+    },
     LibType.LM_STUDIO: {
-        ("image", "text"): [True],
-        ("text", "text"): ["llm"],
+        ("image", "text"): [("vision", True)],
+        ("text", "text"): ["llm", ("tool", True)],
     },
     LibType.HUB: {
         ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
