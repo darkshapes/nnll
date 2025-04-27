@@ -100,7 +100,6 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
     )
     litellm.disable_end_user_cost_tracking = True
     litellm.telemetry = False
-    litellm.disable_hf_tokenizer_download = True
     litellm.disable_streaming_logging = True
     litellm.turn_off_message_logging = True
     litellm.suppress_debug_info = True
