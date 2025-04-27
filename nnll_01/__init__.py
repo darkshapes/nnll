@@ -56,6 +56,7 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
 
     import logging
     import structlog
+
     import litellm
     from structlog.processors import ExceptionPrettyPrinter, StackInfoRenderer, format_exc_info, dict_tracebacks, TimeStamper, JSONRenderer
     from structlog.stdlib import add_log_level, PositionalArgumentsFormatter
@@ -97,6 +98,8 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
             ),
         ],
     )
+    litellm.disable_end_user_cost_tracking = True
+    litellm.telemetry = False
     litellm.disable_streaming_logging = True
     litellm.turn_off_message_logging = True
     litellm.suppress_debug_info = True

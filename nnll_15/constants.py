@@ -50,6 +50,7 @@ def check_and_import() -> Tuple[bool]:
                 TimeoutError,
                 OSError,
             ):
+                nfo("|Ignorable| Source unavailable:", f"{api}")
                 continue
 
         elif api == "llamafile":
@@ -76,6 +77,7 @@ def check_and_import() -> Tuple[bool]:
                     TimeoutError,
                     OSError,
                 ):
+                    nfo("|Ignorable| Source unavailable:", f"{api}")
                     continue
         else:
             try:
