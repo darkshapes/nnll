@@ -38,12 +38,6 @@ class ButtonsApp(App[str]):
     traced_path: reactive[list[str]] = reactive([])
     CSS_PATH = "button.tcss"
 
-    # BINDINGS = [
-    #     Binding("`", "scribe_response", "go", priority=True),  # Send to LLM
-    #     Binding("bk", "", "⌨️"),
-    #     Binding("alt+bk", "clear_input", "del"),
-    #     Binding("escape", "cancel_generation", "◼︎ / ⏏︎"),  # Cancel response
-    # ]
 
     def compose(self) -> ComposeResult:
         yield Horizontal(
@@ -83,7 +77,7 @@ class ButtonsApp(App[str]):
             # event.stop()
             self.intent_processor = IntentProcessor()
             self.intent_processor.calc_graph()
-            results_panel.write(f"Created {self.intent_processor}")
+            results_panel.write(f"Created {self.intent_processor.intent_graph}")
             start_points = self.query_one("#start_points")
             end_points = self.query_one("#end_points")
 
@@ -96,7 +90,8 @@ class ButtonsApp(App[str]):
                 available_conversions = {edge[0] for edge in self.intent_processor.intent_graph.edges}
                 end_points.extend([ListItem(Label(f"{edge}"), id=f"{edge}") for edge in available_conversions])
                 build_button.variant = "success"
-                results_panel.write(f"Attributes added to {self.intent_processor}")
+                results_panel.write(f"Attributes added to {self.intent_processor.intent_graph}")
+                results_panel.write(f"Attributes added to {self.intent_processor.intent_graph}")
             else:
                 build_button.variant = "warning"
                 results_panel.write("Attributes already added to graph")
@@ -135,7 +130,7 @@ class ButtonsApp(App[str]):
             self.intent_processor.set_path(mode_in=start_type, mode_out=end_type)
             results_panel.write(self.intent_processor.coord_path)
             self.intent_processor.set_ckpts()
-            self.tokenizer = next(iter(self.intent_processor.models))
+            self.tokenizer = next(iter(self.intent_processor.models)) if self.intent_processor.models != None else ""
             nfo(self.intent_processor.intent_graph.nodes(data=True))
             nfo([*self.intent_processor.intent_graph.edges(data=True)])
 

@@ -9,7 +9,7 @@ from typing import Dict, List, Tuple
 from pydantic import BaseModel, computed_field
 
 from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
-from nnll_15.constants import VALID_CONVERSIONS, VALID_TASKS, LibType, has_api
+from nnll_15.constants import LIBTYPE_CONFIG, VALID_CONVERSIONS, VALID_TASKS, LibType, has_api
 
 # import open_webui
 # from package import response_panel
@@ -64,7 +64,13 @@ class RegistryEntry(BaseModel):
         """
         entries = []
 
-        if LibType.OLLAMA and has_api(api_name="OLLAMA"):
+        @LIBTYPE_CONFIG.decorator
+        def _read_data(data:dict =None):
+            return data
+
+        libtype_data = _read_data()
+
+        if LibType.OLLAMA and has_api("OLLAMA"):
             from ollama import ListResponse, list as ollama_list
 
             model_data: ListResponse = ollama_list()  # type: ignore
@@ -78,7 +84,7 @@ class RegistryEntry(BaseModel):
                     timestamp=int(model.modified_at.timestamp()),
                 )
                 entries.append(entry)
-        if LibType.HUB and has_api(api_name="HUB"):
+        if LibType.HUB and has_api("HUB"):
 
             from huggingface_hub import scan_cache_dir, repocard  # type: ignore
             model_data = scan_cache_dir()
@@ -98,11 +104,11 @@ class RegistryEntry(BaseModel):
                 entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
                 entries.append(entry)
 
-        if LibType.CORTEX and has_api(api_name="CORTEX"):
+        if LibType.CORTEX and has_api("CORTEX"):
             import requests
             from datetime import datetime
 
-            response = requests.get("http://127.0.0.1:39281/v1/models", timeout=(3, 3))
+            response = requests.get(libtype_data["CORTEX"]["api_kwargs"]["api_base"], timeout=(3, 3))
             model = response.json()
             for model_data in model["data"]:
                 entry = cls(
@@ -114,10 +120,10 @@ class RegistryEntry(BaseModel):
                 )
                 entries.append(entry)
 
-        if LibType.LLAMAFILE and has_api(api_name="LLAMAFILE"):
+        if LibType.LLAMAFILE and has_api("LLAMAFILE"):
 
             from openai import OpenAI
-            model_data = OpenAI(base_url="http://localhost:8080/v1", api_key="sk-no-key-required")
+            model_data = OpenAI(base_url=libtype_data["LLAMAFILE"]["api_kwargs"]["api_base"], api_key="sk-no-key-required")
             for model in model_data.models.list().data:
                 entry = cls(
                     model=f"openai/{model.id}",
@@ -128,8 +134,7 @@ class RegistryEntry(BaseModel):
                 )
                 entries.append(entry)
 
-        if LibType.LM_STUDIO and has_api(api_name="LM_STUDIO"):
-            print(has_api(api_name="LM_STUDIO"))
+        if LibType.LM_STUDIO and has_api("LM_STUDIO"):
             from lmstudio import list_downloaded_models  # pylint: disable=unused-import, # type: ignore
             model_data = list_downloaded_models()
             for model in model_data:  # pylint:disable=no-member
@@ -147,13 +152,13 @@ class RegistryEntry(BaseModel):
                 )
                 entries.append(entry)
 
-        if LibType.VLLM and has_api(api_name="VLLM"):  # placeholder
+        if LibType.VLLM and has_api("VLLM"):  # placeholder
             import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
 
         # else:
         #     nfo("Unsupported source")
         #     raise ValueError("Unsupported source")
-        dbug(entries)
+        nfo(f"entries {entries}")
         return sorted(entries, key=lambda x: x.timestamp, reverse=True)
 
 
@@ -164,5 +169,8 @@ def from_cache() -> Dict[str, RegistryEntry]:
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
     models = None
+    nfo(f"available {LibType.OLLAMA is True}")
+    nfo(f"available {LibType.HUB is True}")
     models = RegistryEntry.from_model_data()
+    dbug(f"REG_ENTRIES {models}")
     return models

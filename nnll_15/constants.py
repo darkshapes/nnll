@@ -23,51 +23,65 @@ def has_api(api_name: str) -> bool:
     :return: _description_
     """
 
-    @LIBTYPE_CONFIG.decorator
-    def _read_data(data:dict =None):
-        return data
-
-    libtype_data = _read_data()
-    import requests
-    import importlib
-
-    api_data = libtype_data[api_name]
-    if api_data.get("module",0):
-        try:
-            if api_name == "LM_STUDIO":
-                from lmstudio import APIConnectionError, APITimeoutError, APIStatusError, LMStudioWebsocketError
-                exceptions = (APIConnectionError, APITimeoutError, APIStatusError,LMStudioWebsocketError,)
-            elif api_name in ["LLAMAFILE","CORTEX"]:
-                from openai import APIConnectionError, APIStatusError, APITimeoutError
-                exceptions = (APIConnectionError, APIStatusError, APITimeoutError)
-            else:
-                importlib.import_module(api_data.get("module"))
-                exceptions = Exception
-        except (ImportError, ModuleNotFoundError):
-            nfo("|Ignorable| Source unavailable:", f"{api_name}")
-            return False
-    else:
-        exceptions = Exception
-    try:
-        from httpcore import ConnectError
-        from urllib3.exceptions import NewConnectionError, MaxRetryError
-        # from httpx import ConnectError as ConnectError
+    def check_host() -> bool:
         from json.decoder import JSONDecodeError
-        response = requests.get(api_data["api_kwargs"].get("api_base"), timeout=(1, 1))
-        status     = response.json() if response is not None else {}
-        if status.get("result") == "OK":
-            return True
-    except (requests.exceptions.ConnectionError,
-                JSONDecodeError,
-                ConnectError,
+        import httpcore
+        import httpx
+        from urllib3.exceptions import NewConnectionError, MaxRetryError
+        import requests
+        dbug(f"responded for ! {api_data}")
+        try:
+            if api_data.get("api_url",0):
+                request = requests.get(api_data.get("api_url"), timeout=(1, 1))
+                status = request.json() if request is not None else {}
+                if status.get("result") == "OK":
+                    return True
+        except JSONDecodeError:
+            dbug(f"json for ! {api_data}")
+            dbug(request.status_code)
+            if request.status_code == 200:
+                return True
+        except (requests.exceptions.ConnectionError,
+                httpcore.ConnectError,
+                httpx.ConnectError,
                 ConnectionRefusedError,
                 MaxRetryError,
                 NewConnectionError,
                 TimeoutError,
                 OSError,
                 RuntimeError,
-                ConnectionError,
-                ValueError,):
+                ConnectionError):
+            nfo("|Ignorable| Source unavailable:", f"{api_name}")
+            return False
+        return False
+
+    @LIBTYPE_CONFIG.decorator
+    def _read_data(data:dict =None):
+        return data
+
+    libtype_data = _read_data()
+    api_data = libtype_data[api_name] #pylint: disable=unsubscriptable-object
+
+    try:
+        if api_name == "LM_STUDIO":
+            from lmstudio import APIConnectionError, APITimeoutError, APIStatusError, LMStudioWebsocketError
+            return check_host()
+        elif api_name in ["LLAMAFILE","CORTEX"]:
+            from openai import APIConnectionError, APIStatusError, APITimeoutError
+            return check_host()
+        else:
+            __import__(api_data.get("module"))
+            if api_name == "HUB":
+                return True
+            else:
+                return check_host()
+    except (ImportError, ModuleNotFoundError):
+        nfo("|Ignorable| Source unavailable:", f"{api_name}")
+        return False
+    except (APIConnectionError, APITimeoutError, APIStatusError):
+        nfo("|Ignorable| Source unavailable:", f"{api_name}")
+        return False
+    except (LMStudioWebsocketError):
         nfo("|Ignorable| Source unavailable:", f"{api_name}")
         return False
     return False
@@ -76,12 +90,12 @@ def has_api(api_name: str) -> bool:
 class LibType(Enum):
     """API library constants"""
 
-    OLLAMA   : int = (0, has_api("OLLAMA"))
-    HUB      : int = (1, has_api("HUB"))
-    LM_STUDIO: int = (2, has_api("LM_STUDIO"))
-    CORTEX   : int = (3, has_api("CORTEX"))
-    LLAMAFILE: int = (4, has_api("LLAMAFILE"))
-    VLLM     : int = (5, has_api("VLLM"))
+    OLLAMA   : bool = (has_api("OLLAMA"))
+    HUB      : bool = (has_api("HUB"))
+    LM_STUDIO: bool = (has_api("LM_STUDIO"))
+    CORTEX   : bool = (has_api("CORTEX"))
+    LLAMAFILE: bool = (has_api("LLAMAFILE"))
+    VLLM     : bool = (has_api("VLLM"))
 
 
 class GenTypeC(BaseModel):
