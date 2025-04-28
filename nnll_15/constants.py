@@ -14,9 +14,8 @@ from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
 
 LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
 
-@LIBTYPE_CONFIG.decorator
 @debug_monitor
-def has_api(api_name: str, _data=None) -> bool:
+def has_api(api_name: str) -> bool:
     """Check available modules, try to import dynamically.
     True for successful import, else False
 
@@ -25,10 +24,15 @@ def has_api(api_name: str, _data=None) -> bool:
     :return: _description_
     """
 
+    @LIBTYPE_CONFIG.decorator
+    def _read_data(data):
+        return data
+
+    libtype_data = _read_data
     import requests
     import importlib
 
-    api_data = _data[api_name]
+    api_data = libtype_data[api_name]
     if api_data.get("module",0):
         try:
             if api_name == "LM_STUDIO":

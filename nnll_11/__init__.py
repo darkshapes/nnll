@@ -33,9 +33,8 @@ class QASignature(dspy.Signature):
 
 
 # signature: dspy.Signature = BasicQAHistory
-@LIBTYPE_CONFIG.decorator
 @debug_monitor
-async def get_api(model: str, library: LibType, _data: dict =None) -> dict:
+async def get_api(model: str, library: LibType) -> dict:
     """
     Load model into chat completion method based on library and run query\n
     :param model: The model to create a reply with the question
@@ -44,18 +43,26 @@ async def get_api(model: str, library: LibType, _data: dict =None) -> dict:
     :return: Arguments to pass to the LM constructor
     """
 
+    @LIBTYPE_CONFIG.decorator
+    def _read_data(data):
+        return data
+
+    libtype_data = _read_data
+    import requests
+    import importlib
+
     if library == LibType.OLLAMA and has_api("OLLAMA"):
-        model = {"model": model } | _data["OLLAMA"].get("api_kwargs")  # ollama_chat/
+        model = {"model": model } | libtype_data["OLLAMA"].get("api_kwargs")  # ollama_chat/
     elif library == LibType.LM_STUDIO and has_api("LM_STUDIO"):
-        model = {"model": model} | _data["LM_STUDIO"].get("api_kwargs")  # lm_studio/
+        model = {"model": model} | libtype_data["LM_STUDIO"].get("api_kwargs")  # lm_studio/
     elif library == LibType.HUB and has_api("HUB"):
-        model = {"model": model} | _data["HUB"].get("api_kwargs")# huggingface/civitai via sdbx
+        model = {"model": model} | libtype_data["HUB"].get("api_kwargs")# huggingface/civitai via sdbx
     elif library == LibType.VLLM and has_api("VLLM"):
-        model = {"model": model} | _data["VLLM"].get("api_kwargs") # hosted_vllm/
+        model = {"model": model} | libtype_data["VLLM"].get("api_kwargs") # hosted_vllm/
     elif library == LibType.LLAMAFILE and has_api("LLAMAFILE"):
-        model = {"model": model} | _data["LLAMAFILE"].get("api_kwargs")
+        model = {"model": model} | libtype_data["LLAMAFILE"].get("api_kwargs")
     elif library == LibType.CORTEX and has_api("CORTEX"):
-        model = {"model": model} | _data["CORTEX"].get("api_kwargs")
+        model = {"model": model} | libtype_data["CORTEX"].get("api_kwargs")
     return model
 
 
