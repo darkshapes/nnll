@@ -35,13 +35,13 @@ async def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
     """
     import importlib
 
-    mir_arch = next(key for key, value in mir_data() if known_repo in value["repo"])
-    sequence = mir_data[mir_arch].get("constructor", [])
+    mir_arch      = next(key for key, value in mir_data() if known_repo in value["repo"])
+    sequence      = mir_data[mir_arch].get("constructor", [])
     call_sequence = [seq.split(".") for seq in sequence]
     module_names, function_names = zip(*[(func[0], func[-1]) for func in call_sequence]) if call_sequence else ([], [])
-    modules = zip(module_names, function_names)
-    import_name = next(iter(modules))
-    module = importlib.import_module(modules)
+    modules       = zip(module_names, function_names)
+    import_name   = next(iter(modules))
+    module        = importlib.import_module(modules)
     function_call = getattr(module, module[import_name])
     return function_call
 

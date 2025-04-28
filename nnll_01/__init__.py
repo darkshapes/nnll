@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
-import viztracer
+# import viztracer
 
 
 def use_nouveau_theme():
@@ -174,7 +174,8 @@ def info_stream():
     from rich.console import Console
     from rich.logging import RichHandler
     from logging import StreamHandler, Formatter, getLogger
-    from logging import root
+
+    # from logging import root
     from sys import stderr as sys_stderr
 
     console_out = Console(stderr=True, theme=use_nouveau_theme())
@@ -221,13 +222,6 @@ log_folder = os.path.join(
     "log",
 )
 os.makedirs(log_folder, exist_ok=True)
-
-
-def main():
-    from nnll_10.package import __main__ as app_nnll_10
-
-    info_message("Launching...")
-    return app_nnll_10.Combo(ansi_color=False)
 
 
 if __name__ == "__main__":

@@ -49,11 +49,11 @@ async def get_api(model: str, library: LibType) -> dict:
     elif library == LibType.HUB:
         model = {"model": model}  # api_base="https://localhost:xxxx/address:port/sdbx/placeholder"} # huggingface/
     elif library == LibType.VLLM:
-        model = {"model": model, "api_base": "http://localhost:8000/chat/completions"}  # hosted_vllm/
+        model = {"model": model, "api_base": "http://localhost:8000/chat/completions", "api_key": "sk-no-key-required"}  # hosted_vllm/
     elif library == LibType.LLAMAFILE:
         model = {"model": model, "api_base": "http://localhost:8080/v1", "api_key": "sk-no-key-required"}
     elif library == LibType.CORTEX:
-        model = {"model": model, "api_base": "http://127.0.0.1:39281/v1/chat/completions"}
+        model = {"model": model, "api_base": "http://127.0.0.1:39281/v1/chat/completions", "api_key": "sk-no-key-required"}
     return model
 
 
