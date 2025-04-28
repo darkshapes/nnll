@@ -18,8 +18,8 @@ from textual.widgets import Button, Label, ListItem, ListView, RichLog, Static
 from nnll_01 import debug_message as dbug, info_message as nfo
 from nnll_01 import debug_monitor
 from nnll_10 import IntentProcessor
-from nnll_10.package.response_panel import ResponsePanel
-from nnll_10.package.token_counters import tk_count
+from nnll_10.response_panel import ResponsePanel
+from nnll_10.token_counters import tk_count
 from nnll_13 import VoicePanel
 from nnll_15.constants import GenTypeC, GenTypeCText
 from nnll_19 import MessagePanel
@@ -85,7 +85,7 @@ class ButtonsApp(App[str]):
         if self.hover_name == "build":
             # event.stop()
             self.intent_processor = IntentProcessor()
-            self.intent_processor.calculate_intent_graph()
+            self.intent_processor.calc_graph()
             results_panel.write(f"Created {self.intent_processor}")
             start_points = self.query_one("#start_points")
             end_points = self.query_one("#end_points")
@@ -135,15 +135,15 @@ class ButtonsApp(App[str]):
             results_panel.write(self.gen_type)
 
         if start_type is not None and end_type is not None:
-            self.intent_processor.derive_coordinates_path(mode_in=start_type, mode_out=end_type)
-            results_panel.write(self.intent_processor.coordinates_path)
-            self.intent_processor.define_model_waypoints()
-            self.tokenizer = next(iter(self.intent_processor.model_names))
+            self.intent_processor.set_path(mode_in=start_type, mode_out=end_type)
+            results_panel.write(self.intent_processor.coord_path)
+            self.intent_processor.set_ckpts()
+            self.tokenizer = next(iter(self.intent_processor.models))
             nfo(self.intent_processor.intent_graph.nodes(data=True))
             nfo([*self.intent_processor.intent_graph.edges(data=True)])
 
             self.query_one("#response_panel").insert(f"{str(self.tokenizer)}\n")
-            results_panel.write([x["entry"].model for x in list(self.intent_processor.registry_entries)])
+            results_panel.write([x["entry"].model for x in list(self.intent_processor.ckpts)])
             convert_type = self.query_one("#convert_type")
             all_fields = GenTypeCText.model_fields | GenTypeC.model_fields
             convert_type.remove_children(ListItem)

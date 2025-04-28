@@ -11,7 +11,6 @@ from nnll_01 import debug_message as dbug
 from nnll_01 import debug_monitor
 from nnll_01 import info_message as nfo
 
-
 @debug_monitor
 def has_api(api_name: str) -> bool:
     """Check available modules, try to import dynamically.
@@ -21,10 +20,34 @@ def has_api(api_name: str) -> bool:
     import httpcore
     import json
     from urllib3.exceptions import NewConnectionError, MaxRetryError
-
-    if api_name == "cortex":
+    if api_name == "lmstudio":
         try:
-            response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(3, 3))
+            from lmstudio import LMStudioWebsocketError
+        except (ImportError, ModuleNotFoundError) as error_log:
+            nfo("|Ignorable| Source unavailable:", f"{api_name}")
+            dbug(error_log)
+        else:
+            try:
+                response = requests.get("http://localhost:1234/v1", timeout=(1, 1))
+                data     = response.json() if response is not None else {}
+                if data.get("result") == "OK":
+                    return True
+            except (
+                httpcore.ConnectError,
+                json.decoder.JSONDecodeError,
+                requests.exceptions.ConnectionError,
+                ConnectionRefusedError,
+                MaxRetryError,
+                NewConnectionError,
+                TimeoutError,
+                OSError,
+                LMStudioWebsocketError
+                ):
+                        nfo("|Ignorable| Source unavailable:", f"{api_name}")
+
+    elif api_name == "cortex":
+        try:
+            response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(1, 1))
             data     = response.json() if response is not None else {}
             if data.get("result") == "OK":
                 return True
@@ -39,7 +62,6 @@ def has_api(api_name: str) -> bool:
             OSError,
         ):
             nfo("|Ignorable| Source unavailable:", f"{api_name}")
-
     elif api_name == "llamafile":
         try:
             import openai
@@ -47,7 +69,7 @@ def has_api(api_name: str) -> bool:
             dbug(error_log)
         else:
             try:
-                response = requests.get("http://localhost:8080/v1", timeout=(3, 3))
+                response = requests.get("http://localhost:8080/v1", timeout=(1, 1))
                 data     = response.json() if response is not None else {}
                 if data.get("result") == "OK":
                     return True
@@ -63,13 +85,6 @@ def has_api(api_name: str) -> bool:
                 OSError,
             ):
                 nfo("|Ignorable| Source unavailable:", f"{api_name}")
-    else:
-        try:
-            __import__(api_name)
-            return True
-        except ImportError as error_log:
-            nfo("|Ignorable| Source unavailable:", f"{api_name}")
-            dbug(error_log)
     return False
 
 

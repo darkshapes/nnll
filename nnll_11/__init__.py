@@ -47,7 +47,7 @@ async def get_api(model: str, library: LibType) -> dict:
     elif library == LibType.LM_STUDIO:
         model = {"model": model, "api_base": "http://localhost:1234/v1", "api_key": "lm-studio"}  # lm_studio/
     elif library == LibType.HUB:
-        model = {"model": model}  # api_base="https://localhost:xxxx/address:port/sdbx/placeholder"} # huggingface/
+        model = {"model": model, "api_base": "http://127.0.0.1:8188"} # huggingface/civitai via sdbx
     elif library == LibType.VLLM:
         model = {"model": model, "api_base": "http://localhost:8000/chat/completions", "api_key": "sk-no-key-required"}  # hosted_vllm/
     elif library == LibType.LLAMAFILE:
