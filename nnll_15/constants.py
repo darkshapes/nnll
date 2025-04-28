@@ -14,7 +14,6 @@ from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
 
 LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
 
-@debug_monitor
 def has_api(api_name: str) -> bool:
     """Check available modules, try to import dynamically.
     True for successful import, else False
@@ -32,10 +31,7 @@ def has_api(api_name: str) -> bool:
     import requests
     import importlib
 
-    nfo("libtype", libtype_data)
     api_data = libtype_data[api_name]
-    nfo(api_data)
-    dbug(locals())
     if api_data.get("module",0):
         try:
             if api_name == "LM_STUDIO":
@@ -47,9 +43,8 @@ def has_api(api_name: str) -> bool:
             else:
                 importlib.import_module(api_data.get("module"))
                 exceptions = Exception
-        except (ImportError, ModuleNotFoundError) as error_log:
+        except (ImportError, ModuleNotFoundError):
             nfo("|Ignorable| Source unavailable:", f"{api_name}")
-            dbug(error_log)
             return False
     else:
         exceptions = Exception

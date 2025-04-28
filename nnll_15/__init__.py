@@ -54,7 +54,6 @@ class RegistryEntry(BaseModel):
         return processed_tasks
 
     @classmethod
-    @debug_monitor
     def from_model_data(cls) -> list[tuple[str]]:  # lib_type: LibType) model_data: tuple[frozenset[str]]
         """# todo - split into dependency-specific implementations
         # absolutely needs to be refactored!!!!!
@@ -154,7 +153,7 @@ class RegistryEntry(BaseModel):
         # else:
         #     nfo("Unsupported source")
         #     raise ValueError("Unsupported source")
-
+        dbug(entries)
         return sorted(entries, key=lambda x: x.timestamp, reverse=True)
 
 
