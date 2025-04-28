@@ -90,12 +90,12 @@ def has_api(api_name: str) -> bool:
 class LibType(Enum):
     """API library constants"""
 
-    OLLAMA   : bool = (has_api("OLLAMA"))
-    HUB      : bool = (has_api("HUB"))
-    LM_STUDIO: bool = (has_api("LM_STUDIO"))
-    CORTEX   : bool = (has_api("CORTEX"))
-    LLAMAFILE: bool = (has_api("LLAMAFILE"))
-    VLLM     : bool = (has_api("VLLM"))
+    OLLAMA   : int = (0,has_api("OLLAMA"))
+    HUB      : int = (1,has_api("HUB"))
+    LM_STUDIO: int = (2,has_api("LM_STUDIO"))
+    CORTEX   : int = (3,has_api("CORTEX"))
+    LLAMAFILE: int = (4,has_api("LLAMAFILE"))
+    VLLM     : int = (5,has_api("VLLM"))
 
 
 class GenTypeC(BaseModel):
