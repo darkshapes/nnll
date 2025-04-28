@@ -32,7 +32,10 @@ def has_api(api_name: str) -> bool:
     import requests
     import importlib
 
+    nfo("libtype", libtype_data)
     api_data = libtype_data[api_name]
+    nfo(api_data)
+    dbug(locals())
     if api_data.get("module",0):
         try:
             if api_name == "LM_STUDIO":
@@ -42,7 +45,7 @@ def has_api(api_name: str) -> bool:
                 from openai import APIConnectionError, APIStatusError, APITimeoutError
                 exceptions = (APIConnectionError, APIStatusError, APITimeoutError)
             else:
-                importlib.import_module(libtype_data[api_name]["module"])
+                importlib.import_module(api_data.get("module"))
                 exceptions = Exception
         except (ImportError, ModuleNotFoundError) as error_log:
             nfo("|Ignorable| Source unavailable:", f"{api_name}")
