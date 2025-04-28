@@ -148,7 +148,7 @@ class RegistryEntry(BaseModel):
                 )
                 entries.append(entry)
 
-        if LibType.VLLM and has_api(api_name="VLLM", poll_only=True):  # placeholder
+        if LibType.VLLM and has_api(api_name="VLLM"):  # placeholder
             import vllm  # type: ignore  # noqa: F401 #pylint:disable=unused-import
 
         # else:
