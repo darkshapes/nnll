@@ -25,10 +25,10 @@ def has_api(api_name: str) -> bool:
     """
 
     @LIBTYPE_CONFIG.decorator
-    def _read_data(data):
+    def _read_data(data:dict =None):
         return data
 
-    libtype_data = _read_data
+    libtype_data = _read_data()
     import requests
     import importlib
 

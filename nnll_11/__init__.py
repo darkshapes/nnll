@@ -44,10 +44,10 @@ async def get_api(model: str, library: LibType) -> dict:
     """
 
     @LIBTYPE_CONFIG.decorator
-    def _read_data(data):
+    def _read_data(data:dict=None):
         return data
 
-    libtype_data = _read_data
+    libtype_data = _read_data()
     import requests
     import importlib
 
