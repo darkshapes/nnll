@@ -49,12 +49,9 @@ class ButtonsApp(App[str]):
         yield Horizontal(
             VerticalScroll(
                 Button("Build", id="build", variant="primary"),
-                # Button("2. Add Attributes", id="attrib", variant="default"),
-                # Static("3. Source", classes="header"),
                 ListView(id="start_points"),
                 Static("to", classes="header"),
                 ListView(id="end_points"),
-                # Static("5. Type", classes="header"),
                 ListView(id="convert_type", initial_index=0),
             ),
             Vertical(

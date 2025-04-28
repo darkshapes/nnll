@@ -10,93 +10,78 @@ from pydantic import BaseModel, Field
 from nnll_01 import debug_message as dbug
 from nnll_01 import debug_monitor
 from nnll_01 import info_message as nfo
+from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
 
+LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
+
+@LIBTYPE_CONFIG.decorator
 @debug_monitor
-def has_api(api_name: str) -> bool:
+def has_api(api_name: str, _data=None) -> bool:
     """Check available modules, try to import dynamically.
-    True for successful import, else False."""
+    True for successful import, else False
+
+    :param api_name: Constant name for API
+    :param _data: filled by config decorator, ignore, defaults to None
+    :return: _description_
+    """
 
     import requests
-    import httpcore
-    import json
-    from urllib3.exceptions import NewConnectionError, MaxRetryError
-    if api_name == "lmstudio":
+    import importlib
+
+    api_data = _data[api_name]
+    if api_data.get("module",0):
         try:
-            from lmstudio import LMStudioWebsocketError
+            if api_name == "LM_STUDIO":
+                from lmstudio import APIConnectionError, APITimeoutError, APIStatusError, LMStudioWebsocketError
+                exceptions = (APIConnectionError, APITimeoutError, APIStatusError,LMStudioWebsocketError,)
+            elif api_name in ["LLAMAFILE","CORTEX"]:
+                from openai import APIConnectionError, APIStatusError, APITimeoutError
+                exceptions = (APIConnectionError, APIStatusError, APITimeoutError)
+            else:
+                importlib.import_module(api_name["module"])
+                exceptions = Exception
         except (ImportError, ModuleNotFoundError) as error_log:
             nfo("|Ignorable| Source unavailable:", f"{api_name}")
             dbug(error_log)
-        else:
-            try:
-                response = requests.get("http://localhost:1234/v1", timeout=(1, 1))
-                data     = response.json() if response is not None else {}
-                if data.get("result") == "OK":
-                    return True
-            except (
-                httpcore.ConnectError,
-                json.decoder.JSONDecodeError,
-                requests.exceptions.ConnectionError,
+            return False
+    else:
+        exceptions = Exception
+    try:
+        from httpcore import ConnectError as hc_ConnectError
+        from urllib3.exceptions import NewConnectionError, MaxRetryError
+        from httpx import ConnectError as hx_ConnectError
+        from json.decoder import JSONDecodeError
+        response = requests.get(api_data["api_kwargs"].get("api_base"), timeout=(1, 1))
+        status     = response.json() if response is not None else {}
+        if status.get("result") == "OK":
+            return True
+    except (requests.exceptions.ConnectionError,
+                JSONDecodeError,
                 ConnectionRefusedError,
                 MaxRetryError,
                 NewConnectionError,
                 TimeoutError,
                 OSError,
-                LMStudioWebsocketError
-                ):
-                        nfo("|Ignorable| Source unavailable:", f"{api_name}")
-
-    elif api_name == "cortex":
-        try:
-            response = requests.get("http://127.0.0.1:39281/v1/chat/completions", timeout=(1, 1))
-            data     = response.json() if response is not None else {}
-            if data.get("result") == "OK":
-                return True
-        except (
-            httpcore.ConnectError,
-            json.decoder.JSONDecodeError,
-            requests.exceptions.ConnectionError,
-            ConnectionRefusedError,
-            MaxRetryError,
-            NewConnectionError,
-            TimeoutError,
-            OSError,
-        ):
-            nfo("|Ignorable| Source unavailable:", f"{api_name}")
-    elif api_name == "llamafile":
-        try:
-            import openai
-        except (ModuleNotFoundError, ImportError) as error_log:
-            dbug(error_log)
-        else:
-            try:
-                response = requests.get("http://localhost:8080/v1", timeout=(1, 1))
-                data     = response.json() if response is not None else {}
-                if data.get("result") == "OK":
-                    return True
-            except (
-                openai.APIConnectionError,
-                httpcore.ConnectError,
-                json.decoder.JSONDecodeError,
-                requests.exceptions.ConnectionError,
-                ConnectionRefusedError,
-                MaxRetryError,
-                NewConnectionError,
-                TimeoutError,
-                OSError,
-            ):
-                nfo("|Ignorable| Source unavailable:", f"{api_name}")
+                RuntimeError,
+                ConnectionError,
+                ValueError,
+                hx_ConnectError,
+                hc_ConnectError,
+                exceptions):
+        nfo("|Ignorable| Source unavailable:", f"{api_name}")
+        return False
     return False
 
 
 class LibType(Enum):
     """API library constants"""
 
-    OLLAMA   : int = (0, has_api("ollama"))
-    HUB      : int = (1, has_api("huggingface_hub"))
-    LM_STUDIO: int = (2, has_api("lmstudio"))
-    CORTEX   : int = (3, has_api("cortex"))
-    LLAMAFILE: int = (4, has_api("llamafile"))
-    VLLM     : int = (5, has_api("vllm"))
+    OLLAMA   : int = (0, has_api("OLLAMA"))
+    HUB      : int = (1, has_api("HUB"))
+    LM_STUDIO: int = (2, has_api("LM_STUDIO"))
+    CORTEX   : int = (3, has_api("CORTEX"))
+    LLAMAFILE: int = (4, has_api("LLAMAFILE"))
+    VLLM     : int = (5, has_api("VLLM"))
 
 
 class GenTypeC(BaseModel):
