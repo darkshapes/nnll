@@ -34,18 +34,7 @@ nnll-04 = ["gguf>=0.14.0", "safetensors>=0.5.3"]
 nnll-05 = ["networkx>=3.4.2"]
 nnll-06 = ["litellm>=1.65.0", "ollama>=0.4.7", "tiktoken>=0.9.0"]
 nnll-08 = ["numpy>=2.2.3", "torch>=2.6.0"]
-nnll-09 = ["torch>=2.6.0", "torchvision>=0.21.0", "transformers>=4.49.0"]
-nnll-10 = [
-    "rich>=13.9.4",
-    "dspy>=2.6.13",
-    "sounddevice>=0.5.1",
-    "textual[syntax]>=2.1.2",
-    "textual-plotext>=1.0.1",
-    "ollama>=0.4.7",
-    "numpy>=2.2.3",
-    "tree-sitter>=0.24.0",
-    "litellm>=1.65.0",
-]
+nnll-09 = ["torch>=2.7.0", "torchvision>=0.22.0", "transformers>=4.49.0"]
 nnll-11 = ["dspy>=2.6.13", "pydantic>=2.10.6"]
 nnll-12 = ["textual[syntax]>=2.1.2", "networkx>=3.4.2", "tree-sitter>=0.24.0"]
 nnll-13 = ["sounddevice>=0.5.1", "textual-plotext>=1.0.1"]
@@ -60,17 +49,23 @@ nnll-15 = [
     "ollama>=0.4.7",
     "pydantic>=2.10.6",
 ]
-nnll-16 = ["torch>=2.6.0"]
-nnll-18 = ["torch>=2.6.0"]
-nnll-26 = ["torch>=2.6.0"]
-nnll-36 = ["torch>=2.6.0"]
+nnll-16 = ["torch>=2.7.0"]
+nnll-18 = ["torch>=2.7.0"]
+nnll-26 = ["torch>=2.7.0"]
+nnll-36 = ["torch>=2.7.0"]
 nnll-44 = ["huggingface-hub[hf-transfer]>=0.29.1"]
 nnll-45 = ["huggingface-hub[hf-transfer]>=0.29.1"]
 nnll-47 = ["pydantic>=2.10.6", "pydantic-core>=2.27.2"]
 nnll-48 = ["pillow>=11.1.0", "toml>=0.10.2"]
 nnll-49 = ["pydantic>=2.10.6"]
-nnll-56 = ["hidiffusion>=0.1.10", "torch>=2.6.0", "torchvision>=0.21.0"]
-nnll-62 = ["diffusers>=0.32.2", "torch>=2.6.0", "torchvision>=0.21.0"]
+nnll-56 = ["hidiffusion>=0.1.10", "torch>=2.7.0", "torchvision>=0.22.0"]
+nnll-62 = [
+    "diffusers>=0.32.2",
+    "torch>=2.7.0",
+    "torchvision>=0.22.0",
+    "accelerate",
+    "peft",
+]
 nnll-64 = ["pillow>=11.1.0"]
 all = [
     "nnll[nnll_01]",
@@ -81,7 +76,6 @@ all = [
     "nnll[nnll_06]",
     "nnll[nnll_08]",
     "nnll[nnll_09]",
-    "nnll[nnll_10]",
     "nnll[nnll_11]",
     "nnll[nnll_12]",
     "nnll[nnll_13]",
@@ -100,6 +94,7 @@ all = [
     "nnll[nnll_62]",
     "nnll[nnll_64]",
 ]
+
 dev = [
     "nnll[all]",
     "aioresponses>=0.7.8",
@@ -142,6 +137,7 @@ ignore-paths    = ["^tests/.*$", "test_.*$"]
 disable         = ["C0415"]
 
 [tool.ruff.format]
+exclude = ["*.py"]
 
 [tool.ruff.lint.pycodestyle]
 max-line-length               = 140
