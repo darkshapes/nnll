@@ -51,9 +51,9 @@ def has_api(api_name: str) -> bool:
     else:
         exceptions = Exception
     try:
-        from httpcore import ConnectError as hc_ConnectError
+        from httpcore import ConnectError
         from urllib3.exceptions import NewConnectionError, MaxRetryError
-        from httpx import ConnectError as hx_ConnectError
+        # from httpx import ConnectError as ConnectError
         from json.decoder import JSONDecodeError
         response = requests.get(api_data["api_kwargs"].get("api_base"), timeout=(1, 1))
         status     = response.json() if response is not None else {}
@@ -61,6 +61,7 @@ def has_api(api_name: str) -> bool:
             return True
     except (requests.exceptions.ConnectionError,
                 JSONDecodeError,
+                ConnectError,
                 ConnectionRefusedError,
                 MaxRetryError,
                 NewConnectionError,
@@ -68,10 +69,7 @@ def has_api(api_name: str) -> bool:
                 OSError,
                 RuntimeError,
                 ConnectionError,
-                ValueError,
-                hx_ConnectError,
-                hc_ConnectError,
-                exceptions):
+                ValueError,):
         nfo("|Ignorable| Source unavailable:", f"{api_name}")
         return False
     return False
