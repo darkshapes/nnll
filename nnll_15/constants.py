@@ -42,7 +42,7 @@ def has_api(api_name: str) -> bool:
                 from openai import APIConnectionError, APIStatusError, APITimeoutError
                 exceptions = (APIConnectionError, APIStatusError, APITimeoutError)
             else:
-                importlib.import_module(api_name["module"])
+                importlib.import_module(libtype_data[api_name]["module"])
                 exceptions = Exception
         except (ImportError, ModuleNotFoundError) as error_log:
             nfo("|Ignorable| Source unavailable:", f"{api_name}")
