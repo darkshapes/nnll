@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: blessing) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 """初始化 init, argparse, 建立控制檯日誌 logging"""
