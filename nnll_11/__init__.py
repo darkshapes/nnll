@@ -46,24 +46,18 @@ async def get_api(model: str, library: LibType) -> dict:
     def _read_data(data:dict =None):
         return data
 
-    libtype_data = _read_data()
-    # import requests
-    # import importlib
+    data = _read_data()
     req_form = {}
-    if library == LibType.OLLAMA:
-        model = {"model": model, "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}  # ollama_chat/
-    elif library == LibType.LM_STUDIO and has_api("LM_STUDIO"):
-        req_form = {"model": model, **libtype_data["LM_STUDIO"].get("api_kwargs")}  # lm_studio/
-    elif library == LibType.HUB and has_api("HUB"):
-        req_form = {"model": model, **libtype_data["HUB"].get("api_kwargs")}# huggingface/civitai via sdbx
-    elif library == LibType.VLLM and has_api("VLLM"):
-        req_form = {"model": model, **libtype_data["VLLM"].get("api_kwargs")} # hosted_vllm/
-    elif library == LibType.LLAMAFILE and has_api("LLAMAFILE"):
-        req_form = {"model": model, **libtype_data["LLAMAFILE"].get("api_kwargs")}
-    elif library == LibType.CORTEX and has_api("CORTEX"):
-        req_form = {"model": model, **libtype_data["CORTEX"].get("api_kwargs")}
-    return model
 
+    if data.get(library.value[1],0) and has_api(library.value[1]):
+        config = data[library.value[1],0]
+        req_form = {
+            "model": model,  # Assuming 'model' corresponds to 'module'
+            **config["api_kwargs"],
+        }
+        return req_form
+    else:
+        raise ValueError(f"Library '{library}' not found in configuration.")
 
 # fact_checking = dspy.ChainOfThought('claims -> verdicts: list[bool]')
 # fact_checking(claims=["Python was released in 1991.", "Python is a compiled language."])
