@@ -143,6 +143,7 @@ class GenTypeE(BaseModel):
 
 VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d render", "vector graphic", "upscale_image"]
 
+# decide on a way to keep paired tuples and sets together inside config dict
 VALID_TASKS = {
     LibType.CORTEX: {
         ("text", "text"): ["text"],

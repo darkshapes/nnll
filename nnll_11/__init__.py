@@ -1,11 +1,10 @@
 #  # # <!-- // /*  SPDX-License-Identifier: blessing) */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
-# pylint: disable=pointless-statement
+# pylint: disable=pointless-statement, unsubscriptable-object
 from typing import Any
 import dspy
 from pydantic import BaseModel, Field
-from sympy import Basic
 
 from nnll_01 import debug_monitor, debug_message as dbug  # , info_message as nfo
 from nnll_15.constants import LibType, has_api, LibType, LIBTYPE_CONFIG
@@ -48,21 +47,21 @@ async def get_api(model: str, library: LibType) -> dict:
         return data
 
     libtype_data = _read_data()
-    import requests
-    import importlib
-
-    if library == LibType.OLLAMA and has_api("OLLAMA"):
-        model = {"model": model } | libtype_data["OLLAMA"].get("api_kwargs")  # ollama_chat/
+    # import requests
+    # import importlib
+    req_form = {}
+    if library == LibType.OLLAMA:
+        model = {"model": model, "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}  # ollama_chat/
     elif library == LibType.LM_STUDIO and has_api("LM_STUDIO"):
-        model = {"model": model} | libtype_data["LM_STUDIO"].get("api_kwargs")  # lm_studio/
+        req_form = {"model": model, **libtype_data["LM_STUDIO"].get("api_kwargs")}  # lm_studio/
     elif library == LibType.HUB and has_api("HUB"):
-        model = {"model": model} | libtype_data["HUB"].get("api_kwargs")# huggingface/civitai via sdbx
+        req_form = {"model": model, **libtype_data["HUB"].get("api_kwargs")}# huggingface/civitai via sdbx
     elif library == LibType.VLLM and has_api("VLLM"):
-        model = {"model": model} | libtype_data["VLLM"].get("api_kwargs") # hosted_vllm/
+        req_form = {"model": model, **libtype_data["VLLM"].get("api_kwargs")} # hosted_vllm/
     elif library == LibType.LLAMAFILE and has_api("LLAMAFILE"):
-        model = {"model": model} | libtype_data["LLAMAFILE"].get("api_kwargs")
+        req_form = {"model": model, **libtype_data["LLAMAFILE"].get("api_kwargs")}
     elif library == LibType.CORTEX and has_api("CORTEX"):
-        model = {"model": model} | libtype_data["CORTEX"].get("api_kwargs")
+        req_form = {"model": model, **libtype_data["CORTEX"].get("api_kwargs")}
     return model
 
 
@@ -74,7 +73,7 @@ class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
 
-    @debug_monitor
+    # Don't capture user prompts
     def __init__(self, sig: dspy.Signature = QASignature, streaming=True) -> None:
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
@@ -86,7 +85,7 @@ class ChatMachineWithMemory(dspy.Module):
         generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
         self.completion = dspy.streamify(generator)
 
-    @debug_monitor
+    # Don't capture user prompts
     async def forward(self, tx_data: str, model: str, library: LibType, max_workers=4) -> Any:
         """
         Forward pass for LLM Chat process\n
@@ -96,15 +95,18 @@ class ChatMachineWithMemory(dspy.Module):
         :return: yields response in chunks
         """
         from nnll_05 import lookup_function_for
+        from httpx import ResponseNotRead
 
         if library == LibType.HUB:
             constructor = await lookup_function_for(model)
+            dbug(constructor, model)
             async for chunk in constructor(model):
                 yield chunk
         else:
             api_kwargs = await get_api(model=model, library=library)
             model = dspy.LM(**api_kwargs)
             dspy.settings.configure(lm=model, async_max_workers=max_workers)
+            # dbug(library, max_workers)
             async for chunk in self.completion(message=tx_data["text"], stream=self.streaming):
                 try:
                     if chunk is not None:
@@ -115,5 +117,5 @@ class ChatMachineWithMemory(dspy.Module):
                                 pass
                         else:
                             yield chunk["choices"][0]["delta"]["content"]
-                except (GeneratorExit, RuntimeError, AttributeError) as error_log:
+                except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead) as error_log:
                     dbug(error_log)  # consider threading user selection between cursor jumps
