@@ -106,7 +106,7 @@ class ChatMachineWithMemory(dspy.Module):
             api_kwargs = await get_api(model=model, library=library)
             model = dspy.LM(**api_kwargs)
             dspy.settings.configure(lm=model, async_max_workers=max_workers)
-            dbug(model, library, max_workers)
+            # dbug(library, max_workers)
             async for chunk in self.completion(message=tx_data["text"], stream=self.streaming):
                 try:
                     if chunk is not None:

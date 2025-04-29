@@ -72,7 +72,7 @@ class RegistryEntry(BaseModel):
             model_data: ListResponse = ollama_list()  # type: ignore
             for model in model_data.models:  # pylint:disable=no-member
                 entry = cls(
-                    model=f"{api_data[LibType.OLLAMA.value[1]].get('prefix')}/{model.model}",
+                    model=f"{api_data[LibType.OLLAMA.value[1]].get('prefix')}{model.model}",
                     size=model.size.real,
                     tags=[model.details.family],
                     library=LibType.OLLAMA,
@@ -135,7 +135,7 @@ class RegistryEntry(BaseModel):
             model_data = OpenAI(base_url=api_data["VLLM"]["api_kwargs"]["api_base"], api_key=api_data["VLLM"]["api_kwargs"]["api_key"])
             for model in model_data.models.list().data:
                 entry = cls(
-                    model = f"{api_data[LibType.VLLM.value[1]].get('prefix')}/{model['data'].get('id')}f",
+                    model = f"{api_data[LibType.VLLM.value[1]].get('prefix')}{model['data'].get('id')}f",
                     size=0,
                     tags=["text"],
                     library=LibType.VLLM,
@@ -153,7 +153,7 @@ class RegistryEntry(BaseModel):
                 if hasattr(model._data, "trained_for_tool_use"):
                     tags.append(("tool", model._data.trained_for_tool_use))
                 entry = cls(
-                    model=f"{api_data[LibType.LM_STUDIO.value[1]].get('prefix')}/{model.model_key}",
+                    model=f"{api_data[LibType.LM_STUDIO.value[1]].get('prefix')}{model.model_key}",
                     size=model._data.size_bytes,
                     tags=tags,
                     library=LibType.LM_STUDIO,
@@ -174,8 +174,6 @@ def from_cache() -> Dict[str, RegistryEntry]:
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
     models = None
-    nfo(f"available {LibType.OLLAMA is True}")
-    nfo(f"available {LibType.HUB is True}")
     models = RegistryEntry.from_model_data()
     dbug(f"REG_ENTRIES {models}")
     return models
