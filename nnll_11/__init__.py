@@ -49,9 +49,9 @@ async def get_api(model: str, library: LibType) -> dict:
     libtype_data = _read_data()
     # import requests
     # import importlib
-
-    if library == LibType.OLLAMA and has_api("OLLAMA"):
-        req_form = {"model": model, **libtype_data["OLLAMA"].get("api_kwargs")}  # ollama_chat/
+    req_form = {}
+    if library == LibType.OLLAMA:
+        model = {"model": model, "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}  # ollama_chat/
     elif library == LibType.LM_STUDIO and has_api("LM_STUDIO"):
         req_form = {"model": model, **libtype_data["LM_STUDIO"].get("api_kwargs")}  # lm_studio/
     elif library == LibType.HUB and has_api("HUB"):
