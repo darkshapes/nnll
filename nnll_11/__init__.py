@@ -62,7 +62,7 @@ async def get_api(model: str, library: LibType) -> dict:
         req_form = {"model": model, **libtype_data["LLAMAFILE"].get("api_kwargs")}
     elif library == LibType.CORTEX and has_api("CORTEX"):
         req_form = {"model": model, **libtype_data["CORTEX"].get("api_kwargs")}
-    return req_form
+    return model
 
 
 # fact_checking = dspy.ChainOfThought('claims -> verdicts: list[bool]')
