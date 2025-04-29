@@ -50,7 +50,7 @@ async def get_api(model: str, library: LibType) -> dict:
     req_form = {}
 
     if data.get(library.value[1],0) and has_api(library.value[1]):
-        config = data[library.value[1],0]
+        config = data[library.value[1]]
         req_form = {
             "model": model,  # Assuming 'model' corresponds to 'module'
             **config["api_kwargs"],
