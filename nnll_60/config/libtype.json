@@ -5,7 +5,8 @@
         "api_kwargs": {
             "api_base": "http://localhost:11434/api/chat",
             "model_type": "chat"
-        }
+        },
+        "prefix": "ollama_chat/"
     },
     "LM_STUDIO": {
         "module": "lmstudio",
@@ -13,7 +14,8 @@
         "api_kwargs": {
             "api_base": "http://localhost:1234/v1",
             "api_key": "lm-studio"
-        }
+        },
+        "prefix": "lm_studio/"
     },
     "HUB": {
         "module": "huggingface_hub",
@@ -27,7 +29,8 @@
         "api_kwargs": {
             "api_base": "http://localhost:8000/chat/completions",
             "api_key": "sk-no-key-required"
-        }
+        },
+        "prefix": "hosted_vllm/"
     },
     "LLAMAFILE": {
         "module": "openai",
@@ -35,7 +38,8 @@
         "api_kwargs": {
             "api_base": "http://localhost:8080/v1",
             "api_key": "sk-no-key-required"
-        }
+        },
+        "prefix": "openai/"
     },
     "CORTEX": {
         "module": "openai",
@@ -43,6 +47,7 @@
         "api_kwargs": {
             "api_base": "http://127.0.0.1:39281/v1/chat/completions",
             "api_key": "sk-no-key-required"
-        }
+        },
+        "prefix": "openai/"
     }
 }

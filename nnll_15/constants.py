@@ -7,14 +7,12 @@ from typing import Annotated, Callable, Optional
 
 from pydantic import BaseModel, Field
 
-from nnll_01 import debug_message as dbug
-from nnll_01 import debug_monitor
-from nnll_01 import info_message as nfo
+from nnll_01 import debug_message as dbug, info_message as nfo
 from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
 
 LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
-
-def has_api(api_name: str) -> bool:
+@LIBTYPE_CONFIG.decorator
+def has_api(api_name: str, data: dict = None) -> bool:
     """Check available modules, try to import dynamically.
     True for successful import, else False
 
@@ -39,8 +37,14 @@ def has_api(api_name: str) -> bool:
         except JSONDecodeError:
             dbug(f"json for ! {api_data}")
             dbug(request.status_code)
-            if request.status_code == 200:
+            if request.ok:
                 return True
+            else:
+                try:
+                    request.raise_for_status()
+                except requests.HTTPError() as error_log:
+                    dbug(error_log)
+
         except (requests.exceptions.ConnectionError,
                 httpcore.ConnectError,
                 httpx.ConnectError,
@@ -55,12 +59,7 @@ def has_api(api_name: str) -> bool:
             return False
         return False
 
-    @LIBTYPE_CONFIG.decorator
-    def _read_data(data:dict =None):
-        return data
-
-    libtype_data = _read_data()
-    api_data = libtype_data[api_name] #pylint: disable=unsubscriptable-object
+    api_data = data[api_name] #pylint: disable=unsubscriptable-object
 
     try:
         if api_name == "LM_STUDIO":
@@ -89,13 +88,14 @@ def has_api(api_name: str) -> bool:
 
 class LibType(Enum):
     """API library constants"""
+    #Integers are usedto differentiate boolean condition
 
-    OLLAMA   : int = (0,has_api("OLLAMA"))
-    HUB      : int = (1,has_api("HUB"))
-    LM_STUDIO: int = (2,has_api("LM_STUDIO"))
-    CORTEX   : int = (3,has_api("CORTEX"))
-    LLAMAFILE: int = (4,has_api("LLAMAFILE"))
-    VLLM     : int = (5,has_api("VLLM"))
+    OLLAMA   : tuple = (has_api("OLLAMA"),"OLLAMA")
+    HUB      : tuple = (has_api("HUB"),"HUB")
+    LM_STUDIO: tuple = (has_api("LM_STUDIO"),"LM_STUDIO")
+    CORTEX   : tuple = (has_api("CORTEX"),"CORTEX")
+    LLAMAFILE: tuple = (has_api("LLAMAFILE"),"LLAMAFILE")
+    VLLM     : tuple = (has_api("VLLM"),"VLLM")
 
 
 class GenTypeC(BaseModel):
