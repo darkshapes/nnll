@@ -51,7 +51,7 @@ async def get_api(model: str, library: LibType) -> dict:
     # import importlib
     req_form = {}
     if library == LibType.OLLAMA:
-        model = {"model": model, "api_base": "http://localhost:11434/api/chat", "model_type": "chat"}  # ollama_chat/
+        req_form = {"model": model, **libtype_data["OLLAMA"].get("api_kwargs")}  # ollama_chat/
     elif library == LibType.LM_STUDIO and has_api("LM_STUDIO"):
         req_form = {"model": model, **libtype_data["LM_STUDIO"].get("api_kwargs")}  # lm_studio/
     elif library == LibType.HUB and has_api("HUB"):
@@ -62,7 +62,7 @@ async def get_api(model: str, library: LibType) -> dict:
         req_form = {"model": model, **libtype_data["LLAMAFILE"].get("api_kwargs")}
     elif library == LibType.CORTEX and has_api("CORTEX"):
         req_form = {"model": model, **libtype_data["CORTEX"].get("api_kwargs")}
-    return model
+    return req_form
 
 
 # fact_checking = dspy.ChainOfThought('claims -> verdicts: list[bool]')
