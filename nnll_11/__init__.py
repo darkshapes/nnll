@@ -73,7 +73,7 @@ class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
 
-    @debug_monitor
+    # Don't capture user prompts
     def __init__(self, sig: dspy.Signature = QASignature, streaming=True) -> None:
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
@@ -85,7 +85,7 @@ class ChatMachineWithMemory(dspy.Module):
         generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
         self.completion = dspy.streamify(generator)
 
-    @debug_monitor
+    # Don't capture user prompts
     async def forward(self, tx_data: str, model: str, library: LibType, max_workers=4) -> Any:
         """
         Forward pass for LLM Chat process\n
@@ -99,12 +99,14 @@ class ChatMachineWithMemory(dspy.Module):
 
         if library == LibType.HUB:
             constructor = await lookup_function_for(model)
+            dbug(constructor, model)
             async for chunk in constructor(model):
                 yield chunk
         else:
             api_kwargs = await get_api(model=model, library=library)
             model = dspy.LM(**api_kwargs)
             dspy.settings.configure(lm=model, async_max_workers=max_workers)
+            dbug(model, library, max_workers)
             async for chunk in self.completion(message=tx_data["text"], stream=self.streaming):
                 try:
                     if chunk is not None:
