@@ -133,7 +133,7 @@ class HyperChain:
         else:
             raise ValueError("Invalid Block Value, chain cannot save. File handling error or otherwise corrupt chain.")
 
-    # @chain_file.decorator
+    @chain_file.decorator
     @debug_monitor
     def load_chain_from_file(self, data: str):
         """Load and validate chain"""

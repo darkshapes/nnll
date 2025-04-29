@@ -18,8 +18,8 @@ from textual.widgets import Button, Label, ListItem, ListView, RichLog, Static
 from nnll_01 import debug_message as dbug, info_message as nfo
 from nnll_01 import debug_monitor
 from nnll_10 import IntentProcessor
-from nnll_10.package.response_panel import ResponsePanel
-from nnll_10.package.token_counters import tk_count
+from nnll_10.response_panel import ResponsePanel
+from nnll_10.token_counters import tk_count
 from nnll_13 import VoicePanel
 from nnll_15.constants import GenTypeC, GenTypeCText
 from nnll_19 import MessagePanel
@@ -38,23 +38,14 @@ class ButtonsApp(App[str]):
     traced_path: reactive[list[str]] = reactive([])
     CSS_PATH = "button.tcss"
 
-    # BINDINGS = [
-    #     Binding("`", "scribe_response", "go", priority=True),  # Send to LLM
-    #     Binding("bk", "", "⌨️"),
-    #     Binding("alt+bk", "clear_input", "del"),
-    #     Binding("escape", "cancel_generation", "◼︎ / ⏏︎"),  # Cancel response
-    # ]
 
     def compose(self) -> ComposeResult:
         yield Horizontal(
             VerticalScroll(
                 Button("Build", id="build", variant="primary"),
-                # Button("2. Add Attributes", id="attrib", variant="default"),
-                # Static("3. Source", classes="header"),
                 ListView(id="start_points"),
                 Static("to", classes="header"),
                 ListView(id="end_points"),
-                # Static("5. Type", classes="header"),
                 ListView(id="convert_type", initial_index=0),
             ),
             Vertical(
@@ -85,8 +76,8 @@ class ButtonsApp(App[str]):
         if self.hover_name == "build":
             # event.stop()
             self.intent_processor = IntentProcessor()
-            self.intent_processor.calculate_intent_graph()
-            results_panel.write(f"Created {self.intent_processor}")
+            self.intent_processor.calc_graph()
+            results_panel.write(f"Created {self.intent_processor.intent_graph}")
             start_points = self.query_one("#start_points")
             end_points = self.query_one("#end_points")
 
@@ -99,7 +90,8 @@ class ButtonsApp(App[str]):
                 available_conversions = {edge[0] for edge in self.intent_processor.intent_graph.edges}
                 end_points.extend([ListItem(Label(f"{edge}"), id=f"{edge}") for edge in available_conversions])
                 build_button.variant = "success"
-                results_panel.write(f"Attributes added to {self.intent_processor}")
+                results_panel.write(f"Attributes added to {self.intent_processor.intent_graph}")
+                results_panel.write(f"Attributes added to {self.intent_processor.intent_graph}")
             else:
                 build_button.variant = "warning"
                 results_panel.write("Attributes already added to graph")
@@ -135,15 +127,15 @@ class ButtonsApp(App[str]):
             results_panel.write(self.gen_type)
 
         if start_type is not None and end_type is not None:
-            self.intent_processor.derive_coordinates_path(mode_in=start_type, mode_out=end_type)
-            results_panel.write(self.intent_processor.coordinates_path)
-            self.intent_processor.define_model_waypoints()
-            self.tokenizer = next(iter(self.intent_processor.model_names))
+            self.intent_processor.set_path(mode_in=start_type, mode_out=end_type)
+            results_panel.write(self.intent_processor.coord_path)
+            self.intent_processor.set_ckpts()
+            self.tokenizer = next(iter(self.intent_processor.models)) if self.intent_processor.models != None else ""
             nfo(self.intent_processor.intent_graph.nodes(data=True))
             nfo([*self.intent_processor.intent_graph.edges(data=True)])
 
             self.query_one("#response_panel").insert(f"{str(self.tokenizer)}\n")
-            results_panel.write([x["entry"].model for x in list(self.intent_processor.registry_entries)])
+            results_panel.write([x["entry"].model for x in list(self.intent_processor.ckpts)])
             convert_type = self.query_one("#convert_type")
             all_fields = GenTypeCText.model_fields | GenTypeC.model_fields
             convert_type.remove_children(ListItem)

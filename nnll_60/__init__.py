@@ -8,7 +8,7 @@ import os
 HASH_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "hashes.json")
 CONFIG_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "config.json")
 CHAIN_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "hyperchain.json")
-
+LIBTYPE_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "libtype.json")
 
 class JSONCache:
     """Manage input/output disk/mem for json files"""
