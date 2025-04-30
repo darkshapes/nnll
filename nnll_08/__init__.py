@@ -7,7 +7,7 @@ from nnll_01 import debug_monitor
 
 
 @debug_monitor
-def soft_random(size: int = 0x2540BE3FF) -> int:
+def soft_random(size: int = 0x100000000) -> int: #previously 0x2540BE3FF
     """
     Generate a deterministic random number using philox\n
     :params size: `int` RNG ceiling in hex format
@@ -24,7 +24,7 @@ def soft_random(size: int = 0x2540BE3FF) -> int:
 
 
 @debug_monitor
-def seed_planter(seed, deterministic=True) -> int:
+def seed_planter(seed, deterministic:bool=True) -> int:
     from numpy import random
     import torch
 

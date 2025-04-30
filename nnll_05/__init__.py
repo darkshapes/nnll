@@ -6,9 +6,9 @@
 from typing import Any
 import networkx as nx
 from nnll_01 import debug_monitor
-from nnll_01 import info_message as nfo
+from nnll_01 import info_message as nfo, debug_message as dbug
 from nnll_60 import CONFIG_PATH_NAMED, JSONCache
-from nnll_15.constants import LibType
+# from nnll_15.constants import LibType
 
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
@@ -21,7 +21,7 @@ def split_sequence_by(delimiter: str = ".", sequence: str = "") -> tuple | None:
     :return: `tuple` of import and function statement
     """
     parts = sequence.rsplit(delimiter, 1)
-    return parts[0], parts[1] if len(parts) > 1 else None
+    return parts
 
 
 @mir_db.decorator
@@ -36,14 +36,14 @@ async def lookup_function_for(known_repo: str, data: dict = None) -> str:
     import importlib
     mir_data = data
     mir_arch      = next(key for key, value in mir_data.items() if known_repo in value.get("repo"))
-    sequence      = mir_data[mir_arch].get("constructor", [])
-    call_sequence = [seq.split(".") for seq in sequence]
-    module_names, function_names = zip(*[(func[0], func[-1]) for func in call_sequence]) if call_sequence else ([], [])
-    modules       = zip(module_names, function_names)
-    import_name   = next(iter(modules))
-    module        = importlib.import_module(modules)
-    function_call = getattr(module, module[import_name])
-    return function_call
+    sequence      = mir_data[mir_arch].get("constructor", "")
+    sequence = split_sequence_by(".")
+    assert len(sequence) >1
+    # modules       = zip(module_names, function_names)
+    # import_name   = sequence[1]
+    module = importlib.import_module(sequence[0])
+    constructor = getattr(module, sequence[-1])
+    return constructor, mir_arch
 
 
 @debug_monitor

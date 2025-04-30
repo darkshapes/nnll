@@ -42,7 +42,7 @@ def name_save_file_as(extension: str = ".png", data: TextIOWrapper = None) -> st
 
 
 @debug_monitor
-def add_to_metadata(pipe: Dict, model: str, prompt: str | List[str] | Dict[str], kwargs: Dict) -> Dict:
+def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:
     """
     Create metadata from active hf inference pipes\n
     :param pipe: Active HuggingFace pipe from diffusers/transformers
@@ -66,7 +66,7 @@ def add_to_metadata(pipe: Dict, model: str, prompt: str | List[str] | Dict[str],
 
 
 @debug_monitor
-def write_image_to_disk(image: PIL, metadata: Dict[str], extension: LiteralString = """.png"""):
+def write_image_to_disk(image: PIL, metadata: dict[str], extension: LiteralString = """.png"""):
     """Save image to file"""
     file_path_absolute = name_save_file_as(extension)
     image.save(file_path_absolute, "PNG", pnginfo=metadata)

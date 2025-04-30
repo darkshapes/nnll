@@ -40,13 +40,13 @@ class RegistryEntry(BaseModel):
             default_task = ("text", "text")
         elif self.library == LibType.HUB:
             pattern = re.compile(r"(\w+)-to-(\w+)")
-            for tag in self.tags:
-                match = pattern.search(tag)
+            for label in self.tags:
+                match = pattern.search(label)
                 if match and all(group in VALID_CONVERSIONS for group in match.groups()):
                     processed_tasks.append((match.group(1), match.group(2)))
-        for tag in self.tags:
-            for (graph_src, graph_dest), tags in library_tasks.items():
-                if tag in tags and (graph_src, graph_dest) not in processed_tasks:
+        for label in self.tags:
+            for (graph_src, graph_dest), task in library_tasks.items():
+                if label in task and (graph_src, graph_dest) not in [*processed_tasks,default_task]:
                     processed_tasks.append((graph_src, graph_dest))
         if default_task and default_task not in processed_tasks:
             processed_tasks.append(default_task)

@@ -80,7 +80,7 @@ class ChatMachineWithMemory(dspy.Module):
         self.completion = dspy.streamify(generator)
 
     # Don't capture user prompts
-    async def forward(self, tx_data: str, model: str, library: LibType, max_workers=4) -> Any:
+    async def forward(self, tx_data: str, model: str, library: LibType, max_workers=0) -> Any:
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration
@@ -92,10 +92,10 @@ class ChatMachineWithMemory(dspy.Module):
         from httpx import ResponseNotRead
 
         if library == LibType.HUB:
-            constructor = await lookup_function_for(model)
-            dbug(constructor, model)
-            async for chunk in constructor(model):
-                yield chunk
+            constructor, mir_arch = await lookup_function_for(model)
+            dbug(constructor, mir_arch)
+            yield constructor(mir_arch)
+
         else:
             api_kwargs = await get_api(model=model, library=library)
             model = dspy.LM(**api_kwargs)
