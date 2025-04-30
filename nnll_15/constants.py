@@ -11,6 +11,7 @@ from nnll_01 import debug_message as dbug, info_message as nfo
 from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
 
 LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
+
 @LIBTYPE_CONFIG.decorator
 def has_api(api_name: str, data: dict = None) -> bool:
     """Check available modules, try to import dynamically.

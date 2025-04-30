@@ -7,7 +7,7 @@ import dspy
 from pydantic import BaseModel, Field
 
 from nnll_01 import debug_monitor, debug_message as dbug  # , info_message as nfo
-from nnll_15.constants import LibType, has_api, LibType, LIBTYPE_CONFIG
+from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
 ps_sysprompt = "Provide x for Y"

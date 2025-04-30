@@ -26,8 +26,8 @@ class JSONCache:
         `cache_manager.update({"new_key": "new_value"})`
         """
 
-        self.file = file_or_path
-        self._cache = None
+        self.file: str = file_or_path
+        self._cache: dict = {}
 
     def _load_cache(self):
         """Populate cache with file data if not already populated"""
