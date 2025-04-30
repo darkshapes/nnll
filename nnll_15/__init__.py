@@ -1,4 +1,4 @@
-#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 """Register model types"""
@@ -36,15 +36,15 @@ class RegistryEntry(BaseModel):
         library_tasks = {}
         processed_tasks = []
         library_tasks = VALID_TASKS[self.library]
-        if self.library == LibType.OLLAMA or self.library == LibType.CORTEX:
-            default_task = ("text", "text")
-        elif self.library == LibType.HUB:
+        if self.library in [LibType.OLLAMA, LibType.LM_STUDIO, LibType.LLAMAFILE, LibType.CORTEX, LibType.VLLM]:
+            default_task = ("text", "text") # usually these are txt gen libraries
+        elif self.library == LibType.HUB: # pair tags from the hub such 'x-to-y' such as 'text-to-text' etc
             pattern = re.compile(r"(\w+)-to-(\w+)")
             for tag in self.tags:
                 match = pattern.search(tag)
                 if match and all(group in VALID_CONVERSIONS for group in match.groups()):
                     processed_tasks.append((match.group(1), match.group(2)))
-        for tag in self.tags:
+        for tag in self.tags: # when pair-tagged elements are not available, potential to duplicate HUB tags here
             for (graph_src, graph_dest), tags in library_tasks.items():
                 if tag in tags and (graph_src, graph_dest) not in processed_tasks:
                     processed_tasks.append((graph_src, graph_dest))

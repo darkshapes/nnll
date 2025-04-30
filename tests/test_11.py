@@ -1,4 +1,4 @@
-#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 import unittest
@@ -23,7 +23,8 @@ class LibType(Enum):
     LLAMAFILE: tuple = (has_api("LLAMAFILE"),"LLAMAFILE")
     VLLM     : tuple = (has_api("VLLM"),"VLLM")
 
-
+@pytest.mark.filterwarnings("ignore:open_text")
+@pytest.mark.filterwarnings("ignore::DeprecationWarning:")
 @patch('nnll_15.constants.has_api', side_effect=lambda x: False)
 def test_libtype(mock_has_api):
     assert LibType.OLLAMA.value[0] is True
@@ -81,8 +82,8 @@ async def test_lookup_libtypes(mock_has_api):
         library = getattr(LibType, library)
 
         req_form = await get_api(model, library)
-
-        data = JSONCache(os.path.join( os.path.dirname(os.getcwd()),"nnll_60", "config", "libtype.json"))
+        test_path = os.path.dirname(os.path.abspath(__file__))
+        data = JSONCache(os.path.join(os.path.dirname(test_path),"nnll_60", "config", "libtype.json"))
         data._load_cache()
         expected = vars(data).get('_cache')
         assert expected

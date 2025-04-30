@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 """初始化 init, argparse, 建立控制檯日誌 logging"""
@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
+from sys import modules as sys_modules
+
 # import viztracer
 
 
@@ -57,7 +59,6 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
     import logging
     import structlog
 
-    import litellm
     from structlog.processors import ExceptionPrettyPrinter, StackInfoRenderer, format_exc_info, dict_tracebacks, TimeStamper, JSONRenderer
     from structlog.stdlib import add_log_level, PositionalArgumentsFormatter
     from structlog import configure as structlog_conf, make_filtering_bound_logger, WriteLoggerFactory, get_logger
@@ -98,12 +99,15 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
             ),
         ],
     )
+    import litellm
+
     litellm.disable_end_user_cost_tracking = True
     litellm.telemetry = False
     litellm.disable_streaming_logging = True
     litellm.turn_off_message_logging = True
     litellm.suppress_debug_info = True
     litellm.json_logs = True  # type: ignore
+
     handler = logging.FileHandler(assembled_path)
     handler.setFormatter(formatter)
     handler.setLevel(level)
@@ -223,9 +227,7 @@ log_folder = os.path.join(
 )
 os.makedirs(log_folder, exist_ok=True)
 
-
 if __name__ == "__main__":
-    from sys import modules as sys_modules
 
     if "pytest" not in sys_modules:
         parser = ArgumentParser(description="Set logging level.")
