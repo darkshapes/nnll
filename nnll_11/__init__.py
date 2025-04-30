@@ -55,6 +55,7 @@ async def get_api(model: str, library: LibType) -> dict:
             "model": model,  # Assuming 'model' corresponds to 'module'
             **config["api_kwargs"],
         }
+        dbug("Pushing form : %s", req_form)
         return req_form
     else:
         raise ValueError(f"Library '{library}' not found in configuration.")
@@ -80,7 +81,7 @@ class ChatMachineWithMemory(dspy.Module):
         self.completion = dspy.streamify(generator)
 
     # Don't capture user prompts
-    async def forward(self, tx_data: str, model: str, library: LibType, max_workers=0) -> Any:
+    async def forward(self, tx_data: str, model: str, library: LibType, max_workers: int=0) -> Any:
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration

@@ -28,7 +28,7 @@ def has_api(api_name: str, data: dict = None) -> bool:
         import httpx
         from urllib3.exceptions import NewConnectionError, MaxRetryError
         import requests
-        dbug(f"responded for ! {api_data}")
+        dbug(f"Response from API  {api_data}")
         try:
             if api_data.get("api_url",0):
                 request = requests.get(api_data.get("api_url"), timeout=(1, 1))
