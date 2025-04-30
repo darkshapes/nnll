@@ -75,6 +75,7 @@ nnll_60/config/filter.json
 nnll_60/config/hashes.json
 nnll_60/config/hf_map.json
 nnll_60/config/hyperchain.json
+nnll_60/config/libtype.json
 nnll_60/config/mir.json
 nnll_60/config/precisions.json
 nnll_61/__init__.py
@@ -94,8 +95,8 @@ tests/test_04_expected_output_2.json
 tests/test_05.py
 tests/test_07.py
 tests/test_08.py
-tests/test_10_register_types.py
 tests/test_10_weight.py
+tests/test_11.py
 tests/test_15_register_types.py
 tests/test_24.py
 tests/test_25.py

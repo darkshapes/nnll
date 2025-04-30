@@ -96,6 +96,18 @@
         "unet": {},
         "constructor": "image"
     },
+    "model.dit.flux-1:lite": {
+        "repo": "Freepik/flux.1-lite-8B",
+        "pipe_name": "FluxPipeline",
+        "defaults": {
+            "num_inference_steps": 28,
+            "guidance_scape": 3.5,
+            "height": 1024,
+            "width": 1024
+        },
+        "torch_dtype": "torch.bfloat16",
+        "constructor": "image"
+    },
     "model.dit.pixart-sigma": {
         "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
         "pipe_name": "PixArtSigmaPipeline",

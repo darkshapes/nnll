@@ -25,7 +25,7 @@ def split_sequence_by(delimiter: str = ".", sequence: str = "") -> tuple | None:
 
 
 @mir_db.decorator
-async def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
+async def lookup_function_for(known_repo: str, data: dict = None) -> str:
     """
     Find MIR URI from known repo name and retrieve its \n
     MIR data and call instructions autofilled by decorator\n
@@ -34,8 +34,8 @@ async def lookup_function_for(known_repo: str, mir_data: dict = None) -> str:
     :return: `str` of the mir URI
     """
     import importlib
-
-    mir_arch      = next(key for key, value in mir_data() if known_repo in value["repo"])
+    mir_data = data
+    mir_arch      = next(key for key, value in mir_data.items() if known_repo in value.get("repo"))
     sequence      = mir_data[mir_arch].get("constructor", [])
     call_sequence = [seq.split(".") for seq in sequence]
     module_names, function_names = zip(*[(func[0], func[-1]) for func in call_sequence]) if call_sequence else ([], [])
