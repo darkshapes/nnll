@@ -71,7 +71,7 @@ async def test_get_api(mock_has_api, mock_config,):
         value = namedtuple("OLLAMA",["true", "OLLAMA"])
         nfo(value)
         with patch("nnll_11.LibType", autocast=True, return_value=value):
-            req_form = get_api(model, library)
+            req_form = await get_api(model, library)
             yield req_form
 
 
