@@ -142,7 +142,7 @@ class GenTypeE(BaseModel):
     text     : GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
 
 
-VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d render", "vector graphic", "upscale_image"]
+VALID_CONVERSIONS = ["text", "image", "music", "speech","music","video", "3d_render", "vector_graphic", "upscale_image"]
 
 # decide on a way to keep paired tuples and sets together inside config dict
 VALID_TASKS = {

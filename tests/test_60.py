@@ -30,7 +30,7 @@ class TestJSONCache(unittest.TestCase):
     def test_initialization(self):
         """Ensure JSONCache initializes correctly."""
         self.assertEqual(self.cache.file, self.test_file)
-        self.assertIsNone(self.cache._cache)
+        self.assertEqual(self.cache._cache, {})
 
     def test_load_cache(self):
         """Check if cache loads properly from a file."""
