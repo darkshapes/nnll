@@ -4,7 +4,7 @@
 
 # # import networkx as nx
 # import nnll_01
-# from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
+# from nnll_01 import dbug, debug_monitor, nfo
 # # from nnll_05 import lookup_function_for, label_key_prompt  # , split_sequence_by, main
 # from nnll_10 import IntentProcessor
 # # from nnll_15.constants import LibType  # , loop_in_feature_processes

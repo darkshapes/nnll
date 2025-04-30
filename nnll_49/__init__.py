@@ -8,7 +8,7 @@
 
 from typing import List, Tuple
 from nnll_01 import debug_monitor, debug_message
-from nnll_01 import info_message as nfo
+from nnll_01 import nfo
 from nnll_47 import (
     BracketedDict,
     DownField,

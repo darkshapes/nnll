@@ -7,7 +7,7 @@
 #     import os
 #     from nnll_04 import ModelTool
 #     from nnll_44 import compute_hash_for
-#     from nnll_01 import info_message as nfo
+#     from nnll_01 import nfo
 #     from pathlib import Path
 
 #     model_tool = ModelTool()

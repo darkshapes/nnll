@@ -7,7 +7,7 @@ from textual.reactive import reactive
 from textual.widgets import TextArea
 import networkx as nx
 
-from nnll_01 import debug_message as dbug
+from nnll_01 import dbug
 # from nnll_11 import chat_machine
 
 

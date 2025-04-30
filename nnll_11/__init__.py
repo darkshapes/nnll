@@ -7,7 +7,7 @@ from typing import Any
 import dspy
 from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, debug_message as dbug, info_message as nfo
+from nnll_01 import debug_monitor, dbug, nfo
 from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 

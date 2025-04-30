@@ -6,7 +6,7 @@
 from typing import Any
 import networkx as nx
 from nnll_01 import debug_monitor
-from nnll_01 import info_message as nfo, debug_message as dbug
+from nnll_01 import nfo, dbug
 from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 # from nnll_15.constants import LibType
 

@@ -7,7 +7,7 @@ from typing import Annotated, Callable, Optional
 
 from pydantic import BaseModel, Field
 
-from nnll_01 import debug_message as dbug, info_message as nfo
+from nnll_01 import dbug, nfo
 from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
 
 LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
@@ -142,7 +142,7 @@ class GenTypeE(BaseModel):
     text     : GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
 
 
-VALID_CONVERSIONS = ["text", "image", "music", "speech","music","video", "3d_render", "vector_graphic", "upscale_image"]
+VALID_CONVERSIONS = ["text", "image", "music", "speech","video", "3d_render", "vector_graphic", "upscale_image"]
 
 # decide on a way to keep paired tuples and sets together inside config dict
 VALID_TASKS = {
