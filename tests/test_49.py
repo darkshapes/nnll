@@ -262,7 +262,7 @@ class TestParseMetadata(unittest.TestCase):
         expected_output = self.redivide_dict_test_data["2"]
         assert result == expected_output
 
-    @patch("nnll_49.debug_message")
+    @patch("nnll_49.dbug")
     def test_validate_typical_fail(self, mock_debug_msg):
         subdict = {"mock": "data"}
         mock_data = {"prompt": subdict}

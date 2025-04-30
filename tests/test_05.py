@@ -18,7 +18,7 @@
 #     if "pytest" not in sys.modules:
 #         int_proc = IntentProcessor()
 #         nx_graph = int_proc.alc_ggraph()
-#         nnll_01.debug_message(f"graph : {nx_graph}")
+#         nnll_01.dbug(f"graph : {nx_graph}")
 #         # example user input
 #         content = {"text": "Test Prompt"}
 #         target = "text"

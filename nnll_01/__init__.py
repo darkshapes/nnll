@@ -201,7 +201,7 @@ def info_stream():
 info_obj = info_stream()
 
 
-def info_message(*args, **kwargs):
+def nfo(*args, **kwargs):
     """Info log output"""
 
     info_obj.info("%s", f"{args}")
@@ -215,7 +215,7 @@ def info_message(*args, **kwargs):
     # )
 
 
-def debug_message(*args, **kwargs):
+def dbug(*args, **kwargs):
     """Info log output"""
     logger_obj.debug("%s", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=False)
 
@@ -254,7 +254,7 @@ if __name__ == "__main__":
 
         __version__ = metadata.version("nnll")
     except metadata.PackageNotFoundError as error_log:
-        debug_message(f"nnll package is not installed. Did you run `pip install .`? {error_log}", tb=error_log.__traceback__)
+        dbug(f"nnll package is not installed. Did you run `pip install .`? {error_log}", tb=error_log.__traceback__)
 else:
     LOG_LEVEL = DEBUG
     logger_obj = configure_logging()

@@ -7,7 +7,7 @@
 # pylint: disable=line-too-long, import-outside-toplevel
 
 from typing import List, Tuple
-from nnll_01 import debug_monitor, debug_message
+from nnll_01 import debug_monitor, dbug
 from nnll_01 import nfo
 from nnll_47 import (
     BracketedDict,
@@ -59,19 +59,19 @@ def validate_typical(nested_map: dict, key_name: str) -> dict | None:
         try:
             is_search_data.workflow.validate_python(nested_map)
         except ValidationError as error_log:  #
-            debug_message("%s", f"Node workflow not found, returning NoneType {key_name}", error_log)
+            dbug("%s", f"Node workflow not found, returning NoneType {key_name}", error_log)
         else:
             return nested_map[key_name]
     else:
         try:
             is_search_data.data.validate_python(nested_map[key_name])  # Be sure we have the right data
         except ValidationError as error_log:
-            debug_message("%s", "Node data not found", error_log)
+            dbug("%s", "Node data not found", error_log)
         else:
             return nested_map[key_name]
 
-    debug_message("%s", f"Node workflow not found {key_name}")
-    debug_message(KeyError(f"Unknown format for dictionary {key_name} in {nested_map}"))
+    dbug("%s", f"Node workflow not found {key_name}")
+    dbug(KeyError(f"Unknown format for dictionary {key_name} in {nested_map}"))
     return None
 
 
@@ -338,7 +338,7 @@ def make_paired_str_dict(text_to_convert: str) -> dict:
     try:
         converted_text = {el[0]: el[1] for el in delineated if len(el) == 2}
     except IndexError as error_log:
-        debug_message("Index position for prompt input out of range", text_to_convert, "at", delineated, error_log, tb=error_log.__traceback__)
+        dbug("Index position for prompt input out of range", text_to_convert, "at", delineated, error_log, tb=error_log.__traceback__)
         converted_text = None
     return converted_text
 
@@ -467,10 +467,10 @@ def arrange_str_metadata(header_data: str) -> dict:
     try:
         metadata = dict(header_data)
     except JSONDecodeError as error_log:
-        debug_message("JSON Decode failed %s", error_log, tb=error_log.__traceback__)
+        dbug("JSON Decode failed %s", error_log, tb=error_log.__traceback__)
         metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
     except KeyError as error_log:
-        debug_message("Could not load metadata as dict %s", error_log, tb=error_log.__traceback__)
+        dbug("Could not load metadata as dict %s", error_log, tb=error_log.__traceback__)
         metadata = {UpField.DATA: header_data, EmptyField.PLACEHOLDER: EmptyField.EMPTY}
     else:
         up_data = {UpField.DATA: header_data}
