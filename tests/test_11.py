@@ -1,6 +1,7 @@
 #  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
+from collections import namedtuple
 import unittest
 import pytest
 from unittest.mock import MagicMock, patch, Mock
@@ -23,6 +24,11 @@ class LibType(Enum):
     LLAMAFILE: tuple = (has_api("LLAMAFILE"),"LLAMAFILE")
     VLLM     : tuple = (has_api("VLLM"),"VLLM")
 
+@pytest_asyncio.fixture(loop_scope="session")
+async def mock_has_api():
+    with patch("nnll_15.constants.has_api", return_value=True) as mocked:
+        yield mocked
+
 @pytest.mark.filterwarnings("ignore:open_text")
 @pytest.mark.filterwarnings("ignore::DeprecationWarning:")
 @patch('nnll_15.constants.has_api', side_effect=lambda x: False)
@@ -33,11 +39,6 @@ def test_libtype(mock_has_api):
     assert LibType.CORTEX.value[0] is True
     assert LibType.LLAMAFILE.value[0] is True
     assert LibType.VLLM.value[0] is True
-
-@pytest.fixture(name="mock_has_api")
-def has_api_fixture():
-    with patch("nnll_15.constants.has_api", return_value=True):
-        yield
 
 @pytest_asyncio.fixture(loop_scope="session",name="mock_config")
 def mock_deco():
@@ -59,19 +60,23 @@ def libtype_config_fixture():
     with patch("nnll_11.LIBTYPE_CONFIG", MagicMock()):
         yield mock_deco
 
-@pytest.mark.asyncio(loop_scope="session")
-async def test_get_api(mock_has_api, mock_config):
+@pytest_asyncio.fixture(loop_scope="session")
+async def test_get_api(mock_has_api, mock_config,):
     from nnll_11 import get_api
-
+    from nnll_01 import nfo
     import os
     model = "🤡"
     library = LibType.OLLAMA
-
-    req_form = await get_api(model, library)
+    with patch("nnll_11.has_api", autocast=True, return_value=mock_has_api):
+        value = namedtuple("OLLAMA",["true", "OLLAMA"])
+        nfo(value)
+        with patch("nnll_11.LibType", autocast=True, return_value=value):
+            req_form = get_api(model, library)
+            yield req_form
 
 
 @pytest.mark.asyncio(loop_scope="session")
-async def test_lookup_libtypes(mock_has_api):
+async def test_lookup_libtypes(mock_has_api,test_get_api):
     from nnll_11 import get_api
     from nnll_60 import JSONCache
 
@@ -80,7 +85,7 @@ async def test_lookup_libtypes(mock_has_api):
 
     for library in LibType.__members__.keys():
         library = getattr(LibType, library)
-
+        # with patch("nnll_11.LibType", autocast=True):
         req_form = await get_api(model, library)
         test_path = os.path.dirname(os.path.abspath(__file__))
         data = JSONCache(os.path.join(os.path.dirname(test_path),"nnll_60", "config", "libtype.json"))
@@ -91,4 +96,4 @@ async def test_lookup_libtypes(mock_has_api):
             "model": model,
             **expected[library.value[1]].get('api_kwargs')
 
-        }
+            }
