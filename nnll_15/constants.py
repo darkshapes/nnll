@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
@@ -7,10 +7,11 @@ from typing import Annotated, Callable, Optional
 
 from pydantic import BaseModel, Field
 
-from nnll_01 import debug_message as dbug, info_message as nfo
+from nnll_01 import dbug, nfo
 from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
 
 LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
+
 @LIBTYPE_CONFIG.decorator
 def has_api(api_name: str, data: dict = None) -> bool:
     """Check available modules, try to import dynamically.
@@ -27,7 +28,7 @@ def has_api(api_name: str, data: dict = None) -> bool:
         import httpx
         from urllib3.exceptions import NewConnectionError, MaxRetryError
         import requests
-        dbug(f"responded for ! {api_data}")
+        dbug(f"Response from API  {api_data}")
         try:
             if api_data.get("api_url",0):
                 request = requests.get(api_data.get("api_url"), timeout=(1, 1))
@@ -141,7 +142,7 @@ class GenTypeE(BaseModel):
     text     : GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
 
 
-VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d render", "vector graphic", "upscale_image"]
+VALID_CONVERSIONS = ["text", "image", "music", "speech","video", "3d_render", "vector_graphic", "upscale_image"]
 
 # decide on a way to keep paired tuples and sets together inside config dict
 VALID_TASKS = {

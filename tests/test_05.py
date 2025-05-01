@@ -1,10 +1,10 @@
-# #  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+# #  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 # #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 
 # # import networkx as nx
 # import nnll_01
-# from nnll_01 import debug_message as dbug, debug_monitor, info_message as nfo
+# from nnll_01 import dbug, debug_monitor, nfo
 # # from nnll_05 import lookup_function_for, label_key_prompt  # , split_sequence_by, main
 # from nnll_10 import IntentProcessor
 # # from nnll_15.constants import LibType  # , loop_in_feature_processes
@@ -18,7 +18,7 @@
 #     if "pytest" not in sys.modules:
 #         int_proc = IntentProcessor()
 #         nx_graph = int_proc.alc_ggraph()
-#         nnll_01.debug_message(f"graph : {nx_graph}")
+#         nnll_01.dbug(f"graph : {nx_graph}")
 #         # example user input
 #         content = {"text": "Test Prompt"}
 #         target = "text"

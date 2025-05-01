@@ -1,4 +1,4 @@
-# ### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+# ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 # ### <!-- // /*  d a r k s h a p e s */ -->
 # q
 
@@ -7,7 +7,7 @@
 #     import os
 #     from nnll_04 import ModelTool
 #     from nnll_44 import compute_hash_for
-#     from nnll_01 import info_message as nfo
+#     from nnll_01 import nfo
 #     from pathlib import Path
 
 #     model_tool = ModelTool()

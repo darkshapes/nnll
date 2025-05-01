@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel,unused-variable, assignment-from-no-return
@@ -7,8 +7,8 @@
 import os
 from typing import Any, Callable, Tuple
 
-from nnll_01 import debug_message, debug_monitor
-from nnll_01 import info_message as nfo
+from nnll_01 import dbug, debug_monitor
+from nnll_01 import nfo
 
 
 @debug_monitor
@@ -28,11 +28,11 @@ async def retry(max_retries: int, delay_seconds: int, operation: Callable, excep
             return await operation()
         except exception_type as error_log:
             if retries < max_retries:
-                debug_message(f"Operation failed (retry {retries + 1}/{max_retries}", tb=error_log.__traceback__)
+                dbug(f"Operation failed (retry {retries + 1}/{max_retries}", tb=error_log.__traceback__)
                 await asyncio.sleep(delay_seconds)
                 retries += 1
             else:
-                debug_message(f"Operation failed after {max_retries}) retries.", tb=error_log.__traceback__)
+                dbug(f"Operation failed after {max_retries}) retries.", tb=error_log.__traceback__)
                 raise
 
 
@@ -53,10 +53,10 @@ async def async_remote_transfer(session, remote_file_path: str) -> Any:
             response.raise_for_status()
             return await response.read()
     except aiohttp.client_exceptions.ClientConnectionError as error_log:
-        debug_message(f"Connection error.{error_log}", tb=error_log.__traceback__)
+        dbug(f"Connection error.{error_log}", tb=error_log.__traceback__)
 
     except RuntimeError as error_log:
-        debug_message(f"Failed to download, Session Error. {error_log}", tb=error_log.__traceback__)
+        dbug(f"Failed to download, Session Error. {error_log}", tb=error_log.__traceback__)
 
 
 @debug_monitor
@@ -134,7 +134,7 @@ async def async_download_session(remote_url: str, save_file_path_absolute: str) 
             tasks.append(save_task)
 
         except aiohttp.ClientError as error_log:
-            debug_message(f"Error occurred during request. {error_log}", tb=error_log.__traceback__)
+            dbug(f"Error occurred during request. {error_log}", tb=error_log.__traceback__)
         else:
             await asyncio.gather(*tasks)
 

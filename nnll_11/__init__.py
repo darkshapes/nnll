@@ -1,13 +1,14 @@
-#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=pointless-statement, unsubscriptable-object
+import array
 from typing import Any
 import dspy
 from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, debug_message as dbug  # , info_message as nfo
-from nnll_15.constants import LibType, has_api, LibType, LIBTYPE_CONFIG
+from nnll_01 import debug_monitor, dbug, nfo
+from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
 ps_sysprompt = "Provide x for Y"
@@ -55,61 +56,57 @@ async def get_api(model: str, library: LibType) -> dict:
             "model": model,  # Assuming 'model' corresponds to 'module'
             **config["api_kwargs"],
         }
+        dbug("Pushing form : %s", req_form)
         return req_form
     else:
         raise ValueError(f"Library '{library}' not found in configuration.")
 
-# fact_checking = dspy.ChainOfThought('claims -> verdicts: list[bool]')
-# fact_checking(claims=["Python was released in 1991.", "Python is a compiled language."])
-
-
+# Don't capture user prompts: AVOID logging this class as much as possible
 class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
 
-    # Don't capture user prompts
-    def __init__(self, sig: dspy.Signature = QASignature, streaming=True) -> None:
+
+    def __init__(self, sig: dspy.Signature = QASignature, max_workers=4) -> None:
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
         Does not load any models until forward pass
         :param signature: The format of messages sent to the model
+        :param max_workers: Maximum number of async processes, based on system resources
         """
         super().__init__()
-        self.streaming = streaming
-        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
+        self.max_workers = max_workers
+        generator = dspy.asyncify(program=dspy.Predict(signature=sig))   # this should only be used in the case of text
         self.completion = dspy.streamify(generator)
 
-    # Don't capture user prompts
-    async def forward(self, tx_data: str, model: str, library: LibType, max_workers=4) -> Any:
+    # Reminder: Don't capture user prompts - this is the crucial stage
+    async def forward(self, tx_data: dict[str|list[float]], model: str, library: LibType, streaming=True) -> Any:
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration
         :param message: A simple string to send to the LLM
-        :param max_workers: Maximum number of async processes
-        :return: yields response in chunks
+        :param tx_data: prompt transmission values for all media formats
+        :param model: path to model
+        :param library: LibType of model origin
+        :param streaming: output type flag, defaults to True
+        :yield: responses in chunks or response as a single block
         """
+
         from nnll_05 import lookup_function_for
         from httpx import ResponseNotRead
 
         if library == LibType.HUB:
-            constructor = await lookup_function_for(model)
-            dbug(constructor, model)
-            async for chunk in constructor(model):
-                yield chunk
+            constructor, mir_arch = await lookup_function_for(model)
+            dbug(constructor, mir_arch)
+            yield constructor(mir_arch)
+
         else:
             api_kwargs = await get_api(model=model, library=library)
             model = dspy.LM(**api_kwargs)
-            dspy.settings.configure(lm=model, async_max_workers=max_workers)
-            # dbug(library, max_workers)
-            async for chunk in self.completion(message=tx_data["text"], stream=self.streaming):
-                try:
-                    if chunk is not None:
-                        if isinstance(chunk, dspy.Prediction):
-                            if not self.streaming:
-                                yield chunk.answer  # the final, processed output
-                            else:
-                                pass
-                        else:
-                            yield chunk["choices"][0]["delta"]["content"]
-                except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead) as error_log:
-                    dbug(error_log)  # consider threading user selection between cursor jumps
+            dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
+            try:
+                yield self.completion(message=tx_data["text"], stream=streaming)
+            except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
+                dbug(error_log)  # consider threading user selection between cursor jumps
+            except TypeError as error_log:
+                dbug(error_log)

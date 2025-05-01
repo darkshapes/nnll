@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 """Wrap Image/Model Metadata I/O"""
@@ -15,8 +15,8 @@ class MetadataFileReader:
         self.show_content = None
         import nnll_01
 
-        self.nfo = nnll_01.info_message
-        self.debug_message = nnll_01.debug_message
+        self.nfo = nnll_01.nfo
+        self.dbug = nnll_01.dbug
         # debug_monitor = nnll_02.debug_monitor
 
     @debug_monitor
@@ -70,7 +70,7 @@ class MetadataFileReader:
                 return metadata  # Reads text file into string
         except UnicodeDecodeError as error_log:
             self.nfo("File did not match expected unicode format %s", file_path_named)
-            self.debug_message(error_log)
+            self.dbug(error_log)
             return None
         try:
             with open(file_path_named, "r", encoding="utf_16-be") as open_file:
@@ -82,7 +82,7 @@ class MetadataFileReader:
                 return metadata  # Reads text file into string
         except UnicodeDecodeError as error_log:
             self.nfo("File did not match expected unicode format %s", file_path_named)
-            self.debug_message(error_log)
+            self.dbug(error_log)
             return None
 
     def read_schema_file(self, file_path_named: str, mode="r") -> dict:

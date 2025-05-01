@@ -16,6 +16,7 @@
         "3d": [],
         "svg": []
     },
+    "save_folder_path_absolute": "/Users/unauthorized/Pictures/Combo/",
     "model.dit.cogview-3": {
         "repo": "THUDM/CogView3-Plus-3B",
         "defaults": {
@@ -49,7 +50,6 @@
         "torch_dtype": "torch.bfloat16",
         "constructor": "image"
     },
-    "model.unet.stable-diffusion": {},
     "model.unet.stable-diffusion-xl:base": {
         "repo": "stabilityai/stable-diffusion-xl-base-1.0",
         "unet": {
@@ -95,6 +95,18 @@
         "repo_alt": "cocktailpeanut/xulf-s/",
         "unet": {},
         "constructor": "image"
+    },
+    "model.dit.flux-1:lite": {
+        "repo": "Freepik/flux.1-lite-8B",
+        "pipe_name": "FluxPipeline",
+        "defaults": {
+            "num_inference_steps": 28,
+            "guidance_scale": 3.5,
+            "height": 1024,
+            "width": 1024
+        },
+        "torch_dtype": "torch.bfloat16",
+        "constructor": "nnll_64.run_inference"
     },
     "model.dit.pixart-sigma": {
         "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",

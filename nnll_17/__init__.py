@@ -1,7 +1,7 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-from nnll_01 import info_message as nfo
+from nnll_01 import nfo
 from nnll_60 import JSONCache, HASH_PATH_NAMED
 
 cache_manager = JSONCache(HASH_PATH_NAMED)

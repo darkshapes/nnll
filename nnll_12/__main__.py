@@ -1,4 +1,4 @@
-#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint:disable=not-an-iterable, wrong-import-position, unsupported-membership-test
@@ -15,7 +15,7 @@ from textual.containers import Horizontal, Vertical, VerticalGroup, VerticalScro
 from textual.reactive import reactive
 from textual.widgets import Button, Label, ListItem, ListView, RichLog, Static
 
-from nnll_01 import debug_message as dbug, info_message as nfo
+from nnll_01 import dbug, nfo
 from nnll_01 import debug_monitor
 from nnll_10 import IntentProcessor
 from nnll_10.response_panel import ResponsePanel

@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
@@ -9,7 +9,7 @@ def compare_layers(query: str, file_path: str) -> None:
     :param query: Search term to scan for
     :param file_path: The folder of JSON files to scan
     """
-    from nnll_01.__init__ import info_message as nfo
+    from nnll_01.__init__ import nfo
     from nnll_30 import read_json_file
     import json
 
@@ -46,7 +46,7 @@ def main():
     """
     import argparse
     import subprocess
-    from nnll_01.__init__ import info_message as nfo
+    from nnll_01.__init__ import nfo
 
     parser = argparse.ArgumentParser(description="Search layer name metadata in the current folder's models.")
     parser.add_argument("pattern", help="Pattern to search for")

@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3) */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 """Load model metadata"""
@@ -6,9 +6,9 @@
 # pylint: disable=import-outside-toplevel
 from pathlib import Path
 
-from nnll_01 import debug_message as dbug
+from nnll_01 import dbug
 from nnll_01 import debug_monitor
-from nnll_01 import info_message as nfo
+from nnll_01 import nfo
 
 
 class ModelTool:
