@@ -82,20 +82,8 @@ async def test_chat_machine_generation(mock_signature, mock_predict, has_api):
     api_kwargs = {"model":"🤡"} | api_data[library.value[1]].get('api_kwargs')
 
     with patch("nnll_11.dspy.LM", autospec=True, return_value="🤡") as mock_lm:
-        # with patch('nnll_11.dspy.settings.configure', autospec=True) as mock_config:
-        # mock_config(signature= mock_signature)
-        # mock_predict.assert_called_once()
-        # assert hasattr(chat_machine, "streaming")
-        # with pytest.raises(TypeError) as exc_info:
+
         async for _ in chat_machine.forward(tx_data={"text":"test"}, model="🤡", library=library, streaming=streaming):
             assert _ is not None
-        # assert exc_info.type is TypeError
-        # assert exc_info.value.args[0] == "missing a required argument: 'signature'"
-            # print(data)
-    mock_lm.assert_called_once_with(**api_kwargs)
-    # mock_signature.assert_called_once_with(lm="🤡", async_max_workers=max_workers)
 
-        # mock_asyncify_call = mock_predict.return_value.__init__.call_args[0][0]
-        # assert mock_asyncify_call['program'] == mock_predict
-        # mock_streamify_call = streamify(mock_asyncify_call)
-        # assert mock_streamify_call == chat_machine.completion
+    mock_lm.assert_called_once_with(**api_kwargs)

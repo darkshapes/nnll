@@ -106,15 +106,6 @@ class ChatMachineWithMemory(dspy.Module):
             dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
             try:
                 yield self.completion(message=tx_data["text"], stream=streaming)
-                    # try:
-                    #     if chunk is not None:
-                    #         if isinstance(chunk, dspy.Prediction):
-                    #             if not streaming:
-                    #                 yield chunk.answer  # the final, processed output
-                    #             else:
-                    #                 pass
-                    #         else:
-                    #             yield chunk["choices"][0]["delta"]["content"] # streaming output
             except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
                 dbug(error_log)  # consider threading user selection between cursor jumps
             except TypeError as error_log:
