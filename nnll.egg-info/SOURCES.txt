@@ -1,4 +1,5 @@
 .gitignore
+.test.json
 LICENSE
 README.md
 _version.py
@@ -95,10 +96,10 @@ tests/test_04_expected_output_2.json
 tests/test_05.py
 tests/test_07.py
 tests/test_08.py
-tests/test_10_weight.py
-tests/test_11.py
 tests/test_11_gen.py
+tests/test_11_getapi.py
 tests/test_15_register_types.py
+tests/test_15_tags.py
 tests/test_24.py
 tests/test_25.py
 tests/test_26.py

@@ -8,9 +8,10 @@ from typing import Annotated, Callable, Optional
 from pydantic import BaseModel, Field
 
 from nnll_01 import dbug, nfo
-from nnll_60 import JSONCache,LIBTYPE_PATH_NAMED
+from nnll_60 import JSONCache, LIBTYPE_PATH_NAMED
 
 LIBTYPE_CONFIG = JSONCache(LIBTYPE_PATH_NAMED)
+
 
 @LIBTYPE_CONFIG.decorator
 def has_api(api_name: str, data: dict = None) -> bool:
@@ -28,9 +29,10 @@ def has_api(api_name: str, data: dict = None) -> bool:
         import httpx
         from urllib3.exceptions import NewConnectionError, MaxRetryError
         import requests
+
         dbug(f"Response from API  {api_data}")
         try:
-            if api_data.get("api_url",0):
+            if api_data.get("api_url", 0):
                 request = requests.get(api_data.get("api_url"), timeout=(1, 1))
                 status = request.json() if request is not None else {}
                 if status.get("result") == "OK":
@@ -46,28 +48,21 @@ def has_api(api_name: str, data: dict = None) -> bool:
                 except requests.HTTPError() as error_log:
                     dbug(error_log)
 
-        except (requests.exceptions.ConnectionError,
-                httpcore.ConnectError,
-                httpx.ConnectError,
-                ConnectionRefusedError,
-                MaxRetryError,
-                NewConnectionError,
-                TimeoutError,
-                OSError,
-                RuntimeError,
-                ConnectionError):
+        except (requests.exceptions.ConnectionError, httpcore.ConnectError, httpx.ConnectError, ConnectionRefusedError, MaxRetryError, NewConnectionError, TimeoutError, OSError, RuntimeError, ConnectionError):
             nfo("|Ignorable| Source unavailable:", f"{api_name}")
             return False
         return False
 
-    api_data = data[api_name] #pylint: disable=unsubscriptable-object
+    api_data = data[api_name]  # pylint: disable=unsubscriptable-object
 
     try:
         if api_name == "LM_STUDIO":
             from lmstudio import APIConnectionError, APITimeoutError, APIStatusError, LMStudioWebsocketError
+
             return check_host()
-        elif api_name in ["LLAMAFILE","CORTEX"]:
+        elif api_name in ["LLAMAFILE", "CORTEX"]:
             from openai import APIConnectionError, APIStatusError, APITimeoutError
+
             return check_host()
         else:
             __import__(api_data.get("module"))
@@ -81,7 +76,7 @@ def has_api(api_name: str, data: dict = None) -> bool:
     except (APIConnectionError, APITimeoutError, APIStatusError):
         nfo("|Ignorable| Source unavailable:", f"{api_name}")
         return False
-    except (LMStudioWebsocketError):
+    except LMStudioWebsocketError:
         nfo("|Ignorable| Source unavailable:", f"{api_name}")
         return False
     return False
@@ -89,14 +84,15 @@ def has_api(api_name: str, data: dict = None) -> bool:
 
 class LibType(Enum):
     """API library constants"""
-    #Integers are usedto differentiate boolean condition
 
-    OLLAMA   : tuple = (has_api("OLLAMA"),"OLLAMA")
-    HUB      : tuple = (has_api("HUB"),"HUB")
-    LM_STUDIO: tuple = (has_api("LM_STUDIO"),"LM_STUDIO")
-    CORTEX   : tuple = (has_api("CORTEX"),"CORTEX")
-    LLAMAFILE: tuple = (has_api("LLAMAFILE"),"LLAMAFILE")
-    VLLM     : tuple = (has_api("VLLM"),"VLLM")
+    # Integers are usedto differentiate boolean condition
+
+    OLLAMA: tuple = (has_api("OLLAMA"), "OLLAMA")
+    HUB: tuple = (has_api("HUB"), "HUB")
+    LM_STUDIO: tuple = (has_api("LM_STUDIO"), "LM_STUDIO")
+    CORTEX: tuple = (has_api("CORTEX"), "CORTEX")
+    LLAMAFILE: tuple = (has_api("LLAMAFILE"), "LLAMAFILE")
+    VLLM: tuple = (has_api("VLLM"), "VLLM")
 
 
 class GenTypeC(BaseModel):
@@ -108,8 +104,8 @@ class GenTypeC(BaseModel):
     :param translate: A range of comprehensible approximations
     """
 
-    clone    : Annotated[Callable | None, Field(default=None)]
-    sync     : Annotated[Callable | None, Field(default=None)]
+    clone: Annotated[Callable | None, Field(default=None)]
+    sync: Annotated[Callable | None, Field(default=None)]
     translate: Annotated[Callable | None, Field(default=None)]
 
 
@@ -125,9 +121,9 @@ class GenTypeCText(BaseModel):
     :param question_answer: Basic, straightforward responses
     """
 
-    research        : Annotated[Optional[Callable | None], Field(default=None, examples=example_str)]
+    research: Annotated[Optional[Callable | None], Field(default=None, examples=example_str)]
     chain_of_thought: Annotated[Optional[Callable | None], Field(default=None, examples=example_str)]
-    question_answer : Annotated[Optional[Callable | None], Field(default=None, examples=example_str)]
+    question_answer: Annotated[Optional[Callable | None], Field(default=None, examples=example_str)]
 
 
 class GenTypeE(BaseModel):
@@ -138,16 +134,20 @@ class GenTypeE(BaseModel):
     :param text: Text-only conversions
     """
 
-    universal: GenTypeC     = GenTypeC(clone=None, sync=None, translate=None)
-    text     : GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
+    universal: GenTypeC = GenTypeC(clone=None, sync=None, translate=None)
+    text: GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
 
 
-VALID_CONVERSIONS = ["text", "image", "music", "speech","video", "3d_render", "vector_graphic", "upscale_image"]
+VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d_render", "vector_graphic", "upscale_image"]
 
 # decide on a way to keep paired tuples and sets together inside config dict
 VALID_TASKS = {
     LibType.CORTEX: {
         ("text", "text"): ["text"],
+    },
+    LibType.VLLM: {
+        ("text", "text"): ["text"],
+        ("image", "text"): ["vision"],
     },
     LibType.OLLAMA: {
         ("text", "text"): ["mllama", "llava", "vllm"],
@@ -156,13 +156,13 @@ VALID_TASKS = {
         ("text", "text"): ["text"],
     },
     LibType.LM_STUDIO: {
-        ("image", "text"): [("vision", True)],
-        ("text", "text") : ["llm", ("tool", True)],
+        # ("image", "text"): [("vision", True)],
+        ("text", "text"): ["llm"],
     },
     LibType.HUB: {
-        ("image", "text") : ["image-generation", "image-text-to-text", "visual-question-answering"],
-        ("text", "text")  : ["chat", "conversational", "text-generation", "text2text-generation"],
-        ("text", "video") : ["video generation"],
+        ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
+        ("text", "text"): ["chat", "conversational", "text-generation", "text2text-generation"],
+        ("text", "video"): ["video generation"],
         ("speech", "text"): ["speech-translation", "speech-summarization", "automatic-speech-recognition"],
     },
 }
