@@ -1,18 +1,18 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev342+g71a714b.d20250430
+Version: 0.1.dev348+ge2c81da.d20250502
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: SPDX-License-Identifier: LAL-1.3
-        
+
         darkshapes github.com/darkshapes
-        
-        Copyleft: cette œuvre est libre, vous pouvez la copier, la diffuser et la modifier selon les termes de la Licence Art Libre http://www.artlibre.org
-        
+
+        Copyleft: cette œuvre est libre, vous pouvez la copier, la diffuser et la modifier selon les termes de la Licence Art Libre https://www.artlibre.org
+
           *   May you do good and not evil.
           *   May you find forgiveness for yourself and forgive others.
           *   May you share freely, never taking more than you give.
-        
+
 Project-URL: source, https://github.com/darkshapes/nnll
 Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
