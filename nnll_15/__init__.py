@@ -42,7 +42,7 @@ class RegistryEntry(BaseModel):
             pattern = re.compile(r"(\w+)-to-(\w+)")
             for tag in self.tags:
                 match = pattern.search(tag)
-                if match and all(group in VALID_CONVERSIONS for group in match.groups()) and ((match.group(1), match.group(2))) not in processed_tasks:
+                if match and all(group in VALID_CONVERSIONS for group in match.groups()) and (match.group(1), match.group(2)) not in processed_tasks:
                     processed_tasks.append((match.group(1), match.group(2)))
         for tag in self.tags:  # when pair-tagged elements are not available, potential to duplicate HUB tags here
             for (graph_src, graph_dest), tags in library_tasks.items():
