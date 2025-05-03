@@ -26,7 +26,7 @@ class PictureSignature(dspy.Signature):
 
 
 class QASignature(dspy.Signature):
-    f"""{bqa_sysprompt}"""
+    f"""{bqa_sysprompt} /no_think"""
 
     message: str = dspy.InputField(desc="The message to respond to")
     answer = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
@@ -44,13 +44,13 @@ async def get_api(model: str, library: LibType) -> dict:
     """
 
     @LIBTYPE_CONFIG.decorator
-    def _read_data(data:dict =None):
+    def _read_data(data: dict = None):
         return data
 
     data = _read_data()
     req_form = {}
 
-    if data.get(library.value[1],0) and has_api(library.value[1]):
+    if data.get(library.value[1], 0) and has_api(library.value[1]):
         config = data[library.value[1]]
         req_form = {
             "model": model,  # Assuming 'model' corresponds to 'module'
@@ -61,11 +61,11 @@ async def get_api(model: str, library: LibType) -> dict:
     else:
         raise ValueError(f"Library '{library}' not found in configuration.")
 
+
 # Don't capture user prompts: AVOID logging this class as much as possible
 class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
-
 
     def __init__(self, sig: dspy.Signature = QASignature, max_workers=4) -> None:
         """
@@ -76,11 +76,11 @@ class ChatMachineWithMemory(dspy.Module):
         """
         super().__init__()
         self.max_workers = max_workers
-        generator = dspy.asyncify(program=dspy.Predict(signature=sig))   # this should only be used in the case of text
+        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
         self.completion = dspy.streamify(generator)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
-    async def forward(self, tx_data: dict[str|list[float]], model: str, library: LibType, streaming=True) -> Any:
+    async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration

@@ -94,8 +94,6 @@ class RegistryEntry(BaseModel):
                     tags.extend(meta.tags)
                 if hasattr(meta, "pipeline_tag"):
                     tags.append(meta.pipeline_tag)
-                if not tags:
-                    tags = ["unknown"]
                 entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
                 entries.append(entry)
 
