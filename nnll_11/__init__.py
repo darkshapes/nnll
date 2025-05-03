@@ -26,10 +26,10 @@ class PictureSignature(dspy.Signature):
 
 
 class QASignature(dspy.Signature):
-    f"""{bqa_sysprompt} /no_think"""
+    f"""{bqa_sysprompt}"""
 
     message: str = dspy.InputField(desc="The message to respond to")
-    answer = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
+    answer = dspy.OutputField(desc="/no_think Often between 60 and 90 words and limited to 10000 character code blocks")
 
 
 # signature: dspy.Signature = BasicQAHistory
