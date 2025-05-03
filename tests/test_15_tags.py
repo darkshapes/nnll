@@ -38,6 +38,82 @@ def test_hub_available_tasks(registry_entry_hub: RegistryEntry):  # ensure that 
 
 
 @pytest.fixture
+def hub_xlate():
+    return RegistryEntry(
+        model="🤡",
+        size=1024,
+        tags=["speech-translation"],
+        library=LibType.HUB,
+        timestamp=int(datetime.now().timestamp()),
+    )
+
+
+@pytest.fixture
+def hub_sum():
+    return RegistryEntry(
+        model="🤡",
+        size=1024,
+        tags=["speech-summarization"],
+        library=LibType.HUB,
+        timestamp=int(datetime.now().timestamp()),
+    )
+
+
+@pytest.fixture
+def hub_asr():
+    return RegistryEntry(
+        model="🤡",
+        size=1024,
+        tags=["automatic-speech-recognition"],
+        library=LibType.HUB,
+        timestamp=int(datetime.now().timestamp()),
+    )
+
+
+@pytest.fixture
+def hub_tts():
+    return RegistryEntry(
+        model="🤡",
+        size=1024,
+        tags=[
+            "text-to-speech",
+        ],
+        library=LibType.HUB,
+        timestamp=int(datetime.now().timestamp()),
+    )
+
+
+def test_hub_xlate(hub_xlate):
+    expected_tasks = [
+        ("speech", "text"),
+    ]
+    assert set(hub_xlate.available_tasks) == set(expected_tasks)
+
+
+def test_hub_sum(hub_sum):
+    expected_tasks = [
+        ("speech", "text"),
+    ]
+
+    assert set(hub_sum.available_tasks) == set(expected_tasks)
+
+
+def test_hub_asr(hub_asr):
+    expected_tasks = [
+        ("speech", "text"),
+    ]
+    assert set(hub_asr.available_tasks) == set(expected_tasks)
+
+
+def test_hub_tts(hub_tts):
+    expected_tasks = [
+        ("text", "speech"),
+    ]
+
+    assert set(hub_tts.available_tasks) == set(expected_tasks)
+
+
+@pytest.fixture
 def registry_entry_hub_extra():
     return RegistryEntry(
         model="🤡",
