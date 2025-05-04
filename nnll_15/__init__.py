@@ -11,9 +11,6 @@ from pydantic import BaseModel, computed_field
 from nnll_01 import dbug, debug_monitor, nfo
 from nnll_15.constants import LIBTYPE_CONFIG, VALID_CONVERSIONS, VALID_TASKS, LibType, has_api
 
-# import open_webui
-# from package import response_panel
-
 
 class RegistryEntry(BaseModel):
     """Validate Hub / Ollama / LMStudio model input"""
@@ -24,12 +21,15 @@ class RegistryEntry(BaseModel):
     library: LibType
     timestamp: int
     # tokenizer: None
-    # api: None
 
     @computed_field
     @property
     def available_tasks(self) -> List[Tuple]:
         """Filter tag tasks into edge coordinates for graphing"""
+        # This is a best effort at parsing tags; it is not perfect, and there is room for improvement
+        # particularly: Tokenizers, being locatable here, should be assigned to their model entry
+        # the logistics of how this occurs have been difficult to implement
+        # additionally, tag recognition of tasks needs cleaner, which requires practical testing to solve
         import re
 
         default_task = None
@@ -169,7 +169,7 @@ class RegistryEntry(BaseModel):
 @debug_monitor
 def from_cache() -> Dict[str, RegistryEntry]:
     """
-    Retrieve models from ollama server, local huggingface hub cache, !!! Incomplete! local lmstudio cache & vllm.
+    Retrieve models from ollama server, local huggingface hub cache, local lmstudio cache & vllm.
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
     models = None

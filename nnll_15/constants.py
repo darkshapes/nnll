@@ -86,6 +86,7 @@ class LibType(Enum):
     """API library constants"""
 
     # Integers are usedto differentiate boolean condition
+    # GIVEN : The state of all unavailable library modules & servers are flagged at launch
 
     OLLAMA: tuple = (has_api("OLLAMA"), "OLLAMA")
     HUB: tuple = (has_api("HUB"), "HUB")
@@ -95,10 +96,19 @@ class LibType(Enum):
     VLLM: tuple = (has_api("VLLM"), "VLLM")
 
 
+# Gentype is an X/Y mapping along axes of EQUIVALENCE and DETAIL
+# In the set of all generative processes and their possible applications, all of these operations apply
+# the TEXT entries are an appendix specific to text contexts which simply dont apply to other media
+# LLMs just get more attention than other modalities
+# `sync` may have better terms, such as 'harmonize' or 'attune'. `sync` is used here because it is shorter
+
+example_str = ("function_name", "import.function_name")
+
+
 class GenTypeC(BaseModel):
     """
     Generative inference types in ***C***-dimensional order\n
-    ***Compute***, sorted from 'most involved' to 'least involved'\n
+    ***Detail***, sorted from 'most involved' to 'least involved'\n
     :param clone: Copying identity, voice, exact mirror
     :param sync: Tone, tempo, color, quality, genre, scale, mood
     :param translate: A range of comprehensible approximations
@@ -109,13 +119,10 @@ class GenTypeC(BaseModel):
     translate: Annotated[Callable | None, Field(default=None)]
 
 
-example_str = ("function_name", "import.function_name")
-
-
 class GenTypeCText(BaseModel):
     """
     Generative inference types in ***C***-dimensional order for text operations\n
-    ***Compute***, sorted from 'most involved' to 'least involved'\n
+    ***Detail***, sorted from 'most involved' to 'least involved'\n
     :param research: Quoting, paraphrasing, and deriving from sources
     :param chain_of_thought: A performance of processing step-by-step
     :param question_answer: Basic, straightforward responses
@@ -137,6 +144,10 @@ class GenTypeE(BaseModel):
     universal: GenTypeC = GenTypeC(clone=None, sync=None, translate=None)
     text: GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
 
+
+# The case could be made that tasks could be derived by filtering by tasks, rather than graphing
+# This is true, however it would require us to calculate or list all possible trajectories
+# moreover, it offers no guarantees for difficult logic conditions that can be easily verified by graph algorithms
 
 VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d_render", "vector_graphic", "upscale_image"]
 
