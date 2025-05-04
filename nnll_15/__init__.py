@@ -174,5 +174,5 @@ def from_cache() -> Dict[str, RegistryEntry]:
     """
     models = None
     models = RegistryEntry.from_model_data()
-    dbug(f"REG_ENTRIES {models}")
+    nfo(f"REG_ENTRIES {models}")
     return models
