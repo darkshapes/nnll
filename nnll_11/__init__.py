@@ -5,9 +5,9 @@
 import array
 from typing import Any
 import dspy
-from pydantic import BaseModel, Field
+# from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, dbug, nfo
+from nnll_01 import debug_monitor, dbug  # , nfo
 from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
@@ -42,6 +42,37 @@ async def get_api(model: str, library: LibType) -> dict:
     :param library: API Library to use
     :param _data: filled by config decorator, ignore, defaults to None
     :return: Arguments to pass to the LM constructor
+
+    ====================================================
+    #### IMPLIED
+    Since model Libraries only populate registry if:
+    - X : Library modules are detected at launch
+    - Y : Library server was available on index
+
+    THUS
+    #### Safely assume only valid Libraries are processed
+    `valid` in this case meaning available to the system out of the set of all Zodiac supported
+
+    However, server status can change. This must be validated. So:
+
+    #### GIVEN
+    For any supported Library Type:
+    - A: Library call modules MUST be detected in CONFIG data
+    - B: Library server MUST be available
+    - If A is True AND B is True: Library index operations will be run
+
+    In theory a model can be removed while the server is rebooted in between these checks.\n
+    We would have to repopulate and reconstruct the index to know. An expensive computation.\n
+    It would be ideal to have a lookup method inside 'from_cache' that confirms\n
+    - A : the model remains available in the library
+    - B : the location of the model is real
+    - C : the file exists
+     Unfortunately, several local model API's do not have a method to determine model file location.
+
+    Therefore:
+    #### MODEL AVAILABILITY IS UNCERTAIN
+    #### ALWAYS prepare a case where the model file itself cannot be found
+
     """
 
     @LIBTYPE_CONFIG.decorator
@@ -54,13 +85,12 @@ async def get_api(model: str, library: LibType) -> dict:
     if data.get(library.value[1], 0) and has_api(library.value[1]):
         config = data[library.value[1]]
         req_form = {
-            "model": model,  # Assuming 'model' corresponds to 'module'
+            "model": model,
             **config["api_kwargs"],
         }
         dbug("Pushing form : %s", req_form)
         return req_form
-    else:
-        raise ValueError(f"Library '{library}' not found in configuration.")
+    raise ValueError(f"Library '{library}' not found in configuration.")
 
 
 # Don't capture user prompts: AVOID logging this class as much as possible

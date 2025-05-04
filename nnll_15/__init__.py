@@ -57,7 +57,16 @@ class RegistryEntry(BaseModel):
         """Create RegistryEntry instances based on source\n
         Extract common model information and stack by newest model first for each conversion type.\n
         :param lib_type: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
-        :return: A list of RegistryEntry objects containing model metadata relevant to execution\n"""
+        :return: A list of RegistryEntry objects containing model metadata relevant to execution\n
+
+        ========================================================\n
+        ### GIVEN
+        For any supported Library Type:\n
+        - A: Library modules MUST be detected as installed during launch\n
+        - B: Library server MUST continue to be available\n
+        If A is **True** AND B is **True**: Library index operations will be run\n
+
+        """
         entries = []
 
         @LIBTYPE_CONFIG.decorator
@@ -65,11 +74,6 @@ class RegistryEntry(BaseModel):
             return data
 
         api_data = _read_data()
-
-        # GIVEN : For any supported Library Type:
-        # A: Library modules MUST be detected as installed during launch
-        # B: Library server MUST continue to be available
-        # If A is True and B is True: Library index operations will be run
 
         if next(iter(LibType.OLLAMA.value)) and has_api("OLLAMA"):  # check that server is still up!
             from ollama import ListResponse, list as ollama_list
