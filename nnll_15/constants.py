@@ -86,7 +86,7 @@ class LibType(Enum):
     """API library constants"""
 
     # Integers are usedto differentiate boolean condition
-    # GIVEN : The state of all unavailable library modules & servers are flagged at launch
+    # GIVEN : The state of all library modules & servers are marked at launch
 
     OLLAMA: tuple = (has_api("OLLAMA"), "OLLAMA")
     HUB: tuple = (has_api("HUB"), "HUB")
@@ -96,22 +96,18 @@ class LibType(Enum):
     VLLM: tuple = (has_api("VLLM"), "VLLM")
 
 
-# Gentype is an X/Y mapping along axes of EQUIVALENCE and DETAIL
-# In the set of all generative processes and their possible applications, all of these operations apply
-# the TEXT entries are an appendix specific to text contexts which simply dont apply to other media
-# LLMs just get more attention than other modalities
-# `sync` may have better terms, such as 'harmonize' or 'attune'. `sync` is used here because it is shorter
-
 example_str = ("function_name", "import.function_name")
 
 
 class GenTypeC(BaseModel):
     """
     Generative inference types in ***C***-dimensional order\n
-    ***Detail***, sorted from 'most involved' to 'least involved'\n
+    ***Comprehensiveness***, sorted from 'most involved' to 'least involved'\n
+    The terms define 'artistic' and ambiguous operations\n
+
     :param clone: Copying identity, voice, exact mirror
     :param sync: Tone, tempo, color, quality, genre, scale, mood
-    :param translate: A range of comprehensible approximations
+    :param translate: A range of comprehensible approximations\n
     """
 
     clone: Annotated[Callable | None, Field(default=None)]
@@ -122,10 +118,12 @@ class GenTypeC(BaseModel):
 class GenTypeCText(BaseModel):
     """
     Generative inference types in ***C***-dimensional order for text operations\n
-    ***Detail***, sorted from 'most involved' to 'least involved'\n
+    ***Comprehensiveness***, sorted from 'most involved' to 'least involved'\n
+    The terms define 'concrete' and more rigid operations\n
+
     :param research: Quoting, paraphrasing, and deriving from sources
-    :param chain_of_thought: A performance of processing step-by-step
-    :param question_answer: Basic, straightforward responses
+    :param chain_of_thought: A performance of processing step-by-step (similar to `reasoning`)
+    :param question_answer: Basic, straightforward responses\n
     """
 
     research: Annotated[Optional[Callable | None], Field(default=None, examples=example_str)]
@@ -138,20 +136,50 @@ class GenTypeE(BaseModel):
     Generative inference operation types in ***E***-dimensional order \n
     ***Equivalence***, lists sorted from 'highly-similar' to 'loosely correlated.'"\n
     :param universal: Affecting all conversions
-    :param text: Text-only conversions
+    :param text: Text-only conversions\n
+
+    ***multimedia generation***
+    ```
+    Y-axis: Detail (Most involved to least involved)
+    │
+    │                             clone
+    │                 sync
+    │ translate
+    │
+    +───────────────────────────────────────> X-axis: Equivalence (Loosely correlated to highly similar)
+    ```
+    ***text generation***
+    ```
+    Y-axis: Detail (Most involved to least involved)
+    │
+    │                           research
+    │             chain-of-thought
+    │ question/answer
+    │
+    +───────────────────────────────────────> X-axis:  Equivalence (Loosely correlated to highly similar)
+    ```
+
+    This is essentially the translation operation of C types, and the mapping of them to E \n
+
+    An abstract generalization of the set of all multimodal generative synthesis processes\n
+    The sum of each coordinate pair reflects effective compute use\n
+    In this way, both C types and their similarity are translatable, but not 1:1 identical\n
+    Text is allowed to perform all 6 core operations. Other media perform only 3.\n
     """
+
+    # note: `sync` may have better terms, such as 'harmonize' or 'attune'. `sync` was chosen because it is shorter
 
     universal: GenTypeC = GenTypeC(clone=None, sync=None, translate=None)
     text: GenTypeCText = GenTypeCText(research=None, chain_of_thought=None, question_answer=None)
 
 
-# The case could be made that tasks could be derived by filtering by tasks, rather than graphing
-# This is true, however it would require us to calculate or list all possible trajectories
-# moreover, it offers no guarantees for difficult logic conditions that can be easily verified by graph algorithms
+# Here, a case could be made that tasks could be determined by filters, rather than graphing
+# This is valid but, it offers no guarantees for difficult logic conditions that can be easily verified by graph algorithms
+# Using graphs also allows us to offload the logic elsewhere
 
 VALID_CONVERSIONS = ["text", "image", "music", "speech", "video", "3d_render", "vector_graphic", "upscale_image"]
 
-# decide on a way to keep paired tuples and sets together inside config dict
+# note : decide on a way to keep paired tuples and sets together inside config dict
 VALID_TASKS = {
     LibType.CORTEX: {
         ("text", "text"): ["text"],

@@ -66,6 +66,11 @@ class RegistryEntry(BaseModel):
 
         api_data = _read_data()
 
+        # GIVEN : For any supported Library Type:
+        # A: Library modules MUST be detected as installed during launch
+        # B: Library server MUST continue to be available
+        # If A is True and B is True: Library index operations will be run
+
         if next(iter(LibType.OLLAMA.value)) and has_api("OLLAMA"):  # check that server is still up!
             from ollama import ListResponse, list as ollama_list
 

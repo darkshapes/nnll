@@ -20,6 +20,7 @@ ps_edit_message = "Edited input image of the dog with a yellow hat."
 
 class PictureSignature(dspy.Signature):
     f"""{ps_sysprompt}"""
+    # This is an example multimodal input signature
     image_input: dspy.Image = dspy.InputField(desc=ps_infield_tag)
     answer: str = dspy.OutputField(desc=ps_outfield_tag)
     image_output: dspy.Image = dspy.OutputField(desc=ps_edit_message)
