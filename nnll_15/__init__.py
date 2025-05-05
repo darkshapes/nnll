@@ -11,9 +11,6 @@ from pydantic import BaseModel, computed_field
 from nnll_01 import dbug, debug_monitor, nfo
 from nnll_15.constants import LIBTYPE_CONFIG, VALID_CONVERSIONS, VALID_TASKS, LibType, has_api
 
-# import open_webui
-# from package import response_panel
-
 
 class RegistryEntry(BaseModel):
     """Validate Hub / Ollama / LMStudio model input"""
@@ -24,12 +21,15 @@ class RegistryEntry(BaseModel):
     library: LibType
     timestamp: int
     # tokenizer: None
-    # api: None
 
     @computed_field
     @property
     def available_tasks(self) -> List[Tuple]:
         """Filter tag tasks into edge coordinates for graphing"""
+        # This is a best effort at parsing tags; it is not perfect, and there is room for improvement
+        # particularly: Tokenizers, being locatable here, should be assigned to their model entry
+        # the logistics of how this occurs have been difficult to implement
+        # additionally, tag recognition of tasks needs cleaner, which requires practical testing to solve
         import re
 
         default_task = None
@@ -37,14 +37,14 @@ class RegistryEntry(BaseModel):
         processed_tasks = []
         library_tasks = VALID_TASKS[self.library]
         if self.library in [LibType.OLLAMA, LibType.LM_STUDIO, LibType.LLAMAFILE, LibType.CORTEX, LibType.VLLM]:
-            default_task = ("text", "text") # usually these are txt gen libraries
-        elif self.library == LibType.HUB: # pair tags from the hub such 'x-to-y' such as 'text-to-text' etc
+            default_task = ("text", "text")  # usually these are txt gen libraries
+        elif self.library == LibType.HUB:  # pair tags from the hub such 'x-to-y' such as 'text-to-text' etc
             pattern = re.compile(r"(\w+)-to-(\w+)")
             for tag in self.tags:
                 match = pattern.search(tag)
-                if match and all(group in VALID_CONVERSIONS for group in match.groups()):
+                if match and all(group in VALID_CONVERSIONS for group in match.groups()) and (match.group(1), match.group(2)) not in processed_tasks:
                     processed_tasks.append((match.group(1), match.group(2)))
-        for tag in self.tags: # when pair-tagged elements are not available, potential to duplicate HUB tags here
+        for tag in self.tags:  # when pair-tagged elements are not available, potential to duplicate HUB tags here
             for (graph_src, graph_dest), tags in library_tasks.items():
                 if tag in tags and (graph_src, graph_dest) not in processed_tasks:
                     processed_tasks.append((graph_src, graph_dest))
@@ -57,16 +57,25 @@ class RegistryEntry(BaseModel):
         """Create RegistryEntry instances based on source\n
         Extract common model information and stack by newest model first for each conversion type.\n
         :param lib_type: Origin of this data (eg: HuggingFace, Ollama, CivitAI, ModelScope)
-        :return: A list of RegistryEntry objects containing model metadata relevant to execution\n"""
+        :return: A list of RegistryEntry objects containing model metadata relevant to execution\n
+
+        ========================================================\n
+        ### GIVEN
+        For any supported Library Type:\n
+        - A: Library modules MUST be detected as installed during launch\n
+        - B: Library server MUST continue to be available\n
+        If A is **True** AND B is **True**: Library index operations will be run\n
+
+        """
         entries = []
 
         @LIBTYPE_CONFIG.decorator
-        def _read_data(data:dict =None):
+        def _read_data(data: dict = None):
             return data
 
         api_data = _read_data()
 
-        if next(iter(LibType.OLLAMA.value)) and has_api("OLLAMA"): # check that server is still up!
+        if next(iter(LibType.OLLAMA.value)) and has_api("OLLAMA"):  # check that server is still up!
             from ollama import ListResponse, list as ollama_list
 
             model_data: ListResponse = ollama_list()  # type: ignore
@@ -80,23 +89,21 @@ class RegistryEntry(BaseModel):
                 )
                 entries.append(entry)
         if next(iter(LibType.HUB.value)) and has_api("HUB"):
-            from huggingface_hub import scan_cache_dir, repocard, HFCacheInfo  # type: ignore
+            from huggingface_hub import scan_cache_dir, repocard, HFCacheInfo, CacheNotFound  # type: ignore
 
-            model_data: HFCacheInfo = scan_cache_dir()
-            for repo in model_data.repos:
-                try:
+            try:
+                model_data: HFCacheInfo = scan_cache_dir()
+                for repo in model_data.repos:
                     meta = repocard.RepoCard.load(repo.repo_id).data
-                except ValueError as error_log:
-                    dbug(error_log)
-                    continue
+            except (ValueError, CacheNotFound) as error_log:
+                dbug(error_log)
+            else:
                 tags = []
                 if hasattr(meta, "tags"):
                     tags.extend(meta.tags)
                 if hasattr(meta, "pipeline_tag"):
                     tags.append(meta.pipeline_tag)
-                if not tags:
-                    tags = ["unknown"]
-                entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))
+                entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))  # pylint: disable=undefined-loop-variable
                 entries.append(entry)
 
         if next(iter(LibType.CORTEX.value)) and has_api("CORTEX"):
@@ -135,7 +142,7 @@ class RegistryEntry(BaseModel):
             model_data = OpenAI(base_url=api_data["VLLM"]["api_kwargs"]["api_base"], api_key=api_data["VLLM"]["api_kwargs"]["api_key"])
             for model in model_data.models.list().data:
                 entry = cls(
-                    model = f"{api_data[LibType.VLLM.value[1]].get('prefix')}{model['data'].get('id')}f",
+                    model=f"{api_data[LibType.VLLM.value[1]].get('prefix')}{model['data'].get('id')}f",
                     size=0,
                     tags=["text"],
                     library=LibType.VLLM,
@@ -145,6 +152,7 @@ class RegistryEntry(BaseModel):
 
         if next(iter(LibType.LM_STUDIO.value)) and has_api("LM_STUDIO"):
             from lmstudio import list_downloaded_models  # pylint: disable=import-error, # type: ignore
+
             model_data = list_downloaded_models()
             for model in model_data:  # pylint:disable=no-member
                 tags = []
@@ -170,10 +178,10 @@ class RegistryEntry(BaseModel):
 @debug_monitor
 def from_cache() -> Dict[str, RegistryEntry]:
     """
-    Retrieve models from ollama server, local huggingface hub cache, !!! Incomplete! local lmstudio cache & vllm.
+    Retrieve models from ollama server, local huggingface hub cache, local lmstudio cache & vllm.
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
     models = None
     models = RegistryEntry.from_model_data()
-    dbug(f"REG_ENTRIES {models}")
+    nfo(f"REG_ENTRIES {models}")
     return models

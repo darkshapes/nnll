@@ -5,9 +5,9 @@
 import array
 from typing import Any
 import dspy
-from pydantic import BaseModel, Field
+# from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, dbug, nfo
+from nnll_01 import debug_monitor, dbug  # , nfo
 from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
@@ -20,6 +20,7 @@ ps_edit_message = "Edited input image of the dog with a yellow hat."
 
 class PictureSignature(dspy.Signature):
     f"""{ps_sysprompt}"""
+    # This is an example multimodal input signature
     image_input: dspy.Image = dspy.InputField(desc=ps_infield_tag)
     answer: str = dspy.OutputField(desc=ps_outfield_tag)
     image_output: dspy.Image = dspy.OutputField(desc=ps_edit_message)
@@ -41,31 +42,61 @@ async def get_api(model: str, library: LibType) -> dict:
     :param library: API Library to use
     :param _data: filled by config decorator, ignore, defaults to None
     :return: Arguments to pass to the LM constructor
+
+    ====================================================
+    #### IMPLIED
+    Since model Libraries only populate registry if:
+    - X : Library modules are detected at launch
+    - Y : Library server was available on index
+
+    THUS
+    #### Safely assume only valid Libraries are processed
+    `valid` in this case meaning available to the system out of the set of all Zodiac supported
+
+    However, server status can change. This must be validated. So:
+
+    #### GIVEN
+    For any supported Library Type:
+    - A: Library call modules MUST be detected in CONFIG data
+    - B: Library server MUST be available
+    - If A is True AND B is True: Library index operations will be run
+
+    In theory a model can be removed while the server is rebooted in between these checks.\n
+    We would have to repopulate and reconstruct the index to know. An expensive computation.\n
+    It would be ideal to have a lookup method inside 'from_cache' that confirms\n
+    - A : the model remains available in the library
+    - B : the location of the model is real
+    - C : the file exists
+     Unfortunately, several local model API's do not have a method to determine model file location.
+
+    Therefore:
+    #### MODEL AVAILABILITY IS UNCERTAIN
+    #### ALWAYS prepare a case where the model file itself cannot be found
+
     """
 
     @LIBTYPE_CONFIG.decorator
-    def _read_data(data:dict =None):
+    def _read_data(data: dict = None):
         return data
 
     data = _read_data()
     req_form = {}
 
-    if data.get(library.value[1],0) and has_api(library.value[1]):
+    if data.get(library.value[1], 0) and has_api(library.value[1]):
         config = data[library.value[1]]
         req_form = {
-            "model": model,  # Assuming 'model' corresponds to 'module'
+            "model": model,
             **config["api_kwargs"],
         }
         dbug("Pushing form : %s", req_form)
         return req_form
-    else:
-        raise ValueError(f"Library '{library}' not found in configuration.")
+    raise ValueError(f"Library '{library}' not found in configuration.")
+
 
 # Don't capture user prompts: AVOID logging this class as much as possible
 class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
-
 
     def __init__(self, sig: dspy.Signature = QASignature, max_workers=4) -> None:
         """
@@ -76,11 +107,11 @@ class ChatMachineWithMemory(dspy.Module):
         """
         super().__init__()
         self.max_workers = max_workers
-        generator = dspy.asyncify(program=dspy.Predict(signature=sig))   # this should only be used in the case of text
+        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
         self.completion = dspy.streamify(generator)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
-    async def forward(self, tx_data: dict[str|list[float]], model: str, library: LibType, streaming=True) -> Any:
+    async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
         """
         Forward pass for LLM Chat process\n
         :param model: The library-specific arguments for the model configuration
