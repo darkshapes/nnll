@@ -91,22 +91,24 @@ class RegistryEntry(BaseModel):
         if next(iter(LibType.HUB.value)) and has_api("HUB"):
             from huggingface_hub import scan_cache_dir, repocard, HFCacheInfo, CacheNotFound  # type: ignore
 
-            # try:
-            model_data: HFCacheInfo = scan_cache_dir()
-            for repo in model_data.repos:
-                meta = repocard.RepoCard.load(repo.repo_id).data
-                # except (ValueError, CacheNotFound) as error_log:
-                # dbug(error_log)
-                # else:
-                nfo(meta)
-                tags = []
-                if hasattr(meta, "tags"):
-                    tags.extend(meta.tags)
-                if hasattr(meta, "pipeline_tag"):
-                    tags.append(meta.pipeline_tag)
-                entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))  # pylint: disable=undefined-loop-variable
-                entries.append(entry)
-
+            try:
+                model_data: HFCacheInfo = scan_cache_dir()
+                for repo in model_data.repos:
+                    try:
+                        meta = repocard.RepoCard.load(repo.repo_id).data
+                    except ValueError as error_log:
+                        dbug(error_log)
+                    else:
+                        nfo(meta)
+                        tags = []
+                        if hasattr(meta, "tags"):
+                            tags.extend(meta.tags)
+                        if hasattr(meta, "pipeline_tag"):
+                            tags.append(meta.pipeline_tag)
+                        entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))  # pylint: disable=undefined-loop-variable
+                        entries.append(entry)
+            except CacheNotFound as error_log:
+                dbug(error_log)
         if next(iter(LibType.CORTEX.value)) and has_api("CORTEX"):
             import requests
             from datetime import datetime
