@@ -10,6 +10,17 @@
         "torch_dtype": "torch.bfloat16",
         "constructor": "image"
     },
+    "model.dit.cogview-4": {
+        "repo": "THUDM/CogView4-6B",
+        "defaults": {
+            "height": 1024,
+            "width": 1024,
+            "guidance_scale": 4.0,
+            "num_inference_steps": 50
+        },
+        "torch_dtype": "torch.bfloat16",
+        "constructor": "image"
+    },
     "model.unet.kolors": {
         "repo": "Kwai-Kolors/Kolors-diffusers",
         "defaults": {

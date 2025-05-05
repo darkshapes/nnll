@@ -99,7 +99,6 @@ class RegistryEntry(BaseModel):
                     except ValueError as error_log:
                         dbug(error_log)
                     else:
-                        nfo(meta)
                         tags = []
                         if hasattr(meta, "tags"):
                             tags.extend(meta.tags)
