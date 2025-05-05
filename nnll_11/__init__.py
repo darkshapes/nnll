@@ -7,7 +7,7 @@ from typing import Any
 import dspy
 # from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, dbug  # , nfo
+from nnll_01 import debug_monitor, dbug, nfo
 from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
@@ -132,12 +132,22 @@ class ChatMachineWithMemory(dspy.Module):
             yield constructor(mir_arch)
 
         else:
-            api_kwargs = await get_api(model=model, library=library)
-            model = dspy.LM(**api_kwargs)
-            dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
             try:
-                yield self.completion(message=tx_data["text"], stream=streaming)
-            except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
-                dbug(error_log)  # consider threading user selection between cursor jumps
-            except TypeError as error_log:
+                api_kwargs = await get_api(model=model, library=library)
+            except ValueError as error_log:
+                nfo(f"Library '{library}' not found in configuration.")
                 dbug(error_log)
+                yield {
+                    "choices": {
+                        "0": {"delta": {"content": "The attempt to gather resources for this request was rejected. Have files changed?"}},
+                    },
+                }
+            else:
+                model = dspy.LM(**api_kwargs)
+                dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
+                try:
+                    yield self.completion(message=tx_data["text"], stream=streaming)
+                except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
+                    dbug(error_log)  # consider threading user selection between cursor jumps
+                except TypeError as error_log:
+                    dbug(error_log)
