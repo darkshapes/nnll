@@ -1,24 +1,17 @@
 {
-    "weight_map_locations": {
-        "repo": "https://huggingface.co/exdysa/mir/",
-        "unet": "transformer/diffusion_pytorch_model.safetensors.index.json",
-        "text_encoder": "text_encoder/model.safetensors.index.json",
-        "text_encoder_2": "text_encoder_2/model.safetensors.index.json",
-        "text_encoder_3": "text_encoder_3/model.safetensors.index.json",
-        "image": [
-            "nnll_60",
-            "ConstructPipeline",
-            "create_pipeline"
-        ],
-        "speech": [],
-        "text": [],
-        "video": [],
-        "3d": [],
-        "svg": []
-    },
-    "save_folder_path_absolute": "/Users/unauthorized/Pictures/Combo/",
     "model.dit.cogview-3": {
         "repo": "THUDM/CogView3-Plus-3B",
+        "defaults": {
+            "height": 1024,
+            "width": 1024,
+            "guidance_scale": 4.0,
+            "num_inference_steps": 50
+        },
+        "torch_dtype": "torch.bfloat16",
+        "constructor": "image"
+    },
+    "model.dit.cogview-4": {
+        "repo": "THUDM/CogView4-6B",
         "defaults": {
             "height": 1024,
             "width": 1024,
@@ -276,5 +269,22 @@
             },
             "fuse": 0.125
         }
+    },
+    "weight_map_locations": {
+        "repo": "https://huggingface.co/exdysa/mir/",
+        "unet": "transformer/diffusion_pytorch_model.safetensors.index.json",
+        "text_encoder": "text_encoder/model.safetensors.index.json",
+        "text_encoder_2": "text_encoder_2/model.safetensors.index.json",
+        "text_encoder_3": "text_encoder_3/model.safetensors.index.json",
+        "image": [
+            "nnll_60",
+            "ConstructPipeline",
+            "create_pipeline"
+        ],
+        "speech": [],
+        "text": [],
+        "video": [],
+        "3d": [],
+        "svg": []
     }
 }

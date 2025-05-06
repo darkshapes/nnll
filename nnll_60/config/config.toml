@@ -1,6 +1,7 @@
 
 [local]
-save_folder = "/Users/unauthorized/Documents/Combo/02/"
+save_folder_path_absolute = "/Users/unauthorized/Pictures/Combo/"
+save_folder               = "/Users/unauthorized/Documents/Combo/02/"
 
 [cogview-3]
 model.dit.cogview-3 = "/Users/unauthorized/Downloads/models/image_synthesis/CogView3-Plus-3B"
