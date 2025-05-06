@@ -108,6 +108,7 @@ class RegistryEntry(BaseModel):
                         entries.append(entry)
             except CacheNotFound as error_log:
                 dbug(error_log)
+
         if next(iter(LibType.CORTEX.value)) and has_api("CORTEX"):
             import requests
             from datetime import datetime

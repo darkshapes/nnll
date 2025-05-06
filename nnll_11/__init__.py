@@ -7,7 +7,7 @@ from typing import Any
 import dspy
 # from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, dbug, nfo
+from nnll_01 import debug_monitor, dbug  # , nfo
 from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
@@ -151,3 +151,4 @@ class ChatMachineWithMemory(dspy.Module):
                     dbug(error_log)  # consider threading user selection between cursor jumps
                 except TypeError as error_log:
                     dbug(error_log)
+
