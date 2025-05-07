@@ -14,7 +14,7 @@ mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 
 @mir_db.decorator
-async def lookup_function_for(known_repo: str, data: dict = None, delimiter=".") -> str:
+def lookup_function_for(known_repo: str, data: dict = None, delimiter=".") -> str:
     """
     Find MIR URI from known repo name and retrieve its \n
     MIR data and call instructions autofilled by decorator\n
