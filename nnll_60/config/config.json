@@ -58,7 +58,8 @@
         "defaults": {
             "num_inference_steps": 40,
             "denoising_end": 0.8,
-            "output_type": "latent"
+            "output_type": "latent",
+            "safety_checker": false
         },
         "constructor": "image"
     },

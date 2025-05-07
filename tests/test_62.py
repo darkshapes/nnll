@@ -48,7 +48,10 @@ class TestConstructPipeline(unittest.TestCase):
         mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
         self.assertEqual(pipe, "mock_pipe")
         self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
-        self.assertEqual(settings, {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent"})
+        self.assertEqual(
+            settings,
+            {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent", "safety_checker": False},
+        )
 
     @patch("os.path.isfile", return_value=False)
     @patch("diffusers.StableDiffusionXLPipeline.from_pretrained")

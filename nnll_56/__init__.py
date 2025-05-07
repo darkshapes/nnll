@@ -3,11 +3,12 @@
 
 # pylint: disable=import-outside-toplevel
 
+from typing import Callable, Tuple
 from nnll_01 import debug_monitor
 
 
 @debug_monitor
-async def add_hi_diffusion(pipe, kwargs):
+def add_hi_diffusion(pipe: Callable, kwargs: dict) -> Tuple[Callable, dict]:
     """Apply support for up to 4096 generation without upscaling
     compatibility: stable-diffusion-xl, stable-diffusion, stable-diffusion-2
     """
@@ -19,7 +20,7 @@ async def add_hi_diffusion(pipe, kwargs):
 
 
 @debug_monitor
-async def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
+def add_ays(pipe: Callable, kwargs: dict, ays_type="StableDiffusionXLTimesteps") -> Tuple[Callable, dict]:
     """Apply AlignYourSteps optimization
     compatibility: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
     """
@@ -38,7 +39,7 @@ async def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
 
 
 @debug_monitor
-async def add_generator(pipe, noise_seed: int = 0):
+def add_generator(pipe: Callable, noise_seed: int = 0) -> Callable:
     """Create a generator object ready to receive seeds"""
 
     import torch
@@ -48,7 +49,7 @@ async def add_generator(pipe, noise_seed: int = 0):
 
 
 @debug_monitor
-async def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False):
+def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False) -> Callable:
     """
     Compile torch processes for speed
     """
@@ -64,7 +65,7 @@ async def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer:
 
 
 @debug_monitor
-async def get_func_name() -> str:
+def get_func_name() -> str:
     """Return the name of the calling function for self-identification or diagnostic purposes"""
     from inspect import currentframe
 

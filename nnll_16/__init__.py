@@ -1,11 +1,17 @@
 #  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
-from nnll_01 import debug_monitor
+from typing import Callable
+from nnll_01 import debug_monitor, nfo
 
 
 @debug_monitor
-def first_available(processor=None):
+def first_available(processor: str = None) -> Callable:
+    """Return first available\n
+
+    :param processor: _description_, defaults to None
+    :return: _description_
+    """
     from functools import reduce
     import torch
 
@@ -19,6 +25,7 @@ def first_available(processor=None):
             ],
             "cpu",
         )
+    nfo(f"highest available torch device: {processor}")
     return torch.device(processor)
 
 

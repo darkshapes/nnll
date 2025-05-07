@@ -4,12 +4,11 @@
 # pylint: disable=import-outside-toplevel
 # import os
 from typing import Any
-
 from nnll_01 import debug_monitor
 
 
 @debug_monitor
-def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
+def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     """Create diffusion process"""
     import nnll_59 as disk
 
@@ -22,16 +21,14 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
 
     noise_seed = soft_random()
     seed_planter(noise_seed)
+
     user_set = {  # needs to be abstracted out still
         "output_type": "pil",
-        "noise_seed": noise_seed,
-        "denoising_end": 1.5,
         "num_inference_steps": 30,
         "guidance_scale": 2.5,
         "eta": 1.0,
         "width": 768,
         "height": 1344,
-        "safety_checker": False,
     }
     model_hash = {}
     active_gpu = first_available()
