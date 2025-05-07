@@ -41,7 +41,7 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     # optimization = "ays"
 
     data_chain = HyperChain()
-    factory = ConstructPipeline()
+    factory = await ConstructPipeline()
     pipe, model, kwargs = await factory.create_pipeline(mir_arch)
 
     if lora:
@@ -52,7 +52,7 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
         pipe.prompt += negative_prompt
     pipe.to(active_gpu)
 
-    pipe = techniques.add_generator(pipe, noise_seed=user_set.get("noise_seed", 0))
+    pipe = await techniques.add_generator(pipe, noise_seed=user_set.get("noise_seed", 0))
 
     # generator
     kwargs.update(user_set)
@@ -62,13 +62,13 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
         **kwargs,
     ).images[0]
 
-    gen_data = disk.add_to_metadata(pipe, prompt, model_hash, kwargs)
+    gen_data = await disk.add_to_metadata(pipe, prompt, model_hash, kwargs)
 
     metadata = PngImagePlugin.PngInfo()
     metadata.add_text("parameters", str(gen_data.get("parameters")))
 
     data_chain.add_block(f"{pipe}{model}{kwargs}")
-    disk.write_image_to_disk(image, metadata)
+    await disk.write_image_to_disk(image, metadata)
 
 
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
