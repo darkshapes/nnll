@@ -134,9 +134,9 @@ class ChatMachineWithMemory(dspy.Module):
         from nnll_05 import lookup_function_for
         from httpx import ResponseNotRead
 
-        nfo("libtype hub req : {model} {library}")
+        nfo(f"libtype hub req : {model} {library}")
         if library == LibType.HUB:
-            nfo("libtype hub req : {model}")
+            nfo(f"libtype hub req : {model}")
             constructor, mir_arch = await lookup_function_for(model)
             dbug(constructor, mir_arch)
             yield constructor(mir_arch)
