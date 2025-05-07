@@ -12,7 +12,8 @@ from nnll_01 import debug_monitor
 async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     """Create diffusion process"""
     import nnll_59 as disk
-    from nnll_61 import HyperChain
+
+    # from nnll_61 import HyperChain
     from nnll_62 import ConstructPipeline
     import nnll_56 as techniques
     from nnll_08 import soft_random, seed_planter
@@ -40,7 +41,7 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     lora = lora_opt
     # optimization = "ays"
 
-    data_chain = await HyperChain()
+    # data_chain = await HyperChain()
     factory = await ConstructPipeline()
     pipe, model, kwargs = await factory.create_pipeline(mir_arch)
 
