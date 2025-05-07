@@ -75,21 +75,18 @@ def multiproc(mir_arch):
     import multiprocessing as mp
     from nnll_01 import nfo
 
+    mp.set_start_method("spawn")
     nfo("starting ctx! ")
 
-    contexts = []
-    mp.set_start_method("spawn")
-    nfo("ctx start method.. ")
     ctx = mp.get_context("spawn")
-    nfo("ctx started.. ")
+    nfo("ctx start method.. ")
     queue = ctx.Queue(mir_arch)
     nfo("starting process ctx !")
-    ctx.Process(target=run_inference, args=queue, join=True).start()
-    contexts.append(ctx)
+    ctx.Process(target=run_inference, args=queue).start()
     nfo("ctx in queue~")
 
-    for ctx_proc in contexts:
-        ctx_proc.join()
+    # for ctx_proc in contexts:
+    #     ctx_proc.join()
     # mp.spawn(run_inference, args=queue, join=True)
 
     # lock = mp.Lock()
