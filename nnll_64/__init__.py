@@ -75,7 +75,7 @@ def multiproc(mir_arch):
     import multiprocessing as mp
     from nnll_01 import nfo
 
-    mp.set_start_method("spawn")
+    # mp.set_start_method("spawn")
     nfo("starting ctx! ")
 
     ctx = mp.get_context("spawn")
