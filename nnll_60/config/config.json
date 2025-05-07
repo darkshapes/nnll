@@ -8,7 +8,7 @@
             "num_inference_steps": 50
         },
         "torch_dtype": "torch.bfloat16",
-        "constructor": "image"
+        "constructor": "nnll_64.run_inference"
     },
     "model.dit.cogview-4": {
         "repo": "THUDM/CogView4-6B",
