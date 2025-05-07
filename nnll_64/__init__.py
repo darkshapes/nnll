@@ -17,7 +17,6 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     import nnll_56 as techniques
     from nnll_08 import soft_random, seed_planter
     from PIL import PngImagePlugin
-    from nnll_16 import first_available
 
     noise_seed = soft_random()
     seed_planter(noise_seed)
@@ -31,7 +30,10 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
         "height": 1344,
     }
     model_hash = {}
-    active_gpu = first_available()
+    import torch
+    # from nnll_16 import first_available
+
+    active_gpu = torch.device("mps")  # first_available()
 
     prompt = "aquatic scene, sunken ship, ocean divers, coral, exotic fish"
     negative_prompt = ""
@@ -72,17 +74,17 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
 def multiproc(mir_arch):
     import multiprocessing as mp
 
-    lock = mp.Lock()
-    mp.Process(target=run_inference, args=(lock, mir_arch)).start()
+    mp.set_start_method("spawn")
+    ctx = mp.get_context("spawn")
+    queue = ctx.Queue(mir_arch)
+    out = ctx.Process(target=run_inference, args=queue, daemon=True, join=True)
+    # mp.spawn(run_inference, args=queue, join=True)
+
+    # lock = mp.Lock()
+    # mp.Process(target=run_inference, args=(lock, mir_arch)).start()
     # tx.start()
     # tx.join()
 
-
-if __name__ == "__main__":
-    import sys
-
-    mir_arch = sys.argv(0)
-    multiproc(mir_arch)
 
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
