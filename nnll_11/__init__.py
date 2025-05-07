@@ -137,9 +137,9 @@ class ChatMachineWithMemory(dspy.Module):
         nfo(f"libtype hub req : {model} {library}")
         if library == LibType.HUB:
             nfo(f"libtype hub req : {model}")
-            constructor, mir_arch = await lookup_function_for(model)
+            constructor, mir_arch = lookup_function_for(model)
             dbug(constructor, mir_arch)
-            await constructor(mir_arch)
+            constructor(mir_arch)
 
         else:
             try:
