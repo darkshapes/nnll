@@ -106,7 +106,7 @@ class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
 
-    def __init__(self, sig: dspy.Signature = QASignature, max_workers=4) -> None:
+    def __init__(self, sig: dspy.Signature = QASignature, max_workers=4, out_text: bool = True) -> None:
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
         Does not load any models until forward pass
@@ -115,8 +115,11 @@ class ChatMachineWithMemory(dspy.Module):
         """
         super().__init__()
         self.max_workers = max_workers
-        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
-        self.completion = dspy.streamify(generator)
+        if out_text:
+            generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
+            self.completion = dspy.streamify(generator)
+        else:
+            self.completion = dspy.Predict(signature=sig)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
     async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
@@ -134,7 +137,7 @@ class ChatMachineWithMemory(dspy.Module):
         from nnll_05 import lookup_function_for
         from httpx import ResponseNotRead
 
-        nfo(f"libtype hub req : {model} {library}")
+        nfo(f"libtype hub req : {vars(self.completion)} {model} {library}")
         if library == LibType.HUB:
             nfo(f"libtype hub req : {model}")
             constructor, mir_arch = lookup_function_for(model)
