@@ -9,7 +9,7 @@ from nnll_01 import debug_monitor
 
 
 @debug_monitor
-def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
+async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     """Create diffusion process"""
     import nnll_59 as disk
     from nnll_61 import HyperChain
@@ -42,7 +42,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
 
     data_chain = HyperChain()
     factory = ConstructPipeline()
-    pipe, model, kwargs = factory.create_pipeline(mir_arch)
+    pipe, model, kwargs = await factory.create_pipeline(mir_arch)
 
     if lora:
         pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe)

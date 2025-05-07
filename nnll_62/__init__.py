@@ -14,7 +14,7 @@ config_file = JSONCache(CONFIG_PATH_NAMED)
 
 
 @debug_monitor
-def pipe_call(func):
+async def pipe_call(func):
     """Decorator for Diffusers pipes to combine arguments"""
     from functools import wraps
     import inspect
@@ -34,13 +34,13 @@ class ConstructPipeline:
 
     @debug_monitor
     @config_file.decorator
-    def __init__(self, *args, **kwargs):
+    async def __init__(self, *args, **kwargs):
         """Encapsulate the config file for later use"""
         self.construct = kwargs.get("data", None)
 
     @debug_monitor
     @pipe_call
-    def create_pipeline(self, architecture, *args, **kwargs):
+    async def create_pipeline(self, architecture, *args, **kwargs):
         """
         Build a diffusers pipe based on model type\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
@@ -62,7 +62,7 @@ class ConstructPipeline:
             pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
         else:
             pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
-            raise NotImplementedError("Support for only from_pretrained and from_single_file")
+            # raise NotImplementedError("Support for only from_pretrained and from_single_file")
 
         settings = arch_data.get("defaults", {})
         kwargs.update(settings)
@@ -71,7 +71,7 @@ class ConstructPipeline:
 
     @debug_monitor
     @pipe_call
-    def add_lora(self, lora, architecture, pipe, *args, **kwargs):
+    async def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """
         Add a LoRA to the diffusers pipe\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
