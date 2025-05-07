@@ -36,6 +36,7 @@ async def lookup_function_for(known_repo: str, data: dict = None, delimiter=".")
     # import_name   = sequence[1]
     module = importlib.import_module(sequence[0])
     constructor = getattr(module, sequence[-1])
+    nfo(f"attr {constructor}, {mir_arch}")
     return constructor, mir_arch
 
 
