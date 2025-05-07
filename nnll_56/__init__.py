@@ -7,7 +7,7 @@ from nnll_01 import debug_monitor
 
 
 @debug_monitor
-def add_hi_diffusion(pipe, kwargs):
+async def add_hi_diffusion(pipe, kwargs):
     """Apply support for up to 4096 generation without upscaling
     compatibility: stable-diffusion-xl, stable-diffusion, stable-diffusion-2
     """
@@ -19,7 +19,7 @@ def add_hi_diffusion(pipe, kwargs):
 
 
 @debug_monitor
-def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
+async def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
     """Apply AlignYourSteps optimization
     compatibility: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
     """
@@ -38,7 +38,7 @@ def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
 
 
 @debug_monitor
-def add_generator(pipe, noise_seed: int = 0):
+async def add_generator(pipe, noise_seed: int = 0):
     """Create a generator object ready to receive seeds"""
 
     import torch
@@ -48,7 +48,7 @@ def add_generator(pipe, noise_seed: int = 0):
 
 
 @debug_monitor
-def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False):
+async def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False):
     """
     Compile torch processes for speed
     """
@@ -64,7 +64,7 @@ def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool 
 
 
 @debug_monitor
-def get_func_name() -> str:
+async def get_func_name() -> str:
     """Return the name of the calling function for self-identification or diagnostic purposes"""
     from inspect import currentframe
 
