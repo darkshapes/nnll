@@ -7,6 +7,7 @@
             "guidance_scale": 4.0,
             "num_inference_steps": 50
         },
+        "pipe_name": "CogView3PlusPipeline",
         "torch_dtype": "torch.bfloat16",
         "constructor": "nnll_64.run_inference"
     },
