@@ -7,7 +7,7 @@
 # pylint:disable=line-too-long
 
 
-from nnll_01 import debug_monitor
+from nnll_01 import debug_monitor, dbug
 from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 
 config_file = JSONCache(CONFIG_PATH_NAMED)
@@ -33,14 +33,8 @@ class ConstructPipeline:
     """Build and configure Diffusers pipelines"""
 
     @debug_monitor
-    @config_file.decorator
-    async def __init__(self, *args, **kwargs):
-        """Encapsulate the config file for later use"""
-        self.construct = kwargs.get("data", None)
-
-    @debug_monitor
     # @pipe_call
-    async def create_pipeline(self, architecture, *args, **kwargs):
+    def create_pipeline(self, architecture: str, *args, **kwargs):
         """
         Build a diffusers pipe based on model type\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
@@ -48,8 +42,14 @@ class ConstructPipeline:
         import os
         import diffusers
 
-        # print(self.construct)
-        arch_data = self.construct[architecture]
+        @config_file.decorator
+        def _read_data(data: dict = None):
+            return data
+
+        construct = _read_data()
+
+        dbug(construct)
+        arch_data = construct[architecture]  # pylint:disable = unsubscriptable-object
         # repo = arch_data.get("local")
         repo = None
         if not repo:
@@ -71,7 +71,7 @@ class ConstructPipeline:
 
     @debug_monitor
     # @pipe_call
-    async def add_lora(self, lora, architecture, pipe, *args, **kwargs):
+    def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """
         Add a LoRA to the diffusers pipe\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
@@ -80,7 +80,13 @@ class ConstructPipeline:
         import diffusers
         from pathlib import Path
 
-        lora_data = self.construct[lora]
+        @config_file.decorator
+        def _read_data(data: dict = None):
+            return data
+
+        construct = _read_data()
+
+        lora_data = construct[lora]  # pylint:disable = unsubscriptable-object
 
         arch_data = lora_data.get(Path(architecture).suffix[1:])
         solver = lora_data.get("solver")

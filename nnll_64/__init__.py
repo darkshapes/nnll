@@ -43,7 +43,7 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
 
     # data_chain = await HyperChain()
     factory = ConstructPipeline()
-    pipe, model, kwargs = await factory.create_pipeline(architecture=mir_arch)
+    pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch)
 
     if lora:
         pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe)
@@ -53,7 +53,7 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
         pipe.prompt += negative_prompt
     pipe.to(active_gpu)
 
-    pipe = await techniques.add_generator(pipe, noise_seed=user_set.get("noise_seed", 0))
+    pipe = techniques.add_generator(pipe, noise_seed=user_set.get("noise_seed", 0))
 
     # generator
     kwargs.update(user_set)
@@ -63,13 +63,13 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
         **kwargs,
     ).images[0]
 
-    gen_data = await disk.add_to_metadata(pipe, prompt, model_hash, kwargs)
+    gen_data = disk.add_to_metadata(pipe, prompt, model_hash, kwargs)
 
     metadata = PngImagePlugin.PngInfo()
     metadata.add_text("parameters", str(gen_data.get("parameters")))
 
-    data_chain.add_block(f"{pipe}{model}{kwargs}")
-    await disk.write_image_to_disk(image, metadata)
+    # data_chain.add_block(f"{pipe}{model}{kwargs}")
+    disk.write_image_to_disk(image, metadata)
 
 
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
