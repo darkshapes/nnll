@@ -74,10 +74,17 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
 def multiproc(mir_arch):
     import multiprocessing as mp
 
+    contexts = []
     mp.set_start_method("spawn")
     ctx = mp.get_context("spawn")
     queue = ctx.Queue(mir_arch)
-    return ctx.Process(target=run_inference, args=queue, daemon=True, join=True)
+    ctx.Process(target=run_inference, args=queue, daemon=True, join=True)
+    ctx.start()
+
+    contexts.append(ctx)
+
+    for ctx_proc in contexts:
+        ctx_proc.join()
     # mp.spawn(run_inference, args=queue, join=True)
 
     # lock = mp.Lock()
