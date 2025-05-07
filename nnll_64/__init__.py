@@ -69,6 +69,15 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     disk.write_image_to_disk(image, metadata)
 
 
+def multiproc(mir_arch):
+    import multiprocessing as mp
+
+    lock = mp.Lock()
+    mp.Process(target=run_inference, args=(lock, mir_arch)).start()
+    # tx.start()
+    # tx.join()
+
+
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
