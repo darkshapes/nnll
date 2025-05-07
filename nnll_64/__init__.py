@@ -78,6 +78,12 @@ def multiproc(mir_arch):
     # tx.join()
 
 
+if __name__ == "__main__":
+    import sys
+
+    mir_arch = sys.argv(0)
+    multiproc(mir_arch)
+
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
