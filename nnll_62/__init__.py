@@ -13,20 +13,20 @@ from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 config_file = JSONCache(CONFIG_PATH_NAMED)
 
 
-@debug_monitor
-async def pipe_call(func):
-    """Decorator for Diffusers pipes to combine arguments"""
-    from functools import wraps
-    import inspect
+# @debug_monitor
+# async def pipe_call(func):
+#     """Decorator for Diffusers pipes to combine arguments"""
+#     from functools import wraps
+#     import inspect
 
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        func_params = inspect.signature(func).parameters
-        args_dict = dict(zip(func_params, args))
-        kwargs.update({k: v for k, v in args_dict.items() if v is not None and k not in kwargs})
-        return func(**kwargs)
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         func_params = inspect.signature(func).parameters
+#         args_dict = dict(zip(func_params, args))
+#         kwargs.update({k: v for k, v in args_dict.items() if v is not None and k not in kwargs})
+#         return func(**kwargs)
 
-    return wrapper
+#     return wrapper
 
 
 class ConstructPipeline:
@@ -39,7 +39,7 @@ class ConstructPipeline:
         self.construct = kwargs.get("data", None)
 
     @debug_monitor
-    @pipe_call
+    # @pipe_call
     async def create_pipeline(self, architecture, *args, **kwargs):
         """
         Build a diffusers pipe based on model type\n
@@ -70,7 +70,7 @@ class ConstructPipeline:
         return (pipe, repo, kwargs)
 
     @debug_monitor
-    @pipe_call
+    # @pipe_call
     async def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """
         Add a LoRA to the diffusers pipe\n
