@@ -38,11 +38,11 @@ async def lookup_function_for(known_repo: str, data: dict = None) -> str:
     mir_data = data
     mir_arch = next(key for key, value in mir_data.items() if known_repo in value.get("repo"))
     sequence = mir_data[mir_arch].get("constructor", "")
+    nfo(f"lookup result : {mir_arch}, {sequence}")
     sequence = split_sequence_by(".")
     assert len(sequence) > 1
     # modules       = zip(module_names, function_names)
     # import_name   = sequence[1]
-    nfo(f"lookup result : {mir_arch}, {sequence}")
     module = importlib.import_module(sequence[0])
     constructor = getattr(module, sequence[-1])
     return constructor, mir_arch
