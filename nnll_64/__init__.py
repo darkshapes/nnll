@@ -80,9 +80,9 @@ def multiproc(mir_arch):
 
     ctx = mp.get_context("spawn")
     nfo("ctx start method.. ")
-    queue = ctx.Queue(mir_arch)
+    # queue = ctx.Queue(mir_arch)
     nfo("starting process ctx !")
-    return ctx.Process(target=run_inference, args=queue).start()
+    return ctx.Process(target=run_inference, args=mir_arch).start()
 
     # for ctx_proc in contexts:
     #     ctx_proc.join()
