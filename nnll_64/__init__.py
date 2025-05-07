@@ -79,6 +79,7 @@ def multiproc(mir_arch):
 
     contexts = []
     mp.set_start_method("spawn")
+    nfo("ctx start method.. ")
     ctx = mp.get_context("spawn")
     nfo("ctx started.. ")
     queue = ctx.Queue(mir_arch)
