@@ -73,6 +73,9 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
 
 def multiproc(mir_arch):
     import multiprocessing as mp
+    from nnll_01 import nfo
+
+    nfo("starting ctx! ")
 
     contexts = []
     mp.set_start_method("spawn")
@@ -80,6 +83,7 @@ def multiproc(mir_arch):
     queue = ctx.Queue(mir_arch)
     ctx.Process(target=run_inference, args=queue, daemon=True, join=True)
     ctx.start()
+    nfo("ctx started.. ")
 
     contexts.append(ctx)
 
