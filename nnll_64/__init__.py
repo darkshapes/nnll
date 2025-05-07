@@ -3,6 +3,7 @@
 
 # pylint: disable=import-outside-toplevel
 # import os
+import copy
 from typing import Any
 from nnll_01 import debug_monitor
 
@@ -72,26 +73,18 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
 
 
 def multiproc(mir_arch):
-    import multiprocessing as mp
+    import torch.multiprocessing as multi
     from nnll_01 import nfo
 
-    # mp.set_start_method("spawn")
     nfo("starting ctx! ")
 
-    ctx = mp.get_context("spawn")
+    ctx = multi.get_context("spawn")
     nfo("ctx start method.. ")
-    # queue = ctx.Queue(mir_arch)
     nfo("starting process ctx !")
-    return ctx.Process(target=run_inference, args=mir_arch).start()
+    queue = ctx.Queue()
+    queue.put(copy.deepcopy(mir_arch))
 
-    # for ctx_proc in contexts:
-    #     ctx_proc.join()
-    # mp.spawn(run_inference, args=queue, join=True)
-
-    # lock = mp.Lock()
-    # mp.Process(target=run_inference, args=(lock, mir_arch)).start()
-    # tx.start()
-    # tx.join()
+    multi.spawn(run_inference, args=(queue,), nprocs=1, join=True)
 
 
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
