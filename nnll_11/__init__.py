@@ -139,7 +139,7 @@ class ChatMachineWithMemory(dspy.Module):
             nfo(f"libtype hub req : {model}")
             constructor, mir_arch = await lookup_function_for(model)
             dbug(constructor, mir_arch)
-            yield constructor(mir_arch)
+            await constructor(mir_arch)
 
         else:
             try:
