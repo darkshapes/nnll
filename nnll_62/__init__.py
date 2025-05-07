@@ -67,7 +67,7 @@ class ConstructPipeline:
         settings = arch_data.get("defaults", {})
         kwargs.update(settings)
 
-        return pipe, repo, kwargs
+        return (pipe, repo, kwargs)
 
     @debug_monitor
     @pipe_call
@@ -97,4 +97,4 @@ class ConstructPipeline:
             print(os.path.basename(repo), fuse)
             pipe.fuse_lora(adapter_name=os.path.basename(repo), lora_scale=fuse)
             pipe.unload_lora_weights()
-        return pipe, repo, kwargs
+        return (pipe, repo, kwargs)

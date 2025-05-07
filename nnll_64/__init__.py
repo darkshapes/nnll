@@ -40,7 +40,7 @@ async def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     lora = lora_opt
     # optimization = "ays"
 
-    data_chain = HyperChain()
+    data_chain = await HyperChain()
     factory = await ConstructPipeline()
     pipe, model, kwargs = await factory.create_pipeline(mir_arch)
 
