@@ -7,7 +7,7 @@ from typing import Any
 import dspy
 # from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, dbug  # , nfo
+from nnll_01 import debug_monitor, dbug, nfo
 from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
@@ -17,13 +17,21 @@ ps_infield_tag = "An image of x"
 ps_outfield_tag = "The nature of the x in the image."
 ps_edit_message = "Edited input image of the dog with a yellow hat."
 
+is_msg: str = "Description x of the image to generate"
+is_out: str = "An image matching the description x"
 
-class PictureSignature(dspy.Signature):
+
+class I2ISignature(dspy.Signature):
     f"""{ps_sysprompt}"""
     # This is an example multimodal input signature
     image_input: dspy.Image = dspy.InputField(desc=ps_infield_tag)
     answer: str = dspy.OutputField(desc=ps_outfield_tag)
     image_output: dspy.Image = dspy.OutputField(desc=ps_edit_message)
+
+
+class BasicImageSignature(dspy.Signature):
+    message: str = dspy.InputField(desc=is_msg)
+    image_output: dspy.Image = dspy.OutputField(desc=is_out)
 
 
 class QASignature(dspy.Signature):
@@ -126,6 +134,7 @@ class ChatMachineWithMemory(dspy.Module):
         from nnll_05 import lookup_function_for
         from httpx import ResponseNotRead
 
+        nfo("libtype hub req : {model} {library}")
         if library == LibType.HUB:
             nfo("libtype hub req : {model}")
             constructor, mir_arch = await lookup_function_for(model)
@@ -152,4 +161,3 @@ class ChatMachineWithMemory(dspy.Module):
                     dbug(error_log)  # consider threading user selection between cursor jumps
                 except TypeError as error_log:
                     dbug(error_log)
-
