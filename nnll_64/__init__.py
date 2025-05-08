@@ -76,8 +76,10 @@ def multiproc(mir_arch):
     import torch.multiprocessing as multi
     from nnll_01 import nfo
 
+    nfo(multi.get_start_method())
     multi.set_start_method("spawn", force=True)
-    lock = multi.Lock()
+    nfo(multi.get_start_method())
+    # lock = multi.Lock()
     nfo("starting ctx! ")
     # try:
     #     multi.set_start_method("fork")
@@ -90,7 +92,7 @@ def multiproc(mir_arch):
     # queue = ctx.Queue()
     # queue.put(copy.deepcopy(mir_arch))
     nfo("starting process ctx !")
-    multi.spawn(run_inference, args=(mir_arch, lock), nprocs=1, join=True)
+    multi.spawn(run_inference, args=(mir_arch), nprocs=1, join=True)
 
 
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
