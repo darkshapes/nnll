@@ -93,7 +93,10 @@ def multiproc(mir_arch):
     # queue = ctx.Queue()
     # queue.put(copy.deepcopy(mir_arch))
     nfo("starting process ctx !")
-    multi.spawn(run_inference, args=(mir_arch), nprocs=1, join=True)
+    ctx = multi.Process(target=run_inference, args=(mir_arch,))
+    ctx.start()
+    ctx.join()
+    # multi.spawn(run_inference, args=(mir_arch), nprocs=1, join=True)
 
 
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
