@@ -32,7 +32,7 @@ config_file = JSONCache(CONFIG_PATH_NAMED)
 class ConstructPipeline:
     """Build and configure Diffusers pipelines"""
 
-    @debug_monitor
+    # @debug_monitor
     # @pipe_call
     def create_pipeline(self, architecture: str, *args, **kwargs):
         """
@@ -69,7 +69,7 @@ class ConstructPipeline:
 
         return (pipe, repo, kwargs)
 
-    @debug_monitor
+    # @debug_monitor
     # @pipe_call
     def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """
