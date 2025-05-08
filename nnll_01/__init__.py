@@ -145,30 +145,6 @@ def debug_monitor(func: Callable = None) -> Callable:
 
             return return_data
         except Exception as error_log:
-            # file_name = f".nnll_trace{datetime.now().strftime('%Y%m%d%_H.%M.%S.%f')}.json"
-            # assembled_path = os.path.join("log", file_name)
-
-            # tracer = viztracer.VizTracer()
-            # tracer.start()
-            # logger_obj.debug(
-            #     {
-            #         "Exception": {
-            #             "exc_info": error_log,
-            #             "filename": func.__module__,
-            #             "pathname": Path(func.__module__).cwd(),
-            #             "func_name": func.__name__,
-            #             "process": os.getppid(),
-            #             "thread": get_native_id(),
-            #             **{"ain_type": type(args), "ain": args if args else {}},
-            #             **{"kin_type": type(kwargs), "kin": kwargs if kwargs else {}},
-            #             "locals": locals(),
-            #             "globals": globals(),
-            #         }
-            #     }
-            # )
-            # # Re-raise the exception to propagate it
-            # tracer.stop()
-            # tracer.save(output_file=assembled_path)
             raise error_log
 
     return wrapper
@@ -203,21 +179,12 @@ info_obj = info_stream()
 
 def nfo(*args, **kwargs):
     """Info log output"""
-
     info_obj.info("%s", f"{args}")
-    # logger_obj.info(
-    #     "%s",
-    #     type_ain=type(args),
-    #     ain=args,
-    #     type_kin=type(kwargs),
-    #     kin=kwargs,
-    #     stack_info=True,
-    # )
 
 
 def dbug(*args, **kwargs):
     """Info log output"""
-    logger_obj.debug("%s", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=False)
+    logger_obj.debug("%s", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=True)
 
 
 os.makedirs("log", exist_ok=True)
@@ -228,7 +195,6 @@ log_folder = os.path.join(
 os.makedirs(log_folder, exist_ok=True)
 
 if __name__ == "__main__":
-
     if "pytest" not in sys_modules:
         parser = ArgumentParser(description="Set logging level.")
         group = parser.add_mutually_exclusive_group()
