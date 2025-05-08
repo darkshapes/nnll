@@ -77,7 +77,7 @@ def multiproc(mir_arch):
     from nnll_01 import nfo
 
     nfo("starting ctx! ")
-    multi.set_start_method("spawn")
+    # multi.set_start_method("spawn")
     # ctx = multi.get_context("spawn")
     # nfo("ctx start method.. ")
 
