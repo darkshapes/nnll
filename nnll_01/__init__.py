@@ -15,6 +15,8 @@ from threading import get_native_id
 from datetime import datetime
 from sys import modules as sys_modules
 
+import textual_dev
+
 # import viztracer
 
 
@@ -184,7 +186,7 @@ def nfo(*args, **kwargs):
 
 def dbug(*args, **kwargs):
     """Info log output"""
-    logger_obj.debug("%s", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=True)
+    logger_obj.debug("%s", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=exc_info)
 
 
 os.makedirs("log", exist_ok=True)
@@ -213,6 +215,7 @@ if __name__ == "__main__":
     else:
         LOG_LEVEL = DEBUG
 
+    exc_info = True if textual_dev in sys_modules else False
     logger_obj = configure_logging(level=LOG_LEVEL)
 
     try:
