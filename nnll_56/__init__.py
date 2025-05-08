@@ -7,7 +7,7 @@ from typing import Callable, Tuple
 from nnll_01 import debug_monitor
 
 
-# @debug_monitor
+@debug_monitor
 def add_hi_diffusion(pipe: Callable, kwargs: dict) -> Tuple[Callable, dict]:
     """Apply support for up to 4096 generation without upscaling
     compatibility: stable-diffusion-xl, stable-diffusion, stable-diffusion-2
@@ -19,7 +19,7 @@ def add_hi_diffusion(pipe: Callable, kwargs: dict) -> Tuple[Callable, dict]:
     return pipe, kwargs
 
 
-# @debug_monitor
+@debug_monitor
 def add_ays(pipe: Callable, kwargs: dict, ays_type="StableDiffusionXLTimesteps") -> Tuple[Callable, dict]:
     """Apply AlignYourSteps optimization
     compatibility: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
@@ -38,7 +38,17 @@ def add_ays(pipe: Callable, kwargs: dict, ays_type="StableDiffusionXLTimesteps")
     return pipe, kwargs
 
 
-# @debug_monitor
+@debug_monitor
+def add_generator(pipe: Callable, noise_seed: int = 0) -> Callable:
+    """Create a generator object ready to receive seeds"""
+
+    import torch
+
+    pipe.generator = torch.Generator(pipe.device).manual_seed(noise_seed)
+    return pipe
+
+
+@debug_monitor
 def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False) -> Callable:
     """
     Compile torch processes for speed
@@ -54,7 +64,7 @@ def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool 
     return pipe
 
 
-# @debug_monitor
+@debug_monitor
 def get_func_name() -> str:
     """Return the name of the calling function for self-identification or diagnostic purposes"""
     from inspect import currentframe

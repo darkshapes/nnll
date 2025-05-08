@@ -103,16 +103,25 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     disk.write_image_to_disk(image, metadata)
 
 
-# def multiproc(mir_arch):
-#     import torch.multiprocessing as multi
-#     from nnll_01 import nfo
+def multiproc(mir_arch):
+    import torch.multiprocessing as multi
+    from nnll_01 import nfo
 
-#     # nfo(multi.get_start_method())
-#     multi.set_sharing_strategy("file_system")
-#     multi.set_start_method("spawn", force=True)
-#     # nfo(multi.get_start_method())
-#     # lock = multi.Lock()
-#     nfo("starting ctx! ")
+    # nfo(multi.get_start_method())
+    multi.set_sharing_strategy("file_system")
+    multi.set_start_method("fork", force=True)
+    # nfo(multi.get_start_method())
+    # lock = multi.Lock()
+    nfo("starting ctx! ")
+    ctx = multi.Process(target=run_inference, args=(mir_arch,))
+    ctx.start()
+    ctx.join()
+
+    # multi.
+
+
+# fork(run_inference, args=(mir_arch), nprocs=0, join=True)
+
 # try:
 #     multi.set_start_method("fork")
 # except (RuntimeError, ValueError):
@@ -127,7 +136,6 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
 # ctx = multi.Process(target=run_inference, args=(mir_arch,))
 # ctx.start()
 # ctx.join()
-# # multi.spawn(run_inference, args=(mir_arch), nprocs=1, join=True)
 
 
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
