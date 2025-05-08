@@ -76,9 +76,10 @@ def multiproc(mir_arch):
     import torch.multiprocessing as multi
     from nnll_01 import nfo
 
-    nfo(multi.get_start_method())
+    # nfo(multi.get_start_method())
+    multi.set_sharing_strategy("file_system")
     multi.set_start_method("spawn", force=True)
-    nfo(multi.get_start_method())
+    # nfo(multi.get_start_method())
     # lock = multi.Lock()
     nfo("starting ctx! ")
     # try:
