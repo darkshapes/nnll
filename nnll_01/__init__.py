@@ -19,6 +19,8 @@ import textual_dev
 
 # import viztracer
 
+exc_info = True if textual_dev in sys_modules else False
+
 
 def use_nouveau_theme():
     """Set a a midnight blue and dark purple theme to console logs"""
@@ -215,7 +217,6 @@ if __name__ == "__main__":
     else:
         LOG_LEVEL = DEBUG
 
-    exc_info = True if textual_dev in sys_modules else False
     logger_obj = configure_logging(level=LOG_LEVEL)
 
     try:
