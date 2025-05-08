@@ -76,12 +76,13 @@ def multiproc(mir_arch):
     import torch.multiprocessing as multi
     from nnll_01 import nfo
 
+    multi.set_start_method("spawn", force=True)
     lock = multi.Lock()
     nfo("starting ctx! ")
     # try:
     #     multi.set_start_method("fork")
     # except (RuntimeError, ValueError):
-    multi.set_start_method("spawn", force=True)
+
     # multi.set_start_method("spawn")
     # ctx = multi.get_context("spawn")
     # nfo("ctx start method.. ")
