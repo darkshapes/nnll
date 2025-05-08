@@ -20,7 +20,23 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     from PIL import PngImagePlugin
 
     noise_seed = soft_random()
-    seed_planter(noise_seed)
+    from numpy import random
+    import torch
+
+    deterministic = True
+    seed = noise_seed
+    torch.manual_seed(seed)
+    random.seed(seed)
+    if torch.cuda.is_available():
+        if deterministic:
+            return {"torch.backends.cudnn.deterministic": "True", "torch.backends.cudnn.benchmark": "False"}
+        return torch.cuda.manual_seed(seed), torch.cuda.manual_seed_all(seed)
+    elif torch.backends.mps.is_available():
+        return torch.mps.manual_seed(seed)
+    elif torch.xpu.is_available():
+        return torch.xpu.manual_seed(seed)
+
+    # seed_planter(noise_seed)
 
     user_set = {  # needs to be abstracted out still
         "output_type": "pil",
@@ -31,14 +47,14 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
         "height": 1344,
     }
     model_hash = {}
-    import torch
+    # import torch
     # from nnll_16 import first_available
 
     active_gpu = torch.device("mps")  # first_available()
 
     prompt = "aquatic scene, sunken ship, ocean divers, coral, exotic fish"
     negative_prompt = ""
-    lora = lora_opt
+    # lora = lora_opt
     # optimization = "ays"
 
     # data_chain = HyperChain()
@@ -113,11 +129,10 @@ def multiproc(mir_arch):
     # nfo(multi.get_start_method())
     # lock = multi.Lock()
     nfo("starting ctx! ")
+
     ctx = multi.Process(target=run_inference, args=(mir_arch,))
     ctx.start()
     ctx.join()
-
-    # multi.
 
 
 # fork(run_inference, args=(mir_arch), nprocs=0, join=True)
