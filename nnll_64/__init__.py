@@ -80,7 +80,7 @@ def multiproc(mir_arch):
     nfo("starting ctx! ")
     try:
         multi.set_start_method("fork")
-    except RuntimeError:
+    except (RuntimeError, ValueError):
         multi.set_start_method("spawn", force=True)
     # multi.set_start_method("spawn")
     # ctx = multi.get_context("spawn")
