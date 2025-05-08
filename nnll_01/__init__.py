@@ -15,11 +15,9 @@ from threading import get_native_id
 from datetime import datetime
 from sys import modules as sys_modules
 
-import textual_dev
-
 # import viztracer
 
-exc_info = True if textual_dev in sys_modules else False
+exc_info = True if "textual_dev" in sys_modules else False
 
 
 def use_nouveau_theme():
@@ -200,6 +198,7 @@ os.makedirs(log_folder, exist_ok=True)
 
 if __name__ == "__main__":
     if "pytest" not in sys_modules:
+        exc_info = False
         parser = ArgumentParser(description="Set logging level.")
         group = parser.add_mutually_exclusive_group()
 
@@ -215,6 +214,7 @@ if __name__ == "__main__":
         # Resolve log_level from args dynamically
         LOG_LEVEL = levels[next(iter([k for k, v in levels.items() if getattr(cli_args, v.lower(), False)]), cli_args.log_level)]
     else:
+        exc_info = True
         LOG_LEVEL = DEBUG
 
     logger_obj = configure_logging(level=LOG_LEVEL)
