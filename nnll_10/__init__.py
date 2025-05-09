@@ -1,4 +1,4 @@
-#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+#  # # <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
@@ -41,7 +41,7 @@ class IntentProcessor:
         self.intent_graph = nx.MultiDiGraph()
         self.intent_graph.add_nodes_from(VALID_CONVERSIONS)
         registry_entries = from_cache()
-        dbug("REG_ENTRIES",registry_entries)
+        dbug("REG_ENTRIES", registry_entries)
         if registry_entries:
             for model in registry_entries:
                 self.intent_graph.add_edges_from(model.available_tasks, entry=model, weight=1.0)

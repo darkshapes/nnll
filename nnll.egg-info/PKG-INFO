@@ -3,7 +3,8 @@ Name: nnll
 Version: 0.1.dev348+ge2c81da.d20250502
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
-License: SPDX-License-Identifier: LAL-1.3
+License: SPDX-License-Identifier: MPL-2.0
+
 
         darkshapes github.com/darkshapes
 

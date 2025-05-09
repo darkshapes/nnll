@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
@@ -12,7 +12,8 @@ def write_toc_to_file(module_index: dict, index_file_name: str, root_folder: str
 
     write_path = os.path.join(root_folder, index_file_name)
     with open(write_path, "w", encoding="utf-8") as toc_file:  # No +, don't need to read from file
-        toc_file.write('#// SPDX-License-Identifier: LAL-1.3\n#// d a r k s h a p e s\n"""\n## module table of contents\n\n')
+        toc_file.write('#// SPDX-License-Identifier: MPL-2.0
+\n#// d a r k s h a p e s\n"""\n## module table of contents\n\n')
         for resource, link in module_index.items():
             if ".md" in index_file_name:
                 link = os.path.dirname(resource)

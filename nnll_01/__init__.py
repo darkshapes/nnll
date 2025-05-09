@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 """初始化 init, argparse, 建立控制檯日誌 logging"""
@@ -13,11 +13,12 @@ from pathlib import Path
 from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
-from sys import modules as sys_modules
+from sys import modules as sys_modules, argv as sys_argv
 
 # import viztracer
 
-exc_info = True if "textual_dev" in sys_modules else False
+
+exc_info = any(arg in sys_argv for arg in ["textual", "pytest"])
 
 
 def use_nouveau_theme():

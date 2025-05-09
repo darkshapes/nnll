@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
@@ -38,9 +38,13 @@ def add_ays(pipe: Callable, kwargs: dict, ays_type="StableDiffusionXLTimesteps")
     return pipe, kwargs
 
 
-@debug_monitor
+# @debug_monitor
 def add_generator(pipe: Callable, noise_seed: int = 0) -> Callable:
-    """Create a generator object ready to receive seeds"""
+    """Create a generator object ready to receive seeds\n
+    :param pipe: Current generation process pipe
+    :param noise_seed: Seed value for generation, defaults to 0
+    :return: The generation pipe with generator attached
+    """
 
     import torch
 
