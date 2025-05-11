@@ -32,7 +32,7 @@
 #             # Use re.sub to replace the matched pattern with a placeholder that accounts for either/or situation
 #             expected_content = (
 #                 "#// SPDX-License-Identifier: MPL-2.0
-\n"
+# \n"
 #                 '#// d a r k s h a p e s\n"""\n## module table of contents\n\n'
 #                 f"#### [1 - {next((m.group() for m in (re.search(p, content) for p in [r'Class1, func1', r'func1, Class1']) if m), 'No match')}]({{}})\n"
 #                 "#### [2 - func2]({})\n"

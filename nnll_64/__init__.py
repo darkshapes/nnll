@@ -94,7 +94,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     pipe.to(active_gpu)
     # generator
     kwargs.update(user_set)
-    nfo(f"Pipe {pipe}, Device {pipe.device} - {active_gpu == pipe.device}")
+    nfo(f"Pipe {pipe}, Device {pipe.device} - {f'Device {active_gpu}:0' == str(pipe.device)}")
     image = pipe(
         prompt=prompt,
         **kwargs,
