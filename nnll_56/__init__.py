@@ -1,13 +1,14 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
 
+from typing import Callable, Tuple
 from nnll_01 import debug_monitor
 
 
 @debug_monitor
-def add_hi_diffusion(pipe, kwargs):
+def add_hi_diffusion(pipe: Callable, kwargs: dict) -> Tuple[Callable, dict]:
     """Apply support for up to 4096 generation without upscaling
     compatibility: stable-diffusion-xl, stable-diffusion, stable-diffusion-2
     """
@@ -19,7 +20,7 @@ def add_hi_diffusion(pipe, kwargs):
 
 
 @debug_monitor
-def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
+def add_ays(pipe: Callable, kwargs: dict, ays_type="StableDiffusionXLTimesteps") -> Tuple[Callable, dict]:
     """Apply AlignYourSteps optimization
     compatibility: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
     """
@@ -37,9 +38,13 @@ def add_ays(pipe, kwargs, ays_type="StableDiffusionXLTimesteps"):
     return pipe, kwargs
 
 
-@debug_monitor
-def add_generator(pipe, noise_seed: int = 0):
-    """Create a generator object ready to receive seeds"""
+# @debug_monitor
+def add_generator(pipe: Callable, noise_seed: int = 0) -> Callable:
+    """Create a generator object ready to receive seeds\n
+    :param pipe: Current generation process pipe
+    :param noise_seed: Seed value for generation, defaults to 0
+    :return: The generation pipe with generator attached
+    """
 
     import torch
 
@@ -48,7 +53,7 @@ def add_generator(pipe, noise_seed: int = 0):
 
 
 @debug_monitor
-def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False):
+def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool = False) -> Callable:
     """
     Compile torch processes for speed
     """

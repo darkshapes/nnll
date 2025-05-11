@@ -1,4 +1,4 @@
-#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+#  # # <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
@@ -13,36 +13,30 @@ from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 mir_db = JSONCache(CONFIG_PATH_NAMED)
 
 
-@debug_monitor
-def split_sequence_by(delimiter: str = ".", sequence: str = "") -> tuple | None:
-    """Divide a string into an import module and a function
-    :param delimiter: The separator between component identities
-    :param sequence: The string to split
-    :return: `tuple` of import and function statement
-    """
-    parts = sequence.rsplit(delimiter, 1)
-    return parts
-
-
 @mir_db.decorator
-async def lookup_function_for(known_repo: str, data: dict = None) -> str:
+def lookup_function_for(known_repo: str, data: dict = None, delimiter=".") -> str:
     """
     Find MIR URI from known repo name and retrieve its \n
     MIR data and call instructions autofilled by decorator\n
     :param known_repo: HuggingFace repo name
     :param mir_data: MIR URI reference file
+    :param delimiter: The separator between module and function identities
     :return: `str` of the mir URI
     """
     import importlib
+
     mir_data = data
-    mir_arch      = next(key for key, value in mir_data.items() if known_repo in value.get("repo"))
-    sequence      = mir_data[mir_arch].get("constructor", "")
-    sequence = split_sequence_by(".")
-    assert len(sequence) >1
+    mir_arch = next(key for key, value in mir_data.items() if known_repo in value.get("repo"))
+    sequence = mir_data[mir_arch].get("constructor", "")
+    nfo(f"lookup result : {mir_arch}, {sequence}")
+
+    sequence = sequence.split(delimiter)
+    # assert len(sequence) > 1
     # modules       = zip(module_names, function_names)
     # import_name   = sequence[1]
     module = importlib.import_module(sequence[0])
     constructor = getattr(module, sequence[-1])
+    nfo(f"attr {constructor}, {mir_arch}")
     return constructor, mir_arch
 
 

@@ -1,38 +1,43 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
 # import os
+import copy
 from typing import Any
+# from nnll_01 import debug_monitor
 
-from nnll_01 import debug_monitor
 
-
-@debug_monitor
-def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
+# @debug_monitor
+def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     """Create diffusion process"""
     import nnll_59 as disk
-    from nnll_61 import HyperChain
+
+    # from nnll_61 import HyperChain
     from nnll_62 import ConstructPipeline
     import nnll_56 as techniques
     from nnll_08 import soft_random, seed_planter
-    from PIL import PngImagePlugin
     from nnll_16 import first_available
+    from PIL import PngImagePlugin
+    from nnll_01 import nfo
 
     noise_seed = soft_random()
     seed_planter(noise_seed)
+    nfo(noise_seed)
+    # seed_planter(noise_seed)
+
     user_set = {  # needs to be abstracted out still
         "output_type": "pil",
-        "noise_seed": noise_seed,
-        "denoising_end": 1.5,
         "num_inference_steps": 30,
         "guidance_scale": 2.5,
         "eta": 1.0,
         "width": 768,
         "height": 1344,
-        "safety_checker": False,
     }
     model_hash = {}
+    # import torch
+
+    # active_gpu = torch.device("mps")  #
     active_gpu = first_available()
 
     prompt = "aquatic scene, sunken ship, ocean divers, coral, exotic fish"
@@ -40,23 +45,56 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     lora = lora_opt
     # optimization = "ays"
 
-    data_chain = HyperChain()
+    # data_chain = HyperChain()
     factory = ConstructPipeline()
-    pipe, model, kwargs = factory.create_pipeline(mir_arch)
+    pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch)
 
+    # import os
+    # import diffusers
+    # from nnll_60 import JSONCache, CONFIG_PATH_NAMED
+
+    # config_file = JSONCache(CONFIG_PATH_NAMED)
+
+    # @config_file.decorator
+    # def _read_data(data: dict = None):
+    #     return data
+
+    # construct = _read_data()
+    # kwargs = {}
+    # # dbug(construct)
+    # arch_data = construct[mir_arch]  # pylint:disable = unsubscriptable-object
+    # # repo = arch_data.get("local")
+    # model = None
+    # if not model:
+    #     model = arch_data.get("repo")
+    # pipe_class = getattr(diffusers, arch_data["pipe_name"])
+    # pipe_kwargs = arch_data.get("pipe_kwargs", {})
+    # # pipe_kwargs.update()
+
+    # if os.path.isfile(model):
+    #     pipe = pipe_class.from_single_file(model, **pipe_kwargs)
+    # else:
+    #     pipe = pipe_class.from_pretrained(model, **pipe_kwargs)
+    #     # raise NotImplementedError("Support for only from_pretrained and from_single_file")
+
+    # settings = arch_data.get("defaults", {})
+    # kwargs.update(settings)
+
+    nfo(f"pre-generator Model {model} Lora {lora} Arguments {kwargs} {pipe}")
     if lora:
         pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe)
 
     pipe.prompt = prompt
     if negative_prompt:
         pipe.prompt += negative_prompt
+
+    pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
+    # pipe.generator = torch.Generator(pipe.device).manual_seed(user_set.get("noise_seed", 0))
+
     pipe.to(active_gpu)
-
-    pipe = techniques.add_generator(pipe, noise_seed=user_set.get("noise_seed", 0))
-
     # generator
     kwargs.update(user_set)
-
+    nfo(f"Pipe {pipe}, Device {pipe.device} - {f'Device {active_gpu}:0' == str(pipe.device)}")
     image = pipe(
         prompt=prompt,
         **kwargs,
@@ -67,11 +105,45 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> Any:
     metadata = PngImagePlugin.PngInfo()
     metadata.add_text("parameters", str(gen_data.get("parameters")))
 
-    data_chain.add_block(f"{pipe}{model}{kwargs}")
+    # data_chain.add_block(f"{pipe}{model}{kwargs}")
     disk.write_image_to_disk(image, metadata)
 
 
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+# def multiproc(mir_arch):
+#     import torch.multiprocessing as multi
+#     from nnll_01 import nfo
+
+#     # nfo(multi.get_start_method())
+#     multi.set_sharing_strategy("file_system")
+#     multi.set_start_method("fork", force=True)
+#     # nfo(multi.get_start_method())
+#     # lock = multi.Lock()
+#     nfo("starting ctx! ")
+
+#     ctx = multi.Process(target=run_inference, args=(mir_arch,))
+#     ctx.start()
+#     ctx.join()
+
+
+# fork(run_inference, args=(mir_arch), nprocs=0, join=True)
+
+# try:
+#     multi.set_start_method("fork")
+# except (RuntimeError, ValueError):
+
+# multi.set_start_method("spawn")
+# ctx = multi.get_context("spawn")
+# nfo("ctx start method.. ")
+
+# queue = ctx.Queue()
+# queue.put(copy.deepcopy(mir_arch))
+# nfo("starting process ctx !")
+# ctx = multi.Process(target=run_inference, args=(mir_arch,))
+# ctx.start()
+# ctx.join()
+
+
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 

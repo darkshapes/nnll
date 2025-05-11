@@ -7,8 +7,9 @@
             "guidance_scale": 4.0,
             "num_inference_steps": 50
         },
+        "pipe_name": "CogView3PlusPipeline",
         "torch_dtype": "torch.bfloat16",
-        "constructor": "image"
+        "constructor": "nnll_64.run_inference"
     },
     "model.dit.cogview-4": {
         "repo": "THUDM/CogView4-6B",
@@ -57,7 +58,8 @@
         "defaults": {
             "num_inference_steps": 40,
             "denoising_end": 0.8,
-            "output_type": "latent"
+            "output_type": "latent",
+            "safety_checker": false
         },
         "constructor": "image"
     },

@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
@@ -7,40 +7,34 @@
 # pylint:disable=line-too-long
 
 
-from nnll_01 import debug_monitor
+from nnll_01 import debug_monitor, dbug
 from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 
 config_file = JSONCache(CONFIG_PATH_NAMED)
 
 
-@debug_monitor
-def pipe_call(func):
-    """Decorator for Diffusers pipes to combine arguments"""
-    from functools import wraps
-    import inspect
+# @debug_monitor
+# async def pipe_call(func):
+#     """Decorator for Diffusers pipes to combine arguments"""
+#     from functools import wraps
+#     import inspect
 
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        func_params = inspect.signature(func).parameters
-        args_dict = dict(zip(func_params, args))
-        kwargs.update({k: v for k, v in args_dict.items() if v is not None and k not in kwargs})
-        return func(**kwargs)
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         func_params = inspect.signature(func).parameters
+#         args_dict = dict(zip(func_params, args))
+#         kwargs.update({k: v for k, v in args_dict.items() if v is not None and k not in kwargs})
+#         return func(**kwargs)
 
-    return wrapper
+#     return wrapper
 
 
 class ConstructPipeline:
     """Build and configure Diffusers pipelines"""
 
-    @debug_monitor
-    @config_file.decorator
-    def __init__(self, *args, **kwargs):
-        """Encapsulate the config file for later use"""
-        self.construct = kwargs.get("data", None)
-
-    @debug_monitor
-    @pipe_call
-    def create_pipeline(self, architecture, *args, **kwargs):
+    # @debug_monitor
+    # @pipe_call
+    def create_pipeline(self, architecture: str, *args, **kwargs):
         """
         Build a diffusers pipe based on model type\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
@@ -48,8 +42,14 @@ class ConstructPipeline:
         import os
         import diffusers
 
-        # print(self.construct)
-        arch_data = self.construct[architecture]
+        @config_file.decorator
+        def _read_data(data: dict = None):
+            return data
+
+        construct = _read_data()
+
+        dbug(construct)
+        arch_data = construct[architecture]  # pylint:disable = unsubscriptable-object
         # repo = arch_data.get("local")
         repo = None
         if not repo:
@@ -62,15 +62,15 @@ class ConstructPipeline:
             pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
         else:
             pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
-            raise NotImplementedError("Support for only from_pretrained and from_single_file")
+            # raise NotImplementedError("Support for only from_pretrained and from_single_file")
 
         settings = arch_data.get("defaults", {})
         kwargs.update(settings)
 
-        return pipe, repo, kwargs
+        return (pipe, repo, kwargs)
 
-    @debug_monitor
-    @pipe_call
+    # @debug_monitor
+    # @pipe_call
     def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """
         Add a LoRA to the diffusers pipe\n
@@ -80,7 +80,13 @@ class ConstructPipeline:
         import diffusers
         from pathlib import Path
 
-        lora_data = self.construct[lora]
+        @config_file.decorator
+        def _read_data(data: dict = None):
+            return data
+
+        construct = _read_data()
+
+        lora_data = construct[lora]  # pylint:disable = unsubscriptable-object
 
         arch_data = lora_data.get(Path(architecture).suffix[1:])
         solver = lora_data.get("solver")
@@ -97,4 +103,4 @@ class ConstructPipeline:
             print(os.path.basename(repo), fuse)
             pipe.fuse_lora(adapter_name=os.path.basename(repo), lora_scale=fuse)
             pipe.unload_lora_weights()
-        return pipe, repo, kwargs
+        return (pipe, repo, kwargs)

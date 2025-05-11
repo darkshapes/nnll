@@ -1,4 +1,4 @@
-#  # # <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+#  # # <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=pointless-statement, unsubscriptable-object
@@ -7,7 +7,7 @@ from typing import Any
 import dspy
 # from pydantic import BaseModel, Field
 
-from nnll_01 import debug_monitor, dbug  # , nfo
+from nnll_01 import debug_monitor, dbug, nfo
 from nnll_15.constants import LibType, has_api, LIBTYPE_CONFIG
 
 
@@ -17,13 +17,21 @@ ps_infield_tag = "An image of x"
 ps_outfield_tag = "The nature of the x in the image."
 ps_edit_message = "Edited input image of the dog with a yellow hat."
 
+is_msg: str = "Description x of the image to generate"
+is_out: str = "An image matching the description x"
 
-class PictureSignature(dspy.Signature):
+
+class I2ISignature(dspy.Signature):
     f"""{ps_sysprompt}"""
     # This is an example multimodal input signature
     image_input: dspy.Image = dspy.InputField(desc=ps_infield_tag)
     answer: str = dspy.OutputField(desc=ps_outfield_tag)
     image_output: dspy.Image = dspy.OutputField(desc=ps_edit_message)
+
+
+class BasicImageSignature(dspy.Signature):
+    message: str = dspy.InputField(desc=is_msg)
+    image_output: dspy.Image = dspy.OutputField(desc=is_out)
 
 
 class QASignature(dspy.Signature):
@@ -98,7 +106,7 @@ class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
 
-    def __init__(self, sig: dspy.Signature = QASignature, max_workers=4) -> None:
+    def __init__(self, sig: dspy.Signature = QASignature, max_workers=4, stream: bool = True) -> None:
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
         Does not load any models until forward pass
@@ -107,8 +115,11 @@ class ChatMachineWithMemory(dspy.Module):
         """
         super().__init__()
         self.max_workers = max_workers
-        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
-        self.completion = dspy.streamify(generator)
+        if stream:
+            generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
+            self.completion = dspy.streamify(generator)
+        else:
+            self.completion = dspy.Predict(signature=sig)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
     async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
@@ -123,32 +134,33 @@ class ChatMachineWithMemory(dspy.Module):
         :yield: responses in chunks or response as a single block
         """
 
-        from nnll_05 import lookup_function_for
+        # from nnll_05 import lookup_function_for
         from httpx import ResponseNotRead
 
-        if library == LibType.HUB:
-            constructor, mir_arch = await lookup_function_for(model)
-            dbug(constructor, mir_arch)
-            yield constructor(mir_arch)
+        # nfo(f"libtype hub req : {vars(self.completion)} {model} {library}")
+        # if library == LibType.HUB:
+        #     nfo(f"libtype hub req : {model}")
+        #     constructor, mir_arch = lookup_function_for(model)
+        #     dbug(constructor, mir_arch)
+        #     constructor(mir_arch)
 
+        # else:
+        try:
+            api_kwargs = await get_api(model=model, library=library)
+        except ValueError as error_log:
+            nfo(f"Library '{library}' not found in configuration.")
+            dbug(error_log)
+            yield {
+                "choices": {
+                    "0": {"delta": {"content": "The attempt to gather resources for this request was rejected. Have files changed?"}},
+                },
+            }
         else:
+            model = dspy.LM(**api_kwargs)
+            dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
             try:
-                api_kwargs = await get_api(model=model, library=library)
-            except ValueError as error_log:
-                nfo(f"Library '{library}' not found in configuration.")
+                yield self.completion(message=tx_data["text"], stream=streaming)
+            except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
+                dbug(error_log)  # consider threading user selection between cursor jumps
+            except TypeError as error_log:
                 dbug(error_log)
-                yield {
-                    "choices": {
-                        "0": {"delta": {"content": "The attempt to gather resources for this request was rejected. Have files changed?"}},
-                    },
-                }
-            else:
-                model = dspy.LM(**api_kwargs)
-                dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-                try:
-                    yield self.completion(message=tx_data["text"], stream=streaming)
-                except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
-                    dbug(error_log)  # consider threading user selection between cursor jumps
-                except TypeError as error_log:
-                    dbug(error_log)
-
