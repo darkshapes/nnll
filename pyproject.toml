@@ -60,6 +60,7 @@ nnll-48 = ["pillow>=11.1.0", "toml>=0.10.2"]
 nnll-49 = ["pydantic>=2.10.6"]
 nnll-56 = ["hidiffusion>=0.1.10", "torch>=2.7.0", "torchvision>=0.22.0"]
 nnll-62 = [
+    "transformers>=4.49.0",
     "diffusers>=0.32.2",
     "torch>=2.7.0",
     "torchvision>=0.22.0",
