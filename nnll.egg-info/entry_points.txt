@@ -1,5 +1,4 @@
 [console_scripts]
-astra = nnll_12:__main__
 nnll-find = nnll_31:main
 nnll-hash = nnll_17:main
 nnll-index = nnll_43:main
