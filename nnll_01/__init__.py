@@ -102,14 +102,6 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", 
             ),
         ],
     )
-    import litellm
-
-    litellm.disable_end_user_cost_tracking = True
-    litellm.telemetry = False
-    litellm.disable_streaming_logging = True
-    litellm.turn_off_message_logging = True
-    litellm.suppress_debug_info = True
-    litellm.json_logs = True  # type: ignore
 
     handler = logging.FileHandler(assembled_path)
     handler.setFormatter(formatter)

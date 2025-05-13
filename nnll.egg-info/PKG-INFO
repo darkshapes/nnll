@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev439+g4ee3c78.d20250513
+Version: 0.1.dev441+g4f0bd75.d20250513
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: darkshapes github.com/darkshapes
@@ -14,6 +14,7 @@ License-File: LICENSE
 Provides-Extra: nnll-01
 Requires-Dist: structlog>=25.2.0; extra == "nnll-01"
 Requires-Dist: viztracer>=1.0.3; extra == "nnll-01"
+Requires-Dist: rich>=13.9.4; extra == "nnll-01"
 Provides-Extra: nnll-02
 Requires-Dist: huggingface-hub>=0.29.3; extra == "nnll-02"
 Requires-Dist: litellm==1.67.1; extra == "nnll-02"
@@ -23,6 +24,7 @@ Requires-Dist: aiohttp<=3.11.13,>=3.9.5; extra == "nnll-03"
 Requires-Dist: tqdm>=4.67.1; extra == "nnll-03"
 Provides-Extra: nnll-04
 Requires-Dist: gguf>=0.14.0; extra == "nnll-04"
+Requires-Dist: llama-cpp-python>=0.3.9; extra == "nnll-04"
 Requires-Dist: safetensors>=0.5.3; extra == "nnll-04"
 Provides-Extra: nnll-05
 Requires-Dist: networkx>=3.4.2; extra == "nnll-05"
@@ -81,6 +83,7 @@ Requires-Dist: hidiffusion>=0.1.10; extra == "nnll-56"
 Requires-Dist: torch>=2.7.0; extra == "nnll-56"
 Requires-Dist: torchvision>=0.22.0; extra == "nnll-56"
 Provides-Extra: nnll-62
+Requires-Dist: transformers>=4.49.0; extra == "nnll-62"
 Requires-Dist: diffusers>=0.32.2; extra == "nnll-62"
 Requires-Dist: torch>=2.7.0; extra == "nnll-62"
 Requires-Dist: torchvision>=0.22.0; extra == "nnll-62"
@@ -124,8 +127,6 @@ Requires-Dist: textual-dev>=1.7.0; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
 Requires-Dist: viztracer>=1.0.3; extra == "dev"
-Provides-Extra: nnll-01
-Requires-Dist: rich>=13.9.4; extra == "nnll-01"
 Dynamic: license-file
 
 <div align="center">

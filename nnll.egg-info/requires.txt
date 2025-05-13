@@ -37,9 +37,6 @@ pytest-tornasync>=0.6.0.post2
 pytest-trio>=0.8.0
 viztracer>=1.0.3
 
-[nnll-01]
-rich>=13.9.4
-
 [nnll-02]
 huggingface-hub>=0.29.3
 litellm==1.67.1
@@ -51,6 +48,7 @@ tqdm>=4.67.1
 
 [nnll-04]
 gguf>=0.14.0
+llama-cpp-python>=0.3.9
 safetensors>=0.5.3
 
 [nnll-05]
@@ -129,6 +127,7 @@ torch>=2.7.0
 torchvision>=0.22.0
 
 [nnll-62]
+transformers>=4.49.0
 diffusers>=0.32.2
 torch>=2.7.0
 torchvision>=0.22.0
@@ -141,3 +140,4 @@ pillow>=11.1.0
 [nnll_01]
 structlog>=25.2.0
 viztracer>=1.0.3
+rich>=13.9.4

@@ -1169,6 +1169,18 @@ wheels = [
 ]
 
 [[package]]
+name = "llama-cpp-python"
+version = "0.3.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "diskcache" },
+    { name = "jinja2" },
+    { name = "numpy" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/de/6d/4a20e676bdf7d9d3523be3a081bf327af958f9bdfe2a564f5cf485faeaec/llama_cpp_python-0.3.9.tar.gz", hash = "sha256:a3a985f558385e2f5de5b663f4e9b0817506d6af98122450142cd98e79216370", size = 67858575 }
+
+[[package]]
 name = "magicattr"
 version = "0.1.6"
 source = { registry = "https://pypi.org/simple" }
@@ -1516,7 +1528,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev439+g4ee3c78.d20250513"
+version = "0.1.dev441+g4f0bd75.d20250513"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1530,6 +1542,7 @@ all = [
     { name = "hidiffusion" },
     { name = "huggingface-hub", extra = ["hf-transfer"] },
     { name = "litellm" },
+    { name = "llama-cpp-python" },
     { name = "matplotlib" },
     { name = "networkx" },
     { name = "numpy" },
@@ -1564,6 +1577,7 @@ dev = [
     { name = "hidiffusion" },
     { name = "huggingface-hub", extra = ["hf-transfer"] },
     { name = "litellm" },
+    { name = "llama-cpp-python" },
     { name = "matplotlib" },
     { name = "networkx" },
     { name = "numpy" },
@@ -1609,6 +1623,7 @@ nnll-03 = [
 ]
 nnll-04 = [
     { name = "gguf" },
+    { name = "llama-cpp-python" },
     { name = "safetensors" },
 ]
 nnll-05 = [
@@ -1692,6 +1707,7 @@ nnll-62 = [
     { name = "peft" },
     { name = "torch" },
     { name = "torchvision" },
+    { name = "transformers" },
 ]
 nnll-64 = [
     { name = "pillow" },
@@ -1718,6 +1734,7 @@ requires-dist = [
     { name = "huggingface-hub", extras = ["hf-transfer"], marker = "extra == 'nnll-45'", specifier = ">=0.29.1" },
     { name = "litellm", marker = "extra == 'nnll-02'", specifier = "==1.67.1" },
     { name = "litellm", marker = "extra == 'nnll-06'", specifier = ">=1.65.0" },
+    { name = "llama-cpp-python", marker = "extra == 'nnll-04'", specifier = ">=0.3.9" },
     { name = "matplotlib", marker = "extra == 'nnll-14'", specifier = ">=3.10.1" },
     { name = "networkx", marker = "extra == 'nnll-05'", specifier = ">=3.4.2" },
     { name = "networkx", marker = "extra == 'nnll-12'", specifier = ">=3.4.2" },
@@ -1787,6 +1804,7 @@ requires-dist = [
     { name = "torchvision", marker = "extra == 'nnll-62'", specifier = ">=0.22.0" },
     { name = "tqdm", marker = "extra == 'nnll-03'", specifier = ">=4.67.1" },
     { name = "transformers", marker = "extra == 'nnll-09'", specifier = ">=4.49.0" },
+    { name = "transformers", marker = "extra == 'nnll-62'", specifier = ">=4.49.0" },
     { name = "tree-sitter", marker = "extra == 'nnll-12'", specifier = ">=0.24.0" },
     { name = "tree-sitter", marker = "extra == 'nnll-14'", specifier = ">=0.24.0" },
     { name = "viztracer", marker = "extra == 'dev'", specifier = ">=1.0.3" },
