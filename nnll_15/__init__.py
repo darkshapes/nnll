@@ -179,12 +179,12 @@ class RegistryEntry(BaseModel):
 
 
 @debug_monitor
-def from_cache() -> Dict[str, RegistryEntry]:
+def from_cache() -> list[str, RegistryEntry]:
     """
     Retrieve models from ollama server, local huggingface hub cache, local lmstudio cache & vllm.
     我們不應該繼續為LMStudio編碼。 歡迎貢獻者來改進它。 LMStudio is not OSS, but contributions are welcome.
     """
     models = None
     models = RegistryEntry.from_model_data()
-    nfo(f"REG_ENTRIES {models}")
+    dbug(f"REG_ENTRIES {models}")
     return models

@@ -37,6 +37,9 @@ pytest-tornasync>=0.6.0.post2
 pytest-trio>=0.8.0
 viztracer>=1.0.3
 
+[nnll-01]
+rich>=13.9.4
+
 [nnll-02]
 huggingface-hub>=0.29.3
 litellm==1.67.1

@@ -1516,7 +1516,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev295+gcda140a.d20250428"
+version = "0.1.dev439+g4ee3c78.d20250513"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1538,6 +1538,7 @@ all = [
     { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-core" },
+    { name = "rich" },
     { name = "safetensors" },
     { name = "sounddevice" },
     { name = "structlog" },
@@ -1575,6 +1576,7 @@ dev = [
     { name = "pytest-asyncio" },
     { name = "pytest-tornasync" },
     { name = "pytest-trio" },
+    { name = "rich" },
     { name = "ruff" },
     { name = "safetensors" },
     { name = "sounddevice" },
@@ -1592,6 +1594,7 @@ dev = [
     { name = "viztracer" },
 ]
 nnll-01 = [
+    { name = "rich" },
     { name = "structlog" },
     { name = "viztracer" },
 ]
@@ -1760,6 +1763,7 @@ requires-dist = [
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.25.3" },
     { name = "pytest-tornasync", marker = "extra == 'dev'", specifier = ">=0.6.0.post2" },
     { name = "pytest-trio", marker = "extra == 'dev'", specifier = ">=0.8.0" },
+    { name = "rich", marker = "extra == 'nnll-01'", specifier = ">=13.9.4" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.7" },
     { name = "safetensors", marker = "extra == 'nnll-04'", specifier = ">=0.5.3" },
     { name = "sounddevice", marker = "extra == 'nnll-13'", specifier = ">=0.5.1" },

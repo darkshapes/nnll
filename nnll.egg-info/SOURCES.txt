@@ -31,9 +31,6 @@ nnll_10/response_panel.py
 nnll_10/token_counters.py
 nnll_10/tuner.py
 nnll_11/__init__.py
-nnll_12/__init__.py
-nnll_12/__main__.py
-nnll_12/button.tcss
 nnll_13/__init__.py
 nnll_14/__init__.py
 nnll_15/__init__.py
@@ -96,8 +93,9 @@ tests/test_04_expected_output_2.json
 tests/test_05.py
 tests/test_07.py
 tests/test_08.py
+tests/test_11.py
 tests/test_11_gen.py
-tests/test_11_getapi.py
+tests/test_11_get_api.py
 tests/test_15_register_types.py
 tests/test_15_tags.py
 tests/test_24.py

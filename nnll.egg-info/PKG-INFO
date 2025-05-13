@@ -1,19 +1,11 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev348+ge2c81da.d20250502
+Version: 0.1.dev439+g4ee3c78.d20250513
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
-License: SPDX-License-Identifier: MPL-2.0
-
-
-        darkshapes github.com/darkshapes
-
-        Copyleft: cette œuvre est libre, vous pouvez la copier, la diffuser et la modifier selon les termes de la Licence Art Libre https://www.artlibre.org
-
-          *   May you do good and not evil.
-          *   May you find forgiveness for yourself and forgive others.
-          *   May you share freely, never taking more than you give.
-
+License: darkshapes github.com/darkshapes
+        
+        This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 Project-URL: source, https://github.com/darkshapes/nnll
 Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
@@ -132,14 +124,16 @@ Requires-Dist: textual-dev>=1.7.0; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
 Requires-Dist: viztracer>=1.0.3; extra == "dev"
+Provides-Extra: nnll-01
+Requires-Dist: rich>=13.9.4; extra == "nnll-01"
 Dynamic: license-file
 
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll <br><sub>neural network link library</sub>
+# nnll <br><sub>neural network link library: flexible blocks for building tomorrows multimodal software</sub>
 
-`nnll` (or <em>null</em>) is a project incubator and AI toolkit for managing and processing Diffusion and Large Language Models (LLMs). The project is divided into modular, ready-to-use components and may appeal to researchers or developers working in the general field of machine learning.
+`nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs).  It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
 
 * Generative AI pipeline preparation & execution
 * Extracting and classifying metadata from images/models
