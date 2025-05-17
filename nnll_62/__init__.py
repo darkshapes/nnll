@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
@@ -41,7 +41,6 @@ class ConstructPipeline:
         """
         import os
         import diffusers
-        from importlib import import_module
 
         @config_file.decorator
         def _read_data(data: dict = None):
@@ -55,26 +54,16 @@ class ConstructPipeline:
         repo = None
         if not repo:
             repo = arch_data.get("repo")
-        import importlib
-
-        dynamic_module = importlib.import_module(f"diffusers.{arch_data['pipe_name']}")
+        pipe_class = getattr(diffusers, arch_data["pipe_name"])
         pipe_kwargs = arch_data.get("pipe_kwargs", {})
         pipe_kwargs.update(kwargs)
-
-        if os.path.isfile(repo):
-            pipe = dynamic_module.from_single_file(repo, **pipe_kwargs)
-        else:
-            dbug(f"pipe_class_test : {arch_data['pipe_name']} {dynamic_module}")
-            # from diffusers import CogView3PlusPipeline
-
-            pipe = dynamic_module.from_pretrained(repo, **pipe_kwargs)
-            # pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
-            # raise NotImplementedError("Support for only from_pretrained and from_single_file")
-
         settings = arch_data.get("defaults", {})
         kwargs.update(settings)
-
-        return (pipe, repo, kwargs)
+        if os.path.isfile(repo):
+            return (pipe_class.from_single_file(repo, **pipe_kwargs), repo, kwargs)
+        else:
+            return (pipe_class.from_pretrained(repo, **pipe_kwargs), repo, kwargs)
+            # raise NotImplementedError("Support for only from_pretrained and from_single_file")
 
     # @debug_monitor
     # @pipe_call
