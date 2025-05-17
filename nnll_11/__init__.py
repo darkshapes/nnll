@@ -135,7 +135,7 @@ class ChatMachineWithMemory(dspy.Module):
         from httpx import ResponseNotRead
 
         nfo(f"libtype hub req : {vars(self.completion)} {model} {library}")
-        nfo(streaming)
+        # nfo(streaming)
         if library == LibType.HUB:
             api_kwargs = await get_api(model=model, library=library)
             nfo(f"libtype hub req : {model}")
@@ -157,9 +157,9 @@ class ChatMachineWithMemory(dspy.Module):
             else:
                 model = dspy.LM(**api_kwargs)
                 dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-                try:
-                    yield self.completion(message=tx_data["text"], stream=streaming)
-                except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
-                    dbug(error_log)  # consider threading user selection between cursor jumps
-                except TypeError as error_log:
-                    dbug(error_log)
+                # try:
+                yield self.completion(message=tx_data["text"], stream=streaming)
+            # except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
+            #     dbug(error_log)  # consider threading user selection between cursor jumps
+            # # except TypeError as error_log:
+            #     dbug(error_log)
