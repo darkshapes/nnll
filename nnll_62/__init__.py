@@ -56,7 +56,7 @@ class ConstructPipeline:
         if not repo:
             repo = arch_data.get("repo")
         pipe_class = getattr(diffusers, arch_data["pipe_name"])
-        dynamic_module = import_module(diffusers, f"{pipe_class}")
+        dynamic_module = import_module(f"{pipe_class}", diffusers)
         pipe_kwargs = arch_data.get("pipe_kwargs", {})
         pipe_kwargs.update(kwargs)
 
