@@ -8,7 +8,9 @@
             "num_inference_steps": 50
         },
         "pipe_name": "CogView3PlusPipeline",
-        "torch_dtype": "torch.bfloat16",
+        "pipe_kwargs": {
+            "torch_dtype": "torch.bfloat16"
+        },
         "constructor": "nnll_64.run_inference"
     },
     "model.dit.cogview-4": {

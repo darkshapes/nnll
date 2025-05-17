@@ -53,38 +53,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     # data_chain = HyperChain()
     factory = ConstructPipeline()
     pipe_class, pipe_kwargs, model, kwargs = factory.create_pipeline(architecture=mir_arch)
-    pipe = pipe_class(model, **pipe_kwargs)
-
-    # import os
-    # import diffusers
-    # from nnll_60 import JSONCache, CONFIG_PATH_NAMED
-
-    # config_file = JSONCache(CONFIG_PATH_NAMED)
-
-    # @config_file.decorator
-    # def _read_data(data: dict = None):
-    #     return data
-
-    # construct = _read_data()
-    # kwargs = {}
-    # # dbug(construct)
-    # arch_data = construct[mir_arch]  # pylint:disable = unsubscriptable-object
-    # # repo = arch_data.get("local")
-    # model = None
-    # if not model:
-    #     model = arch_data.get("repo")
-    # pipe_class = getattr(diffusers, arch_data["pipe_name"])
-    # pipe_kwargs = arch_data.get("pipe_kwargs", {})
-    # # pipe_kwargs.update()
-
-    # if os.path.isfile(model):
-    #     pipe = pipe_class.from_single_file(model, **pipe_kwargs)
-    # else:
-    #     pipe = pipe_class.from_pretrained(model, **pipe_kwargs)
-    #     # raise NotImplementedError("Support for only from_pretrained and from_single_file")
-
-    # settings = arch_data.get("defaults", {})
-    # kwargs.update(settings)
+    pipe = pipe_class(model, **pipe_kwargs).to(active_gpu)
 
     nfo(f"pre-generator Model {model} Lora {lora} Arguments {kwargs} {pipe}")
     if lora:
