@@ -134,11 +134,11 @@ class ChatMachineWithMemory(dspy.Module):
         from nnll_05 import lookup_function_for
         from httpx import ResponseNotRead
 
-        nfo(f"libtype hub req : {vars(self.completion)} {model} {library}")
+        dbug(f"libtype hub req : {vars(self.completion)} {model} {library}")
         # nfo(streaming)
         if library == LibType.HUB:
             api_kwargs = await get_api(model=model, library=library)
-            nfo(f"libtype hub req : {model}")
+            dbug(f"libtype hub req : {model}")
             constructor, mir_arch = lookup_function_for(model)
             dbug(constructor, mir_arch)
             constructor(mir_arch)
