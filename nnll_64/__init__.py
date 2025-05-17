@@ -19,7 +19,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     from nnll_08 import soft_random, seed_planter
     from nnll_16 import first_available
     from PIL import PngImagePlugin
-    from nnll_01 import nfo
+    from nnll_01 import nfo, dbug
 
     noise_seed = soft_random()
     seed_planter(noise_seed)
@@ -59,7 +59,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     # optimization = "ays"
     import psutil
 
-    print("Open FDs:", psutil.Process(os.getpid()).open_files())
+    dbug("Open FDs:", psutil.Process(os.getpid()).open_files())
     # data_chain = HyperChain()
     factory = ConstructPipeline()
     pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch)
