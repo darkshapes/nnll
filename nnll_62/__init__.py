@@ -61,6 +61,7 @@ class ConstructPipeline:
         if os.path.isfile(repo):
             pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
         else:
+            dbug("pipe_class_test")
             pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
             # raise NotImplementedError("Support for only from_pretrained and from_single_file")
 
