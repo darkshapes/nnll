@@ -46,7 +46,6 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     os.set_inheritable(0, False)
     os.set_inheritable(1, False)
     os.set_inheritable(2, False)
-    os.set_inheritable(3, False)
     import torch.multiprocessing as mp
 
     mp.set_sharing_strategy("file_system")  # safer for multi-process load
