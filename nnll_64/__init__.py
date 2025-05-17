@@ -47,10 +47,11 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     # data_chain = HyperChain()
     factory = ConstructPipeline()
     pipe_name, pipe_mode, pipe_kwargs, model, kwargs = factory.create_pipeline(architecture=mir_arch)
-    # pipe_class = getattr(pipe_name, pipe_mode)
-    from diffusers import CogView3PlusPipeline
+    import torch.multiprocessing as mp
 
-    pipe = CogView3PlusPipeline.from_pretrained(model, **pipe_kwargs).to(active_gpu)
+    mp.set_sharing_strategy("file_system")
+    pipe_class = getattr(pipe_name, pipe_mode)
+    pipe = pipe_class(model, **pipe_kwargs).to(active_gpu)
 
     nfo(f"pre-generator Model {model} Lora {lora} Arguments {kwargs} {pipe}")
     if lora:
