@@ -63,7 +63,7 @@ class ConstructPipeline:
         if os.path.isfile(repo):
             pipe = dynamic_module.from_single_file(repo, **pipe_kwargs)
         else:
-            dbug("pipe_class_test : {pipe_class}")
+            dbug(f"pipe_class_test : {pipe_class} {dynamic_module}")
             # from diffusers import CogView3PlusPipeline
 
             pipe = dynamic_module.from_pretrained(repo, **pipe_kwargs)
