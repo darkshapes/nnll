@@ -37,19 +37,12 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     model_hash = {}
     # import torch
     import os
-    import multiprocessing as mp
+    import psutil
 
-    try:
-        mp.set_start_method("spawn", force=True)
-    except RuntimeError:
-        pass
-    os.set_inheritable(0, False)
-    os.set_inheritable(1, False)
-    os.set_inheritable(2, False)
-    import torch.multiprocessing as mp
-
-    mp.set_sharing_strategy("file_system")  # safer for multi-process load
-
+    fds = psutil.Process(os.getpid()).open_files()
+    for item in fds:
+        num = item[1]
+        os.set_inheritable(num, False)
     # active_gpu = torch.device("mps")  #
     active_gpu = first_available()
 
@@ -57,9 +50,6 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     negative_prompt = ""
     lora = lora_opt
     # optimization = "ays"
-    import psutil
-
-    dbug("Open FDs:", psutil.Process(os.getpid()).open_files())
     # data_chain = HyperChain()
     factory = ConstructPipeline()
     pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch)
