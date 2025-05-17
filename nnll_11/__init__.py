@@ -132,28 +132,26 @@ class ChatMachineWithMemory(dspy.Module):
         """
 
         from nnll_05 import lookup_function_for
-        from httpx import ResponseNotRead
+        # from httpx import ResponseNotRead
 
         dbug(f"libtype hub req : {vars(self.completion)} {model} {library}")
         # nfo(streaming)
-        if library == LibType.HUB:
+        try:
             api_kwargs = await get_api(model=model, library=library)
-            dbug(f"libtype hub req : {model}")
-            constructor, mir_arch = lookup_function_for(model)
-            dbug(constructor, mir_arch)
-            constructor(mir_arch)
-
+        except ValueError as error_log:
+            nfo(f"Library '{library}' not found in configuration.")
+            dbug(error_log)
+            yield {
+                "choices": {
+                    "0": {"delta": {"content": "The attempt to gather resources for this request was rejected. Have files changed?"}},
+                },
+            }
         else:
-            try:
-                api_kwargs = await get_api(model=model, library=library)
-            except ValueError as error_log:
-                nfo(f"Library '{library}' not found in configuration.")
-                dbug(error_log)
-                yield {
-                    "choices": {
-                        "0": {"delta": {"content": "The attempt to gather resources for this request was rejected. Have files changed?"}},
-                    },
-                }
+            if library == LibType.HUB:
+                constructor, mir_arch = lookup_function_for(model)
+                dbug(constructor, mir_arch)
+                generator = dspy.asyncify(constructor(mir_arch))
+                self.completion = dspy.streamify(generator)
             else:
                 model = dspy.LM(**api_kwargs)
                 dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
