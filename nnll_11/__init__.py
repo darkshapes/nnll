@@ -119,6 +119,7 @@ class ChatMachineWithMemory(dspy.Module):
             generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
             self.completion = dspy.streamify(generator)
         else:
+            generator = dspy.asyncify(program=dspy.Predict(signature=sig))
             self.completion = dspy.Predict(signature=sig)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
