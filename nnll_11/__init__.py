@@ -115,9 +115,8 @@ class ChatMachineWithMemory(dspy.Module):
         """
         super().__init__()
         self.max_workers = max_workers
-        if stream:
-            generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
-            self.completion = dspy.streamify(generator)
+        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
+        self.completion = dspy.streamify(generator)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
     async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
@@ -136,14 +135,13 @@ class ChatMachineWithMemory(dspy.Module):
         from httpx import ResponseNotRead
 
         nfo(f"libtype hub req : {vars(self.completion)} {model} {library}")
-
+        nfo(streaming)
         if library == LibType.HUB:
             api_kwargs = await get_api(model=model, library=library)
             nfo(f"libtype hub req : {model}")
             constructor, mir_arch = lookup_function_for(model)
             dbug(constructor, mir_arch)
-            generator = dspy.asyncify(program=constructor(mir_arch))
-            self.completion = dspy.streamify(generator)
+            constructor(mir_arch)
 
         else:
             try:
