@@ -150,8 +150,8 @@ class ChatMachineWithMemory(dspy.Module):
             if library == LibType.HUB:
                 constructor, mir_arch = lookup_function_for(model)
                 dbug(constructor, mir_arch)
-                # generator = dspy.asyncify(constructor(mir_arch))
-                self.completion = constructor(mir_arch)
+                generator = dspy.asyncify(constructor(mir_arch))
+                self.completion = dspy.streamify(generator)
             else:
                 model = dspy.LM(**api_kwargs)
                 dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
