@@ -59,11 +59,10 @@ class ConstructPipeline:
         pipe_kwargs.update(kwargs)
         settings = arch_data.get("defaults", {})
         kwargs.update(settings)
-        # if os.path.isfile(repo):
-        # return (pipe_class.from_single_file(repo, **pipe_kwargs), repo, kwargs)
-        # else:
-        # return (pipe_class.from_pretrained(repo, **pipe_kwargs), repo, kwargs)
-        return (pipe_class, pipe_kwargs, repo, kwargs)
+        if os.path.isfile(repo):
+            return (pipe_class, "from_single_file", pipe_kwargs, repo, kwargs)
+        else:
+            return (pipe_class, "from_pretrained", pipe_kwargs, repo, kwargs)
 
         # raise NotImplementedError("Support for only from_pretrained and from_single_file")
 
