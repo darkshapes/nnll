@@ -41,6 +41,7 @@ class ConstructPipeline:
         """
         import os
         import diffusers
+        from importlib import import_module
 
         @config_file.decorator
         def _read_data(data: dict = None):
@@ -55,14 +56,18 @@ class ConstructPipeline:
         if not repo:
             repo = arch_data.get("repo")
         pipe_class = getattr(diffusers, arch_data["pipe_name"])
+        dynamic_module = import_module(diffusers, f"{pipe_class}")
         pipe_kwargs = arch_data.get("pipe_kwargs", {})
         pipe_kwargs.update(kwargs)
 
         if os.path.isfile(repo):
-            pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
+            pipe = dynamic_module.from_single_file(repo, **pipe_kwargs)
         else:
-            dbug("pipe_class_test")
-            pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
+            dbug("pipe_class_test : {pipe_class}")
+            # from diffusers import CogView3PlusPipeline
+
+            pipe = dynamic_module.from_pretrained(repo, **pipe_kwargs)
+            # pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
             # raise NotImplementedError("Support for only from_pretrained and from_single_file")
 
         settings = arch_data.get("defaults", {})
