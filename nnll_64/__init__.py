@@ -40,9 +40,6 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     import psutil
 
     fds = psutil.Process(os.getpid()).open_files()
-    for item in fds:
-        num = item[1]
-        os.set_inheritable(num, False)
     # active_gpu = torch.device("mps")  #
     active_gpu = first_available()
 
@@ -54,6 +51,9 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     factory = ConstructPipeline()
     pipe_name, pipe_mode, pipe_kwargs, model, kwargs = factory.create_pipeline(architecture=mir_arch)
     pipe_class = getattr(pipe_name, pipe_mode)
+    for item in fds:
+        num = item[1]
+        os.set_inheritable(num, False)
     pipe = pipe_class(model, **pipe_kwargs).to(active_gpu)
 
     nfo(f"pre-generator Model {model} Lora {lora} Arguments {kwargs} {pipe}")
