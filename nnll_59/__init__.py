@@ -29,7 +29,7 @@ def name_save_file_as(extension: str = ".png", data: TextIOWrapper = None) -> st
     :return: `str` A file path with a name
     """
 
-    save_folder_path_absolute = data["save_folder_path_absolute"]
+    save_folder_path_absolute = data.get("save_folder_path_absolute", os.getcwd())
     if not os.path.isdir(save_folder_path_absolute):
         raise FileNotFoundError("Invalid folder location. {error_log}")
     files_in_save_location = os.listdir(save_folder_path_absolute)
@@ -52,7 +52,7 @@ def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str],
     :return: Dictionary of attributes
     """
     model_data = {}
-    model_data.setdefault(collect_hashes(model))
+    model_data.setdefault(model, collect_hashes(model))
 
     gen_data = {
         "parameters": {
