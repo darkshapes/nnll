@@ -10,10 +10,13 @@ from typing import Any
 
 # @debug_monitor
 def run_inference(mir_arch: str, lora_opt: list = None) -> None:
-    """Create diffusion process"""
+    """Create diffusion process (temporary method)\n
+    :param mir_arch: MIR system identifier
+    :param lora_opt: List of LoRAs to add to the process, defaults to None\n
+    """
     import nnll_59 as disk
 
-    # from nnll_61 import HyperChain
+    from nnll_61 import HyperChain
     from nnll_62 import ConstructPipeline
     import nnll_56 as techniques
     from nnll_08 import soft_random, seed_planter
@@ -36,23 +39,25 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     }
     model_hash = {}
     # import torch
+    # import torch.multiprocessing as mp
+    # mp.set_sharing_strategy("file_system")
 
-    # active_gpu = torch.device("mps")  #
     active_gpu = first_available()
-
+    join = True  # memory threshold formula function returns boolean value here
     prompt = "aquatic scene, sunken ship, ocean divers, coral, exotic fish"
     negative_prompt = ""
     lora = lora_opt
     # optimization = "ays"
-    # data_chain = HyperChain()
+
+    data_chain = HyperChain()
+
     factory = ConstructPipeline()
-    pipe_name, pipe_mode, pipe_kwargs, model, kwargs = factory.create_pipeline(architecture=mir_arch)
-    import torch.multiprocessing as mp
-
-    mp.set_sharing_strategy("file_system")
-    pipe_class = getattr(pipe_name, pipe_mode)
-    pipe = pipe_class(model, **pipe_kwargs).to(active_gpu)
-
+    if join:
+        pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch, join=join)
+    else:
+        pipe_name, pipe_mode, pipe_kwargs, model, kwargs = factory.create_pipeline(architecture=mir_arch, join=join)
+        pipe_class = getattr(pipe_name, pipe_mode)
+        pipe = pipe_class(model, **pipe_kwargs).to(active_gpu)
     nfo(f"pre-generator Model {model} Lora {lora} Arguments {kwargs} {pipe}")
     if lora:
         pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe)
