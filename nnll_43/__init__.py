@@ -1,6 +1,11 @@
 ### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
 
 def write_toc_to_file(module_index: dict, index_file_name: str, root_folder: str) -> None:
     """Output module data to .md file
@@ -12,8 +17,7 @@ def write_toc_to_file(module_index: dict, index_file_name: str, root_folder: str
 
     write_path = os.path.join(root_folder, index_file_name)
     with open(write_path, "w", encoding="utf-8") as toc_file:  # No +, don't need to read from file
-        toc_file.write('#// SPDX-License-Identifier: MPL-2.0
-\n#// d a r k s h a p e s\n"""\n## module table of contents\n\n')
+        toc_file.write('#// SPDX-License-Identifier: MPL-2.0\n#// d a r k s h a p e s\n"""\n## module table of contents\n\n')
         for resource, link in module_index.items():
             if ".md" in index_file_name:
                 link = os.path.dirname(resource)
@@ -68,7 +72,7 @@ def main():
         "-i",
         "--indicator",
         nargs="?",
-        help="Regex pattern of filename convention(s) to be indexed (default: r'__init__\.py|main\.py)",
+        help="Regex pattern of filename convention(s) to be indexed (default: '__init__\\.py|main\\.py)",
         const=["__init__.py", "__main__.py"],
         default=["__init__.py", "__main__.py"],
     )

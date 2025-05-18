@@ -115,8 +115,9 @@ class ChatMachineWithMemory(dspy.Module):
         """
         super().__init__()
         self.max_workers = max_workers
-        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
-        self.completion = dspy.streamify(generator)
+        if stream:
+            generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
+            self.completion = dspy.streamify(generator)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
     async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
@@ -130,8 +131,6 @@ class ChatMachineWithMemory(dspy.Module):
         :param streaming: output type flag, defaults to True
         :yield: responses in chunks or response as a single block
         """
-
-        from nnll_05 import lookup_function_for
         # from httpx import ResponseNotRead
 
         dbug(f"libtype hub req : {vars(self.completion)} {model} {library}")
@@ -147,17 +146,19 @@ class ChatMachineWithMemory(dspy.Module):
                 },
             }
         else:
-            if library == LibType.HUB:
-                constructor, mir_arch = lookup_function_for(model)
-                dbug(constructor, mir_arch)
-                generator = dspy.asyncify(constructor(mir_arch))
-                self.completion = dspy.streamify(generator)
-            else:
-                model = dspy.LM(**api_kwargs)
-                dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-                # try:
-                yield self.completion(message=tx_data["text"], stream=streaming)
-            # except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
-            #     dbug(error_log)  # consider threading user selection between cursor jumps
-            # # except TypeError as error_log:
-            #     dbug(error_log)
+            model = dspy.LM(**api_kwargs)
+            dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
+            # try:
+            yield self.completion(message=tx_data["text"], stream=streaming)
+        # except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
+        #     dbug(error_log)  # consider threading user selection between cursor jumps
+        # # except TypeError as error_log:
+        #     dbug(error_log)
+
+    def forward_hub(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=False) -> None:
+        # api_kwargs = await get_api(model=model, library=library)
+        from nnll_05 import lookup_function_for
+
+        constructor, mir_arch = lookup_function_for(model)
+        dbug(constructor, mir_arch)
+        constructor(mir_arch)

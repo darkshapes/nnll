@@ -14,6 +14,8 @@ from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
 from sys import modules as sys_modules, argv as sys_argv
+import sys
+
 
 # import viztracer
 

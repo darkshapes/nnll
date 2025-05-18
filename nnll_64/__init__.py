@@ -16,7 +16,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     """
     import nnll_59 as disk
 
-    from nnll_61 import HyperChain
+    # from nnll_61 import HyperChain
     from nnll_62 import ConstructPipeline
     import nnll_56 as techniques
     from nnll_08 import soft_random, seed_planter
@@ -49,7 +49,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     lora = lora_opt
     # optimization = "ays"
 
-    data_chain = HyperChain()
+    # data_chain = HyperChain()
 
     factory = ConstructPipeline()
     if join:
