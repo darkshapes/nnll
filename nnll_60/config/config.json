@@ -11,7 +11,7 @@
         "pipe_kwargs": {
             "torch_dtype": "torch.bfloat16"
         },
-        "constructor": "nnll_64.run_inference"
+        "constructor": "image"
     },
     "model.dit.cogview-4": {
         "repo": "THUDM/CogView4-6B",
@@ -103,7 +103,7 @@
             "width": 1024
         },
         "torch_dtype": "torch.bfloat16",
-        "constructor": "nnll_64.run_inference"
+        "constructor": "image"
     },
     "model.dit.pixart-sigma": {
         "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
