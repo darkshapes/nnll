@@ -115,11 +115,8 @@ class ChatMachineWithMemory(dspy.Module):
         """
         super().__init__()
         self.max_workers = max_workers
-        if stream:
-            generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
-            self.completion = dspy.streamify(generator)
-        else:
-            self.completion = dspy.Predict(signature=sig)
+        generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
+        self.completion = dspy.streamify(generator)
 
     # Reminder: Don't capture user prompts - this is the crucial stage
     async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
@@ -134,17 +131,11 @@ class ChatMachineWithMemory(dspy.Module):
         :yield: responses in chunks or response as a single block
         """
 
-        # from nnll_05 import lookup_function_for
-        from httpx import ResponseNotRead
+        from nnll_05 import lookup_function_for
+        # from httpx import ResponseNotRead
 
-        # nfo(f"libtype hub req : {vars(self.completion)} {model} {library}")
-        # if library == LibType.HUB:
-        #     nfo(f"libtype hub req : {model}")
-        #     constructor, mir_arch = lookup_function_for(model)
-        #     dbug(constructor, mir_arch)
-        #     constructor(mir_arch)
-
-        # else:
+        dbug(f"libtype hub req : {vars(self.completion)} {model} {library}")
+        # nfo(streaming)
         try:
             api_kwargs = await get_api(model=model, library=library)
         except ValueError as error_log:
@@ -156,11 +147,17 @@ class ChatMachineWithMemory(dspy.Module):
                 },
             }
         else:
-            model = dspy.LM(**api_kwargs)
-            dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-            try:
+            if library == LibType.HUB:
+                constructor, mir_arch = lookup_function_for(model)
+                dbug(constructor, mir_arch)
+                generator = dspy.asyncify(constructor(mir_arch))
+                self.completion = dspy.streamify(generator)
+            else:
+                model = dspy.LM(**api_kwargs)
+                dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
+                # try:
                 yield self.completion(message=tx_data["text"], stream=streaming)
-            except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
-                dbug(error_log)  # consider threading user selection between cursor jumps
-            except TypeError as error_log:
-                dbug(error_log)
+            # except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
+            #     dbug(error_log)  # consider threading user selection between cursor jumps
+            # # except TypeError as error_log:
+            #     dbug(error_log)

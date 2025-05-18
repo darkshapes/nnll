@@ -1,4 +1,4 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
+### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
@@ -13,30 +13,32 @@ from nnll_60 import JSONCache, CONFIG_PATH_NAMED
 config_file = JSONCache(CONFIG_PATH_NAMED)
 
 
-# @debug_monitor
-# async def pipe_call(func):
-#     """Decorator for Diffusers pipes to combine arguments"""
-#     from functools import wraps
-#     import inspect
+@debug_monitor
+def pipe_call(func):
+    """Decorator for Diffusers pipes to combine arguments"""
+    from functools import wraps
+    import inspect
 
-#     @wraps(func)
-#     def wrapper(*args, **kwargs):
-#         func_params = inspect.signature(func).parameters
-#         args_dict = dict(zip(func_params, args))
-#         kwargs.update({k: v for k, v in args_dict.items() if v is not None and k not in kwargs})
-#         return func(**kwargs)
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        func_params = inspect.signature(func).parameters
+        args_dict = dict(zip(func_params, args))
+        kwargs.update({k: v for k, v in args_dict.items() if v is not None and k not in kwargs})
+        return func(**kwargs)
 
-#     return wrapper
+    return wrapper
 
 
 class ConstructPipeline:
     """Build and configure Diffusers pipelines"""
 
-    # @debug_monitor
-    # @pipe_call
-    def create_pipeline(self, architecture: str, *args, **kwargs):
+    @debug_monitor
+    @pipe_call
+    def create_pipeline(self, architecture: str, *args, join: bool = True, **kwargs):
         """
         Build a diffusers pipe based on model type\n
+        :param architecture: Identifier of model architecture
+        :param call: Return the pipe components or the called function, defaults to False
         :return: `tuple` constructed pipe, model/repo name, and default settings
         """
         import os
@@ -50,27 +52,30 @@ class ConstructPipeline:
 
         dbug(construct)
         arch_data = construct[architecture]  # pylint:disable = unsubscriptable-object
-        # repo = arch_data.get("local")
+        # repo = arch_data.get("local") # here we can pull user-defined settings
         repo = None
         if not repo:
             repo = arch_data.get("repo")
         pipe_class = getattr(diffusers, arch_data["pipe_name"])
         pipe_kwargs = arch_data.get("pipe_kwargs", {})
         pipe_kwargs.update(kwargs)
-
-        if os.path.isfile(repo):
-            pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
-        else:
-            pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
-            # raise NotImplementedError("Support for only from_pretrained and from_single_file")
-
         settings = arch_data.get("defaults", {})
         kwargs.update(settings)
 
-        return (pipe, repo, kwargs)
+        if join:
+            if os.path.isfile(repo):
+                pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
+            else:
+                pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
+            return (pipe, repo, kwargs)
+        if os.path.isfile(repo):
+            return (pipe_class, "from_single_file", pipe_kwargs, repo, kwargs)
+        return (pipe_class, "from_pretrained", pipe_kwargs, repo, kwargs)
 
-    # @debug_monitor
-    # @pipe_call
+        # raise NotImplementedError("Support for only from_pretrained and from_single_file")
+
+    @debug_monitor
+    @pipe_call
     def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """
         Add a LoRA to the diffusers pipe\n
