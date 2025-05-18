@@ -19,7 +19,7 @@ config_data = JSONCache(CONFIG_PATH_NAMED)
 
 @debug_monitor
 @config_data.decorator
-async def name_save_file_as(extension: str = ".png", data: TextIOWrapper = None) -> str:
+def name_save_file_as(extension: str = ".png", data: TextIOWrapper = None) -> str:
     """
     Construct the file name of a save file\n
     :param extension: The extension of the file
@@ -42,7 +42,7 @@ async def name_save_file_as(extension: str = ".png", data: TextIOWrapper = None)
 
 
 @debug_monitor
-async def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:
+def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:
     """
     Create metadata from active hf inference pipes\n
     :param pipe: Active HuggingFace pipe from diffusers/transformers
@@ -66,7 +66,7 @@ async def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict
 
 
 @debug_monitor
-async def write_image_to_disk(image: PIL, metadata: dict[str], extension: LiteralString = """.png"""):
+def write_image_to_disk(image: PIL, metadata: dict[str], extension: LiteralString = """.png"""):
     """Save image to file"""
     file_path_absolute = name_save_file_as(extension)
     image.save(file_path_absolute, "PNG", pnginfo=metadata)
