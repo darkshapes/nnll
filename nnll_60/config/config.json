@@ -78,35 +78,32 @@
         "constructor": "image"
     },
     "model.dit.stable-diffusion-3": {
-        "repo": "stabilityai/stable-diffusion-3.5-large",
-        "repo_alt": "stabilityai/stable-diffusion-3.5-medium",
+        "repo": [
+            "stabilityai/stable-diffusion-3.5-large",
+            "stabilityai/stable-diffusion-3.5-medium"
+        ],
         "constructor": "image"
     },
     "model.dit.flux-1:dev": {
-        "repo": "black-forest-labs/FLUX.1-dev",
-        "repo_alt": "cocktailpeanut/xulf-d/",
+        "repo": [
+            "black-forest-labs/FLUX.1-dev",
+            "cocktailpeanut/xulf-d/"
+        ],
+        "pipe_name": "FluxPipeline",
         "constructor": "image"
     },
     "model.dit.flux-1:schnell": {
         "repo": "black-forest-labs/FLUX.1-schnell",
+        "pipe_name": "FluxPipeline",
         "repo_alt": "cocktailpeanut/xulf-s/",
         "unet": {},
         "constructor": "image"
     },
     "model.dit.flux-1:lite": {
-        "repo": "Freepik/flux.1-lite-8B",
-        "pipe_name": "FluxPipeline",
-        "defaults": {
-            "num_inference_steps": 28,
-            "guidance_scale": 3.5,
-            "height": 1024,
-            "width": 1024
-        },
-        "torch_dtype": "torch.bfloat16",
-        "constructor": "image"
-    },
-    "model.dit.flux-1:lite": {
-        "repo": "Freepik/F-Lite-Texture",
+        "repo": [
+            "Freepik/flux.1-lite-8B",
+            "Freepik/F-Lite-Texture"
+        ],
         "pipe_name": "FluxPipeline",
         "defaults": {
             "num_inference_steps": 28,

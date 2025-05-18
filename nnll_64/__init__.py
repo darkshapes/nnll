@@ -80,7 +80,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     # pipe, lora, kwargs = factory.add_lora("spo", architecture, pipe, kwargs)
     # pipe, kwargs = techniques.add_slam(pipe, kwargs)
 
-    pipe, kwargs = techniques.euler_a(pipe, kwargs)
+    # pipe, kwargs = techniques.euler_a(pipe, kwargs)
 
     pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
 
