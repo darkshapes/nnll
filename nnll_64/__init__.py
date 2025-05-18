@@ -27,15 +27,26 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     noise_seed = soft_random()
     seed_planter(noise_seed)
     nfo(noise_seed)
-    # seed_planter(noise_seed)
 
-    user_set = {  # needs to be abstracted out still
+    # user_set = {  # needs to be abstracted out still
+    #     "output_type": "pil",
+    #     "num_inference_steps": 30,
+    #     "guidance_scale": 2.5,
+    #     "eta": 1.0,
+    #     "width": 768,
+    #     "height": 1344,
+    # }
+
+    user_set = {
         "output_type": "pil",
+        "noise_seed": noise_seed,
+        "denoising_end": 1.5,
         "num_inference_steps": 30,
         "guidance_scale": 2.5,
         "eta": 1.0,
         "width": 768,
         "height": 1344,
+        "safety_checker": False,
     }
     model_hash = {}
     # import torch
@@ -47,7 +58,7 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     prompt = "aquatic scene, sunken ship, ocean divers, coral, exotic fish"
     negative_prompt = ""
     lora = lora_opt
-    # optimization = "ays"
+    optimization = "ays"
 
     # data_chain = HyperChain()
 
@@ -60,17 +71,20 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
         pipe = pipe_class(model, **pipe_kwargs).to(active_gpu)
     nfo(f"pre-generator Model {model} Lora {lora} Arguments {kwargs} {pipe}")
     if lora:
-        pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe)
+        pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe, kwargs)
 
     pipe.prompt = prompt
     if negative_prompt:
         pipe.prompt += negative_prompt
 
+    # pipe, lora, kwargs = factory.add_lora("spo", architecture, pipe, kwargs)
+    # pipe, kwargs = techniques.add_slam(pipe, kwargs)
+
+    pipe, kwargs = techniques.euler_a(pipe, kwargs)
+
     pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
-    # pipe.generator = torch.Generator(pipe.device).manual_seed(user_set.get("noise_seed", 0))
 
     pipe.to(active_gpu)
-    # generator
     kwargs.update(user_set)
     nfo(f"Pipe {pipe}, Device {pipe.device} - {f'Device {active_gpu}:0' == str(pipe.device)}")
     image = pipe(
@@ -86,81 +100,6 @@ def run_inference(mir_arch: str, lora_opt: list = None) -> None:
     # data_chain.add_block(f"{pipe}{model}{kwargs}")
     disk.write_image_to_disk(image, metadata)
 
-
-# def multiproc(mir_arch):
-#     import torch.multiprocessing as multi
-#     from nnll_01 import nfo
-
-#     # nfo(multi.get_start_method())
-#     multi.set_sharing_strategy("file_system")
-#     multi.set_start_method("fork", force=True)
-#     # nfo(multi.get_start_method())
-#     # lock = multi.Lock()
-#     nfo("starting ctx! ")
-
-#     ctx = multi.Process(target=run_inference, args=(mir_arch,))
-#     ctx.start()
-#     ctx.join()
-
-
-# fork(run_inference, args=(mir_arch), nprocs=0, join=True)
-
-# try:
-#     multi.set_start_method("fork")
-# except (RuntimeError, ValueError):
-
-# multi.set_start_method("spawn")
-# ctx = multi.get_context("spawn")
-# nfo("ctx start method.. ")
-
-# queue = ctx.Queue()
-# queue.put(copy.deepcopy(mir_arch))
-# nfo("starting process ctx !")
-# ctx = multi.Process(target=run_inference, args=(mir_arch,))
-# ctx.start()
-# ctx.join()
-
-
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
-
-
-# """Inferencing"""
-
-# from PIL import PngImagePlugin
-
-# from nnll_08 import soft_random, seed_planter
-# import nnll_53 as mem
-# from nnll_62 import ConstructPipeline
-# import nnll_56 as techniques
-# import nnll_57 as disk_op
-# # import autoencoder as autoencoder
-
-# pipelines = ConstructPipeline()
-
-# noise_seed = soft_random()
-# noise_seed_plot = seed_planter(noise_seed)
-# user_set = {
-#     "output_type": "pil",
-#     "noise_seed": noise_seed,
-#     "denoising_end": 1.5,
-#     "num_inference_steps": 30,
-#     "guidance_scale": 2.5,
-#     "eta": 1.0,
-#     "width": 768,
-#     "height": 1344,
-#     "safety_checker": False,
-# }
-# model = ""
-# vae_file = ""
-# lora_file = None
-# active_gpu = "mps"
-
-# prompt = "sunken ship, ocean divers"
-# negative_prompt = ""
-# architecture = "stable-diffusion-xl-base"
-# # model 1
-# pipe, model, kwargs = pipelines.create_pipeline(architecture)
 
 # # model 2
 # # vae_model = autoencoder.add_vae()
