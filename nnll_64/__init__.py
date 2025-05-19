@@ -4,7 +4,7 @@
 # pylint: disable=import-outside-toplevel
 
 
-def run_inference(mir_arch: str, prompt: str = "", negative_prompt: str = "", lora_opt: list = None, **user_set) -> None:
+def run_inference(mir_arch: str, tx_data: dict, lora_opt: list = None, **user_set) -> None:
     """Dynamially build diffusion process based on model architecture\n
     :param mir_arch: MIR system classifier string
     :param prompt: Instructions to the generative model, defaults to ''
@@ -40,18 +40,21 @@ def run_inference(mir_arch: str, prompt: str = "", negative_prompt: str = "", lo
 
     nfo(f"pre-generator Model {model} Lora {lora_opt} Arguments {kwargs} {pipe}")
 
-    prompt += negative_prompt
+    prompt = tx_data.get("text", "")
+    if tx_data.get("image", 0):
+        kwargs.setdefault("image", tx_data["image"])
 
     pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
     if join:
         pipe.to(first_available())
+
     kwargs.update(user_set)
 
     nfo(f"Pipe {pipe}, Device {pipe.device}")
 
     image = pipe(prompt=prompt, **kwargs).images[0]
 
-    gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt, negative_prompt], kwargs=kwargs)
+    gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
     metadata = PngImagePlugin.PngInfo()
     metadata.add_text("parameters", str(gen_data.get("parameters")))
     disk.write_image_to_disk(image, metadata)
