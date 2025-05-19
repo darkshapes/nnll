@@ -2,7 +2,10 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
+import sys
+import os
 
+sys.path.append(os.getcwd())
 from nnll_01 import debug_monitor
 
 

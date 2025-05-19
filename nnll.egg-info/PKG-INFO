@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev441+g4f0bd75.d20250513
+Version: 0.1.dev478+g2bfbc55.d20250518
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: darkshapes github.com/darkshapes
@@ -16,12 +16,12 @@ Requires-Dist: structlog>=25.2.0; extra == "nnll-01"
 Requires-Dist: viztracer>=1.0.3; extra == "nnll-01"
 Requires-Dist: rich>=13.9.4; extra == "nnll-01"
 Provides-Extra: nnll-02
-Requires-Dist: huggingface-hub>=0.29.3; extra == "nnll-02"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-02"
 Requires-Dist: litellm==1.67.1; extra == "nnll-02"
 Provides-Extra: nnll-03
 Requires-Dist: aiofiles>=24.1.0; extra == "nnll-03"
 Requires-Dist: aiohttp<=3.11.13,>=3.9.5; extra == "nnll-03"
-Requires-Dist: tqdm>=4.67.1; extra == "nnll-03"
+Requires-Dist: tqdm; extra == "nnll-03"
 Provides-Extra: nnll-04
 Requires-Dist: gguf>=0.14.0; extra == "nnll-04"
 Requires-Dist: llama-cpp-python>=0.3.9; extra == "nnll-04"
@@ -33,17 +33,17 @@ Requires-Dist: litellm>=1.65.0; extra == "nnll-06"
 Requires-Dist: ollama>=0.4.7; extra == "nnll-06"
 Requires-Dist: tiktoken>=0.9.0; extra == "nnll-06"
 Provides-Extra: nnll-08
-Requires-Dist: numpy>=2.2.3; extra == "nnll-08"
-Requires-Dist: torch>=2.6.0; extra == "nnll-08"
+Requires-Dist: numpy>=2.2.5; extra == "nnll-08"
+Requires-Dist: torch>=2.7.0; extra == "nnll-08"
 Provides-Extra: nnll-09
 Requires-Dist: torch>=2.7.0; extra == "nnll-09"
 Requires-Dist: torchvision>=0.22.0; extra == "nnll-09"
-Requires-Dist: transformers>=4.49.0; extra == "nnll-09"
+Requires-Dist: transformers>=4.51.3; extra == "nnll-09"
 Provides-Extra: nnll-11
 Requires-Dist: dspy>=2.6.13; extra == "nnll-11"
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-11"
 Provides-Extra: nnll-12
-Requires-Dist: textual[syntax]>=2.1.2; extra == "nnll-12"
+Requires-Dist: textual[syntax]>=3.1.1; extra == "nnll-12"
 Requires-Dist: networkx>=3.4.2; extra == "nnll-12"
 Requires-Dist: tree-sitter>=0.24.0; extra == "nnll-12"
 Provides-Extra: nnll-13
@@ -52,10 +52,10 @@ Requires-Dist: textual-plotext>=1.0.1; extra == "nnll-13"
 Provides-Extra: nnll-14
 Requires-Dist: matplotlib>=3.10.1; extra == "nnll-14"
 Requires-Dist: networkx>=3.4.2; extra == "nnll-14"
-Requires-Dist: textual>=2.1.2; extra == "nnll-14"
+Requires-Dist: textual[syntax]>=3.1.1; extra == "nnll-14"
 Requires-Dist: tree-sitter>=0.24.0; extra == "nnll-14"
 Provides-Extra: nnll-15
-Requires-Dist: huggingface-hub[hf-transfer]>=0.29.1; extra == "nnll-15"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-15"
 Requires-Dist: ollama>=0.4.7; extra == "nnll-15"
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-15"
 Provides-Extra: nnll-16
@@ -67,9 +67,9 @@ Requires-Dist: torch>=2.7.0; extra == "nnll-26"
 Provides-Extra: nnll-36
 Requires-Dist: torch>=2.7.0; extra == "nnll-36"
 Provides-Extra: nnll-44
-Requires-Dist: huggingface-hub[hf-transfer]>=0.29.1; extra == "nnll-44"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-44"
 Provides-Extra: nnll-45
-Requires-Dist: huggingface-hub[hf-transfer]>=0.29.1; extra == "nnll-45"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-45"
 Provides-Extra: nnll-47
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-47"
 Requires-Dist: pydantic-core>=2.27.2; extra == "nnll-47"
@@ -83,14 +83,16 @@ Requires-Dist: hidiffusion>=0.1.10; extra == "nnll-56"
 Requires-Dist: torch>=2.7.0; extra == "nnll-56"
 Requires-Dist: torchvision>=0.22.0; extra == "nnll-56"
 Provides-Extra: nnll-62
-Requires-Dist: transformers>=4.49.0; extra == "nnll-62"
+Requires-Dist: accelerate>=1.6.0; extra == "nnll-62"
 Requires-Dist: diffusers>=0.32.2; extra == "nnll-62"
+Requires-Dist: peft>=0.15.2; extra == "nnll-62"
+Requires-Dist: sentencepiece>=0.2.0; extra == "nnll-62"
 Requires-Dist: torch>=2.7.0; extra == "nnll-62"
 Requires-Dist: torchvision>=0.22.0; extra == "nnll-62"
-Requires-Dist: accelerate; extra == "nnll-62"
-Requires-Dist: peft; extra == "nnll-62"
+Requires-Dist: transformers>=4.51.3; extra == "nnll-62"
 Provides-Extra: nnll-64
 Requires-Dist: pillow>=11.1.0; extra == "nnll-64"
+Requires-Dist: protobuf>=6.31.0; extra == "nnll-64"
 Provides-Extra: all
 Requires-Dist: nnll[nnll_01]; extra == "all"
 Requires-Dist: nnll[nnll_02]; extra == "all"
@@ -132,7 +134,7 @@ Dynamic: license-file
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll <br><sub>neural network link library: flexible blocks for building tomorrows multimodal software</sub>
+# nnll <br><sub>neural network link library: Flexible code blocks for tomorrows multimodal software.</sub>
 
 `nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs).  It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
 

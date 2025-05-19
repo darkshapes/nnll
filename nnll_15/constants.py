@@ -199,6 +199,7 @@ VALID_TASKS = {
         ("text", "text"): ["llm"],
     },
     LibType.HUB: {
+        ("text", "image"): ["Kolors", "image-generation"],
         ("image", "text"): ["image-generation", "image-text-to-text", "visual-question-answering"],
         ("text", "text"): ["chat", "conversational", "text-generation", "text2text-generation"],
         ("text", "video"): ["video generation"],

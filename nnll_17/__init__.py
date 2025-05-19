@@ -1,6 +1,9 @@
 ### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
+import sys
+import os
 
+sys.path.append(os.getcwd())
 from nnll_01 import nfo
 from nnll_60 import JSONCache, HASH_PATH_NAMED
 
