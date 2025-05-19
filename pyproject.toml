@@ -68,7 +68,10 @@ nnll-62 = [
     "torchvision>=0.22.0",
     "transformers>=4.51.3",
 ]
-nnll-64 = ["pillow>=11.1.0"]
+nnll-64 = [
+    "pillow>=11.1.0",
+    "protobuf>=6.31.0",
+]
 all = [
     "nnll[nnll_01]",
     "nnll[nnll_02]",

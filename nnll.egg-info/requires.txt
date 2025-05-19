@@ -43,7 +43,7 @@ viztracer>=1.0.3
 rich>=13.9.4
 
 [nnll-02]
-huggingface-hub[hf-transfer]>=0.29.3
+huggingface-hub[hf-transfer,hf_xet]>=0.30.2
 litellm==1.67.1
 
 [nnll-03]
@@ -93,7 +93,7 @@ textual[syntax]>=3.1.1
 tree-sitter>=0.24.0
 
 [nnll-15]
-huggingface-hub[hf-transfer]>=0.29.3
+huggingface-hub[hf-transfer,hf_xet]>=0.30.2
 ollama>=0.4.7
 pydantic>=2.10.6
 
@@ -110,10 +110,10 @@ torch>=2.7.0
 torch>=2.7.0
 
 [nnll-44]
-huggingface-hub[hf-transfer]>=0.29.3
+huggingface-hub[hf-transfer,hf_xet]>=0.30.2
 
 [nnll-45]
-huggingface-hub[hf-transfer]>=0.29.3
+huggingface-hub[hf-transfer,hf_xet]>=0.30.2
 
 [nnll-47]
 pydantic>=2.10.6
@@ -142,3 +142,4 @@ transformers>=4.51.3
 
 [nnll-64]
 pillow>=11.1.0
+protobuf>=6.31.0

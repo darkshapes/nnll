@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev469+g490d5e8.d20250518
+Version: 0.1.dev478+g2bfbc55.d20250518
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: darkshapes github.com/darkshapes
@@ -16,7 +16,7 @@ Requires-Dist: structlog>=25.2.0; extra == "nnll-01"
 Requires-Dist: viztracer>=1.0.3; extra == "nnll-01"
 Requires-Dist: rich>=13.9.4; extra == "nnll-01"
 Provides-Extra: nnll-02
-Requires-Dist: huggingface-hub[hf-transfer]>=0.29.3; extra == "nnll-02"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-02"
 Requires-Dist: litellm==1.67.1; extra == "nnll-02"
 Provides-Extra: nnll-03
 Requires-Dist: aiofiles>=24.1.0; extra == "nnll-03"
@@ -55,7 +55,7 @@ Requires-Dist: networkx>=3.4.2; extra == "nnll-14"
 Requires-Dist: textual[syntax]>=3.1.1; extra == "nnll-14"
 Requires-Dist: tree-sitter>=0.24.0; extra == "nnll-14"
 Provides-Extra: nnll-15
-Requires-Dist: huggingface-hub[hf-transfer]>=0.29.3; extra == "nnll-15"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-15"
 Requires-Dist: ollama>=0.4.7; extra == "nnll-15"
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-15"
 Provides-Extra: nnll-16
@@ -67,9 +67,9 @@ Requires-Dist: torch>=2.7.0; extra == "nnll-26"
 Provides-Extra: nnll-36
 Requires-Dist: torch>=2.7.0; extra == "nnll-36"
 Provides-Extra: nnll-44
-Requires-Dist: huggingface-hub[hf-transfer]>=0.29.3; extra == "nnll-44"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-44"
 Provides-Extra: nnll-45
-Requires-Dist: huggingface-hub[hf-transfer]>=0.29.3; extra == "nnll-45"
+Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-45"
 Provides-Extra: nnll-47
 Requires-Dist: pydantic>=2.10.6; extra == "nnll-47"
 Requires-Dist: pydantic-core>=2.27.2; extra == "nnll-47"
@@ -92,6 +92,7 @@ Requires-Dist: torchvision>=0.22.0; extra == "nnll-62"
 Requires-Dist: transformers>=4.51.3; extra == "nnll-62"
 Provides-Extra: nnll-64
 Requires-Dist: pillow>=11.1.0; extra == "nnll-64"
+Requires-Dist: protobuf>=6.31.0; extra == "nnll-64"
 Provides-Extra: all
 Requires-Dist: nnll[nnll_01]; extra == "all"
 Requires-Dist: nnll[nnll_02]; extra == "all"

@@ -18,9 +18,11 @@
         "defaults": {
             "height": 1024,
             "width": 1024,
-            "guidance_scale": 4.0,
+            "guidance_scale": 3.5,
+            "num_images_per_prompt": 1,
             "num_inference_steps": 50
         },
+        "pipe_name": "CogView4Pipeline",
         "torch_dtype": "torch.bfloat16",
         "constructor": "image"
     },
@@ -77,9 +79,42 @@
         },
         "constructor": "image"
     },
-    "model.dit.stable-diffusion-3": {
+    "model.dit.stable-diffusion-3:medium": {
+        "repo": "stabilityai/stable-diffusion-3.5-medium",
+        "repo_alt": "https://huggingface.co/adamo1139/stable-diffusion-3.5-medium-ungated",
+        "pipe_name": "StableDiffusion3Pipeline",
+        "defaults": {
+            "num_inference_steps": 40,
+            "guidance_scale": 4.5
+        },
+        "constructor": "image"
+    },
+    "model.dit.stable-diffusion-3:large": {
         "repo": "stabilityai/stable-diffusion-3.5-large",
-        "repo_alt": "stabilityai/stable-diffusion-3.5-medium",
+        "repo_alt": "https://huggingface.co/adamo1139/stable-diffusion-3.5-large-ungated",
+        "pipe_name": "StableDiffusion3Pipeline",
+        "defaults": {
+            "num_inference_steps": 28,
+            "guidance_scale": 3.5
+        },
+        "constructor": "image"
+    },
+    "model.dit.stable-diffusion-3:alchemist-large": {
+        "repo": "yandex/stable-diffusion-3.5-large-alchemist",
+        "pipe_name": "StableDiffusion3Pipeline",
+        "defaults": {
+            "num_inference_steps": 28,
+            "guidance_scale": 3.5
+        },
+        "constructor": "image"
+    },
+    "model.dit.stable-diffusion-3:alchemist-medium": {
+        "repo": "yandex/stable-diffusion-3.5-medium-alchemist",
+        "pipe_name": "StableDiffusion3Pipeline",
+        "defaults": {
+            "num_inference_steps": 40,
+            "guidance_scale": 4.5
+        },
         "constructor": "image"
     },
     "model.dit.flux-1:dev": {
@@ -157,7 +192,7 @@
         "stable-diffusion-3": {
             "repo": "jasperai/flash-sd3"
         },
-        "stable-diffusion": {
+        "stable-diffusion-1": {
             "repo": "jasperai/flash-sd",
             "defaults": {
                 "num_inference_steps": 4,
@@ -178,7 +213,7 @@
             "repo": "ByteDance/Hyper-SD",
             "fuse": 0.125
         },
-        "stable-diffusion": {
+        "stable-diffusion-1": {
             "repo": "ByteDance/Hyper-SD"
         }
     },
@@ -200,7 +235,7 @@
         "vega": {
             "repo": "segmind/Segmind-VegaRT"
         },
-        "stable-diffusion": {
+        "stable-diffusion-1": {
             "repo": "latent-consistency/lcm-lora-sdv1-5"
         }
     },
@@ -217,7 +252,7 @@
         "stable-diffusion-xl:base": {
             "repo": "wangfuyun/PCM_Weights"
         },
-        "stable-diffusion": {
+        "stable-diffusion-1": {
             "repo": "wangfuyun/PCM_Weights"
         }
     },
@@ -233,7 +268,7 @@
                 "guidance_scale": 1
             }
         },
-        "stable-diffusion": {
+        "stable-diffusion-1": {
             "repo": "alimama-creative/slam-sd1.5"
         }
     },
@@ -244,7 +279,7 @@
                 "guidance_scale": 5.0
             }
         },
-        "stable-diffusion": {
+        "stable-diffusion-1": {
             "repo": "SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA",
             "defaults": {
                 "guidance_scale": 7.5
@@ -262,7 +297,7 @@
                 "eta": 0.3
             }
         },
-        "stable-diffusion": {
+        "stable-diffusion-1": {
             "repo": "h1t/TCD-SD15-LoRA"
         }
     },
