@@ -123,21 +123,18 @@ class ChatMachineWithMemory(dspy.Module):
     async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
         """
         Forward pass for LLM Chat process\n
-        :param model: The library-specific arguments for the model configuration
-        :param message: A simple string to send to the LLM
         :param tx_data: prompt transmission values for all media formats
         :param model: path to model
         :param library: LibType of model origin
         :param streaming: output type flag, defaults to True
         :yield: responses in chunks or response as a single block
         """
-        # from httpx import ResponseNotRead
+        from httpx import ResponseNotRead
 
         dbug(f"libtype hub req : {vars(self.completion)} {model} {library}")
-        # nfo(streaming)
         try:
             api_kwargs = await get_api(model=model, library=library)
-        except ValueError as error_log:
+        except (ValueError, ResponseNotRead) as error_log:
             nfo(f"Library '{library}' not found in configuration.")
             dbug(error_log)
             yield {
@@ -148,17 +145,19 @@ class ChatMachineWithMemory(dspy.Module):
         else:
             model = dspy.LM(**api_kwargs)
             dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-            # try:
             yield self.completion(message=tx_data["text"], stream=streaming)
-        # except (GeneratorExit, RuntimeError, AttributeError, ResponseNotRead, ValueError) as error_log:
-        #     dbug(error_log)  # consider threading user selection between cursor jumps
-        # # except TypeError as error_log:
-        #     dbug(error_log)
 
-    def forward_hub(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=False) -> None:
-        # api_kwargs = await get_api(model=model, library=library)
-        from nnll_05 import lookup_function_for
+    def forward_hub(self, tx_data: dict[str | list[float]], model: str, library: LibType) -> None:
+        """Forward pass for non-streaming processes\n
+        :param tx_data: prompt transmission values for all media formats
+        :param model: path to model
+        :param library: LibType of model origin
+        :param streaming: output type flag, defaults to False
+        """
+        if library == LibType.HUB:
+            # api_kwargs = await get_api(model=model, library=library)
+            from nnll_05 import lookup_function_for
 
-        constructor, mir_arch = lookup_function_for(model)
-        dbug(constructor, mir_arch)
-        constructor(mir_arch)
+            constructor, mir_arch = lookup_function_for(model)
+            dbug(constructor, mir_arch)
+            constructor(mir_arch, tx_data)

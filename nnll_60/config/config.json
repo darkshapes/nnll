@@ -48,9 +48,11 @@
             "height": 1024,
             "width": 1024,
             "guidance_scale": 4.0,
-            "num_inference_steps": 50
+            "num_inference_steps": 50,
+            "cfg_trunc_ratio": 0.25,
+            "cfg_normalization": true
         },
-        "pipe_name": "Lumina2Text2ImgPipeline",
+        "pipe_name": "Lumina2Pipeline",
         "pipe_kwargs": {
             "torch_dtype": "torch.bfloat16"
         },
@@ -134,6 +136,36 @@
         },
         "pipe_kwargs": {
             "torch_dtype": "torch.bfloat16"
+        },
+        "constructor": "image"
+    },
+    "model.dit.flux-1:shuttle-3.1-aesthetic": {
+        "repo": "shuttleai/shuttle-3.1-aesthetic",
+        "pipe_name": "DiffusionPipeline",
+        "pipe_kwargs": {
+            "torch_dtype": "torch.bfloat16"
+        },
+        "defaults": {
+            "height": 1024,
+            "width": 1024,
+            "guidance_scale": 3.5,
+            "num_inference_steps": 4,
+            "max_sequence_length": 256
+        },
+        "constructor": "image"
+    },
+    "model.dit.flux-1:shuttle-3": {
+        "repo": "shuttleai/shuttle-3-diffusion",
+        "pipe_name": "DiffusionPipeline",
+        "pipe_kwargs": {
+            "torch_dtype": "torch.bfloat16"
+        },
+        "defaults": {
+            "height": 1024,
+            "width": 1024,
+            "guidance_scale": 3.5,
+            "num_inference_steps": 4,
+            "max_sequence_length": 256
         },
         "constructor": "image"
     },
