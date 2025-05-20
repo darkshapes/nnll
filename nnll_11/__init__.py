@@ -153,6 +153,7 @@ class ChatMachineWithMemory(dspy.Module):
         """Forward pass for non-streaming processes\n
         :param tx_data: prompt transmission values for all media formats
         :param model: path to model # this will need to accept multiple models
+
         :param library: LibType of model origin
         :param streaming: output type flag, defaults to False
         """
@@ -165,3 +166,4 @@ class ChatMachineWithMemory(dspy.Module):
             # generator = dspy.asyncify(constructor)
             # self.completion = dspy.streamify(generator)
             constructor(mir_arch, tx_data, out_type)
+

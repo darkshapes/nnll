@@ -89,6 +89,7 @@
         },
         "constructor": "image"
     },
+
     "model.unet.playground-2.5:aesthetic": {
         "repo": "playgroundai/playground-v2.5-1024px-aesthetic",
         "pipe_name": "DiffusionPipeline",

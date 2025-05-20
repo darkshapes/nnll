@@ -4,6 +4,7 @@
 # pylint: disable=import-outside-toplevel
 
 
+
 def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = None, **user_set) -> None:
     """Dynamially build diffusion process based on model architecture\n
     :param mir_arch: MIR system classifier string
