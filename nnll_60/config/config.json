@@ -89,6 +89,20 @@
         },
         "constructor": "image"
     },
+
+    "model.unet.playground-2.5:aesthetic": {
+        "repo": "playgroundai/playground-v2.5-1024px-aesthetic",
+        "pipe_name": "DiffusionPipeline",
+        "pipe_kwargs": {
+            "torch_dtype": "torch.float16",
+            "variant": "fp16"
+        },
+        "defaults": {
+            "num_inference_steps": 50,
+            "guidance_scale": 3
+        },
+        "constructor": "image"
+    },
     "model.dit.stable-diffusion-3:medium": {
         "repo": "stabilityai/stable-diffusion-3.5-medium",
         "repo_alt": "https://huggingface.co/adamo1139/stable-diffusion-3.5-medium-ungated",
@@ -98,7 +112,7 @@
             "guidance_scale": 4.5
         },
         "pipe_kwargs": {
-            "torch_dtype": "torch.bfloat16"
+            "torch_dtype": "torch.float16"
         },
         "constructor": "image"
     },
@@ -111,7 +125,7 @@
             "guidance_scale": 3.5
         },
         "pipe_kwargs": {
-            "torch_dtype": "torch.bfloat16"
+            "torch_dtype": "torch.float16"
         },
         "constructor": "image"
     },
@@ -170,7 +184,7 @@
         "constructor": "image"
     },
     "model.dit.flux-1:dev": {
-        "repo": "black-forest-labs/FLUX.1-dev",
+        "repo": "black-forest-labs/flux.1-dev",
         "repo_alt": "cocktailpeanut/xulf-d/",
         "pipe_name": "FluxPipeline",
         "defaults": {
@@ -186,7 +200,7 @@
         "constructor": "image"
     },
     "model.dit.flux-1:schnell": {
-        "repo": "black-forest-labs/FLUX.1-schnell",
+        "repo": "black-forest-labs/flux.1-schnell",
         "pipe_name": "FluxPipeline",
         "repo_alt": "cocktailpeanut/xulf-s/",
         "unet": {},
@@ -215,6 +229,36 @@
         },
         "constructor": "image"
     },
+    "model.dit.auraflow": {
+        "repo": "fal/AuraFlow-v0.3",
+        "repo_alt": "fal/AuraFlow-v0.2",
+        "repo_alt_2": "fal/AuraFlow",
+        "pipe_name": "AuraFlowPipeline",
+        "defaults": {
+            "width": 1536,
+            "height": 768,
+            "num_inference_steps": 50,
+            "guidance_scale": 3.5
+        },
+        "constructor": "image"
+    },
+    "model.dit.hunyuandit": {
+        "repo": "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers",
+        "pipe_name": "HunyuanDiTPipeline",
+        "pipe_kwargs": {
+            "num_inference_steps": 50,
+            "guidance_scale": 6
+        },
+        "constructor": "image"
+    },
+    "model.dit.hunyuandit:distilled": {
+        "repo": "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers-Distilled",
+        "pipe_name": "HunyuanDiTPipeline",
+        "pipe_kwargs": {
+            "num_inference_steps": 25
+        },
+        "constructor": "image"
+    },
     "model.dit.pixart-sigma": {
         "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
         "pipe_name": "PixArtSigmaPipeline",
@@ -223,6 +267,34 @@
             "use_safetensors": true
         },
         "constructor": "image"
+    },
+    "model.transformer.phi-4": {
+        "repo": "microsoft/Phi-4-multimodal-instruct",
+        "pipe_name": "AutoModelForCausalLM",
+        "pipe_kwargs": {
+            "torch_dtype": "torch.bfloat16"
+        },
+        "constructor": "text"
+    },
+    "model.transformer.lumina-mgpt": {
+        "repo": "Alpha-VLLM/Lumina-mGPT-7B-768",
+        "pipe_name": "FlexARInferenceSolver",
+        "pipe_kwargs": {
+            "model_path": "Alpha-VLLM/Lumina-mGPT-7B-768",
+            "precision": "bf16",
+            "target_size": 768
+        },
+        "defaults": {
+            "images": [],
+            "qas": [
+                [
+                    "q1",
+                    null
+                ]
+            ],
+            "max_gen_len": 8192,
+            "temperature": 1.0
+        }
     },
     "model.lora.dmd": {
         "solver": "LCMScheduler",

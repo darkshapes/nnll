@@ -204,5 +204,6 @@ VALID_TASKS = {
         ("text", "text"): ["chat", "conversational", "text-generation", "text2text-generation"],
         ("text", "video"): ["video generation"],
         ("speech", "text"): ["speech-translation", "speech-summarization", "automatic-speech-recognition"],
+        ("image", "video"): ["reference-to-video", "refernce-to-video"],
     },
 }

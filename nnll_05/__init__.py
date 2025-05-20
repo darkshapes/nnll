@@ -28,7 +28,7 @@ def lookup_function_for(known_repo: str, data: dict = None, delimiter=".") -> st
     mir_data = data
     mir_arch = next(key for key, value in mir_data.items() if known_repo in value.get("repo"))
     map_entry = mir_data[mir_arch].get("constructor", "")
-    run_map = {"image": "nnll_64.run_inference", "speech": "", "text": ""}
+    run_map = {"image": "nnll_64.run_inference", "speech": "", "text": "nnll_64.run_inference"}
     sequence = run_map.get(map_entry)
     nfo(f"lookup result : {mir_arch}, {sequence}")
 

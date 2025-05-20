@@ -26,6 +26,8 @@ def first_available(processor: str = None) -> Callable:
             "cpu",
         )
     nfo(f"highest available torch device: {processor}")
+    if processor == "mps":
+        torch.mps.set_per_process_memory_fraction(1.7)
     return torch.device(processor)
 
 

@@ -36,13 +36,12 @@ class ConstructPipeline:
     @pipe_call
     def create_pipeline(self, architecture: str, *args, join: bool = True, **kwargs):
         """
-        Build a diffusers pipe based on model type\n
+        Build an inference pipe based on model type\n
         :param architecture: Identifier of model architecture
         :param call: Return the pipe components or the called function, defaults to False
         :return: `tuple` constructed pipe, model/repo name, and default settings
         """
         import os
-        import diffusers
 
         @config_file.decorator
         def _read_data(data: dict = None):
@@ -56,12 +55,19 @@ class ConstructPipeline:
         repo = None
         if not repo:
             repo = arch_data.get("repo")
-        pipe_class = getattr(diffusers, arch_data["pipe_name"])
+
+        if arch_data["constructor"] == "image":
+            import diffusers as pkg
+        else:
+            import transformers as pkg
+        pipe_class = getattr(pkg, arch_data["pipe_name"])
+
         pipe_kwargs = arch_data.get("pipe_kwargs", {})
         pipe_kwargs.update(kwargs)
+        # do a spec check
+        # _attn_implementation='flash_attention_2',
         settings = arch_data.get("defaults", {})
         kwargs.update(settings)
-
         if join:
             if os.path.isfile(repo):
                 pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
@@ -78,11 +84,10 @@ class ConstructPipeline:
     @pipe_call
     def add_lora(self, lora, architecture, pipe, *args, **kwargs):
         """
-        Add a LoRA to the diffusers pipe\n
+        Add a LoRA to the pipe\n
         :return: `tuple` constructed pipe, model/repo name, and default settings
         """
         import os
-        import diffusers
         from pathlib import Path
 
         @config_file.decorator
@@ -95,8 +100,12 @@ class ConstructPipeline:
 
         arch_data = lora_data.get(Path(architecture).suffix[1:])
         solver = lora_data.get("solver")
+        if construct[architecture].get("constructor") == "image":
+            import diffusers as pkg
+        else:
+            import transformers as pkg
         if solver:
-            scheduler_class = getattr(diffusers, solver)
+            scheduler_class = getattr(pkg, solver)
             pipe.scheduler = scheduler_class(lora_data.get("solver_kwargs"))
         # repo = arch_data.get("local")
         repo = None

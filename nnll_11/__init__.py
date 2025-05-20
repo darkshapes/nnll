@@ -38,6 +38,7 @@ class QASignature(dspy.Signature):
     f"""{bqa_sysprompt}"""
 
     message: str = dspy.InputField(desc="The message to respond to")
+    # history: dspy.History = dspy.InputField()
     answer = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
 
 
@@ -145,12 +146,14 @@ class ChatMachineWithMemory(dspy.Module):
         else:
             model = dspy.LM(**api_kwargs)
             dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-            yield self.completion(message=tx_data["text"], stream=streaming)
+            #        history = dspy.History(messages=[{"question":tx_data["text"], "answer":last_answer}
+            yield self.completion(message=tx_data["text"], stream=streaming)  # history=history)
 
-    def forward_hub(self, tx_data: dict[str | list[float]], model: str, library: LibType) -> None:
+    def forward_hub(self, tx_data: dict[str | list[float]], model: str, library: LibType, out_type: str = "image") -> None:
         """Forward pass for non-streaming processes\n
         :param tx_data: prompt transmission values for all media formats
-        :param model: path to model
+        :param model: path to model # this will need to accept multiple models
+
         :param library: LibType of model origin
         :param streaming: output type flag, defaults to False
         """
@@ -160,4 +163,7 @@ class ChatMachineWithMemory(dspy.Module):
 
             constructor, mir_arch = lookup_function_for(model)
             dbug(constructor, mir_arch)
-            constructor(mir_arch, tx_data)
+            # generator = dspy.asyncify(constructor)
+            # self.completion = dspy.streamify(generator)
+            constructor(mir_arch, tx_data, out_type)
+
