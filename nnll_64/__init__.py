@@ -45,9 +45,9 @@ def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = 
         pipe.to(first_available())
 
     prompt = tx_data.get("text", "")
-    if tx_data.get("image", 0):
-        kwargs.setdefault("images", tx_data["image"])
-    if tx_data.get("speech", 0):
+    # if tx_data.get("image", 0):
+    #     kwargs.setdefault("images", tx_data["image"])
+    if out_type == "speech":
         from transformers import AutoProcessor, GenerationConfig
 
         user = "<|user|>"
