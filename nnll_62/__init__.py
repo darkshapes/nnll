@@ -100,7 +100,7 @@ class ConstructPipeline:
 
         arch_data = lora_data.get(Path(architecture).suffix[1:])
         solver = lora_data.get("solver")
-        if arch_data["constructor"] == "image":
+        if construct[architecture].get("constructor") == "image":
             import diffusers as pkg
         else:
             import transformers as pkg
