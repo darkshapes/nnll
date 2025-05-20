@@ -4,7 +4,7 @@
 # pylint: disable=import-outside-toplevel
 
 
-def run_inference(mir_arch: str, tx_data: dict, lora_opt: list = None, **user_set) -> None:
+def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = None, **user_set) -> None:
     """Dynamially build diffusion process based on model architecture\n
     :param mir_arch: MIR system classifier string
     :param prompt: Instructions to the generative model, defaults to ''
@@ -40,24 +40,40 @@ def run_inference(mir_arch: str, tx_data: dict, lora_opt: list = None, **user_se
 
     nfo(f"pre-generator Model {model} Lora {lora_opt} Arguments {kwargs} {pipe}")
 
-    prompt = tx_data.get("text", "")
-    if tx_data.get("image", 0):
-        kwargs.setdefault("image", tx_data["image"])
-
-    pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
     if join:
         pipe.to(first_available())
 
-    kwargs.update(user_set)
+    prompt = tx_data.get("text", "")
+    if tx_data.get("image", 0):
+        kwargs.setdefault("images", tx_data["image"])
+    if tx_data.get("speech", 0):
+        from transformers import AutoProcessor, GenerationConfig
 
-    nfo(f"Pipe {pipe}, Device {pipe.device}")
+        user = "<|user|>"
+        audio_token = "<|audio_1|>"
+        assistant = "<|assistant|>"
+        suffix = "<|end|>"
+        prompt = f"{user}{audio_token}{tx_data.get('text', '')}{suffix}{assistant}"
+        processor = AutoProcessor.from_pretrained(model)
+        kwargs.setdefault("inputs", processor(text=prompt, audios=tx_data["speech"], return_tensors="pt"))
+        kwargs.setdefault("generation_config", GenerationConfig.from_pretrained(model, "generation_config.json"))
+        kwargs.setdefault("max_new_tokens", 1200)
+        kwargs.update(user_set)
+        generate_ids = model.generate(**kwargs)
+        generate_ids = generate_ids[:, kwargs["inputs"].shape[1] :]
 
-    image = pipe(prompt=prompt, **kwargs).images[0]
+        response = processor.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+        nfo(response)
+    else:
+        pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
+        kwargs.update(user_set)
+        nfo(f"Pipe {pipe}, Device {pipe.device}")
+        image = pipe(prompt=prompt, **kwargs).images[0]
+        gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
+        metadata = PngImagePlugin.PngInfo()
+        metadata.add_text("parameters", str(gen_data.get("parameters")))
+        disk.write_image_to_disk(image, metadata)
 
-    gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
-    metadata = PngImagePlugin.PngInfo()
-    metadata.add_text("parameters", str(gen_data.get("parameters")))
-    disk.write_image_to_disk(image, metadata)
     # from nnll_61 import HyperChain
     # data_chain = HyperChain()
     # data_chain.add_block(f"{pipe}{model}{kwargs}")

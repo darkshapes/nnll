@@ -1,7 +1,7 @@
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll <br><sub>neural network link library: Flexible code blocks for tomorrows multimodal software.</sub>
+# nnll <br><sub>neural network link library: Flexible code for multimodal AI apps</sub>
 
 `nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs).  It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
 
