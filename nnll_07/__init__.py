@@ -2,18 +2,17 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 
+import urllib.parse
 from collections import defaultdict
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Callable, Optional, Any, Dict, Union, List, Generic, TypeVar
-import urllib.parse
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
+
+from pydantic import create_model
+
 from nnll_01 import debug_monitor
 
 T = TypeVar("T")
-
-from pydantic import create_model
-from typing import Dict, Any, Union
-from dataclasses import asdict
 
 
 @dataclass
@@ -28,13 +27,13 @@ class Info:
     :param weight_map: Remote location of the weight map for the model
     """
 
-    dep_pkg: Optional[List[str]] = None
-    module_path: Optional[List[str]] = None
-    gen_kwargs: Optional[Dict[str, Union[float, int, Dict[str, int | str], Callable]]] = None
-    init_kwargs: Optional[Dict[str, Union[float, int, Dict[str, int | str], Callable]]] = None
-    layer_256: Optional[List[str]] = None
-    repo: Optional[str] = None
-    solver_kwargs: Optional[Dict[str, Union[float, int, Dict[str, int | str], Callable]]] = None
+    gen_kwargs: Optional[Dict[str, Any]] = None
+    init_kwargs: Optional[Dict[str, Any]] = None
+    layer_256: Optional[List[str] | None] = None
+    module_alt: Optional[List[str] | None] = None
+    repo: Optional[str | None] = None
+    repo_alt: Optional[List[str] | None] = None
+    solver_kwargs: Optional[Dict[str, Any]] = None
     tasks: Optional[List[str]] = None
     weight_map: Optional[urllib.parse.ParseResult] = None
 
@@ -56,6 +55,7 @@ class Ops:
     """
 
     init_kwargs: Optional[Dict[str, int | str | float | list]] = None
+    solver_kwargs: Optional[Dict[str, Any]] = None
     gen_kwargs: Optional[Dict[str, int | str | float | list]] = None
     dep_pkg: Optional[List[str]] = None
     module_path: Optional[List[str]] = None
@@ -90,7 +90,7 @@ class Dev:
     Varying local neural network layers, in-training, pre-release, items under evaluation, likely in unexpected formats\n
     """
 
-    dependency_pkg: Optional[list[str]] = None
+    dep_pkg: Optional[list[str]] = None
     dtype: Optional[str] = None
     file_256: Optional[str] = None
     file_ext: Optional[str] = None
@@ -102,26 +102,68 @@ class Dev:
     layer_type: Optional[str] = None
     lora_kwargs: Optional[str] = None
     module_path: Optional[list[str]] = None
-    pipe_kwargs: Optional[Dict[str, Union[float, int, Callable]]] = None
+    init_kwargs: Optional[Dict[str, Union[float, int, Callable]]] = None
     repo: Optional[str] = None
     solver_kwargs: Optional[Dict[str, Union[float, int, Callable]]] = None
     tasks: Optional[List[str]] = None
     weight_map: Optional[urllib.parse.ParseResult] = None
-
-    # layer_256: Optional[str] = None
-    # tasks: Optional[List[str]] = None
-    # weight_map: Optional[urllib.parse.ParseResult] = None
-    # gen_kwargs: Optional[dict[str, Union[float, int, Callable]]] = None
-    # solver_kwargs: Optional[dict[str, Union[float, int, Callable]]] = None
     # :param stage: Where item fits in a chain
 
 
-def build_model(fields: Dict[str, Any]):
-    """Dynamically create `Compatability` class attributes\n
-    :param fields: Title of the field in `Compatibility`
+def add_mir_fields(domain: str, **kwargs):
+    """Build MIR dataclasses for each domain type\n
+    :param domain: Class type field constructor
+    :raises ValueError: An invalid domain type was entered
+    :return: A class of the designated type constructed with all fields added
     """
-    field = {fields: (Union[Info, Model, Ops, Dev], ...)}
-    return create_model("Compatibility", **field)
+    if domain.lower() == "info":
+        return Info(**{k: v for k, v in kwargs.items() if k in Info.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
+    elif domain.lower() == "model":
+        return Model(**{k: v for k, v in kwargs.items() if k in Model.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
+    elif domain.lower() == "ops":
+        return Ops(**{k: v for k, v in kwargs.items() if k in Ops.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
+    elif domain.lower() == "dev":
+        return Dev(**{k: v for k, v in kwargs.items() if k in Dev.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
+    raise ValueError(f"Unsupported domain: {domain}")
+
+
+def build_comp(comp: str, domain: str, kwargs: dict) -> Callable:
+    """Create a dynamic Compatibility class and return the defined class object with a flattening function\n
+    :param comp: Name for the class field (and subsequent flattened `key`)
+    :param domain: Class type for the `value` data
+    :param kwargs: Key/value data pairs within `value`
+    :return: A Compatibility object with `comp` name mapped to `kwargs` data
+    """
+    data = {
+        comp: add_mir_fields(domain=domain, **kwargs),
+    }
+    field = {
+        comp: (Union[Info, Model, Ops, Dev], ...),
+    }
+    module_key = "[init]"
+    import_modules = ["dep_pkg", "module_path", "module_i2i", "module_inpaint"]
+    for module in import_modules:
+        if module in kwargs:
+            value = kwargs.pop(module)
+            if value is not None:
+                data.get(module_key, data.setdefault(module_key, {module: value})).update(module=value)
+                field.setdefault(
+                    module_key,
+                    (Dict[str, Union[List[str] | None]], ...),
+                )
+    DynamicModel = create_model("Compatibility", **field)  # pylint: disable=invalid-name
+
+    class Compatibility(DynamicModel):  # pylint: disable=too-few-public-methods
+        """Dynamically created model attributes (to create key structure)"""
+
+        def to_dict(self, _) -> Dict[str, Any]:
+            """Flatten the Compatibility class structure\n
+            :return: A dictionary of the structure
+            """
+            setattr(self, comp, asdict(getattr(self, comp)))  # add the data to an attribute if its not already made
+            return {key: value for key, value in self.__dict__.items() if value is not None}
+
+    return Compatibility(**data)
 
 
 class Series:
@@ -147,8 +189,8 @@ class Series:
     def to_dict(self, prefix: str) -> Dict[str, Any]:  # , prefix: str = "compatibility")
         """Flatten the Architecture class structure\n
         :param prefix: Prepended identifying tag"""
-        for comp_name, comp_obj in self.compatibility.items():
-            path = f"{prefix}"  # .{comp_name}"
+        for _comp_name, comp_obj in self.compatibility.items():
+            path = f"{prefix}"  # .{comp_name}" # so that we can combine last keys into one dict
             self.flat_dict[path].update(comp_obj.to_dict(path))  # path
         return self.flat_dict
 
@@ -230,69 +272,29 @@ class Domain:
         return self.flat_dict
 
 
-def add_mir_fields(domain: str, **kwargs):
-    """_summary_\n
-    :param domain: Class type field constructor
-    :raises ValueError: An invalid domain type was entered
-    :return: A class of the designated type constructed with all fields added
-    """
-    if domain.lower() == "info":
-        return Info(**{k: v for k, v in kwargs.items() if k in Info.__dataclass_fields__})  # pylint: disable=no-member
-    elif domain.lower() == "model":
-        return Model(**{k: v for k, v in kwargs.items() if k in Model.__dataclass_fields__})  # pylint: disable=no-member
-    elif domain.lower() == "ops":
-        return Ops(**{k: v for k, v in kwargs.items() if k in Ops.__dataclass_fields__})  # pylint: disable=no-member
-    elif domain.lower() == "dev":
-        return Dev(**{k: v for k, v in kwargs.items() if k in Dev.__dataclass_fields__})  # pylint: disable=no-member
-    else:
-        raise ValueError(f"Unsupported domain: {domain}")
-
-
-# from pydantic import create_model
-# def build_model(fields: Dict[str, Any]):
-#     return create_model("Compatibility", **fields)
-#   data = {compatibility: add_mir_fields(domain=domain.lower(), **kwargs)}
-#     from nnll_01 import nfo
-
-#     Compatibility = build_model({f"{compatibility}": (Union[Info, Model, Ops, Dev], ...)})
-#     compat = Compatibility(**data)
-
-
-def add_mir_entry(domain: str, arch: str, series: str, compatibility: str, **kwargs) -> None:
+def mir_entry(domain: str, arch: str, series: str, comp: str, **kwargs) -> None:
     """Define a new Machine Intelligence Resource\n
     :param domain: Broad name of the type of data (model/ops/info/dev)
     :param arch: Common name of the neural network structure being referenced
     :param series: Specific release name or technique
-    :param compatibility: Details about purpose, tasks
+    :param comp: Details about purpose, tasks
     :param kwargs: Specific key/value data related to location and execution
     """
 
-    domain_info = Domain(domain.lower())
-    arch_name = Architecture(arch.lower())
-    impl_sdxl = Series(series.lower())
-    # kwargs.setdefault("name", compatibility.lower())
-    data = {compatibility: add_mir_fields(domain=domain.lower(), **kwargs)}
-
-    Compatibility = build_model(compatibility)
-
-    class CompatibilityModel(Compatibility):
-        def to_dict(self, _) -> Dict[str, Any]:
-            return {key: value for key, value in self.__dict__.items() if value is not None}
-
-    # from nnll_01 import nfo
-
-    compat = CompatibilityModel(**data)
-    # nfo(compat)
-    # compat = Compatibility(compatibility.lower(), add_mir_fields(domain=domain.lower(), **kwargs))
-    impl_sdxl.add_compat(compatibility, compat)
-    arch_name.add_impl(impl_sdxl.series, impl_sdxl)
-    domain_info.add_arch(arch_name.architecture, arch_name)
-    return domain_info.to_dict()
+    domain_inst = Domain(domain.lower())
+    arch_inst = Architecture(arch.lower())
+    series_inst = Series(series.lower())
+    comp_inst = build_comp(comp, domain, kwargs)
+    series_inst.add_compat(comp, comp_inst)
+    arch_inst.add_impl(series_inst.series, series_inst)
+    domain_inst.add_arch(arch_inst.architecture, arch_inst)
+    return domain_inst.to_dict()
 
 
 if __name__ == "__main__":
     import argparse
-    from nnll_60 import JSONCache, CONFIG_PATH_NAMED
+
+    from nnll_60 import CONFIG_PATH_NAMED, JSONCache
 
     config_file = JSONCache(CONFIG_PATH_NAMED)
     parser = argparse.ArgumentParser(description="MIR database manager")
@@ -311,7 +313,7 @@ if __name__ == "__main__":
         :param data: existing dictionary
         """
         data.update_cache(
-            add_mir_entry(domain=args.domain, arch=args.arch, series=args.series, compatibility=args.compatibility, **args.kwargs),
+            mir_entry(domain=args.domain, arch=args.arch, series=args.series, comp=args.compatibility, **args.kwargs),
         )
 
     read_data()
