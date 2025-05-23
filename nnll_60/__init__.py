@@ -48,6 +48,7 @@ HASH_PATH_NAMED = set_path_stable("hashes.json")
 CONFIG_PATH_NAMED = set_path_stable("config.json")
 CHAIN_PATH_NAMED = set_path_stable("hyperchain.json")
 LIBTYPE_PATH_NAMED = set_path_stable("libtype.json")
+MIR_PATH = set_path_stable("mir.json")
 
 
 class JSONCache:
@@ -72,6 +73,7 @@ class JSONCache:
     def _load_cache(self):
         """Populate cache with **text** file data if not already populated"""
         import json
+        import tomllib
 
         if not self._cache:
             with open(self.file, "r", encoding="UTF-8") as f:

@@ -14,28 +14,9 @@
         "AUTOKL": "AutoencoderKL",
         "AUTOTNY": "AutoencoderTiny",
         "AUTOPIPE": "AutoPipelineForText2Image",
-        "AURAFLOWPIPE": "AuraFlowPipeline",
-        "FLUXPIPE": "FluxPipeline",
-        "SDXLPIPE": "StableDiffusionXLPipeline",
         "SD15PIPE": "StableDiffusionPipeline",
         "CASCADEPRIOR": "StableCascadePriorPipeline",
         "CASCADEDECODER": "StableCascadeDecoderPipeline",
         "CASCADECOMBINED": "StableCascadeCombinedPipeline"
-    },
-    "diffusers.schedulers": {
-        "EULERDISCRETE": "EulerDiscreteScheduler",
-        "EULERANCESTRAL": "EulerAncestralDiscreteScheduler",
-        "FLOWMATCHEULERDISCRETE": "FlowMatchEulerDiscreteScheduler",
-        "EPMDPMSOLVER": "EDMDPMSolverMultistepScheduler",
-        "DPMSOLVER": "DPMSolverMultistepScheduler",
-        "DDIM": "DDIMScheduler",
-        "LCM": "LCMScheduler",
-        "TCD": "TCDScheduler",
-        "AYS": "AysSchedules",
-        "HEUNDISCRETE": "HeunDiscreteScheduler",
-        "UNIPCMULTISTEP": "UniPCMultistepScheduler",
-        "LMSDISCRETE": "LMSDiscreteScheduler",
-        "DEISMULTISTEP": "DEISMultistepScheduler",
-        "DDPMWUERSTCHEN": "DDPMWuerstchenScheduler"
     }
 }

@@ -19,23 +19,30 @@ T = TypeVar("T")
 class Info:
     """
     Static global neural network attributes, metadata with an identifier in the database\n
+    :param file_256: Canonical hash calculation for known model files
     :param gen_kwargs: OEM arguments to pass to the generator
     :param init_kwargs: OEM arguments to pass to constructor
+    :param module_alt: Third-party library module support for the resource
     :param layer_256: Canonical hash calculation for list of model layer names, if applicable
     :param repo: A dedicated remote origin
+    :param repo_alt: Secondary remote sources
+    :param scheduler_kwargs: OEM arguments to pass to constructor function
+    :param scheduler: OEM noise scheduler (mir:type str)
     :param tasks: Supported modalities
     :param weight_map: Remote location of the weight map for the model
     """
 
+    file_256: Optional[str] = None
     gen_kwargs: Optional[Dict[str, Any]] = None
     init_kwargs: Optional[Dict[str, Any]] = None
     layer_256: Optional[List[str] | None] = None
     module_alt: Optional[List[str] | None] = None
-    repo: Optional[str | None] = None
     repo_alt: Optional[List[str] | None] = None
-    solver_kwargs: Optional[Dict[str, Any]] = None
+    repo: Optional[str | None] = None
+    scheduler_alt: Optional[str] = None
+    scheduler_kwargs_alt: Optional[str] = None
     tasks: Optional[List[str]] = None
-    weight_map: Optional[urllib.parse.ParseResult] = None
+    weight_map: Optional[Union[urllib.parse.ParseResult, Path]] = None
 
 
 @dataclass
@@ -46,28 +53,27 @@ class Ops:
     dev: str  # Any pre-release or under evaluation items without an identifier in an expected format\n
     :param info:  Static global neural network attributes, metadata with an identifier in the database\n
     `info` domain attributes
-    :param init_kwargs: OEM arguments to pass to the constructor
+    :param dtype: Model datatype (ie F16,F32,F8_E4M3,I64) name if applicable
     :param gen_kwargs: OEM arguments to pass to the generator
-    :param layer_256: Canonical hash calculation for list of model layer names, if applicable
-    :param name: A specific title or technique identifier
-    :param solver_kwargs: OEM arguments to pass to constructor function
+    :param init_kwargs: OEM arguments to pass to the constructor
     :param repo: A dedicated remote origin
+    :param scheduler_kwargs: OEM arguments to pass to constructor function
+    :param dtype: Alternate datatype name
     """
 
-    init_kwargs: Optional[Dict[str, int | str | float | list]] = None
-    solver_kwargs: Optional[Dict[str, Any]] = None
+    dtype: Optional[str] = None
     gen_kwargs: Optional[Dict[str, int | str | float | list]] = None
-    dep_pkg: Optional[List[str]] = None
-    module_path: Optional[List[str]] = None
+    init_kwargs: Optional[Dict[str, int | str | float | list]] = None
     repo: Optional[str] = None
+    scheduler_kwargs: Optional[Dict[str, Any]] = None
+    variant: Optional[str] = None
 
 
 @dataclass
 class Model:
     """
     Static local neural network layers. Publicly released machine learning models with an identifier in the database\n
-    :param dtype: Model precision (ie F16,F32,F8_E4M3,I64)
-    :param file_256: Canonical hash calculation for known model files
+    :param dtype: Model datatype (ie F16,F32,F8_E4M3,I64) name if applicable
     :param file_ext: The last file extension in the filename
     :param file_name: The basename of the file
     :param file_path: Absoulte location of the file on disk
@@ -76,7 +82,6 @@ class Model:
     """
 
     dtype: Optional[str] = None
-    file_256: Optional[str] = None
     file_ext: Optional[str] = None
     file_name: Optional[str] = None
     file_path: Optional[Path] = None
@@ -85,28 +90,15 @@ class Model:
 
 
 @dataclass
-class Dev:
+class Dev(Info, Ops, Model):
     """
     Varying local neural network layers, in-training, pre-release, items under evaluation, likely in unexpected formats\n
+    Inheriting attributes from Info, Ops, and Model to reduce duplication.
     """
 
     dep_pkg: Optional[list[str]] = None
-    dtype: Optional[str] = None
-    file_256: Optional[str] = None
-    file_ext: Optional[str] = None
-    file_name: Optional[str] = None
-    file_path: Optional[Path] = None
-    file_size: Optional[int] = None
-    gen_kwargs: Optional[Dict[str, Union[float, int, Callable]]] = None
-    layer_256: Optional[str] = None
-    layer_type: Optional[str] = None
     lora_kwargs: Optional[str] = None
     module_path: Optional[list[str]] = None
-    init_kwargs: Optional[Dict[str, Union[float, int, Callable]]] = None
-    repo: Optional[str] = None
-    solver_kwargs: Optional[Dict[str, Union[float, int, Callable]]] = None
-    tasks: Optional[List[str]] = None
-    weight_map: Optional[urllib.parse.ParseResult] = None
     # :param stage: Where item fits in a chain
 
 
@@ -134,23 +126,23 @@ def build_comp(comp: str, domain: str, kwargs: dict) -> Callable:
     :param kwargs: Key/value data pairs within `value`
     :return: A Compatibility object with `comp` name mapped to `kwargs` data
     """
-    data = {
-        comp: add_mir_fields(domain=domain, **kwargs),
-    }
     field = {
         comp: (Union[Info, Model, Ops, Dev], ...),
     }
+    data = {}
     module_key = "[init]"
-    import_modules = ["dep_pkg", "module_path", "module_i2i", "module_inpaint"]
-    for module in import_modules:
+    base_modules = ["scheduler", "scheduler_kwargs", "dep_pkg", "module_path", "module_i2i", "module_inpaint"]
+    for module in base_modules:
         if module in kwargs:
             value = kwargs.pop(module)
             if value is not None:
                 data.get(module_key, data.setdefault(module_key, {module: value})).update(module=value)
                 field.setdefault(
                     module_key,
-                    (Dict[str, Union[List[str] | None]], ...),
+                    (Dict[str, Union[str, Dict[str, Any], List[str], None]], ...),
                 )
+    data.setdefault(comp, add_mir_fields(domain=domain, **kwargs))
+
     DynamicModel = create_model("Compatibility", **field)  # pylint: disable=invalid-name
 
     class Compatibility(DynamicModel):  # pylint: disable=too-few-public-methods

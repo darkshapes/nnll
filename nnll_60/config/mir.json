@@ -1,116 +1,1596 @@
 {
-    "domain": {
-        "model": "",
-        "info": "",
-        "operation": "",
-        "dev": ""
+    "info.unet.stable-diffusion-xl": {
+        "base": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 40,
+                "denoising_end": 0.8,
+                "output_type": "latent",
+                "safety_checker": false
+            },
+            "init_kwargs": {
+                "use_safetensors": true
+            },
+            "layer_256": [
+                "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"
+            ],
+            "module_alt": [
+                "DiffusionPipeline"
+            ],
+            "repo_alt": null,
+            "repo": "stabilityai/stable-diffusion-xl-base-1.0",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": "weight_maps/model.unet.stable-diffusion-xl:base.json"
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "StableDiffusionXLPipeline"
+            ]
+        },
+        "refiner": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 40,
+                "denoising_end": 0.8
+            },
+            "init_kwargs": null,
+            "layer_256": [
+                "8c2d0d32cff5a74786480bbaa932ee504bb140f97efdd1a3815f14a610cf6e4a"
+            ],
+            "module_alt": [
+                "DiffusionPipeline"
+            ],
+            "repo_alt": null,
+            "repo": "stabilityai/stable-diffusion-xl-refiner-1.0",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": "weight_maps/stable-diffusion-xl-refiner.json"
+        },
+        "pony-diffusion": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16"
+            ],
+            "module_alt": [
+                "DiffusionPipeline"
+            ],
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "animagine": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "31164c11db41b007f15c94651a8b1fa4d24097c18782d20fabe13c59ee07aa3a"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "illustrious": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "c4a8d365e7fe07c6dbdd52be922aa6dc23215142342e3e7f8f967f1a123a6982"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "turbo": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "fc94481f0c52b21c5ac1fdade8d9c5b210f7239253f86ef21e6198fe393ed60e"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "playground-2.5-base": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "a6f31493ceeb51c88c5239188b9078dc64ba66d3fc5958ad48c119115b06120c"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "playground-2.5-aesthetic": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 50,
+                "guidance_scale": 3
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.float16",
+                "variant": "fp16"
+            },
+            "layer_256": [
+                "fe2e9edf7e3923a80e64c2552139d8bae926cc3b028ca4773573a6ba60e67c20",
+                "d4813e9f984aa76cb4ac9bf0972d55442923292d276e97e95cb2f49a57227843"
+            ],
+            "module_alt": "DiffusionPipeline",
+            "repo_alt": null,
+            "repo": "playgroundai/playground-v2.5-1024px-aesthetic",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
     },
-    "model.format": {
-        "safetensors": "",
-        "gguf": "",
-        "pickle": "",
-        "onnx": "",
-        "ggml": "",
-        "exl2": "",
-        "mlx": "",
-        "awq": "",
-        "llamafile": ""
+    "info.unet.kolors": {
+        "diffusers": {
+            "file_256": null,
+            "gen_kwargs": {
+                "negative_prompt": "",
+                "guidance_scale": 5.0,
+                "num_inference_steps": 50
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.float16",
+                "variant": "fp16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "Kwai-Kolors/Kolors-diffusers",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "KolorsPipeline"
+            ]
+        }
     },
-    "model.quantization": {
-        "aqlm": "",
-        "gguf": "",
-        "ggml": "",
-        "gptq": "",
-        "vptq": "",
-        "awq": "",
-        "quanto": "",
-        "bitnet": ""
+    "ops.scheduler.align-your-steps": {
+        "stable-diffusion-xl": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers"
+            ],
+            "module": [
+                "schedulers.scheduling_utils",
+                "AysSchedules"
+            ]
+        }
     },
-    "model.architecture": {
-        "unet": "",
-        "dit": "",
-        "transformer": "",
-        "taesd": "",
-        "vae": "",
-        "gan": "",
-        "gru": "",
-        "lstm": "",
-        "brnn": "",
-        "rnn": "",
-        "cnn": "",
-        "rbm": ""
+    "ops.patch.hidiffusion": {
+        "stable-diffusion-xl": {
+            "dtype": null,
+            "gen_kwargs": {
+                "height": 2048,
+                "width": 2048,
+                "eta": 1.0,
+                "guidance_scale": 7.5
+            },
+            "init_kwargs": null,
+            "repo": "megvii-research/HiDiffusion/",
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "hidiffusion"
+            ],
+            "module": [
+                "apply_hidiffusion"
+            ]
+        }
     },
-    "model.architecture.implementation": {
-        "bert": "",
-        "chat_glm": "",
-        "t5": "",
-        "t5-xxl": "",
-        "mt5": "",
-        "clip-l": "",
-        "clip-g": "",
-        "clip-h": "",
-        "llama": "",
-        "openchat": "",
-        "qwen": "",
-        "openai": "",
-        "deepseek": "",
-        "gemma": "",
-        "mistral": "",
-        "vicuna": "",
-        "whisper": "",
-        "nlb": "",
-        "bloom": "",
-        "hunyuan3d": "",
-        "stable-diffusion-xl": "",
-        "lumina-2": "",
-        "stable-diffusion": "",
-        "stable-diffusion-3": "",
-        "flux-1": "",
-        "kolors": "",
-        "pixart-alpha": "",
-        "pixart-sigma": "",
-        "stable-cascade": "",
-        "stable-diffusion-2": "",
-        "auraflow": "",
-        "common-canvas": "",
-        "hunyuan-dit": "",
-        "lumina-mgpt": ""
+    "info.unet.stable-cascade": {
+        "c": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "2b6986954d9d2b0c702911504f78f5021843bd7050bb10444d70fa915cb495ea",
+                "2aa5a461c4cd0e2079e81554081854a2fa01f9b876d7124c8fff9bf1308b9df7",
+                "ce474fd5da12f1d465a9d236d61ea7e98458c1b9d58d35bb8412b2acb9594f08",
+                "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
+                "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "diffusers",
+                "transformers"
+            ]
+        },
+        "b": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "fde5a91a908e8cb969f97bcd20e852fb028cc039a19633b0e1559ae41edeb16f",
+                "24fa8b55d12bf904878b7f2cda47c04c1a92da702fe149e28341686c080dfd4f",
+                "a7c96afb54e60386b7d077bf3f00d04596f4b877d58e6a577f0e1a08dc4a0190",
+                "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
+                "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
     },
-    "model.architecture.implementation.compatibility": {},
-    "operation.scheduler": {
-        "flow-match": "",
-        "ipndm": "",
-        "res-multistep": "",
-        "deis": "",
-        "euler": "",
-        "euler_ancestral": "",
-        "dpm": "",
-        "ddim": "",
-        "lcm": "",
-        "tcd": "",
-        "restart": "",
-        "ddpm": "",
-        "unipc": "",
-        "edm": "",
-        "heun": "",
-        "repaint": "",
-        "scoresde": "",
-        "cm-stochastic": "",
-        "pndm": "",
-        "vq-diffusion": "",
-        "linear": "",
-        "cosine": "",
-        "karras": "",
-        "sgm-uniform": "",
-        "ddim-uniform": "",
-        "align-your-steps": "",
-        "logarithmic-snr": "",
-        "exponential": ""
+    "info.dit.stable-diffusion-3": {
+        "medium": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 40,
+                "guidance_scale": 4.5
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.float16"
+            },
+            "layer_256": [
+                "dee29a467c44cff413fcf1c2dda0b31f5f0a4e093029a8e5a05140f40ae061ee"
+            ],
+            "module_alt": null,
+            "repo_alt": [
+                "adamo1139/stable-diffusion-3.5-medium-ungated"
+            ],
+            "repo": "stabilityai/stable-diffusion-3.5-medium",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "StableDiffusion3Pipeline"
+            ]
+        },
+        "large": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 28,
+                "guidance_scale": 3.5
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.float16"
+            },
+            "layer_256": [
+                "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465"
+            ],
+            "module_alt": null,
+            "repo_alt": [
+                "adamo1139/stable-diffusion-3.5-large-ungated"
+            ],
+            "repo": "stabilityai/stable-diffusion-3.5-large",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "gguf": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "e7eddc3cd09ccf7c9c03ceef70bbcd91d44d46673857d37c3abfe4e6ee240a96"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "alchemist-large": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 28,
+                "guidance_scale": 3.5
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "yandex/stable-diffusion-3.5-large-alchemist",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "alchemist-medium": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 40,
+                "guidance_scale": 4.5
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "yandex/stable-diffusion-3.5-medium-alchemist",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
     },
-    "info.format": {
-        "json": "",
-        "yaml": "",
-        "toml": "",
-        "md": ""
+    "info.dit.flux-1": {
+        "schnell": {
+            "file_256": null,
+            "gen_kwargs": {
+                "guidance_scale": 0.0,
+                "num_inference_steps": 4,
+                "max_sequence_length": 256
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": [
+                "ef5c9cd1ebe6e3be5e8b1347eca0a6f0b138986c71220a7f1c2c14f29d01beed"
+            ],
+            "module_alt": null,
+            "repo_alt": [
+                "cocktailpeanut/xulf-s"
+            ],
+            "repo": "black-forest-labs/flux.1-schnell",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "diffusers",
+                "transformers"
+            ]
+        },
+        "shuttle-3.1-aesthetic": {
+            "file_256": null,
+            "gen_kwargs": {
+                "height": 1024,
+                "width": 1024,
+                "guidance_scale": 3.5,
+                "num_inference_steps": 4,
+                "max_sequence_length": 256
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": [
+                "DiffusionPipeline"
+            ],
+            "repo_alt": null,
+            "repo": "shuttleai/shuttle-3.1-aesthetic",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "shuttle-3-diffusion": {
+            "file_256": null,
+            "gen_kwargs": {
+                "height": 1024,
+                "width": 1024,
+                "guidance_scale": 3.5,
+                "num_inference_steps": 4,
+                "max_sequence_length": 256
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": [
+                "DiffusionPipeline"
+            ],
+            "repo_alt": null,
+            "repo": "shuttleai/shuttle-3-diffusion",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "dev": {
+            "file_256": null,
+            "gen_kwargs": {
+                "height": 1024,
+                "width": 1024,
+                "guidance_scale": 3.5,
+                "num_inference_steps": 50,
+                "max_sequence_length": 512
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": [
+                "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",
+                "20d47474da0714979e543b6f21bd12be5b5f721119c4277f364a29e329e931b9"
+            ],
+            "module_alt": null,
+            "repo_alt": [
+                "cocktailpeanut/xulf-d"
+            ],
+            "repo": "black-forest-labs/flux.1-dev",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "lite": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 28,
+                "guidance_scale": 3.5,
+                "height": 1024,
+                "width": 1024
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": [
+                "Freepik/F-Lite-Texture"
+            ],
+            "repo": "Freepik/flux.1-lite-8B",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "hybrid": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443",
+                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "mini": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": [
+                "e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"
+            ],
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": null,
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.dit.auraflow": {
+        "0": {
+            "file_256": null,
+            "gen_kwargs": {
+                "width": 1536,
+                "height": 768,
+                "num_inference_steps": 50,
+                "guidance_scale": 3.5
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": [
+                "fal/AuraFlow-v0.2",
+                "fal/AuraFlow"
+            ],
+            "repo": "fal/AuraFlow-v0.3",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "AuraFlowPipeline"
+            ]
+        }
+    },
+    "info.dit.hunyuandit": {
+        "diffusers": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 50,
+                "guidance_scale": 6
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "HunyuanDiTPipeline"
+            ]
+        },
+        "distilled": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 25
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers-Distilled",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.dit.pixart-sigma": {
+        "xl-2-1024": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": {
+                "torch_dtype": "torch.float16",
+                "use_safetensors": true
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "PixArtSigmaPipeline"
+            ]
+        }
+    },
+    "info.dit.cogview-3": {
+        "plus-3b": {
+            "file_256": null,
+            "gen_kwargs": {
+                "height": 1024,
+                "width": 1024,
+                "guidance_scale": 4.0,
+                "num_inference_steps": 50
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "THUDM/CogView3-Plus-3B",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "CogView3PlusPipeline"
+            ]
+        }
+    },
+    "info.dit.cogview-4": {
+        "6b": {
+            "file_256": null,
+            "gen_kwargs": {
+                "height": 1024,
+                "width": 1024,
+                "guidance_scale": 3.5,
+                "num_images_per_prompt": 1,
+                "num_inference_steps": 50
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "THUDM/CogView4-6B",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "CogView4Pipeline"
+            ]
+        }
+    },
+    "info.dit.lumina-image": {
+        "2.0": {
+            "file_256": null,
+            "gen_kwargs": {
+                "height": 1024,
+                "width": 1024,
+                "guidance_scale": 4.0,
+                "num_inference_steps": 50,
+                "cfg_trunc_ratio": 0.25,
+                "cfg_normalization": true
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "Alpha-VLLM/Lumina-Image-2.0",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers",
+                "transformers"
+            ],
+            "module": [
+                "Lumina2Pipeline"
+            ]
+        }
+    },
+    "info.art.phi-4": {
+        "multimodal-instruct": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "microsoft/Phi-4-multimodal-instruct",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "transformers"
+            ],
+            "module": [
+                "AutoModelForCausalLM"
+            ]
+        }
+    },
+    "info.art.lumina-mgpt": {
+        "7B-768": {
+            "file_256": null,
+            "gen_kwargs": {
+                "images": [],
+                "qas": [
+                    [
+                        "q1",
+                        null
+                    ]
+                ],
+                "max_gen_len": 8192,
+                "temperature": 1.0
+            },
+            "init_kwargs": {
+                "precision": "bf16",
+                "target_size": 768
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "Alpha-VLLM/Lumina-mGPT-7B-768",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "github.com/Alpha-VLLM/Lumina-mGPT"
+            ],
+            "module": [
+                "FlexARInferenceSolver"
+            ]
+        }
+    },
+    "info.lora.dmd": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 4,
+                "guidance_scale": 0,
+                "timesteps": [
+                    999,
+                    749,
+                    499,
+                    249
+                ]
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "tianweiy/DMD2/",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "scheduler": "ops.scheduler.lcm",
+            "module": [
+                "diffusers"
+            ]
+        }
+    },
+    "info.lora.dpo": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": {
+                "guidance_scale": 7.5,
+                "num_inference_steps": 4
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "radames/sdxl-DPO-LoRA",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "scheduler": "ops.scheduler.dpm",
+            "module": [
+                "diffusers"
+            ]
+        }
+    },
+    "info.lora.flash": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "jasperai/flash-sdxl",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "scheduler": "ops.scheduler.lcm",
+            "module": [
+                "diffusers"
+            ]
+        },
+        "pixart-alpha": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "jasperai/flash-pixart",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "stable-diffusion-3": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "jasperai/flash-sd3",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "stable-diffusion-1": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 4,
+                "guidance_scale": 0
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "jasperai/flash-sd",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.lora.hyper": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": {
+                "fuse": 1.0
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "ByteDance/Hyper-SD",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers"
+            ],
+            "module": [
+                "diffusers"
+            ]
+        },
+        "flux-1:dev": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": {
+                "fuse": 0.125
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "ByteDance/Hyper-SD",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "stable-diffusion-3": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": {
+                "fuse": 0.125
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "ByteDance/Hyper-SD",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "stable-diffusion-1": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "ByteDance/Hyper-SD",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.lora.lcm": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 8
+            },
+            "init_kwargs": {
+                "fuse": 1.0
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "latent-consistency/lcm-lora-sdxl",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "scheduler": "ops.scheduler.lcm",
+            "module": [
+                "diffusers"
+            ]
+        },
+        "ssd-1b": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 8
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "latent-consistency/lcm-lora-ssd-1b",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "vega": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 8
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "segmind/Segmind-VegaRT",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "stable-diffusion-1": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 8
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "latent-consistency/lcm-lora-sdv1-5",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.lora.lightning": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 4,
+                "guidance_scale": 0
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "ByteDance/SDXL-Lightning",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers"
+            ],
+            "module": [
+                "diffusers"
+            ]
+        }
+    },
+    "info.lora.pcm": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "wangfuyun/PCM_Weights",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "stable-diffusion-1": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "wangfuyun/PCM_Weights",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.lora.slam": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 4,
+                "guidance_scale": 1
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "alimama-creative/slam-lora-sdxl/",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "scheduler": "ops.scheduler.lcm",
+            "module": [
+                "diffusers"
+            ]
+        },
+        "stable-diffusion-1": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "alimama-creative/slam-sd1.5",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.lora.spo": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": {
+                "guidance_scale": 5.0
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers"
+            ],
+            "module": [
+                "diffusers"
+            ]
+        },
+        "stable-diffusion-1": {
+            "file_256": null,
+            "gen_kwargs": {
+                "guidance_scale": 7.5
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.lora.tcd": {
+        "stable-diffusion-xl": {
+            "file_256": null,
+            "gen_kwargs": {
+                "num_inference_steps": 4,
+                "guidance_scale": 0,
+                "eta": 0.3
+            },
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "h1t/TCD-SDXL-LoRA",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "scheduler": "ops.scheduler.tcd",
+            "module": [
+                "diffusers"
+            ]
+        },
+        "stable-diffusion-1": {
+            "file_256": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "h1t/TCD-SD15-LoRA",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        }
+    },
+    "info.lora.turbo": {
+        "flux-1:dev": {
+            "file_256": null,
+            "gen_kwargs": {
+                "guidance_scale": 3.5,
+                "num_inference_steps": 8,
+                "max_sequence_length": 512
+            },
+            "init_kwargs": {
+                "fuse": 0.125
+            },
+            "layer_256": null,
+            "module_alt": null,
+            "repo_alt": null,
+            "repo": "alimama-creative/FLUX.1-Turbo-Alpha",
+            "scheduler_alt": null,
+            "scheduler_kwargs_alt": null,
+            "tasks": null,
+            "weight_map": null
+        },
+        "[init]": {
+            "dep_pkg": [
+                "diffusers"
+            ],
+            "module": [
+                "diffusers"
+            ]
+        }
+    },
+    "ops.float.pytorch": {
+        "BF16": {
+            "dtype": "torch.bfloat16",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "F16": {
+            "dtype": "torch.float16",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": "fp16"
+        },
+        "F32": {
+            "dtype": "torch.float32",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": "fp32"
+        },
+        "F64": {
+            "dtype": "torch.float64",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": "fp64"
+        },
+        "[init]": {
+            "dep_pkg": [
+                "torch"
+            ],
+            "module": [
+                "torch"
+            ]
+        },
+        "F8_E4M3": {
+            "dtype": "torch.float8_e4m3fn",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": "fp8e4m3fn"
+        },
+        "F8_E5M2": {
+            "dtype": "torch.float8_e5m2",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": "fp8e5m2"
+        },
+        "I16": {
+            "dtype": "torch.int16",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "I32": {
+            "dtype": "torch.int32",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "I64": {
+            "dtype": "torch.int64",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "I8": {
+            "dtype": "torch.int8",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "NF4": {
+            "dtype": "nf4",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "U8": {
+            "dtype": "torch.uint8",
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        }
+    },
+    "ops.scheduler.euler": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "EulerDiscreteScheduler"
+            ],
+            "module": [
+                "EulerDiscreteScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.euler-ancestral": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "EulerAncestralDiscreteScheduler"
+            ],
+            "module": [
+                "EulerAncestralDiscreteScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.flow-match": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "FlowMatchEulerDiscreteScheduler"
+            ],
+            "module": [
+                "FlowMatchEulerDiscreteScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.edm": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "EDMDPMSolverMultistepScheduler"
+            ],
+            "module": [
+                "EDMDPMSolverMultistepScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.dpm": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "DPMSolverMultistepScheduler"
+            ],
+            "module": [
+                "DPMSolverMultistepScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.ddim": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "DDIMScheduler"
+            ],
+            "module": [
+                "DDIMScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.lcm": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "LCMScheduler"
+            ],
+            "module": [
+                "LCMScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.tcd": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "TCDScheduler"
+            ],
+            "module": [
+                "TCDScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.heun": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "HeunDiscreteScheduler"
+            ],
+            "module": [
+                "HeunDiscreteScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.uni-pc": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "UniPCMultistepScheduler"
+            ],
+            "module": [
+                "UniPCMultistepScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.lms": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "LMSDiscreteScheduler"
+            ],
+            "module": [
+                "LMSDiscreteScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.deis": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "DEISMultistepScheduler"
+            ],
+            "module": [
+                "DEISMultistepScheduler"
+            ]
+        }
+    },
+    "ops.scheduler.ddpm_wuerstchen": {
+        "any": {
+            "dtype": null,
+            "gen_kwargs": null,
+            "init_kwargs": null,
+            "repo": null,
+            "scheduler_kwargs": null,
+            "variant": null
+        },
+        "[init]": {
+            "module_path": [
+                "DDPMWuerstchenScheduler"
+            ],
+            "module": [
+                "DDPMWuerstchenScheduler"
+            ]
+        }
     }
 }
