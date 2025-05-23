@@ -8,36 +8,59 @@ def test_mir_creation():
     from pprint import pprint
 
     entry = add_mir_entry(
-        domain="info",
-        arch="unet",
-        series="stable-diffusion-xl",
-        compatibility="base",
-        gen_kwargs={"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
-        pipe_kwargs={"use_safetensors": True},
+        domain="info", arch="unet", series="stable-diffusion-xl", compatibility="base", gen_kwargs={"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False}, pipe_kwargs={"use_safetensors": True}
+    )
+    entry.update(
+        add_mir_entry(domain="model", arch="unet", series="stable-diffusion-xl", compatibility="base", file_path="/Users/nyan/Documents/models"),
     )
     entry.update(
         add_mir_entry(
-            domain="model",
-            arch="unet",
-            series="stable-diffusion-xl",
-            compatibility="base",
-            file_path="/Users/nyan/Documents/models",
-        ),
+            domain="ops",
+            arch="scheduler",
+            series="align-your-steps",
+            compatibility="stable-diffusion-xl",
+            num_inference_steps=10,
+            timesteps="StableDiffusionXLTimesteps",
+            dependency="diffusers",
+            module_path=["schedulers.scheduling_utils", "AysSchedules"],
+        )
+    )
+    entry.update(
+        add_mir_entry(
+            domain="ops",
+            arch="patch",
+            series="hidiffusion",
+            compatibility="stable-diffusion-xl",
+            num_inference_steps=10,
+            timesteps="StableDiffusionXLTimesteps",
+            dependency="hidiffusion",
+            gen_kwargs={"height": 2048, "width": 2048, "eta": 1.0, "guidance_scale": 7.5},
+            module_path=["apply_hidiffusion"],
+        )
     )
     pprint(entry)
-    # domain_info = Domain("model")
-    # arch_name = Architecture("unet")
-    # impl_sdxl = Implementation("stable-diffusion-xl")
-    # impl_sdxl.pipelines = "StableDiffusionXL"
-    # compat = Compatibility(
-    #     "base",
-    #     Model(file_path="/Users/nyan/Documents/models"),
-    # )
-    # impl_sdxl.add_compat(compat.stage, compat)
-    # arch_name.add_impl(impl_sdxl.implementation, impl_sdxl)
-    # domain_info.add_arch(arch_name.architecture, arch_name)
-    # label = domain_info.to_dict()
-    # print(label)
+
+
+# eta only works with ddim!!!
+
+#  ays_type="StableDiffusionXLTimesteps") -> Tuple[Callable, dict]:
+#     """Apply AlignYourSteps optimization
+#     compatibility: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
+#     """
+
+# domain_info = Domain("model")
+# arch_name = Architecture("unet")
+# impl_sdxl = Implementation("stable-diffusion-xl")
+# impl_sdxl.pipelines = "StableDiffusionXL"
+# compat = Compatibility(
+#     "base",
+#     Model(file_path="/Users/nyan/Documents/models"),
+# )
+# impl_sdxl.add_compat(compat.stage, compat)
+# arch_name.add_impl(impl_sdxl.implementation, impl_sdxl)
+# domain_info.add_arch(arch_name.architecture, arch_name)
+# label = domain_info.to_dict()
+# print(label)
 
 
 # domain_info = Domain("info")
