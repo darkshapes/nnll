@@ -52,9 +52,7 @@ class ConstructPipeline:
         dbug(construct)
         arch_data = construct[architecture]  # pylint:disable = unsubscriptable-object
         # repo = arch_data.get("local") # here we can pull user-defined settings
-        repo = None
-        if not repo:
-            repo = arch_data.get("repo")
+        repo = arch_data.get("repo")
 
         if arch_data["constructor"] == "image":
             import diffusers as pkg
@@ -100,7 +98,7 @@ class ConstructPipeline:
 
         arch_data = lora_data.get(Path(architecture).suffix[1:])
         solver = lora_data.get("solver")
-        if construct[architecture].get("constructor") == "image":
+        if construct[architecture].get("constructor") == "image":  # pylint: disable=unsubscriptable-object
             import diffusers as pkg
         else:
             import transformers as pkg

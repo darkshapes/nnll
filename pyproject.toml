@@ -109,6 +109,7 @@ dev = [
 ]
 
 [project.scripts]
+nnll-mir   = "nnll_07:main"
 nnll-find  = "nnll_31:main"
 nnll-hash  = "nnll_17:main"
 nnll-index = "nnll_43:main"

@@ -1,21 +1,60 @@
 ### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-"""JSONCache, HASH_PATH_NAMED,CONFIG_PATH_NAMED,CHAIN_PATH_NAMED"""
+"""JSONCache, HASH_PATH_NAMED,CONFIG_PATH_NAMED,CHAIN_PATH_NAMED USER_PATH_NAMED"""
 
 import os
+from pathlib import Path
+from functools import cache
+from nnll_01 import dbug
 
-HASH_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "hashes.json")
-CONFIG_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "config.json")
-CHAIN_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "hyperchain.json")
-LIBTYPE_PATH_NAMED = os.path.join(os.path.dirname(__file__), "config", "libtype.json")
+
+@cache
+def set_home_stable() -> Path:
+    """Return platform-dependent app data mapping\n
+    :return: A platform-specific path to vendor-designated app data folder\n
+    RATIONALE: operator may want to discard the application\n
+    EXAMPLES: to maintain experimental conditions, improper venv setup, conflicting dependencies, troubleshooting,
+    overreliance on reinstalling to fix things, switching computersquit, disk space full, they got advice online, etc.\n Therefore,
+    To accomodate user so they can return to previous settings, leverage os-specific library location.
+    """
+    from platform import system
+
+    return (
+        os.path.join(os.environ.get("LOCALAPPDATA", os.path.join(os.path.expanduser("~"), "AppData", "Local")), "Shadowbox")
+        if system().lower() == "windows"
+        else os.path.join(os.path.expanduser("~"), "Library", "Application Support", "Shadowbox")
+        if system().lower() == "darwin"
+        else os.path.join(os.path.expanduser("~"), ".config", "shadowbox")
+    )
+
+
+HOME_FOLDER_PATH = set_home_stable()
+
+
+def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__), prefix: str = "config") -> Path:
+    """Create a constant for a given path, or the path of the current file\n
+    :param file_name: The tail/basename of the absolute file path to
+    :param folder_path: The head of the absolute file path, defaults to `os.path.dirname(__file__)`
+    :param prefix: Optional folder between `folder_path` and `file_name`, defaults to "config"
+    :return: A combined path string of the given values
+    """
+
+    return os.path.join(folder_path, prefix, file_name)
+
+
+USER_PATH_NAMED = set_path_stable("config.toml", HOME_FOLDER_PATH)
+HASH_PATH_NAMED = set_path_stable("hashes.json")
+CONFIG_PATH_NAMED = set_path_stable("config.json")
+CHAIN_PATH_NAMED = set_path_stable("hyperchain.json")
+LIBTYPE_PATH_NAMED = set_path_stable("libtype.json")
 
 
 class JSONCache:
-    """Manage input/output disk/mem for json files"""
+    """Manage input/output disk/mem for json and read-only toml files"""
 
     def __init__(self, file_or_path: str):
-        """Cache operations for .json files. Example:
+        """Cache operations for .json and read-only .toml files. Example:
         ```
         cache_manager = JSONCache("path/to/file.json")
 
@@ -31,17 +70,20 @@ class JSONCache:
         self._cache: dict = {}
 
     def _load_cache(self):
-        """Populate cache with file data if not already populated"""
+        """Populate cache with **text** file data if not already populated"""
         import json
 
         if not self._cache:
             with open(self.file, "r", encoding="UTF-8") as f:
                 try:
-                    self._cache = json.load(f)
+                    if Path(self.file).suffix.lower() == ".toml":
+                        self._cache = tomllib.load(f)
+                    else:
+                        self._cache = json.load(f)
                 except FileNotFoundError:
                     self._cache = {}
-                except json.JSONDecodeError:
-                    # print("Error decoding JSON. Using an empty cache.")
+                except (json.JSONDecodeError, tomllib.TOMLDecodeError) as error_log:
+                    dbug(f"Error decoding cache file. Using an empty cache. {error_log}")
                     self._cache = {}
 
     def _save_cache(self):
@@ -53,7 +95,10 @@ class JSONCache:
 
         temp_file = self.file + ".tmp"
         with open(temp_file, "w", encoding="UTF-8") as doc:
-            json.dump(self._cache, doc, ensure_ascii=False, indent=4)
+            if Path(self.file).suffix == ".toml":
+                pass
+            else:
+                json.dump(self._cache, doc, ensure_ascii=False, indent=4)
         os.replace(temp_file, self.file)
 
     def refresh(self):

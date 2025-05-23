@@ -10,9 +10,9 @@ from nnll_01 import debug_monitor
 
 @debug_monitor
 def create_model_tag(pulled_keys: dict) -> dict:
-    from nnll_07 import Domain, Architecture, Component
+    from nnll_07 import Domain, Architecture, Implementation, Compatibility
 
-    domain_ml = Domain("ml")  # create the domain only when we know its a model
+    domain_ml = Domain("model")  # create the domain only when we know its a model
     if "unknown" in pulled_keys:
         domain_ml = Domain("dev")  # For unrecognized models,
 
@@ -20,12 +20,15 @@ def create_model_tag(pulled_keys: dict) -> dict:
     model_type = pulled_keys["model_type"]
     pulled_keys.pop("architecture")
     pulled_keys.pop("model_type")
-    comp_inside = Component(model_type, **pulled_keys)
-    arch_found.add_component(comp_inside.model_type, comp_inside)
-    domain_ml.add_architecture(arch_found.architecture, arch_found)
+    impl_sdxl = Implementation(model_type)
+    compat = Compatibility(model_type, **pulled_keys)
+    impl_sdxl.add_compat(compat.component_name, compat)
+    arch_found.add_impl(impl_sdxl.implementation, impl_sdxl)
+    domain_ml.add_arch(arch_found.architecture, arch_found)
     index_tag = domain_ml.to_dict()
 
-    return index_tag
+    label = domain_ml.to_dict()
+    print(label)
 
 
 # def create_model_tag(model_header,metadata_dict):
