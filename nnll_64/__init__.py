@@ -4,7 +4,6 @@
 # pylint: disable=import-outside-toplevel
 
 
-
 def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = None, **user_set) -> None:
     """Dynamially build diffusion process based on model architecture\n
     :param mir_arch: MIR system classifier string
@@ -25,24 +24,13 @@ def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = 
     noise_seed = soft_random()
     seed_planter(noise_seed)
     nfo(noise_seed)
-    join = True  # memory threshold formula function returns boolean value here
+
+    # memory threshold formula function returns boolean value here
     factory = ConstructPipeline()
-
-    if join:
-        pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch, join=join)
-    else:
-        pipe_name, pipe_mode, pipe_kwargs, model, kwargs = factory.create_pipeline(architecture=mir_arch, join=join)  # pylint: disable=unbalanced-tuple-unpacking
-        pipe_class = getattr(pipe_name, pipe_mode)
-        pipe = pipe_class(model, **pipe_kwargs).to(first_available())
-
-    if lora_opt:
-        for lora in lora_opt:
-            pipe, model, kwargs = factory.add_lora(lora, "mir_arch", pipe, kwargs)
-
+    pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch, lora=lora_opt)
     nfo(f"pre-generator Model {model} Lora {lora_opt} Arguments {kwargs} {pipe}")
 
-    if join:
-        pipe.to(first_available())
+    pipe.to(first_available())
 
     prompt = tx_data.get("text", "")
     # if tx_data.get("image", 0):

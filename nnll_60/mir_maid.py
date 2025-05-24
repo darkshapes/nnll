@@ -1,6 +1,9 @@
 ### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
+"""神经网络的数据注册"""
+
+# pylint: disable=possibly-used-before-assignment, line-too-long
 from typing import Any
 from nnll_60 import MIR_PATH, JSONCache
 from nnll_07 import mir_entry
@@ -31,10 +34,21 @@ class MIRDatabase:
 
     @mir_file.decorator
     def read_from_disk(self, data: dict = None) -> dict:
+        """Populate mir database\n
+        :param data: mir decorater auto-ppulated, defaults to None
+        :return: dict of MIR data"""
         self.database = data
+        return self.database
 
-
-mir_db = MIRDatabase()
+    def find_path(self, key: str, query: str, join_tag: bool = False) -> Any:
+        """Retrieve MIR path based on nested value search\n
+        :param key: Known field to look within
+        :param query: Search pattern for field
+        :param join_tag: Combine tag elements, defaults to False
+        :return: A list or string of the found tag"""
+        series = next(iter(self.database))
+        compatibility = next((k for k, v in self.database[next(iter(self.database))].items() if query in v.get(key)), "")
+        return "".join([series, compatibility]) if join_tag else [series, compatibility]
 
 
 def build_mir_unet():
@@ -189,6 +203,7 @@ def build_mir_unet():
 
 
 def build_mir_dit():
+    """Create mir info database"""
     mir_db.add(
         mir_entry(
             domain="info",
@@ -434,6 +449,7 @@ def build_mir_dit():
 
 
 def build_mir_art():
+    """Create mir info database"""
     mir_db.add(
         mir_entry(
             domain="info",
@@ -462,6 +478,7 @@ def build_mir_art():
 
 
 def build_mir_lora():
+    """Create mir info database"""
     mir_db.add(
         mir_entry(
             domain="info",
@@ -660,6 +677,7 @@ def build_mir_lora():
 
 
 def build_mir_other():
+    """Create mir info database"""
     mir_db.add(
         mir_entry(
             domain="ops",
@@ -677,6 +695,7 @@ def build_mir_other():
 
 
 def build_mir_float():
+    """Create mir info database"""
     mir_db.add(mir_entry(domain="ops", arch="float", series="pytorch", comp="BF16", dtype="torch.bfloat16"))
     mir_db.add(mir_entry(domain="ops", arch="float", series="pytorch", comp="F16", variant="fp16", dtype="torch.float16"))
     mir_db.add(mir_entry(domain="ops", arch="float", series="pytorch", comp="F32", variant="fp32", dtype="torch.float32"))
@@ -692,6 +711,7 @@ def build_mir_float():
 
 
 def build_mir_scheduler():
+    """Create mir info database"""
     mir_db.add(mir_entry(domain="ops", arch="scheduler", series="euler", comp="any", deps_pkg=["diffusers"], module_path=["EulerDiscreteScheduler"]))
     mir_db.add(mir_entry(domain="ops", arch="scheduler", series="euler-ancestral", comp="any", deps_pkg=["diffusers"], module_path=["EulerAncestralDiscreteScheduler"]))
     mir_db.add(mir_entry(domain="ops", arch="scheduler", series="flow-match", comp="any", deps_pkg=["diffusers"], module_path=["FlowMatchEulerDiscreteScheduler"]))
@@ -722,6 +742,7 @@ def build_mir_scheduler():
 if __name__ == "__main__":
     from pprint import pprint
 
+    mir_db = MIRDatabase()
     build_mir_unet()
     build_mir_dit()
     build_mir_art()

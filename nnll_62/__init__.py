@@ -1,16 +1,14 @@
 ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
+"""动态函数工厂"""
 
 # pylint:disable=import-outside-toplevel
 # pylint:disable=unused-argument
 # pylint:disable=line-too-long
 
-
 from nnll_01 import debug_monitor, dbug
-from nnll_60 import JSONCache, CONFIG_PATH_NAMED
-
-config_file = JSONCache(CONFIG_PATH_NAMED)
+from nnll_60.mir_maid import MIRDatabase
 
 
 @debug_monitor
@@ -34,7 +32,7 @@ class ConstructPipeline:
 
     @debug_monitor
     @pipe_call
-    def create_pipeline(self, architecture: str, *args, join: bool = True, **kwargs):
+    def create_pipeline(self, architecture: list[str], *args, lora: list | None = None, **kwargs):
         """
         Build an inference pipe based on model type\n
         :param architecture: Identifier of model architecture
@@ -42,77 +40,37 @@ class ConstructPipeline:
         :return: `tuple` constructed pipe, model/repo name, and default settings
         """
         import os
+        import importlib
 
-        @config_file.decorator
-        def _read_data(data: dict = None):
-            return data
-
-        construct = _read_data()
-
+        data = MIRDatabase()
+        construct = data.read_from_disk()
         dbug(construct)
-        arch_data = construct[architecture]  # pylint:disable = unsubscriptable-object
-        # repo = arch_data.get("local") # here we can pull user-defined settings
+        series = architecture[0]
+        arch_data = construct[series].get(architecture[1])  # pylint:disable = unsubscriptable-object
         repo = arch_data.get("repo")
-
-        if arch_data["constructor"] == "image":
-            import diffusers as pkg
-        else:
-            import transformers as pkg
-        pipe_class = getattr(pkg, arch_data["pipe_name"])
-
-        pipe_kwargs = arch_data.get("pipe_kwargs", {})
-        pipe_kwargs.update(kwargs)
-        # do a spec check
+        pkg = importlib.import_module(series["deps_pkg"])
+        pipe_class = getattr(pkg, arch_data["module_alt"] or series["module_path"])
+        init_kwargs = arch_data.get("init_kwargs", {})
+        init_kwargs.update(kwargs)
+        # do a barrel roll (and spec check)
         # _attn_implementation='flash_attention_2',
-        settings = arch_data.get("defaults", {})
+        settings = arch_data.get("gen_kwargs", {})
         kwargs.update(settings)
-        if join:
-            if os.path.isfile(repo):
-                pipe = pipe_class.from_single_file(repo, **pipe_kwargs)
-            else:
-                pipe = pipe_class.from_pretrained(repo, **pipe_kwargs)
-            return (pipe, repo, kwargs)
         if os.path.isfile(repo):
-            return (pipe_class, "from_single_file", pipe_kwargs, repo, kwargs)
-        return (pipe_class, "from_pretrained", pipe_kwargs, repo, kwargs)
-
-        # raise NotImplementedError("Support for only from_pretrained and from_single_file")
-
-    @debug_monitor
-    @pipe_call
-    def add_lora(self, lora, architecture, pipe, *args, **kwargs):
-        """
-        Add a LoRA to the pipe\n
-        :return: `tuple` constructed pipe, model/repo name, and default settings
-        """
-        import os
-        from pathlib import Path
-
-        @config_file.decorator
-        def _read_data(data: dict = None):
-            return data
-
-        construct = _read_data()
-
-        lora_data = construct[lora]  # pylint:disable = unsubscriptable-object
-
-        arch_data = lora_data.get(Path(architecture).suffix[1:])
-        solver = lora_data.get("solver")
-        if construct[architecture].get("constructor") == "image":  # pylint: disable=unsubscriptable-object
-            import diffusers as pkg
+            pipe = pipe_class.from_single_file(repo, **init_kwargs)
         else:
-            import transformers as pkg
-        if solver:
-            scheduler_class = getattr(pkg, solver)
-            pipe.scheduler = scheduler_class(lora_data.get("solver_kwargs"))
-        # repo = arch_data.get("local")
-        repo = None
-        if not repo:
-            repo = arch_data.get("repo")
-        fuse = arch_data.get("fuse")
-        pipe.load_lora_weights(repo, adapter_name=os.path.basename(repo))
-        if fuse:
-            print(os.path.basename(repo), fuse)
-            pipe.fuse_lora(adapter_name=os.path.basename(repo), lora_scale=fuse)
-            pipe.unload_lora_weights()
+            pipe = pipe_class.from_pretrained(repo, **init_kwargs)
+        if series.split(".")[1] == "lora":
+            scheduler = arch_data.get("solver", 0)
+            if scheduler:
+                sched = construct[scheduler].get(series)
+                scheduler_class = getattr(pkg, sched)
+                pipe.scheduler = scheduler_class(arch_data.get("solver_kwargs"))
+            fuse = arch_data.get("fuse")
+            pipe.load_lora_weights(repo, adapter_name=os.path.basename(repo))
+            if fuse:
+                print(os.path.basename(repo), fuse)
+                pipe.fuse_lora(adapter_name=os.path.basename(repo), lora_scale=fuse)
+                pipe.unload_lora_weights()
+        # repo = arch_data.get("local") # here we can pull user-defined settings
         return (pipe, repo, kwargs)
