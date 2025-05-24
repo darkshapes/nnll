@@ -4,6 +4,9 @@
 """JSONCache, HASH_PATH_NAMED,CONFIG_PATH_NAMED,CHAIN_PATH_NAMED USER_PATH_NAMED"""
 
 import os
+import sys
+
+sys.path.append(os.getcwd())
 from pathlib import Path
 from functools import cache
 from nnll_01 import dbug
@@ -43,7 +46,7 @@ def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__)
     return os.path.join(folder_path, prefix, file_name)
 
 
-USER_PATH_NAMED = set_path_stable("config.toml", HOME_FOLDER_PATH)
+USER_PATH_NAMED = os.path.join(HOME_FOLDER_PATH, "config.toml")
 HASH_PATH_NAMED = set_path_stable("hashes.json")
 CONFIG_PATH_NAMED = set_path_stable("config.json")
 CHAIN_PATH_NAMED = set_path_stable("hyperchain.json")
@@ -76,17 +79,22 @@ class JSONCache:
         import tomllib
 
         if not self._cache:
-            with open(self.file, "r", encoding="UTF-8") as f:
-                try:
-                    if Path(self.file).suffix.lower() == ".toml":
+            if Path(self.file).suffix.lower() == ".toml":
+                with open(self.file, "rb") as f:
+                    try:
                         self._cache = tomllib.load(f)
-                    else:
+                    except tomllib.TOMLDecodeError as error_log:
+                        dbug(f"Error decoding cache file. Using an empty cache. {error_log}")
+                        self._cache = {}
+            else:
+                with open(self.file, "r", encoding="UTF-8") as f:
+                    try:
                         self._cache = json.load(f)
-                except FileNotFoundError:
-                    self._cache = {}
-                except (json.JSONDecodeError, tomllib.TOMLDecodeError) as error_log:
-                    dbug(f"Error decoding cache file. Using an empty cache. {error_log}")
-                    self._cache = {}
+                    except FileNotFoundError:
+                        self._cache = {}
+                    except json.JSONDecodeError as error_log:
+                        dbug(f"Error decoding cache file. Using an empty cache. {error_log}")
+                        self._cache = {}
 
     def _save_cache(self):
         """
@@ -111,11 +119,10 @@ class JSONCache:
         """Save changes if the data actually changed"""
         self._load_cache()  # Ensure cache loaded / 確保快取載入
 
-        original_cache_copy = self._cache.copy()  # Snapshot current state / 快照當前快取
-        self._cache.update(new_data)  # Add the data to the cache/ 將資料新增到快取中
-
-        if original_cache_copy != self._cache:
-            self._save_cache()
+        # original_cache_copy = self._cache.copy()  # Snapshot current state / 快照當前快取
+        self._cache.update(new_data)  # Add the data to the cache / 將資料新增到快取中
+        # if original_cache_copy != self._cache:
+        self._save_cache()
 
     def decorator(self, func):
         """Add cache file copies to functions"""

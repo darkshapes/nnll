@@ -13,7 +13,7 @@ import PIL
 import PIL.Image
 from nnll_01 import debug_monitor
 from nnll_44 import collect_hashes
-from nnll_60 import USER_PATH_NAMED, JSONCache
+from nnll_60 import USER_PATH_NAMED, JSONCache, HOME_FOLDER_PATH
 
 user_data = JSONCache(USER_PATH_NAMED)
 
@@ -27,11 +27,13 @@ def name_save_file_as(extension: str = ".png") -> Path:
     """
 
     @user_data.decorator
-    def _read_data(data: TextIOWrapper = None):
+    def _read_data(data: TextIOWrapper = None) -> dict:
         return data
 
-    user_settings = _read_data
-    save_folder_path_absolute = user_settings.get("save_folder_path_absolute", os.getcwd())
+    user_settings = _read_data()
+    save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable object
+    if save_folder_path_absolute == "output":
+        save_folder_path_absolute = os.path.join(HOME_FOLDER_PATH, "output")
     if not os.path.isdir(save_folder_path_absolute):
         raise FileNotFoundError("Invalid folder location. {error_log}")
     files_in_save_location = os.listdir(save_folder_path_absolute)

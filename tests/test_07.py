@@ -4,36 +4,34 @@
 
 def test_mir_creation():
     from nnll_01 import nfo
-    from nnll_07 import add_mir_entry
+    from nnll_07 import mir_entry
     from pprint import pprint
 
-    entry = add_mir_entry(
-        domain="info", arch="unet", series="stable-diffusion-xl", compatibility="base", gen_kwargs={"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False}, pipe_kwargs={"use_safetensors": True}
+    entry = mir_entry(domain="info", arch="unet", series="stable-diffusion-xl", comp="base", gen_kwargs={"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False}, pipe_kwargs={"use_safetensors": True})
+    entry.update(
+        mir_entry(domain="model", arch="unet", series="stable-diffusion-xl", comp="base", file_path="/Users/nyan/Documents/models"),
     )
     entry.update(
-        add_mir_entry(domain="model", arch="unet", series="stable-diffusion-xl", compatibility="base", file_path="/Users/nyan/Documents/models"),
-    )
-    entry.update(
-        add_mir_entry(
+        mir_entry(
             domain="ops",
             arch="scheduler",
             series="align-your-steps",
-            compatibility="stable-diffusion-xl",
+            comp="stable-diffusion-xl",
             num_inference_steps=10,
             timesteps="StableDiffusionXLTimesteps",
-            dependency="diffusers",
+            deps_pkg=["diffusers"],
             module_path=["schedulers.scheduling_utils", "AysSchedules"],
         )
     )
     entry.update(
-        add_mir_entry(
+        mir_entry(
             domain="ops",
             arch="patch",
             series="hidiffusion",
-            compatibility="stable-diffusion-xl",
+            comp="stable-diffusion-xl",
             num_inference_steps=10,
             timesteps="StableDiffusionXLTimesteps",
-            dependency="hidiffusion",
+            deps_pkg='["hidiffusion"]',
             gen_kwargs={"height": 2048, "width": 2048, "eta": 1.0, "guidance_scale": 7.5},
             module_path=["apply_hidiffusion"],
         )
@@ -45,14 +43,14 @@ def test_mir_creation():
 
 #  ays_type="StableDiffusionXLTimesteps") -> Tuple[Callable, dict]:
 #     """Apply AlignYourSteps optimization
-#     compatibility: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
+#     comp: stable-diffusion-xl, stable-diffusion, stable-video-diffusion
 #     """
 
 # domain_info = Domain("model")
 # arch_name = Architecture("unet")
 # impl_sdxl = Implementation("stable-diffusion-xl")
 # impl_sdxl.pipelines = "StableDiffusionXL"
-# compat = Compatibility(
+# compat = comp(
 #     "base",
 #     Model(file_path="/Users/nyan/Documents/models"),
 # )
@@ -66,7 +64,7 @@ def test_mir_creation():
 # domain_info = Domain("info")
 # arch_name = Architecture("unet")
 # impl_sdxl = Series("stable-diffusion-xl")
-# compat = Compatibility(
+# compat = comp(
 #     "base",
 #     defaults={"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
 #     pipe_kwargs={"use_safetensors": True},
@@ -85,7 +83,7 @@ def test_mir_creation():
 #     domain_info = Domain("info")
 #     arch_name = Architecture("unet")
 #     impl_sdxl = Implementation("stable-diffusion-xl")
-#     compat = Compatibility(
+#     compat = comp(
 #         "base",
 #         metadata=Info(
 #             gen_kwargs={"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
@@ -102,7 +100,7 @@ def test_mir_creation():
 # arch_name = Architecture("unet")
 # impl_sdxl = Implementation("stable-diffusion-xl")
 # impl_sdxl.pipelines = "StableDiffusionXL"
-# compat = Compatibility(
+# compat = comp(
 #     "base",
 #     Model(file_path="/Users/nyan/Documents/models"),
 # )
@@ -121,7 +119,7 @@ if __name__ == "__main__":
 # arch_name = Architecture('unet')
 # ver = Implementation('stable-diffusion-xl')
 # ver.pipelines = "StableDiffusionXL"
-# compat = Compatibility('base',defaults={"num_inference_steps": 40,"denoising_end": 0.8,"output_type": "latent","safety_checker": False}, pipe_kwargs={"use_safetensors": True})
+# compat = comp('base',defaults={"num_inference_steps": 40,"denoising_end": 0.8,"output_type": "latent","safety_checker": False}, pipe_kwargs={"use_safetensors": True})
 
 # compat.to_dict()
 # ver.add_compat(compat)
@@ -147,7 +145,7 @@ if __name__ == "__main__":
 
 # # Create components within architectures
 # ```
-# comp_xl = Compatibility("base", dtype="float32", file_size=1024, layer_type="diffusers")
+# comp_xl = comp("base", dtype="float32", file_size=1024, layer_type="diffusers")
 # comp_vae = Component("vae", dtype="float32", file_size=512, layer_type="diffusers")
 # comp_lora = Component("lora", dtype="float32", file_size=256, layer_type="diffusers")
 # ```

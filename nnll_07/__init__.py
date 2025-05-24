@@ -132,11 +132,11 @@ def build_comp(comp: str, domain: str, kwargs: dict) -> Callable:
     data = {}
     module_key = "[init]"
     base_modules = ["scheduler", "scheduler_kwargs", "dep_pkg", "module_path", "module_i2i", "module_inpaint"]
-    for module in base_modules:
-        if module in kwargs:
-            value = kwargs.pop(module)
+    for module_name in base_modules:
+        if module_name in kwargs:
+            value = kwargs.pop(module_name)
             if value is not None:
-                data.get(module_key, data.setdefault(module_key, {module: value})).update(module=value)
+                data.get(module_key, data.setdefault(module_key, {module_name: value})).update({module_name: value})
                 field.setdefault(
                     module_key,
                     (Dict[str, Union[str, Dict[str, Any], List[str], None]], ...),
@@ -283,12 +283,21 @@ def mir_entry(domain: str, arch: str, series: str, comp: str, **kwargs) -> None:
     return domain_inst.to_dict()
 
 
-if __name__ == "__main__":
+# def create_model_tag(model_header,metadata_dict):
+#         parse_file = parse_model_header(model_header)
+#         reconstructed_file_path = os.path.join(disk_path,each_file)
+#         attribute_dict = metadata_dict | {"disk_path": reconstructed_file_path}
+#         file_metadata = parse_file | attribute_dict
+#         index_tag = create_model_tag(file_metadata)
+#
+
+
+def main():
     import argparse
 
-    from nnll_60 import CONFIG_PATH_NAMED, JSONCache
+    from nnll_60 import MIR_PATH, JSONCache
 
-    config_file = JSONCache(CONFIG_PATH_NAMED)
+    config_file = JSONCache(MIR_PATH)
     parser = argparse.ArgumentParser(description="MIR database manager")
     parser.add_argument("-r", "--remove", action="store_true", help="Remove an item from the database (currently not implemented)")
     parser.add_argument("-d", "--domain", type=str, help=" Broad name of the type of data (model/ops/info/dev)")
@@ -309,3 +318,7 @@ if __name__ == "__main__":
         )
 
     read_data()
+
+
+if __name__ == "__main__":
+    main()

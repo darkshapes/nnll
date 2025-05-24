@@ -19,7 +19,6 @@ nnll_03/__init__.py
 nnll_03/__main__.py
 nnll_04/__init__.py
 nnll_05/__init__.py
-nnll_06/__init__.py
 nnll_07/__init__.py
 nnll_08/__init__.py
 nnll_09/__init__.py
@@ -27,20 +26,13 @@ nnll_10/__init__.py
 nnll_10/capacity.py
 nnll_10/compute.py
 nnll_10/nodes.py
-nnll_10/response_panel.py
-nnll_10/token_counters.py
 nnll_10/tuner.py
 nnll_11/__init__.py
-nnll_13/__init__.py
-nnll_14/__init__.py
 nnll_15/__init__.py
 nnll_15/constants.py
 nnll_16/__init__.py
 nnll_17/__init__.py
-nnll_17/__main__.py
 nnll_18/__init__.py
-nnll_19/__init__.py
-nnll_20/__init__.py
 nnll_21/__init__.py
 nnll_24/__init__.py
 nnll_25/__init__.py
@@ -52,7 +44,6 @@ nnll_31/__init__.py
 nnll_33/__init__.py
 nnll_36/__init__.py
 nnll_39/__init__.py
-nnll_40/__init__.py
 nnll_41/__init__.py
 nnll_42/__init__.py
 nnll_43/__init__.py
@@ -67,6 +58,7 @@ nnll_53/__init__.py
 nnll_56/__init__.py
 nnll_59/__init__.py
 nnll_60/__init__.py
+nnll_60/mir_maid.py
 nnll_60/config/config.json
 nnll_60/config/config.toml
 nnll_60/config/filter.json
@@ -75,7 +67,7 @@ nnll_60/config/hf_map.json
 nnll_60/config/hyperchain.json
 nnll_60/config/libtype.json
 nnll_60/config/mir.json
-nnll_60/config/precisions.json
+nnll_60/config/mir_template.json
 nnll_61/__init__.py
 nnll_62/__init__.py
 nnll_62/sd_xl_base.yaml

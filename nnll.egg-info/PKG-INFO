@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev478+g2bfbc55.d20250518
+Version: 0.1.dev499+g876f8be.d20250524
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: darkshapes github.com/darkshapes
@@ -134,7 +134,7 @@ Dynamic: license-file
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll <br><sub>neural network link library: Flexible code blocks for tomorrows multimodal software.</sub>
+# nnll <br><sub>neural network link library: Flexible code for multimodal AI apps</sub>
 
 `nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs).  It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
 
