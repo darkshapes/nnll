@@ -59,7 +59,6 @@ nnll_56/__init__.py
 nnll_59/__init__.py
 nnll_60/__init__.py
 nnll_60/mir_maid.py
-nnll_60/config/config.json
 nnll_60/config/config.toml
 nnll_60/config/filter.json
 nnll_60/config/hashes.json

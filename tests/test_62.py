@@ -54,13 +54,15 @@ class TestConstructPipeline(unittest.TestCase):
         )
 
     @patch("os.path.isfile", return_value=False)
-    @patch("diffusers.StableDiffusionXLPipeline.from_pretrained")
+    @patch("diffusers.DiffusionPipeline.from_pretrained")
     def test_create_pipeline_from_pretrained(self, mock_from_pretrained, mock_isfile):
         """Test pipeline creation from a pre-trained model"""
         mock_from_pretrained.return_value = "mock_pipe"
 
         pipeline = ConstructPipeline()
         # with self.assertRaises(NotImplementedError):
+        # with patch("huggingface_hub.hf_hub_download", autospec=True):
+        #     with patch("huggingface_hub.snapshot_download", autospec=True):
         pipeline.create_pipeline(architecture=["info.unet.stable-diffusion-xl", "base"])
 
         mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
