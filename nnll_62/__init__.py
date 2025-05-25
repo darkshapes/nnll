@@ -56,7 +56,11 @@ class ConstructPipeline:
         repo = arch_data.get("repo")
 
         import_pkg = next(iter(init_modules["dep_pkg"]))
-        import_module = arch_data.get("module_alt") or init_modules.get("module_path")
+
+        if os.path.isfile(repo):
+            import_module = init_modules.get("module_path")
+        else:
+            import_module = arch_data.get("module_alt") or init_modules.get("module_path")
         pipe_class = get_module(import_pkg, import_module)
 
         init_kwargs = arch_data.get("init_kwargs", {})

@@ -34,9 +34,11 @@ class MIRDatabase:
     def write_to_disk(self) -> None:
         """Save data to JSON file\n"""
         from pprint import pprint
+        from nnll_01 import nfo
 
         self.mir_file.update_cache(self.database)
-        pprint(f"{self.database} : \nWritten to db")
+        pprint(self.database)
+        nfo(f"Wrote {len(self.database)} lines to MIR database file.")
 
     @mir_file.decorator
     def read_from_disk(self, data: dict = None) -> dict:
@@ -94,7 +96,7 @@ def build_mir_unet(mir_db: MIRDatabase):
             weight_map="weight_maps/model.unet.stable-diffusion-xl:base.json",
             repo="stabilityai/stable-diffusion-xl-base-1.0",
             module_path=["StableDiffusionXLPipeline"],
-            # module_alt=["DiffusionPipeline"],
+            module_alt=["DiffusionPipeline"],
             module_i2i=["StableDiffusionXLImg2ImgPipeline"],
         )
     )
@@ -733,19 +735,19 @@ def build_mir_float(mir_db: MIRDatabase):
 
 def build_mir_scheduler(mir_db: MIRDatabase):
     """Create mir info database"""
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="euler", comp="any", deps_pkg=["diffusers"], module_path=["EulerDiscreteScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="euler-ancestral", comp="any", deps_pkg=["diffusers"], module_path=["EulerAncestralDiscreteScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="flow-match", comp="any", deps_pkg=["diffusers"], module_path=["FlowMatchEulerDiscreteScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="edm", comp="any", deps_pkg=["diffusers"], module_path=["EDMDPMSolverMultistepScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="dpm", comp="any", deps_pkg=["diffusers"], module_path=["DPMSolverMultistepScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="ddim", comp="any", deps_pkg=["diffusers"], module_path=["DDIMScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="lcm", comp="any", deps_pkg=["diffusers"], module_path=["LCMScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="tcd", comp="any", deps_pkg=["diffusers"], module_path=["TCDScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="heun", comp="any", deps_pkg=["diffusers"], module_path=["HeunDiscreteScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="uni-pc", comp="any", deps_pkg=["diffusers"], module_path=["UniPCMultistepScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="lms", comp="any", deps_pkg=["diffusers"], module_path=["LMSDiscreteScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="deis", comp="any", deps_pkg=["diffusers"], module_path=["DEISMultistepScheduler"]))
-    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="ddpm_wuerstchen", comp="any", deps_pkg=["diffusers"], module_path=["DDPMWuerstchenScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="euler", comp="any", dep_pkg=["diffusers"], module_path=["EulerDiscreteScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="euler-ancestral", comp="any", dep_pkg=["diffusers"], module_path=["EulerAncestralDiscreteScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="flow-match", comp="any", dep_pkg=["diffusers"], module_path=["FlowMatchEulerDiscreteScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="edm", comp="any", dep_pkg=["diffusers"], module_path=["EDMDPMSolverMultistepScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="dpm", comp="any", dep_pkg=["diffusers"], module_path=["DPMSolverMultistepScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="ddim", comp="any", dep_pkg=["diffusers"], module_path=["DDIMScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="lcm", comp="any", dep_pkg=["diffusers"], module_path=["LCMScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="tcd", comp="any", dep_pkg=["diffusers"], module_path=["TCDScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="heun", comp="any", dep_pkg=["diffusers"], module_path=["HeunDiscreteScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="uni-pc", comp="any", dep_pkg=["diffusers"], module_path=["UniPCMultistepScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="lms", comp="any", dep_pkg=["diffusers"], module_path=["LMSDiscreteScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="deis", comp="any", dep_pkg=["diffusers"], module_path=["DEISMultistepScheduler"]))
+    mir_db.add(mir_entry(domain="ops", arch="scheduler", series="ddpm_wuerstchen", comp="any", dep_pkg=["diffusers"], module_path=["DDPMWuerstchenScheduler"]))
     mir_db.add(
         mir_entry(
             domain="ops",
@@ -758,199 +760,6 @@ def build_mir_scheduler(mir_db: MIRDatabase):
             module_path=["schedulers.scheduling_utils", "AysSchedules"],
         )
     )
-
-
-# class AspectImage(str, Enum):
-#     """Aspects for 2D image models
-#     incl. Flux, SD3, SDXL, AuraFlow"""
-
-#     RATIOS = {
-#         "1:1___1024x1024": (1024, 1024),
-#         "16:15_1024x960": (1024, 960),
-#         "17:15_1088x960": (1088, 960),
-#         "17:14_1088x896": (1088, 896),
-#         "18:13_1152x832": (1152, 832),
-#         "4:3___1152x896": (1152, 896),
-#         "3:2___1216x832": (1216, 832),
-#         # "72:32_1232x832" : ( 1232, 832),
-#         "5:3___1280x768": (1280, 768),
-#         "21:11_1344x704": (1344, 704),
-#         "7:4___1344x768": (1344, 768),
-#         "2:1___1408x704": (1408, 704),
-#         "23:11_1472x704": (1472, 704),
-#         "21:9__1536x640": (1536, 640),
-#         "2:1___1536x768": (1536, 768),
-#         "5:2___1600x640": (1600, 640),
-#         "26:9__1664x576": (1664, 576),
-#         "3:1___1728x576": (1728, 576),
-#         "28:9__1792x576": (1792, 576),
-#         "29:8__1856x512": (1856, 512),
-#         "15:4__1920x512": (1920, 512),
-#         "31:8__1984x512": (1984, 512),
-#         "4:1___2048x512": (2048, 512),
-#     }
-
-
-# class AspectVideo(str, Enum):
-#     """Aspects for Video models
-#     incl. HunyuanVideo, Pyramid, Sora"""
-
-#     RATIOS = {
-#         "1:1___V_256x256": (256, 256),
-#         "4:3___V_320x240": (320, 240),
-#         "32:27_V_576x486": (576, 486),
-#         "22:15_V_704x480": (704, 480),
-#         "9:5___V_720x400": (720, 400),
-#         "3:2___V_720x480": (720, 480),
-#         "5:4___V_720x576": (720, 576),
-#         "3:2___V_768x512": (768, 512),
-#         "4:3___V_832x624": (832, 624),
-#         "53:30_V_848x480": (848, 480),
-#         "4:3___V 960x704": (960, 704),
-#         "1:1___V_960x960": (960, 960),
-#         "20:11_V_1280x704": (1280, 704),
-#         "16:9__V_1024X576": (1024, 576),
-#     }
-
-
-# class AspectRender(str, Enum):
-#     """Aspects for 3d-generative models
-#     incl. SV3D"""
-
-#     RATIOS = {
-#         "1:1__SV3D_576x576": (576, 576),
-#     }
-
-
-# class AspectLegacy(str, Enum):
-#     """Aspect ratios for earlier 2d Diffusion models
-#     incl. Latent/Stable Diffusion, Pixart A, Playground 1, etc"""
-
-#     RATIOS = {
-#         "1:1____SD_512x512": (512, 512),
-#         "4:3____SD_682x512": (682, 512),
-#         "3:2____SD_768x512": (768, 512),
-#         "1:1____SD_768x768": (768, 768),
-#         "16:9___SD_910x512": (910, 512),
-#         "1:85:1_SD_952x512": (952, 512),
-#         "2:1____SD_1024x512": (1024, 512),
-#     }
-# {
-#     "domain": {
-#         "model": "",
-#         "info": "",
-#         "operation": "",
-#         "dev": ""
-#     },
-#     "model.format": {
-#         "safetensors": "",
-#         "gguf": "",
-#         "pickle": "",
-#         "onnx": "",
-#         "ggml": "",
-#         "exl2": "",
-#         "mlx": "",
-#         "awq": "",
-#         "llamafile": ""
-#     },
-#     "model.quantization": {
-#         "aqlm": "",
-#         "gguf": "",
-#         "ggml": "",
-#         "gptq": "",
-#         "vptq": "",
-#         "awq": "",
-#         "quanto": "",
-#         "bitnet": ""
-#     },
-#     "model.architecture": {
-#         "unet": "",
-#         "dit": "",
-#         "transformer": "",
-#         "taesd": "",
-#         "vae": "",
-#         "gan": "",
-#         "gru": "",
-#         "lstm": "",
-#         "brnn": "",
-#         "rnn": "",
-#         "cnn": "",
-#         "rbm": ""
-#     },
-#     "model.architecture.implementation": {
-#         "bert": "",
-#         "chat_glm": "",
-#         "t5": "",
-#         "t5-xxl": "",
-#         "mt5": "",
-#         "clip-l": "",
-#         "clip-g": "",
-#         "clip-h": "",
-#         "llama": "",
-#         "openchat": "",
-#         "qwen": "",
-#         "openai": "",
-#         "deepseek": "",
-#         "gemma": "",
-#         "mistral": "",
-#         "vicuna": "",
-#         "whisper": "",
-#         "nlb": "",
-#         "bloom": "",
-#         "hunyuan3d": "",
-#         "stable-diffusion-xl": "",
-#         "lumina-2": "",
-#         "stable-diffusion": "",
-#         "stable-diffusion-3": "",
-#         "flux-1": "",
-#         "kolors": "",
-#         "pixart-alpha": "",
-#         "pixart-sigma": "",
-#         "stable-cascade": "",
-#         "stable-diffusion-2": "",
-#         "auraflow": "",
-#         "common-canvas": "",
-#         "hunyuan-dit": "",
-#         "lumina-mgpt": ""
-#     },
-#     "model.architecture.implementation.compatibility": {},
-#     "operation.scheduler": {
-#         "flow-match": "",
-#         "ipndm": "",
-#         "res-multistep": "",
-#         "deis": "",
-#         "euler": "",
-#         "euler_ancestral": "",
-#         "dpm": "",
-#         "ddim": "",
-#         "lcm": "",
-#         "tcd": "",
-#         "restart": "",
-#         "ddpm": "",
-#         "unipc": "",
-#         "edm": "",
-#         "heun": "",
-#         "repaint": "",
-#         "scoresde": "",
-#         "cm-stochastic": "",
-#         "pndm": "",
-#         "vq-diffusion": "",
-#         "linear": "",
-#         "cosine": "",
-#         "karras": "",
-#         "sgm-uniform": "",
-#         "ddim-uniform": "",
-#         "align-your-steps": "",
-#         "logarithmic-snr": "",
-#         "exponential": ""
-#     },
-#     "info.format": {
-#         "json": "",
-#         "yaml": "",
-#         "toml": "",
-#         "md": ""
-#     }
-# }
 
 
 def main():

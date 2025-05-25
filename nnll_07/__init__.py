@@ -8,15 +8,14 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
 
-from pydantic import create_model
+from pydantic import BaseModel, create_model
 
 from nnll_01 import debug_monitor
 
 T = TypeVar("T")
 
 
-@dataclass
-class Info:
+class Info(BaseModel):
     """
     Static global neural network attributes, metadata with an identifier in the database\n
     :param file_256: Canonical hash calculation for known model files
@@ -35,18 +34,17 @@ class Info:
     file_256: Optional[str] = None
     gen_kwargs: Optional[Dict[str, Any]] = None
     init_kwargs: Optional[Dict[str, Any]] = None
-    layer_256: Optional[List[str] | None] = None
-    module_alt: Optional[List[str] | None] = None
-    repo_alt: Optional[List[str] | None] = None
-    repo: Optional[str | None] = None
+    layer_256: Optional[List[str]] = None
+    module_alt: Optional[List[str]] = None
+    repo_alt: Optional[List[str]] = None
+    repo: Optional[str] = None
     scheduler_alt: Optional[str] = None
-    scheduler_kwargs_alt: Optional[str] = None
+    scheduler_kwargs_alt: Optional[Dict[str, Any]] = None
     tasks: Optional[List[str]] = None
-    weight_map: Optional[Union[urllib.parse.ParseResult, Path]] = None
+    weight_map: Optional[Union[urllib.parse.ParseResult, str]] = None
 
 
-@dataclass
-class Ops:
+class Ops(BaseModel):
     """
     Varying global neural network attributes, algorithms, optimizations and procedures on models\n
     info: str  # Immutable metadata with an identifier in the database\n
@@ -69,8 +67,7 @@ class Ops:
     variant: Optional[str] = None
 
 
-@dataclass
-class Model:
+class Model(BaseModel):
     """
     Static local neural network layers. Publicly released machine learning models with an identifier in the database\n
     :param dtype: Model datatype (ie F16,F32,F8_E4M3,I64) name if applicable
@@ -86,6 +83,7 @@ class Model:
     file_name: Optional[str] = None
     file_path: Optional[Path] = None
     file_size: Optional[int] = None
+    format: Optional[str] = None
     layer_type: Optional[str] = None
 
 
@@ -109,11 +107,11 @@ def add_mir_fields(domain: str, **kwargs):
     :return: A class of the designated type constructed with all fields added
     """
     if domain.lower() == "info":
-        return Info(**{k: v for k, v in kwargs.items() if k in Info.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
+        return Info(**{k: v for k, v in kwargs.items() if k in Info.__pydantic_fields__ and v is not None})  # pylint: disable=no-member
     elif domain.lower() == "model":
-        return Model(**{k: v for k, v in kwargs.items() if k in Model.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
+        return Model(**{k: v for k, v in kwargs.items() if k in Model.__pydantic_fields__ and v is not None})  # pylint: disable=no-member
     elif domain.lower() == "ops":
-        return Ops(**{k: v for k, v in kwargs.items() if k in Ops.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
+        return Ops(**{k: v for k, v in kwargs.items() if k in Ops.__pydantic_fields__ and v is not None})  # pylint: disable=no-member
     elif domain.lower() == "dev":
         return Dev(**{k: v for k, v in kwargs.items() if k in Dev.__dataclass_fields__ and v is not None})  # pylint: disable=no-member
     raise ValueError(f"Unsupported domain: {domain}")
@@ -131,7 +129,14 @@ def build_comp(comp: str, domain: str, kwargs: dict) -> Callable:
     }
     data = {}
     module_key = "[init]"
-    base_modules = ["scheduler", "scheduler_kwargs", "dep_pkg", "module_path", "module_i2i", "module_inpaint"]
+    base_modules = [
+        "scheduler",  # name of a scheduler package
+        "scheduler_kwargs",  # dictionary of scheduler arguments
+        "dep_pkg",  # this module be single length list
+        "module_path",  # this module must work with from_single_file, single or multi-length list
+        "module_i2i",
+        "module_inpaint",
+    ]
     for module_name in base_modules:
         if module_name in kwargs:
             value = kwargs.pop(module_name)
@@ -152,8 +157,16 @@ def build_comp(comp: str, domain: str, kwargs: dict) -> Callable:
             """Flatten the Compatibility class structure\n
             :return: A dictionary of the structure
             """
-            setattr(self, comp, asdict(getattr(self, comp)))  # add the data to an attribute if its not already made
-            return {key: value for key, value in self.__dict__.items() if value is not None}
+            setattr(self, comp, getattr(self, comp).__dict__)  # add the data to an attribute if its not already made
+            return {
+                comp_name: {
+                    inner_key: inner_value
+                    for inner_key, inner_value in comp_value.items()
+                    if inner_value is not None  # Comment to force formatting
+                }
+                for comp_name, comp_value in self.__dict__.items()
+                if isinstance(comp_value, dict)
+            }
 
     return Compatibility(**data)
 
