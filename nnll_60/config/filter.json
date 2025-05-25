@@ -175,7 +175,7 @@
         }
     },
     "unet": {
-        "model.unet.common-canvas-s": {
+        "model.unet.stable-diffusion-1:common-canvas-s": {
             "blocks": [
                 "up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"
             ]
@@ -194,7 +194,7 @@
                 ".12.self_attn.k_proj.weight"
             ]
         },
-        "model.unet.stable_diffusion": {
+        "model.unet.stable_diffusion-1": {
             "blocks": [
                 "model.diffusion_model.output_blocks.9"
             ]
@@ -210,7 +210,7 @@
                 "encoder_hid_proj.weight"
             ]
         },
-        "model.unet.playground-25": {
+        "model.unet.stable-diffusion-xl:playground-25": {
             "blocks": [
                 "edm_mean"
             ],

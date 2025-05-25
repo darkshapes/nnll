@@ -1,9 +1,21 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev478+g2bfbc55.d20250518
+Version: 0.1.dev501+g577da42.d20250525
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
-License: darkshapes github.com/darkshapes
+License: “Commons Clause” License Condition v1.0
+        
+        The Software is provided to you by the Licensor under the License, as defined below, subject to the following condition.
+        
+        Without limiting other conditions in the License, the grant of rights under the License will not include, and the License does not grant to you, the right to Sell the Software.
+        
+        For purposes of the foregoing, “Sell” means practicing any or all of the rights granted to you under the License to provide to third parties, for a fee or other consideration (including without limitation fees for hosting or consulting/ support services related to the Software), a product or service whose value derives, entirely or substantially, from the functionality of the Software. Any license notice or attribution required by the License must also include this Commons Clause License Condition notice.
+        
+        Software: nnll
+        
+        License : Mozilla Public License v. 2.0
+        
+        Licensor: darkshapes github.com/darkshapes
         
         This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 Project-URL: source, https://github.com/darkshapes/nnll
@@ -134,7 +146,7 @@ Dynamic: license-file
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll <br><sub>neural network link library: Flexible code blocks for tomorrows multimodal software.</sub>
+# nnll <br><sub>neural network link library: Flexible code for multimodal AI apps</sub>
 
 `nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs).  It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
 

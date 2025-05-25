@@ -1546,7 +1546,7 @@ wheels = [
 
 [[package]]
 name = "nnll"
-version = "0.1.dev478+g2bfbc55.d20250518"
+version = "0.1.dev501+g577da42.d20250525"
 source = { editable = "." }
 
 [package.optional-dependencies]

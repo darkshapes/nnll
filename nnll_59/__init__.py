@@ -7,36 +7,40 @@
 
 from io import TextIOWrapper
 import os
-from typing import LiteralString, Dict, List
-
+from typing import LiteralString, Dict  # , List
+from pathlib import Path
 import PIL
+import PIL.Image
 from nnll_01 import debug_monitor
 from nnll_44 import collect_hashes
-from nnll_60 import CONFIG_PATH_NAMED, JSONCache
+from nnll_60 import USER_PATH_NAMED, JSONCache, HOME_FOLDER_PATH
 
-config_data = JSONCache(CONFIG_PATH_NAMED)
+user_data = JSONCache(USER_PATH_NAMED)
 
 
 @debug_monitor
-@config_data.decorator
-def name_save_file_as(extension: str = ".png", data: TextIOWrapper = None) -> str:
+def name_save_file_as(extension: str = ".png") -> Path:
     """
     Construct the file name of a save file\n
     :param extension: The extension of the file
-    :type extension: `str`
-    :param data: Auto-filled argument by decorator
-    :type data: `None`
     :return: `str` A file path with a name
     """
 
-    save_folder_path_absolute = data.get("save_folder_path_absolute", os.getcwd())
+    @user_data.decorator
+    def _read_data(data: TextIOWrapper = None) -> dict:
+        return data
+
+    user_settings = _read_data()
+    save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable object
+    if save_folder_path_absolute == "output":
+        save_folder_path_absolute = os.path.join(HOME_FOLDER_PATH, "output")
     if not os.path.isdir(save_folder_path_absolute):
         raise FileNotFoundError("Invalid folder location. {error_log}")
     files_in_save_location = os.listdir(save_folder_path_absolute)
     file_extension = extension
     file_count = sum(f.endswith(extension) for f in files_in_save_location)
     file_count = str(file_count).zfill(6)
-    file_name = "Combo_" + file_count + file_extension
+    file_name = "Shadowbox_" + file_count + file_extension
     file_path_absolute = os.path.join(save_folder_path_absolute, file_name)
     return file_path_absolute
 
@@ -66,8 +70,12 @@ def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str],
 
 
 @debug_monitor
-def write_image_to_disk(image: PIL, metadata: dict[str], extension: LiteralString = """.png"""):
-    """Save image to file"""
+def write_image_to_disk(image: PIL.Image.Image, metadata: dict[str], extension: LiteralString = """.png""") -> None:
+    """Save Image to File\n
+    :param image: Image file data in memory
+    :param metadata: Pipe metadata to write into the file
+    :param extension: Type of Image file to write, defaults to "\"\".png"\"\"\"
+    """
     file_path_absolute = name_save_file_as(extension)
     image.save(file_path_absolute, "PNG", pnginfo=metadata)
     image.show()
