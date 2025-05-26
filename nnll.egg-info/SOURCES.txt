@@ -62,7 +62,6 @@ nnll_60/mir_maid.py
 nnll_60/config/config.toml
 nnll_60/config/filter.json
 nnll_60/config/hashes.json
-nnll_60/config/hf_map.json
 nnll_60/config/hyperchain.json
 nnll_60/config/libtype.json
 nnll_60/config/mir.json
@@ -71,6 +70,7 @@ nnll_61/__init__.py
 nnll_62/__init__.py
 nnll_62/sd_xl_base.yaml
 nnll_64/__init__.py
+nnll_64/audio.py
 tests/.test.json
 tests/__init__.py
 tests/test.py
@@ -107,6 +107,7 @@ tests/test_46.py
 tests/test_48.py
 tests/test_49.py
 tests/test_60.py
+tests/test_60_2.py
 tests/test_61.py
 tests/test_61_2.py
 tests/test_62.py

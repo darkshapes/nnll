@@ -31,13 +31,14 @@ class Info(BaseModel):
     :param weight_map: Remote location of the weight map for the model
     """
 
+    dep_alt: Optional[Dict[str, List[str]]] = None
     file_256: Optional[str] = None
     gen_kwargs: Optional[Dict[str, Any]] = None
     init_kwargs: Optional[Dict[str, Any]] = None
     layer_256: Optional[List[str]] = None
     module_alt: Optional[List[str]] = None
-    repo_alt: Optional[List[str]] = None
-    repo: Optional[str] = None
+    repo_pkg: Optional[List[str]] = None
+    repo: Optional[List[str]] = None
     scheduler_alt: Optional[str] = None
     scheduler_kwargs_alt: Optional[Dict[str, Any]] = None
     tasks: Optional[List[str]] = None
@@ -62,7 +63,7 @@ class Ops(BaseModel):
     dtype: Optional[str] = None
     gen_kwargs: Optional[Dict[str, int | str | float | list]] = None
     init_kwargs: Optional[Dict[str, int | str | float | list]] = None
-    repo: Optional[str] = None
+    repo: Optional[List[str]] = None
     scheduler_kwargs: Optional[Dict[str, Any]] = None
     variant: Optional[str] = None
 
@@ -94,8 +95,10 @@ class Dev(Info, Ops, Model):
     Inheriting attributes from Info, Ops, and Model to reduce duplication.
     """
 
-    dep_pkg: Optional[list[str]] = None
+    dep_pkg: Optional[Dict[str, list[str]]] = None
     lora_kwargs: Optional[str] = None
+    scheduler: Optional[str] = None
+    scheduler_kwargs: Optional[Dict[str, Any]] = None
     module_path: Optional[list[str]] = None
     # :param stage: Where item fits in a chain
 
@@ -132,13 +135,10 @@ def build_comp(comp: str, domain: str, kwargs: dict) -> Callable:
     base_modules = [
         "scheduler",  # name of a scheduler package
         "scheduler_kwargs",  # dictionary of scheduler arguments
-        "dep_pkg",  # this module be single length list
-        "module_path",  # this module must work with from_single_file, single or multi-length list
-        "module_i2i",
-        "module_inpaint",
+        "dep_pkg",  # a dictionary of dependency modules mapped to a list of module path, last work with from_single_file, single or multi-length listt
     ]
     for module_name in base_modules:
-        if module_name in kwargs:
+        if module_name in kwargs and domain != Dev:
             value = kwargs.pop(module_name)
             if value is not None:
                 data.get(module_key, data.setdefault(module_key, {module_name: value})).update({module_name: value})

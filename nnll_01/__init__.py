@@ -181,7 +181,7 @@ def nfo(*args, **kwargs):
 
 def dbug(*args, **kwargs):
     """Info log output"""
-    logger_obj.debug("%s", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=exc_info)
+    logger_obj.debug(f"{args, kwargs}", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=exc_info)
 
 
 os.makedirs("log", exist_ok=True)

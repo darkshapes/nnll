@@ -7,10 +7,11 @@
 
 from io import TextIOWrapper
 import os
-from typing import LiteralString, Dict  # , List
+from typing import Literal, Any
+import numpy as np
 from pathlib import Path
-import PIL
 import PIL.Image
+from typing import Dict
 from nnll_01 import debug_monitor
 from nnll_44 import collect_hashes
 from nnll_60 import USER_PATH_NAMED, JSONCache, HOME_FOLDER_PATH
@@ -19,7 +20,7 @@ user_data = JSONCache(USER_PATH_NAMED)
 
 
 @debug_monitor
-def name_save_file_as(extension: str = ".png") -> Path:
+def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Path:
     """
     Construct the file name of a save file\n
     :param extension: The extension of the file
@@ -31,7 +32,7 @@ def name_save_file_as(extension: str = ".png") -> Path:
         return data
 
     user_settings = _read_data()
-    save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable object
+    save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable-object
     if save_folder_path_absolute == "output":
         save_folder_path_absolute = os.path.join(HOME_FOLDER_PATH, "output")
     if not os.path.isdir(save_folder_path_absolute):
@@ -45,7 +46,7 @@ def name_save_file_as(extension: str = ".png") -> Path:
     return file_path_absolute
 
 
-@debug_monitor
+# do not log here
 def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:
     """
     Create metadata from active hf inference pipes\n
@@ -69,13 +70,29 @@ def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str],
     return gen_data
 
 
-@debug_monitor
-def write_image_to_disk(image: PIL.Image.Image, metadata: dict[str], extension: LiteralString = """.png""") -> None:
+# do not log here
+def write_to_disk(content: Any, metadata: dict[str], extension: str = None) -> None:
     """Save Image to File\n
     :param image: Image file data in memory
     :param metadata: Pipe metadata to write into the file
-    :param extension: Type of Image file to write, defaults to "\"\".png"\"\"\"
+    :param extension: Type of Image file to write, defaults to
     """
-    file_path_absolute = name_save_file_as(extension)
-    image.save(file_path_absolute, "PNG", pnginfo=metadata)
-    image.show()
+    if isinstance(content, PIL.Image.Image):
+        from PIL import PngImagePlugin
+
+        file_path_absolute = name_save_file_as(extension or ".png")
+        embed = PngImagePlugin.PngInfo()
+        embed.add_text("parameters", str(metadata))
+        content.save(file_path_absolute, "PNG", pnginfo=embed)
+        content.show()
+
+    else:
+        import soundfile as sf
+
+        file_path_absolute = name_save_file_as(extension or ".wav")
+        sf.write(file_path_absolute, content, metadata)
+    # if import_pkg == ["audiocraft"]:
+    #     from audiocraft.data.audio import audio_write
+
+    #     for idx, one_wav in enumerate(content):
+    #         audio_write(f"{name_save_file_as('.wav')}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)

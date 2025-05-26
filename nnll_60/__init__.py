@@ -48,7 +48,7 @@ def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__)
 
 USER_PATH_NAMED = os.path.join(HOME_FOLDER_PATH, "config.toml")
 HASH_PATH_NAMED = set_path_stable("hashes.json")
-CONFIG_PATH_NAMED = set_path_stable("config.json")
+# CONFIG_PATH_NAMED = set_path_stable("config.json")
 CHAIN_PATH_NAMED = set_path_stable("hyperchain.json")
 LIBTYPE_PATH_NAMED = set_path_stable("libtype.json")
 MIR_PATH = set_path_stable("mir.json")
@@ -115,14 +115,20 @@ class JSONCache:
         """External trigger for manual cache retrieval"""
         self._load_cache()
 
-    def update_cache(self, new_data: dict):
-        """Save changes if the data actually changed"""
+    def update_cache(self, new_data: dict, replace: bool = False):
+        """Save changes only if data actually changed
+        :param new_data: Updated dictionary
+        :param replace: Force clear entire cache and replace with new_data, defaults to False
+        """
         self._load_cache()  # Ensure cache loaded / 確保快取載入
-
-        # original_cache_copy = self._cache.copy()  # Snapshot current state / 快照當前快取
+        if replace:
+            self._cache = {"empty": ""}  # sanity check
+            self._save_cache()
+            self._cache.pop("empty")
+        original_cache_copy = self._cache.copy()  # Snapshot current state / 快照當前快取
         self._cache.update(new_data)  # Add the data to the cache / 將資料新增到快取中
-        # if original_cache_copy != self._cache:
-        self._save_cache()
+        if original_cache_copy != self._cache:
+            self._save_cache()
 
     def decorator(self, func):
         """Add cache file copies to functions"""

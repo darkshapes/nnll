@@ -23,8 +23,9 @@ def lookup_function_for(known_repo: str, delimiter=".") -> str:
 
     mir_db = MIRDatabase()
     mir_db.read_from_disk()
-    mir_arch = mir_db.find_path("repo", known_repo)
+    mir_arch = mir_db.find_path("repo", known_repo.lower())
     sequence = "nnll_64.run_inference"
+    nfo(f"lookup result : {mir_arch}, {sequence}")
     nfo(f"lookup result : {mir_arch}, {sequence}")
     sequence = sequence.split(delimiter)
     module = importlib.import_module(sequence[0])
