@@ -26,6 +26,44 @@ nnll[nnll_56]
 nnll[nnll_62]
 nnll[nnll_64]
 
+[attention]
+sageattention
+
+[attention:platform_system == "linux"]
+flash_attn
+
+[cpu]
+torch
+torchvision
+torchaudio
+
+[cpu-darwin]
+torch>=2.8
+torchvision
+torchaudio
+
+[cu126]
+torch
+torchvision
+torchaudio
+
+[cu126:platform_system == "linux"]
+triton
+
+[cu126:platform_system == "windows"]
+triton-windows
+
+[cu128]
+torch
+torchvision
+torchaudio
+
+[cu128:platform_system == "linux"]
+triton
+
+[cu128:platform_system == "windows"]
+triton-windows
+
 [dev]
 nnll[all]
 aioresponses>=0.7.8
@@ -143,3 +181,9 @@ transformers>=4.51.3
 [nnll-64]
 pillow>=11.1.0
 protobuf>=6.31.0
+
+[rocm]
+torch
+torchvision
+torchaudio
+pytorch-triton-rocm

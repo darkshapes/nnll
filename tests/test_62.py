@@ -37,35 +37,101 @@ class TestConstructPipeline(unittest.TestCase):
     # async def setUp(self):
     #     self.pipeline = ConstructPipeline()
 
-    @patch("os.path.isfile", return_value=True)
-    @patch("diffusers.StableDiffusionXLPipeline.from_single_file")
-    def test_create_pipeline_from_single_file(self, mock_from_single_file, mock_isfile):
-        """Test pipeline creation from a single file"""
-        mock_from_single_file.return_value = "mock_pipe"
+    def test_get_module(self):
         pipeline = ConstructPipeline()
-        pipe, repo, settings = pipeline.create_pipeline(["info.unet.stable-diffusion-xl", "base"])
+        module = pipeline._get_module({"diffusers": ["StableDiffusionXLPipeline"]})
+        from diffusers import StableDiffusionXLPipeline
 
-        mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
-        self.assertEqual(pipe, "mock_pipe")
-        self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
-        self.assertEqual(
-            settings,
-            {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent", "safety_checker": False},
-        )
+        assert module == [StableDiffusionXLPipeline]
 
-    @patch("os.path.isfile", return_value=False)
-    @patch("diffusers.DiffusionPipeline.from_pretrained")
-    def test_create_pipeline_from_pretrained(self, mock_from_pretrained, mock_isfile):
-        """Test pipeline creation from a pre-trained model"""
-        mock_from_pretrained.return_value = "mock_pipe"
-
+    def test_get_several_module(self):
         pipeline = ConstructPipeline()
-        # with self.assertRaises(NotImplementedError):
-        # with patch("huggingface_hub.hf_hub_download", autospec=True):
-        #     with patch("huggingface_hub.snapshot_download", autospec=True):
-        pipeline.create_pipeline(architecture=["info.unet.stable-diffusion-xl", "base"])
+        module_1, module_2 = pipeline._get_module({"diffusers": ["StableDiffusionXLPipeline"], "transformers": ["CLIPModel"]})
+        from diffusers import StableDiffusionXLPipeline
+        from transformers import CLIPModel
 
-        mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
+        assert module_1 == StableDiffusionXLPipeline
+        assert module_2 == CLIPModel
+
+    def test_sub_cls_locs(self):
+        pipeline = ConstructPipeline()
+        module = pipeline._get_module({"diffusers": ["StableDiffusionXLPipeline"]})
+        class_sig = pipeline._get_sub_cls_locs(module[-1])
+        expected_output = {
+            "vae": ["diffusers", "models", "autoencoders", "autoencoder_kl", "AutoencoderKL"],
+            "text_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModel"],
+            "text_encoder_2": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModelWithProjection"],
+            "tokenizer": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
+            "tokenizer_2": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
+            "unet": ["diffusers", "models", "unets", "unet_2d_condition", "UNet2DConditionModel"],
+            "scheduler": ["KarrasDiffusionSchedulers"],
+            "image_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPVisionModelWithProjection"],
+            "feature_extractor": ["transformers", "models", "clip", "image_processing_clip", "CLIPImageProcessor"],
+        }
+        assert class_sig == expected_output
+
+    def test_sub_cls_load(self):
+        pipeline = ConstructPipeline()
+        prev_output = {
+            "vae": ["diffusers", "models", "autoencoders", "autoencoder_kl", "AutoencoderKL"],
+            "text_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModel"],
+            "text_encoder_2": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModelWithProjection"],
+            "tokenizer": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
+            "tokenizer_2": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
+            "unet": ["diffusers", "models", "unets", "unet_2d_condition", "UNet2DConditionModel"],
+            "scheduler": ["KarrasDiffusionSchedulers"],
+            "image_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPVisionModelWithProjection"],
+            "feature_extractor": ["transformers", "models", "clip", "image_processing_clip", "CLIPImageProcessor"],
+        }
+
+        for _, package in prev_output.items():
+            import_map = {package[0]: package[-1:]}
+            print(package)
+            print(import_map)
+            # current_import = pipeline._get_module(import_map)
+            # # from importlib import import_module
+            # # # import diffusers
+
+            # path = ".".join(package[1:])
+            # path_alt = package[-1]
+            # mod = package[0]
+            # print(f"{path}.{mod}")
+            # print(f"{path_alt}")
+            # # expected_import = import_module(mod)
+            # expected_import = __import__(".".join(package[0:-1]))
+            # # __import__()
+
+            # assert current_import == expected_import
+
+    # @patch("os.path.isfile", return_value=True)
+    # @patch("diffusers.StableDiffusionXLPipeline.from_single_file")
+    # def test_create_pipeline_from_single_file(self, mock_from_single_file, mock_isfile):
+    #     """Test pipeline creation from a single file"""
+    #     mock_from_single_file.return_value = "mock_pipe"
+    #     pipeline = ConstructPipeline()
+    #     pipe, repo, import_pkg, settings = pipeline.create_pipeline(["info.unet.stable-diffusion-xl", "base"])
+
+    #     mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
+    #     self.assertEqual(pipe, "mock_pipe")
+    #     self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
+    #     self.assertEqual(
+    #         settings,
+    #         {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent", "safety_checker": False},
+    #     )
+
+    # @patch("os.path.isfile", return_value=False)
+    # @patch("diffusers.DiffusionPipeline.from_pretrained")
+    # def test_create_pipeline_from_pretrained(self, mock_from_pretrained, mock_isfile):
+    #     """Test pipeline creation from a pre-trained model"""
+    #     mock_from_pretrained.return_value = "mock_pipe"
+
+    #     pipeline = ConstructPipeline()
+    #     # with self.assertRaises(NotImplementedError):
+    #     # with patch("huggingface_hub.hf_hub_download", autospec=True):
+    #     #     with patch("huggingface_hub.snapshot_download", autospec=True):
+    #     pipeline.create_pipeline(architecture=["info.unet.stable-diffusion-xl", "base"])
+
+    #     mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
 
     # @patch("os.path.basename", return_value="mock_adapter")
     # def test_add_lora(self, mock_basename):

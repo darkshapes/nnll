@@ -1,6 +1,12 @@
 {
+    "empty": "",
     "info.unet.stable-diffusion-xl": {
         "base": {
+            "dep_alt": {
+                "diffusers": [
+                    "DiffusionPipeline"
+                ]
+            },
             "gen_kwargs": {
                 "num_inference_steps": 40,
                 "denoising_end": 0.8,
@@ -13,22 +19,24 @@
             "layer_256": [
                 "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"
             ],
-            "module_alt": [
-                "DiffusionPipeline"
+            "repo": [
+                "stabilityai/stable-diffusion-xl-base-1.0"
             ],
-            "repo": "stabilityai/stable-diffusion-xl-base-1.0",
             "weight_map": "weight_maps/model.unet.stable-diffusion-xl:base.json"
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "StableDiffusionXLPipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "StableDiffusionXLPipeline"
+                ]
+            }
         },
         "refiner": {
+            "dep_alt": {
+                "diffusers": [
+                    "DiffusionPipeline"
+                ]
+            },
             "gen_kwargs": {
                 "num_inference_steps": 40,
                 "denoising_end": 0.8
@@ -36,18 +44,19 @@
             "layer_256": [
                 "8c2d0d32cff5a74786480bbaa932ee504bb140f97efdd1a3815f14a610cf6e4a"
             ],
-            "module_alt": [
-                "DiffusionPipeline"
+            "repo": [
+                "stabilityai/stable-diffusion-xl-refiner-1.0"
             ],
-            "repo": "stabilityai/stable-diffusion-xl-refiner-1.0",
             "weight_map": "weight_maps/stable-diffusion-xl-refiner.json"
         },
         "pony-diffusion": {
+            "dep_alt": {
+                "diffusers": [
+                    "DiffusionPipeline"
+                ]
+            },
             "layer_256": [
                 "d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16"
-            ],
-            "module_alt": [
-                "DiffusionPipeline"
             ]
         },
         "animagine": {
@@ -66,14 +75,21 @@
             ]
         },
         "playground-2.5-base": {
+            "dep_alt": {
+                "diffusers": [
+                    "DiffusionPipeline"
+                ]
+            },
             "layer_256": [
                 "a6f31493ceeb51c88c5239188b9078dc64ba66d3fc5958ad48c119115b06120c"
-            ],
-            "module_alt": [
-                "DiffusionPipeline"
             ]
         },
         "playground-2.5-aesthetic": {
+            "dep_alt": {
+                "diffusers": [
+                    "DiffusionPipeline"
+                ]
+            },
             "gen_kwargs": {
                 "num_inference_steps": 50,
                 "guidance_scale": 3
@@ -86,10 +102,9 @@
                 "fe2e9edf7e3923a80e64c2552139d8bae926cc3b028ca4773573a6ba60e67c20",
                 "d4813e9f984aa76cb4ac9bf0972d55442923292d276e97e95cb2f49a57227843"
             ],
-            "module_alt": [
-                "DiffusionPipeline"
-            ],
-            "repo": "playgroundai/playground-v2.5-1024px-aesthetic"
+            "repo": [
+                "playgroundai/playground-v2.5-1024px-aesthetic"
+            ]
         }
     },
     "info.unet.kolors": {
@@ -103,16 +118,16 @@
                 "torch_dtype": "torch.float16",
                 "variant": "fp16"
             },
-            "repo": "Kwai-Kolors/Kolors-diffusers"
+            "repo": [
+                "Kwai-Kolors/Kolors-diffusers"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "KolorsPipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "KolorsPipeline"
+                ]
+            }
         }
     },
     "info.unet.stable-cascade": {
@@ -126,10 +141,9 @@
             ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ]
+            "dep_pkg": {
+                "diffusers": "StableCascadeCombinedPipeline"
+            }
         },
         "b": {
             "layer_256": [
@@ -153,19 +167,17 @@
             "layer_256": [
                 "dee29a467c44cff413fcf1c2dda0b31f5f0a4e093029a8e5a05140f40ae061ee"
             ],
-            "repo_alt": [
+            "repo": [
+                "stabilityai/stable-diffusion-3.5-medium",
                 "adamo1139/stable-diffusion-3.5-medium-ungated"
-            ],
-            "repo": "stabilityai/stable-diffusion-3.5-medium"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "StableDiffusion3Pipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "StableDiffusion3Pipeline"
+                ]
+            }
         },
         "large": {
             "gen_kwargs": {
@@ -178,10 +190,10 @@
             "layer_256": [
                 "8c2e5bc99bc89290254142469411db66cb2ca2b89b129cd2f6982b30e26bd465"
             ],
-            "repo_alt": [
+            "repo": [
+                "stabilityai/stable-diffusion-3.5-large",
                 "adamo1139/stable-diffusion-3.5-large-ungated"
-            ],
-            "repo": "stabilityai/stable-diffusion-3.5-large"
+            ]
         },
         "gguf": {
             "layer_256": [
@@ -196,7 +208,9 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "repo": "yandex/stable-diffusion-3.5-large-alchemist"
+            "repo": [
+                "yandex/stable-diffusion-3.5-large-alchemist"
+            ]
         },
         "alchemist-medium": {
             "gen_kwargs": {
@@ -206,7 +220,9 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "repo": "yandex/stable-diffusion-3.5-medium-alchemist"
+            "repo": [
+                "yandex/stable-diffusion-3.5-medium-alchemist"
+            ]
         }
     },
     "info.dit.flux-1": {
@@ -222,18 +238,24 @@
             "layer_256": [
                 "ef5c9cd1ebe6e3be5e8b1347eca0a6f0b138986c71220a7f1c2c14f29d01beed"
             ],
-            "repo_alt": [
+            "repo": [
+                "black-forest-labs/flux.1-schnell",
                 "cocktailpeanut/xulf-s"
-            ],
-            "repo": "black-forest-labs/flux.1-schnell"
-        },
-        "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
             ]
         },
+        "[init]": {
+            "dep_pkg": {
+                "diffusers": [
+                    "FluxPipeline"
+                ]
+            }
+        },
         "shuttle-3.1-aesthetic": {
+            "dep_alt": {
+                "diffusers": [
+                    "DiffusionPipeline"
+                ]
+            },
             "gen_kwargs": {
                 "height": 1024,
                 "width": 1024,
@@ -244,12 +266,16 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "module_alt": [
-                "DiffusionPipeline"
-            ],
-            "repo": "shuttleai/shuttle-3.1-aesthetic"
+            "repo": [
+                "shuttleai/shuttle-3.1-aesthetic"
+            ]
         },
         "shuttle-3-diffusion": {
+            "dep_alt": {
+                "diffusers": [
+                    "DiffusionPipeline"
+                ]
+            },
             "gen_kwargs": {
                 "height": 1024,
                 "width": 1024,
@@ -260,10 +286,9 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "module_alt": [
-                "DiffusionPipeline"
-            ],
-            "repo": "shuttleai/shuttle-3-diffusion"
+            "repo": [
+                "shuttleai/shuttle-3-diffusion"
+            ]
         },
         "dev": {
             "gen_kwargs": {
@@ -280,12 +305,17 @@
                 "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",
                 "20d47474da0714979e543b6f21bd12be5b5f721119c4277f364a29e329e931b9"
             ],
-            "repo_alt": [
+            "repo": [
+                "black-forest-labs/flux.1-dev",
                 "cocktailpeanut/xulf-d"
-            ],
-            "repo": "black-forest-labs/flux.1-dev"
+            ]
         },
         "lite": {
+            "dep_alt": {
+                "f_lite": [
+                    "FLitePipeline"
+                ]
+            },
             "gen_kwargs": {
                 "num_inference_steps": 28,
                 "guidance_scale": 3.5,
@@ -295,10 +325,10 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "repo_alt": [
+            "repo": [
+                "Freepik/flux.1-lite-8B",
                 "Freepik/F-Lite-Texture"
-            ],
-            "repo": "Freepik/flux.1-lite-8B"
+            ]
         },
         "hybrid": {
             "layer_256": [
@@ -307,8 +337,16 @@
             ]
         },
         "mini": {
+            "dep_alt": {
+                "diffusers": [
+                    ""
+                ]
+            },
             "layer_256": [
                 "e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"
+            ],
+            "repo": [
+                "TencentARC/flux-mini"
             ]
         }
     },
@@ -320,20 +358,18 @@
                 "num_inference_steps": 50,
                 "guidance_scale": 3.5
             },
-            "repo_alt": [
+            "repo": [
+                "fal/AuraFlow-v0.3",
                 "fal/AuraFlow-v0.2",
                 "fal/AuraFlow"
-            ],
-            "repo": "fal/AuraFlow-v0.3"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "AuraFlowPipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "AuraFlowPipeline"
+                ]
+            }
         }
     },
     "info.dit.hunyuandit": {
@@ -342,22 +378,24 @@
                 "num_inference_steps": 50,
                 "guidance_scale": 6
             },
-            "repo": "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers"
+            "repo": [
+                "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "HunyuanDiTPipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "HunyuanDiTPipeline"
+                ]
+            }
         },
         "distilled": {
             "gen_kwargs": {
                 "num_inference_steps": 25
             },
-            "repo": "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers-Distilled"
+            "repo": [
+                "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers-Distilled"
+            ]
         }
     },
     "info.dit.pixart-sigma": {
@@ -366,16 +404,16 @@
                 "torch_dtype": "torch.float16",
                 "use_safetensors": true
             },
-            "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS"
+            "repo": [
+                "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "PixArtSigmaPipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "PixArtSigmaPipeline"
+                ]
+            }
         }
     },
     "info.dit.cogview-3": {
@@ -389,16 +427,16 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "repo": "THUDM/CogView3-Plus-3B"
+            "repo": [
+                "THUDM/CogView3-Plus-3B"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "CogView3PlusPipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "CogView3PlusPipeline"
+                ]
+            }
         }
     },
     "info.dit.cogview-4": {
@@ -413,16 +451,16 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "repo": "THUDM/CogView4-6B"
+            "repo": [
+                "THUDM/CogView4-6B"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "CogView4Pipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "CogView4Pipeline"
+                ]
+            }
         }
     },
     "info.dit.lumina-image": {
@@ -438,16 +476,16 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "repo": "Alpha-VLLM/Lumina-Image-2.0"
+            "repo": [
+                "Alpha-VLLM/Lumina-Image-2.0"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers",
-                "transformers"
-            ],
-            "module_path": [
-                "Lumina2Pipeline"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "Lumina2Pipeline"
+                ]
+            }
         }
     },
     "info.art.phi-4": {
@@ -455,14 +493,52 @@
             "init_kwargs": {
                 "torch_dtype": "torch.bfloat16"
             },
-            "repo": "microsoft/Phi-4-multimodal-instruct"
+            "repo": [
+                "microsoft/Phi-4-multimodal-instruct"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "transformers"
-            ],
-            "module_path": [
-                "AutoModelForCausalLM"
+            "dep_pkg": {
+                "transformers": [
+                    "AutoModelForCausalLM"
+                ]
+            }
+        }
+    },
+    "info.art.audiogen": {
+        "medium-1.5b": {
+            "repo": [
+                "facebook/audiogen-medium"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "audiocraft": [
+                    "models",
+                    "AudioGen"
+                ]
+            }
+        }
+    },
+    "info.art.parler-tts": {
+        "tiny-v1": {
+            "repo": [
+                "parler-tts/parler-tts-tiny-v1"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "parler_tts": [
+                    "ParlerTTSForConditionalGeneration"
+                ],
+                "transformers": [
+                    "AutoTokenizer"
+                ]
+            }
+        },
+        "large-v1": {
+            "repo": [
+                "parler-tts/parler-tts-large-v1"
             ]
         }
     },
@@ -483,15 +559,16 @@
                 "precision": "bf16",
                 "target_size": 768
             },
-            "repo": "Alpha-VLLM/Lumina-mGPT-7B-768"
+            "repo": [
+                "Alpha-VLLM/Lumina-mGPT-7B-768"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "github.com/Alpha-VLLM/Lumina-mGPT"
-            ],
-            "module_path": [
-                "FlexARInferenceSolver"
-            ]
+            "dep_pkg": {
+                "inference_solver": [
+                    "FlexARInferenceSolver"
+                ]
+            }
         }
     },
     "info.lora.dmd": {
@@ -506,14 +583,18 @@
                     249
                 ]
             },
-            "repo": "tianweiy/DMD2/"
+            "repo": [
+                "tianweiy/DMD2/"
+            ]
         },
         "[init]": {
             "scheduler": "ops.scheduler.lcm",
             "scheduler_kwargs": {},
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         }
     },
     "info.lora.dpo": {
@@ -522,7 +603,9 @@
                 "guidance_scale": 7.5,
                 "num_inference_steps": 4
             },
-            "repo": "radames/sdxl-DPO-LoRA"
+            "repo": [
+                "radames/sdxl-DPO-LoRA"
+            ]
         },
         "[init]": {
             "scheduler": "ops.scheduler.dpm",
@@ -531,34 +614,46 @@
                 "use_karras_sigmas": true,
                 "order": 2
             },
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         }
     },
     "info.lora.flash": {
         "stable-diffusion-xl": {
-            "repo": "jasperai/flash-sdxl"
+            "repo": [
+                "jasperai/flash-sdxl"
+            ]
         },
         "[init]": {
             "scheduler": "ops.scheduler.lcm",
             "scheduler_kwargs": {},
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         },
         "pixart-alpha": {
-            "repo": "jasperai/flash-pixart"
+            "repo": [
+                "jasperai/flash-pixart"
+            ]
         },
         "stable-diffusion-3": {
-            "repo": "jasperai/flash-sd3"
+            "repo": [
+                "jasperai/flash-sd3"
+            ]
         },
         "stable-diffusion-1": {
             "gen_kwargs": {
                 "num_inference_steps": 4,
                 "guidance_scale": 0
             },
-            "repo": "jasperai/flash-sd"
+            "repo": [
+                "jasperai/flash-sd"
+            ]
         }
     },
     "info.lora.hyper": {
@@ -566,27 +661,37 @@
             "init_kwargs": {
                 "fuse": 1.0
             },
-            "repo": "ByteDance/Hyper-SD"
+            "repo": [
+                "ByteDance/Hyper-SD"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         },
         "flux-1:dev": {
             "init_kwargs": {
                 "fuse": 0.125
             },
-            "repo": "ByteDance/Hyper-SD"
+            "repo": [
+                "ByteDance/Hyper-SD"
+            ]
         },
         "stable-diffusion-3": {
             "init_kwargs": {
                 "fuse": 0.125
             },
-            "repo": "ByteDance/Hyper-SD"
+            "repo": [
+                "ByteDance/Hyper-SD"
+            ]
         },
         "stable-diffusion-1": {
-            "repo": "ByteDance/Hyper-SD"
+            "repo": [
+                "ByteDance/Hyper-SD"
+            ]
         }
     },
     "info.lora.lcm": {
@@ -597,34 +702,44 @@
             "init_kwargs": {
                 "fuse": 1.0
             },
-            "repo": "latent-consistency/lcm-lora-sdxl"
+            "repo": [
+                "latent-consistency/lcm-lora-sdxl"
+            ]
         },
         "[init]": {
             "scheduler": "ops.scheduler.lcm",
             "scheduler_kwargs": {
                 "timestep_spacing": "trailing"
             },
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         },
         "ssd-1b": {
             "gen_kwargs": {
                 "num_inference_steps": 8
             },
-            "repo": "latent-consistency/lcm-lora-ssd-1b"
+            "repo": [
+                "latent-consistency/lcm-lora-ssd-1b"
+            ]
         },
         "vega": {
             "gen_kwargs": {
                 "num_inference_steps": 8
             },
-            "repo": "segmind/Segmind-VegaRT"
+            "repo": [
+                "segmind/Segmind-VegaRT"
+            ]
         },
         "stable-diffusion-1": {
             "gen_kwargs": {
                 "num_inference_steps": 8
             },
-            "repo": "latent-consistency/lcm-lora-sdv1-5"
+            "repo": [
+                "latent-consistency/lcm-lora-sdv1-5"
+            ]
         }
     },
     "info.lora.lightning": {
@@ -633,20 +748,28 @@
                 "num_inference_steps": 4,
                 "guidance_scale": 0
             },
-            "repo": "ByteDance/SDXL-Lightning"
+            "repo": [
+                "ByteDance/SDXL-Lightning"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         }
     },
     "info.lora.pcm": {
         "stable-diffusion-xl": {
-            "repo": "wangfuyun/PCM_Weights"
+            "repo": [
+                "wangfuyun/PCM_Weights"
+            ]
         },
         "stable-diffusion-1": {
-            "repo": "wangfuyun/PCM_Weights"
+            "repo": [
+                "wangfuyun/PCM_Weights"
+            ]
         }
     },
     "info.lora.slam": {
@@ -655,19 +778,25 @@
                 "num_inference_steps": 4,
                 "guidance_scale": 1
             },
-            "repo": "alimama-creative/slam-lora-sdxl/"
+            "repo": [
+                "alimama-creative/slam-lora-sdxl/"
+            ]
         },
         "[init]": {
             "scheduler": "ops.scheduler.lcm",
             "scheduler_kwargs": {
                 "timestep_spacing": "trailing"
             },
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         },
         "stable-diffusion-1": {
-            "repo": "alimama-creative/slam-sd1.5"
+            "repo": [
+                "alimama-creative/slam-sd1.5"
+            ]
         }
     },
     "info.lora.spo": {
@@ -675,18 +804,24 @@
             "gen_kwargs": {
                 "guidance_scale": 5.0
             },
-            "repo": "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA"
+            "repo": [
+                "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         },
         "stable-diffusion-1": {
             "gen_kwargs": {
                 "guidance_scale": 7.5
             },
-            "repo": "SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA"
+            "repo": [
+                "SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA"
+            ]
         }
     },
     "info.lora.tcd": {
@@ -696,17 +831,23 @@
                 "guidance_scale": 0,
                 "eta": 0.3
             },
-            "repo": "h1t/TCD-SDXL-LoRA"
+            "repo": [
+                "h1t/TCD-SDXL-LoRA"
+            ]
         },
         "[init]": {
             "scheduler": "ops.scheduler.tcd",
             "scheduler_kwargs": {},
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         },
         "stable-diffusion-1": {
-            "repo": "h1t/TCD-SD15-LoRA"
+            "repo": [
+                "h1t/TCD-SD15-LoRA"
+            ]
         }
     },
     "info.lora.turbo": {
@@ -719,215 +860,266 @@
             "init_kwargs": {
                 "fuse": 0.125
             },
-            "repo": "alimama-creative/FLUX.1-Turbo-Alpha"
+            "repo": [
+                "alimama-creative/FLUX.1-Turbo-Alpha"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    ""
+                ]
+            }
         }
     },
     "ops.scheduler.euler": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "EulerDiscreteScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "EulerDiscreteScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.euler-ancestral": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "EulerAncestralDiscreteScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "EulerAncestralDiscreteScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.flow-match": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "FlowMatchEulerDiscreteScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "FlowMatchEulerDiscreteScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.edm": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "EDMDPMSolverMultistepScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "EDMDPMSolverMultistepScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.dpm": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "DPMSolverMultistepScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "DPMSolverMultistepScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.ddim": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "DDIMScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "DDIMScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.lcm": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "LCMScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "LCMScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.tcd": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "TCDScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "TCDScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.heun": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "HeunDiscreteScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "HeunDiscreteScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.uni-pc": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "UniPCMultistepScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "UniPCMultistepScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.lms": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "LMSDiscreteScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "LMSDiscreteScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.deis": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "DEISMultistepScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "DEISMultistepScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.ddpm_wuerstchen": {
-        "any": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "DDPMWuerstchenScheduler"
-            ]
+            "dep_pkg": {
+                "diffusers": [
+                    "DDPMWuerstchenScheduler"
+                ]
+            }
         }
     },
     "ops.scheduler.align-your-steps": {
-        "stable-diffusion-xl": {},
+        "stable-diffusion-xl": {}
+    },
+    "ops.float.bf16": {
+        "pytorch": {},
         "[init]": {
-            "dep_pkg": [
-                "diffusers"
-            ],
-            "module_path": [
-                "schedulers.scheduling_utils",
-                "AysSchedules"
-            ]
+            "dep_pkg": {
+                "torch": [
+                    "bfloat16"
+                ]
+            }
         }
     },
-    "ops.float.pytorch": {
-        "BF16": {
-            "dtype": "torch.bfloat16"
-        },
-        "F16": {
-            "dtype": "torch.float16",
+    "ops.float.f16": {
+        "pytorch": {
             "variant": "fp16"
         },
-        "F32": {
-            "dtype": "torch.float32",
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "float16"
+                ]
+            }
+        }
+    },
+    "ops.float.f32": {
+        "pytorch": {
             "variant": "fp32"
         },
-        "F64": {
-            "dtype": "torch.float64",
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "float32"
+                ]
+            }
+        }
+    },
+    "ops.float.f64": {
+        "pytorch": {
             "variant": "fp64"
         },
         "[init]": {
-            "dep_pkg": [
-                "torch"
-            ]
-        },
-        "F8_E4M3": {
-            "dtype": "torch.float8_e4m3fn",
+            "dep_pkg": {
+                "torch": [
+                    "float64"
+                ]
+            }
+        }
+    },
+    "ops.float.f8_e4m3": {
+        "pytorch": {
             "variant": "fp8e4m3fn"
         },
-        "F8_E5M2": {
-            "dtype": "torch.float8_e5m2",
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "float8_e4m3fn"
+                ]
+            }
+        }
+    },
+    "ops.float.f8_e5m2": {
+        "pytorch": {
             "variant": "fp8e5m2"
         },
-        "I16": {
-            "dtype": "torch.int16"
-        },
-        "I32": {
-            "dtype": "torch.int32"
-        },
-        "I64": {
-            "dtype": "torch.int64"
-        },
-        "I8": {
-            "dtype": "torch.int8"
-        },
-        "NF4": {
-            "dtype": "nf4"
-        },
-        "U8": {
-            "dtype": "torch.uint8"
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "float8_e5m2"
+                ]
+            }
+        }
+    },
+    "ops.float.i16": {
+        "pytorch": {},
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "int16"
+                ]
+            }
+        }
+    },
+    "ops.float.i32": {
+        "pytorch": {},
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "int32"
+                ]
+            }
+        }
+    },
+    "ops.float.i64": {
+        "pytorch": {},
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "int64"
+                ]
+            }
+        }
+    },
+    "ops.float.i8": {
+        "pytorch": {},
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "int8"
+                ]
+            }
+        }
+    },
+    "ops.float.nf4": {
+        "pytorch": {},
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "nf4"
+                ]
+            }
+        }
+    },
+    "ops.float.u8": {
+        "pytorch": {},
+        "[init]": {
+            "dep_pkg": {
+                "torch": [
+                    "uint8"
+                ]
+            }
         }
     },
     "ops.patch.hidiffusion": {
@@ -938,15 +1130,16 @@
                 "eta": 1.0,
                 "guidance_scale": 7.5
             },
-            "repo": "megvii-research/HiDiffusion/"
+            "repo": [
+                "github.com/megvii-research/HiDiffusion/"
+            ]
         },
         "[init]": {
-            "dep_pkg": [
-                "hidiffusion"
-            ],
-            "module_path": [
-                "apply_hidiffusion"
-            ]
+            "dep_pkg": {
+                "hidiffusion": [
+                    "apply_hidiffusion"
+                ]
+            }
         }
     }
 }

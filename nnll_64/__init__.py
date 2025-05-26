@@ -10,7 +10,6 @@ def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = 
     :param prompt: Instructions to the generative model, defaults to ''
     :param lora_opt: List of LoRAs to add to the process, defaults to None
     """
-    from PIL import PngImagePlugin
     from nnll_01 import nfo  # , dbug
     from nnll_08 import soft_random, seed_planter
     from nnll_16 import first_available
@@ -27,41 +26,34 @@ def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = 
 
     # memory threshold formula function returns boolean value here
     factory = ConstructPipeline()
-    pipe, model, kwargs = factory.create_pipeline(architecture=mir_arch, lora=lora_opt)
+    pipe, model, import_pkg, kwargs = factory.create_pipeline(architecture=mir_arch, lora=lora_opt)
     nfo(f"pre-generator Model {model} Lora {lora_opt} Arguments {kwargs} {pipe}")
-
-    pipe.to(first_available())
+    device = first_available()
 
     prompt = tx_data.get("text", "")
-    # if tx_data.get("image", 0):
-    #     kwargs.setdefault("images", tx_data["image"])
-    if out_type == "speech":
-        from transformers import AutoProcessor, GenerationConfig
-
-        user = "<|user|>"
-        audio_token = "<|audio_1|>"
-        assistant = "<|assistant|>"
-        suffix = "<|end|>"
-        prompt = f"{user}{audio_token}{tx_data.get('text', '')}{suffix}{assistant}"
-        processor = AutoProcessor.from_pretrained(model)
-        kwargs.setdefault("inputs", processor(text=prompt, audios=tx_data["speech"], return_tensors="pt"))
-        kwargs.setdefault("generation_config", GenerationConfig.from_pretrained(model, "generation_config.json"))
-        kwargs.setdefault("max_new_tokens", 1200)
-        kwargs.update(user_set)
-        generate_ids = model.generate(**kwargs)
-        generate_ids = generate_ids[:, kwargs["inputs"].shape[1] :]
-
-        response = processor.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
-        nfo(response)
-    else:
+    kwargs.update(user_set)
+    nfo(f"Pipe {pipe}, Device {pipe.device}")
+    if import_pkg == ["diffusers"]:
+        pipe.to(device)
         pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
-        kwargs.update(user_set)
-        nfo(f"Pipe {pipe}, Device {pipe.device}")
-        image = pipe(prompt=prompt, **kwargs).images[0]
+        content = pipe(prompt=prompt, **kwargs).images[0]
         gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
-        metadata = PngImagePlugin.PngInfo()
-        metadata.add_text("parameters", str(gen_data.get("parameters")))
-        disk.write_image_to_disk(image, metadata)
+        save_as = ".png"  # may also be video or audio!!
+        metadata = gen_data.get("parameters")
+    elif import_pkg == ["audiogen"]:
+        metadata = pipe.sample_rate
+        save_as = ".wav"
+        content = pipe.generate([prompt])
+    elif import_pkg == ["parler_tts"]:
+        pipe.to(device)
+        input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
+        prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+        save_as = ".wav"
+        generation = pipe.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+        content = generation.cpu().numpy().squeeze()
+        metadata = model.config.sampling_rate
+    if content is not None and save_as is not None:
+        disk.write_to_disk(content, metadata, save_as, next(iter(import_pkg)))
 
     # from nnll_61 import HyperChain
     # data_chain = HyperChain()

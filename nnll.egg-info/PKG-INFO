@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev501+g577da42.d20250525
+Version: 0.1.dev502+gaf4e80b.d20250526
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: “Commons Clause” License Condition v1.0
@@ -131,6 +131,34 @@ Requires-Dist: nnll[nnll_49]; extra == "all"
 Requires-Dist: nnll[nnll_56]; extra == "all"
 Requires-Dist: nnll[nnll_62]; extra == "all"
 Requires-Dist: nnll[nnll_64]; extra == "all"
+Provides-Extra: cpu
+Requires-Dist: torch; extra == "cpu"
+Requires-Dist: torchvision; extra == "cpu"
+Requires-Dist: torchaudio; extra == "cpu"
+Provides-Extra: cpu-darwin
+Requires-Dist: torch>=2.8; extra == "cpu-darwin"
+Requires-Dist: torchvision; extra == "cpu-darwin"
+Requires-Dist: torchaudio; extra == "cpu-darwin"
+Provides-Extra: cu126
+Requires-Dist: torch; extra == "cu126"
+Requires-Dist: torchvision; extra == "cu126"
+Requires-Dist: torchaudio; extra == "cu126"
+Requires-Dist: triton; platform_system == "linux" and extra == "cu126"
+Requires-Dist: triton-windows; platform_system == "windows" and extra == "cu126"
+Provides-Extra: cu128
+Requires-Dist: torch; extra == "cu128"
+Requires-Dist: torchvision; extra == "cu128"
+Requires-Dist: torchaudio; extra == "cu128"
+Requires-Dist: triton; platform_system == "linux" and extra == "cu128"
+Requires-Dist: triton-windows; platform_system == "windows" and extra == "cu128"
+Provides-Extra: rocm
+Requires-Dist: torch; extra == "rocm"
+Requires-Dist: torchvision; extra == "rocm"
+Requires-Dist: torchaudio; extra == "rocm"
+Requires-Dist: pytorch-triton-rocm; extra == "rocm"
+Provides-Extra: attention
+Requires-Dist: sageattention; extra == "attention"
+Requires-Dist: flash_attn; platform_system == "linux" and extra == "attention"
 Provides-Extra: dev
 Requires-Dist: nnll[all]; extra == "dev"
 Requires-Dist: aioresponses>=0.7.8; extra == "dev"
