@@ -5,6 +5,7 @@
 
 # pylint: disable=import-outside-toplevel
 
+from array import ArrayType
 from io import TextIOWrapper
 import os
 from typing import Literal, Any
@@ -86,13 +87,14 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None) -> N
         content.save(file_path_absolute, "PNG", pnginfo=embed)
         content.show()
 
-    else:
-        import soundfile as sf
+    elif isinstance(content, ArrayType):
+        if import_pkg == ["audiocraft"]:
+            from audiocraft.data.audio import audio_write
 
-        file_path_absolute = name_save_file_as(extension or ".wav")
-        sf.write(file_path_absolute, content, metadata)
-    # if import_pkg == ["audiocraft"]:
-    #     from audiocraft.data.audio import audio_write
+            for idx, one_wav in enumerate(content):
+                audio_write(f"{name_save_file_as('.wav')}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)
+        else:
+            import soundfile as sf
 
-    #     for idx, one_wav in enumerate(content):
-    #         audio_write(f"{name_save_file_as('.wav')}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)
+            file_path_absolute = name_save_file_as(extension or ".wav")
+            sf.write(file_path_absolute, content, metadata)

@@ -31,35 +31,35 @@ def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = 
     nfo(f"pre-generator Model {model} Lora {lora_opt} Pipe {pipe} Arguments {kwargs}")
     kwargs.update(user_set)
     metadata = None
-    save_as = None
     content = None
+    gen_data = {"parameters": {}}
     device = first_available()
     if "diffusers" in import_pkg:
         pipe.to(device)
         pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
         content = pipe(prompt=prompt, **kwargs).images[0]
         gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
-        save_as = ".png"  # may also be video or audio!!
-        metadata = gen_data.get("parameters")
+        # may also be video or audio!!
     elif "audiogen" in import_pkg:
         pipe = next(iter(pipe))
         metadata = pipe.sample_rate
-        save_as = ".wav"
         pipe.to(device)
         content = pipe.generate([prompt])
+        kwargs.update({"sample_rate": pipe.config.sampling_rate})
+        gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
     elif "parler_tts" in import_pkg:
         input_ids = pipe[1](prompt).input_ids.to(device)
         prompt_input_ids = pipe[1](prompt).input_ids.to(device)
-        save_as = ".wav"
         pipe = pipe[0]
         pipe.to(device)
         generation = pipe.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
         content = generation.cpu().numpy().squeeze()
-        metadata = pipe.config.sampling_rate
-
-    if content and save_as:
+        kwargs.update({"sampling_rate": pipe.config.sampling_rate})
+        gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
+    if content:
+        metadata = gen_data.get("parameters")
         nfo(f"content type output {content}, {type(content)}")
-        disk.write_to_disk(content, metadata, save_as)
+        disk.write_to_disk(content, metadata)
 
     # from nnll_61 import HyperChain
     # data_chain = HyperChain()
