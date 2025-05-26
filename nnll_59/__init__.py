@@ -7,8 +7,8 @@
 
 from io import TextIOWrapper
 import os
-from typing import Literal  # , List
-from numpy import array as np_array
+from typing import Literal, Any
+import numpy as np
 from pathlib import Path
 import PIL.Image
 from typing import Dict
@@ -46,7 +46,7 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
     return file_path_absolute
 
 
-@debug_monitor
+# do not log here
 def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:
     """
     Create metadata from active hf inference pipes\n
@@ -70,27 +70,29 @@ def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str],
     return gen_data
 
 
-@debug_monitor
-def write_to_disk(content: PIL.Image.Image | np_array, metadata: dict[str], save_as: str = ".png", import_pkg: str = "diffusers") -> None:
+# do not log here
+def write_to_disk(content: Any, metadata: dict[str], extension: str = None) -> None:
     """Save Image to File\n
     :param image: Image file data in memory
     :param metadata: Pipe metadata to write into the file
-    :param extension: Type of Image file to write, defaults to "\"\".png"\"\"\"
+    :param extension: Type of Image file to write, defaults to
     """
-    file_path_absolute = name_save_file_as(save_as)
-    if save_as == ".wav":
-        import soundfile as sf
-
-        sf.write(file_path_absolute, content, metadata)
-        if import_pkg == ["audiocraft"]:
-            from audiocraft.data.audio import audio_write
-
-            for idx, one_wav in enumerate(content):
-                audio_write(f"{name_save_file_as('.wav')}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)
-    if save_as == ".png":
+    if isinstance(content, PIL.Image.Image):
         from PIL import PngImagePlugin
 
+        file_path_absolute = name_save_file_as(extension or ".png")
         embed = PngImagePlugin.PngInfo()
         embed.add_text("parameters", str(metadata))
         content.save(file_path_absolute, "PNG", pnginfo=embed)
         content.show()
+
+    else:
+        import soundfile as sf
+
+        file_path_absolute = name_save_file_as(extension or ".wav")
+        sf.write(file_path_absolute, content, metadata)
+    # if import_pkg == ["audiocraft"]:
+    #     from audiocraft.data.audio import audio_write
+
+    #     for idx, one_wav in enumerate(content):
+    #         audio_write(f"{name_save_file_as('.wav')}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)

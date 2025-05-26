@@ -1,5 +1,4 @@
 {
-    "empty": "",
     "info.unet.stable-diffusion-xl": {
         "base": {
             "dep_alt": {
@@ -310,7 +309,7 @@
                 "cocktailpeanut/xulf-d"
             ]
         },
-        "lite": {
+        "lite-8b": {
             "dep_alt": {
                 "f_lite": [
                     "FLitePipeline"
@@ -326,8 +325,26 @@
                 "torch_dtype": "torch.bfloat16"
             },
             "repo": [
-                "Freepik/flux.1-lite-8B",
-                "Freepik/F-Lite-Texture"
+                "freepik/flux.1-lite-8b"
+            ]
+        },
+        "lite-texture": {
+            "dep_alt": {
+                "f_lite": [
+                    "FLitePipeline"
+                ]
+            },
+            "gen_kwargs": {
+                "num_inference_steps": 28,
+                "guidance_scale": 3.5,
+                "height": 1024,
+                "width": 1024
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "repo": [
+                "freepik/f-lite-texture"
             ]
         },
         "hybrid": {
@@ -339,7 +356,7 @@
         "mini": {
             "dep_alt": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             },
             "layer_256": [
@@ -537,6 +554,11 @@
             }
         },
         "large-v1": {
+            "init_kwargs": {
+                "AutoTokenizer": {
+                    "return_tensors": "pt"
+                }
+            },
             "repo": [
                 "parler-tts/parler-tts-large-v1"
             ]
@@ -592,7 +614,7 @@
             "scheduler_kwargs": {},
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         }
@@ -616,7 +638,7 @@
             },
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         }
@@ -632,7 +654,7 @@
             "scheduler_kwargs": {},
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         },
@@ -668,7 +690,7 @@
         "[init]": {
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         },
@@ -713,7 +735,7 @@
             },
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         },
@@ -755,7 +777,7 @@
         "[init]": {
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         }
@@ -789,7 +811,7 @@
             },
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         },
@@ -811,7 +833,7 @@
         "[init]": {
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         },
@@ -840,7 +862,7 @@
             "scheduler_kwargs": {},
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         },
@@ -867,7 +889,7 @@
         "[init]": {
             "dep_pkg": {
                 "diffusers": [
-                    ""
+                    "diffusers"
                 ]
             }
         }

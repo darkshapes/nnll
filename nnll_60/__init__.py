@@ -124,6 +124,7 @@ class JSONCache:
         if replace:
             self._cache = {"empty": ""}  # sanity check
             self._save_cache()
+            self._cache.pop("empty")
         original_cache_copy = self._cache.copy()  # Snapshot current state / 快照當前快取
         self._cache.update(new_data)  # Add the data to the cache / 將資料新增到快取中
         if original_cache_copy != self._cache:

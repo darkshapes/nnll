@@ -7,6 +7,8 @@ from unittest.mock import patch, MagicMock
 from nnll_01 import nfo
 from nnll_62 import ConstructPipeline  # , pipe_call
 
+# todo - mock MIR db entry
+
 
 class TestPipeCallDecorator(unittest.TestCase):
     def test_pipe_call_preserves_function_signature(self):
@@ -103,67 +105,78 @@ class TestConstructPipeline(unittest.TestCase):
 
             # assert current_import == expected_import
 
-    # @patch("os.path.isfile", return_value=True)
-    # @patch("diffusers.StableDiffusionXLPipeline.from_single_file")
-    # def test_create_pipeline_from_single_file(self, mock_from_single_file, mock_isfile):
-    #     """Test pipeline creation from a single file"""
-    #     mock_from_single_file.return_value = "mock_pipe"
-    #     pipeline = ConstructPipeline()
-    #     pipe, repo, import_pkg, settings = pipeline.create_pipeline(["info.unet.stable-diffusion-xl", "base"])
+    @patch("os.path.isfile", return_value=True)
+    @patch("diffusers.StableDiffusionXLPipeline.from_single_file")
+    def test_create_pipeline_from_single_file(self, mock_from_single_file, mock_isfile):
+        """Test pipeline creation from a single file"""
+        mock_from_single_file.return_value = "mock_pipe"
+        pipeline = ConstructPipeline()
+        pipe, repo, import_pkg, settings = pipeline.create_pipeline(["info.unet.stable-diffusion-xl", "base"])
 
-    #     mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
-    #     self.assertEqual(pipe, "mock_pipe")
-    #     self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
-    #     self.assertEqual(
-    #         settings,
-    #         {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent", "safety_checker": False},
-    #     )
+        mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
+        self.assertEqual(pipe, "mock_pipe")
+        self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
+        self.assertEqual(
+            settings,
+            {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent", "safety_checker": False},
+        )
 
-    # @patch("os.path.isfile", return_value=False)
-    # @patch("diffusers.DiffusionPipeline.from_pretrained")
-    # def test_create_pipeline_from_pretrained(self, mock_from_pretrained, mock_isfile):
-    #     """Test pipeline creation from a pre-trained model"""
-    #     mock_from_pretrained.return_value = "mock_pipe"
+    @patch("os.path.isfile", return_value=False)
+    @patch("diffusers.StableDiffusionXLPipeline.from_pretrained")
+    def test_create_pipeline_from_pretrained(self, mock_from_pretrained, mock_isfile):
+        """Test pipeline creation from a pre-trained model"""
+        mock_from_pretrained.return_value = "mock_pipe"
 
-    #     pipeline = ConstructPipeline()
-    #     # with self.assertRaises(NotImplementedError):
-    #     # with patch("huggingface_hub.hf_hub_download", autospec=True):
-    #     #     with patch("huggingface_hub.snapshot_download", autospec=True):
-    #     pipeline.create_pipeline(architecture=["info.unet.stable-diffusion-xl", "base"])
+        pipeline = ConstructPipeline()
+        # with self.assertRaises(NotImplementedError):
+        # with patch("huggingface_hub.hf_hub_download", autospec=True):
+        #     with patch("huggingface_hub.snapshot_download", autospec=True):
+        pipeline.create_pipeline(architecture=["info.unet.stable-diffusion-xl", "base"])
 
-    #     mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
+        mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
 
-    # @patch("os.path.basename", return_value="mock_adapter")
-    # def test_add_lora(self, mock_basename):
-    #     """Test add_lora method in ConstructPipeline."""
-    #     mock_pipe = MagicMock()
+    @patch("os.path.isfile", return_value=False)
+    @patch("diffusers.loaders.StableDiffusionXLLoraLoaderMixin.load_lora_weights")
+    @patch("diffusers.StableDiffusionXLPipeline.from_pretrained")
+    @patch("os.path.basename", return_value="mock_adapter")
+    def test_add_lora(self, mock_basename, mock_from_pretrained, mock_lora_weights, mock_isfile):
+        """Test add_lora method in ConstructPipeline."""
+        mock_pipe = MagicMock()
+        mock_lora = MagicMock()
+        mock_from_pretrained.return_value = mock_pipe
+        mock_lora_weights.return_value = mock_lora
+        pipeline = ConstructPipeline()
+        # with self.assertRaises(NotImplementedError):
+        # with patch("huggingface_hub.hf_hub_download", autospec=True):
+        #     with patch("huggingface_hub.snapshot_download", autospec=True):
 
-    #     with patch("diffusers.LCMScheduler") as mock_scheduler_class:
-    #         mock_scheduler_instance = MagicMock()
-    #         mock_scheduler_class.return_value = mock_scheduler_instance
+        with patch("diffusers.LCMScheduler") as mock_scheduler_class:
+            mock_scheduler_instance = MagicMock()
+            mock_scheduler_class.return_value = mock_scheduler_instance
+            pipe = pipeline.add_lora(mock_pipe, lora=["info.lora.lcm", "stable-diffusion-xl"])
+            mock_scheduler_class.assert_called_once_with({"timestep_spacing": "trailing"})
+            self.assertEqual(mock_pipe.scheduler, mock_scheduler_instance)
+            pipe.load_lora_weights.assert_called_once_with("latent-consistency/lcm-lora-sdxl", adapter_name="mock_adapter")
+            pipe.fuse_lora.assert_called_once_with(adapter_name="mock_adapter", lora_scale=1.0)
 
-    #         construct_pipeline = ConstructPipeline()
-    #         pipe, repo, kwargs = construct_pipeline.create_pipeline(["model.lora.lcm", "stable-diffusion-xl"])
-    #         nfo(f"return value: {pipe}")
-    #         # Validate pipe modification
-    #         # pipe = None
-    #         mock_scheduler_class.assert_called_once_with({"timestep_spacing": "trailing"})
-    #         self.assertEqual(mock_pipe.scheduler, mock_scheduler_instance)
-    #         pipe.load_lora_weights.assert_called_once_with("latent-consistency/lcm-lora-sdxl", adapter_name="mock_adapter")
-    #         pipe.fuse_lora.assert_called_once_with(adapter_name="mock_adapter", lora_scale=1.0)
-    #         self.assertEqual(repo, "latent-consistency/lcm-lora-sdxl")
-    #         self.assertEqual(kwargs, {})
+    @patch("os.path.isfile", return_value=False)
+    @patch("diffusers.loaders.StableDiffusionXLLoraLoaderMixin.load_lora_weights")
+    @patch("diffusers.StableDiffusionXLPipeline.from_pretrained")
+    @patch("os.path.basename", return_value="mock_adapter")
+    def test_add_lora_with_no_solver_end_to_end(self, mock_adapter, mock_from_pretrained, mock_lora_weights, mock_isfile):
+        """Test add_lora when no solver or fuse is provided, complete run with mocked model"""
+        mock_pipe = MagicMock()
+        mock_lora = MagicMock()
 
-    # def test_add_lora_with_no_solver(self):
-    #     """Test add_lora when no solver is provided."""
-    #     mock_pipe = MagicMock()
+        mock_from_pretrained.return_value = mock_pipe
+        mock_lora_weights.return_value = mock_lora
+        mock_lora = MagicMock()
+        construct_pipeline = ConstructPipeline()
+        pipe, repo, pkg, kwargs = construct_pipeline.create_pipeline(architecture=["info.unet.stable-diffusion-xl", "base"], lora=["info.lora.spo", "stable-diffusion-xl"])
 
-    #     construct_pipeline = ConstructPipeline()
-    #     pipe, repo, kwargs = construct_pipeline.create_pipeline(["model.lora.spo", "stable-diffusion-xl"])
-
-    #     self.assertEqual(repo, "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA")
-    #     pipe.load_lora_weights.assert_called_once_with("SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA", adapter_name="SPO-SDXL_4k-p_10ep_LoRA")
-    #     self.assertEqual(kwargs, {})
+        self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
+        pipe.load_lora_weights.assert_called_once_with("SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA", adapter_name="mock_adapter")
+        self.assertEqual(kwargs, {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent", "safety_checker": False})
 
 
 if __name__ == "__main__":

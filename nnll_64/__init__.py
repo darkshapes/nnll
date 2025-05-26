@@ -23,37 +23,43 @@ def run_inference(mir_arch: str, tx_data: dict, out_type: str, lora_opt: list = 
     noise_seed = soft_random()
     seed_planter(noise_seed)
     nfo(noise_seed)
-
     # memory threshold formula function returns boolean value here
-    factory = ConstructPipeline()
-    pipe, model, import_pkg, kwargs = factory.create_pipeline(architecture=mir_arch, lora=lora_opt)
-    nfo(f"pre-generator Model {model} Lora {lora_opt} Arguments {kwargs} {pipe}")
-    device = first_available()
 
     prompt = tx_data.get("text", "")
+    factory = ConstructPipeline()
+    pipe, model, import_pkg, kwargs = factory.create_pipeline(architecture=mir_arch, lora=lora_opt)
+    nfo(f"pre-generator Model {model} Lora {lora_opt} Pipe {pipe} Arguments {kwargs}")
     kwargs.update(user_set)
-    nfo(f"Pipe {pipe}, Device {pipe.device}")
-    if import_pkg == ["diffusers"]:
+    metadata = None
+    save_as = None
+    content = None
+    device = first_available()
+    if "diffusers" in import_pkg:
         pipe.to(device)
         pipe = techniques.add_generator(pipe=pipe, noise_seed=noise_seed)
         content = pipe(prompt=prompt, **kwargs).images[0]
         gen_data = disk.add_to_metadata(pipe=pipe, model=model, prompt=[prompt], kwargs=kwargs)
         save_as = ".png"  # may also be video or audio!!
         metadata = gen_data.get("parameters")
-    elif import_pkg == ["audiogen"]:
+    elif "audiogen" in import_pkg:
+        pipe = next(iter(pipe))
         metadata = pipe.sample_rate
         save_as = ".wav"
-        content = pipe.generate([prompt])
-    elif import_pkg == ["parler_tts"]:
         pipe.to(device)
-        input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
-        prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+        content = pipe.generate([prompt])
+    elif "parler_tts" in import_pkg:
+        input_ids = pipe[1](prompt).input_ids.to(device)
+        prompt_input_ids = pipe[1](prompt).input_ids.to(device)
         save_as = ".wav"
+        pipe = pipe[0]
+        pipe.to(device)
         generation = pipe.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
         content = generation.cpu().numpy().squeeze()
-        metadata = model.config.sampling_rate
-    if content is not None and save_as is not None:
-        disk.write_to_disk(content, metadata, save_as, next(iter(import_pkg)))
+        metadata = pipe.config.sampling_rate
+
+    if content and save_as:
+        nfo(f"content type output {content}, {type(content)}")
+        disk.write_to_disk(content, metadata, save_as)
 
     # from nnll_61 import HyperChain
     # data_chain = HyperChain()

@@ -4,10 +4,10 @@
 """神经网络的数据注册"""
 
 # pylint: disable=possibly-used-before-assignment, line-too-long
-from typing import Any
+from typing import Any, Callable
 
 
-# from nnll_01 import debug_monitor
+from nnll_01 import debug_monitor, dbug, nfo
 from nnll_60 import MIR_PATH, JSONCache
 from nnll_07 import mir_entry
 
@@ -21,6 +21,7 @@ class MIRDatabase:
     def __init__(self) -> None:
         self.read_from_disk()
 
+    @debug_monitor
     def add(self, resource: dict[str, Any]) -> None:
         """Merge pre-existing MIR entries, or add new ones
         :param element: _description_
@@ -31,41 +32,52 @@ class MIRDatabase:
         else:
             self.database[parent_key] = resource[parent_key]
 
-    def write_to_disk(self) -> None:
+    @mir_file.decorator
+    def write_to_disk(self, data: dict = None) -> None:
         """Save data to JSON file\n"""
-        from pprint import pprint
-        from nnll_01 import nfo
+        # from pprint import pprint
 
         self.mir_file.update_cache(self.database, replace=True)
-        pprint(self.database)
-        mir_file = self.read_from_disk()
-        nfo(f"Wrote {len(mir_file)} lines to MIR database file.")
+        self.database = self.read_from_disk()
+        nfo(self.database)
+        nfo(f"Wrote {len(self.database)} lines to MIR database file.")
 
     @mir_file.decorator
     def read_from_disk(self, data: dict = None) -> dict:
         """Populate mir database\n
-        :param data: mir decorater auto-ppulated, defaults to None
+        :param data: mir decorater auto-populated, defaults to None
         :return: dict of MIR data"""
         self.database = data
         return self.database
 
+    @debug_monitor
     def find_path(self, key: str, query: str, join_tag: bool = False) -> Any:
         """Retrieve MIR path based on nested value search\n
         :param key: Known field to look within
         :param query: Search pattern for field
         :param join_tag: Combine tag elements, defaults to False
         :return: A list or string of the found tag"""
-        return [
-            "".join([series, compatibility])
-            if join_tag
-            else [
-                series,
-                compatibility,
-            ]
-            for series, comp in self.database.items()
-            for compatibility, entry in comp.items()
-            if entry.get(key) is not None and query in entry[key]
-        ][0]
+        for series, comp in self.database.items():
+            for compatibility, entry in comp.items():
+                parameter = entry.get(key)
+                nfo(f" maid found path {parameter} {key} {series} {compatibility} ")
+                if parameter is not None and query.lower() in parameter:
+                    found = "".join([series, compatibility]) if join_tag else [series, compatibility]
+                    nfo(f" maid found path {parameter} {found} {series} {compatibility} ")
+
+                    return found
+        # query = query.lower()
+        # return [
+        #     "".join([series, compatibility])
+        #     if join_tag
+        #     else [
+        #         series,
+        #         compatibility,
+        #     ]
+        #     for series, comp in self.database.items()
+        #     for compatibility, entry in comp.items()
+        #     if entry.get(key) is not None and query in entry[key]
+        # ][0]
         # for series, comp in self.database.items():
         #     for compatibility, entry in comp.items():
         #         if entry.get(key) is not None and query in entry[key]:
@@ -336,8 +348,21 @@ def build_mir_dit(mir_db: MIRDatabase):
             domain="info",
             arch="dit",
             series="flux-1",
-            comp="lite",
-            repo=["Freepik/flux.1-lite-8B", "Freepik/F-Lite-Texture"],
+            comp="lite-8b",
+            repo=["freepik/flux.1-lite-8b"],
+            dep_repo=["github.com/fal-ai/f-lite.git"],
+            dep_alt={"f_lite": ["FLitePipeline"]},
+            gen_kwargs={"num_inference_steps": 28, "guidance_scale": 3.5, "height": 1024, "width": 1024},
+            init_kwargs={"torch_dtype": "torch.bfloat16"},
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series="flux-1",
+            comp="lite-texture",
+            repo=["freepik/f-lite-texture"],
             dep_repo=["github.com/fal-ai/f-lite.git"],
             dep_alt={"f_lite": ["FLitePipeline"]},
             gen_kwargs={"num_inference_steps": 28, "guidance_scale": 3.5, "height": 1024, "width": 1024},
@@ -363,7 +388,7 @@ def build_mir_dit(mir_db: MIRDatabase):
             series="flux-1",
             comp="mini",
             repo=["TencentARC/flux-mini"],
-            dep_alt={"diffusers": [""]},
+            dep_alt={"diffusers": ["diffusers"]},
             layer_256=["e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"],
         ),
     )
@@ -487,7 +512,7 @@ def build_mir_art(mir_db: MIRDatabase):
             series="parler-tts",
             comp="tiny-v1",
             repo=["parler-tts/parler-tts-tiny-v1"],
-            dep_pkg={"parler_tts": ["ParlerTTSForConditionalGeneration"]},
+            dep_pkg={"parler_tts": ["ParlerTTSForConditionalGeneration"], "transformers": ["AutoTokenizer"]},
         )
     )
     mir_db.add(
@@ -498,6 +523,7 @@ def build_mir_art(mir_db: MIRDatabase):
             comp="large-v1",
             repo=["parler-tts/parler-tts-large-v1"],
             dep_pkg={"parler_tts": ["ParlerTTSForConditionalGeneration"], "transformers": ["AutoTokenizer"]},
+            init_kwargs={"AutoTokenizer": {"return_tensors": "pt"}},
         )
     )
     mir_db.add(
@@ -526,7 +552,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             repo=["tianweiy/DMD2/"],
             scheduler="ops.scheduler.lcm",
             scheduler_kwargs={},
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             gen_kwargs={"num_inference_steps": 4, "guidance_scale": 0, "timesteps": [999, 749, 499, 249]},
         )
     )
@@ -539,7 +565,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             repo=["radames/sdxl-DPO-LoRA"],
             scheduler="ops.scheduler.dpm",
             scheduler_kwargs={"algorithm_type": "sde-dpmsolver++", "use_karras_sigmas": True, "order": 2},
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             gen_kwargs={"guidance_scale": 7.5, "num_inference_steps": 4},
         )
     )
@@ -551,7 +577,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             comp="stable-diffusion-xl",
             repo=["jasperai/flash-sdxl"],
             scheduler="ops.scheduler.lcm",
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             scheduler_kwargs={},
         ),
     )
@@ -572,7 +598,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="hyper",
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             comp="stable-diffusion-xl",
             repo=["ByteDance/Hyper-SD"],
             init_kwargs={"fuse": 1.0},
@@ -603,7 +629,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             gen_kwargs={
                 "num_inference_steps": 8,
             },
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             scheduler="ops.scheduler.lcm",
             scheduler_kwargs={"timestep_spacing": "trailing"},
         )
@@ -645,7 +671,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             series="lightning",
             comp="stable-diffusion-xl",
             repo=["ByteDance/SDXL-Lightning"],
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             gen_kwargs={"num_inference_steps": 4, "guidance_scale": 0},
         ),
     )
@@ -659,7 +685,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             comp="stable-diffusion-xl",
             repo=["alimama-creative/slam-lora-sdxl/"],
             gen_kwargs={"num_inference_steps": 4, "guidance_scale": 1},
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             scheduler="ops.scheduler.lcm",
             scheduler_kwargs={"timestep_spacing": "trailing"},
         )
@@ -672,7 +698,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             series="spo",
             comp="stable-diffusion-xl",
             repo=["SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA"],
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             gen_kwargs={"guidance_scale": 5.0},
         ),
     )
@@ -694,7 +720,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             comp="stable-diffusion-xl",
             repo=["h1t/TCD-SDXL-LoRA"],
             gen_kwargs={"num_inference_steps": 4, "guidance_scale": 0, "eta": 0.3},
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             scheduler="ops.scheduler.tcd",
             scheduler_kwargs={},
         ),
@@ -707,7 +733,7 @@ def build_mir_lora(mir_db: MIRDatabase):
             series="turbo",
             comp="flux-1:dev",
             repo=["alimama-creative/FLUX.1-Turbo-Alpha"],
-            dep_pkg={"diffusers": [""]},
+            dep_pkg={"diffusers": ["diffusers"]},
             gen_kwargs={"guidance_scale": 3.5, "num_inference_steps": 8, "max_sequence_length": 512},
             init_kwargs={"fuse": 0.125},
         )
@@ -775,14 +801,13 @@ def build_mir_scheduler(mir_db: MIRDatabase):
     )
 
 
-def main():
+def main(mir_db: Callable = MIRDatabase()) -> None:
     # current_dir = os.path.dirname(os.path.abspath(__file__))
     # root_path = os.path.dirname(current_dir)
     # sys.path.append(root_path)
     # sys.path.append(os.getcwd())
     # print(sys.path)
 
-    mir_db = MIRDatabase()
     build_mir_unet(mir_db)
     build_mir_dit(mir_db)
     build_mir_art(mir_db)

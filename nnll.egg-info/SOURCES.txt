@@ -107,6 +107,7 @@ tests/test_46.py
 tests/test_48.py
 tests/test_49.py
 tests/test_60.py
+tests/test_60_2.py
 tests/test_61.py
 tests/test_61_2.py
 tests/test_62.py
