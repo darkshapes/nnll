@@ -133,9 +133,9 @@ def build_mir_unet(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="unet",
-            series="Kolors",
+            series="kolors",
             comp="diffusers",
-            repo=["Kwai-Kolors/Kolors-diffusers"],
+            repo=["kwai-kolors/kolors-diffusers"],
             gen_kwargs={"negative_prompt": "", "guidance_scale": 5.0, "num_inference_steps": 50},
             init_kwargs={"torch_dtype": "torch.float16", "variant": "fp16"},
             dep_pkg={"diffusers": ["KolorsPipeline"]},
@@ -505,7 +505,7 @@ def build_mir_dit(mir_db: MIRDatabase):
             arch="dit",
             series="lumina-image",
             comp="2.0",
-            repo=["Alpha-VLLM/Lumina-Image-2.0"],
+            repo=["alpha-vllm/lumina-image-2.0"],
             gen_kwargs={
                 "height": 1024,
                 "width": 1024,
