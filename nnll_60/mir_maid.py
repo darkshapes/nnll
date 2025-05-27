@@ -5,7 +5,7 @@
 
 # pylint: disable=possibly-used-before-assignment, line-too-long
 from typing import Any, Callable, Union
-
+import os
 
 from nnll_01 import debug_monitor, nfo  # , dbug
 from nnll_60 import MIR_PATH, JSONCache
@@ -64,8 +64,31 @@ class MIRDatabase:
                 if parameter is not None and query.lower() in parameter:
                     found = "".join([series, compatibility]) if join_tag else [series, compatibility]
                     nfo(f" maid found path {parameter} {found} {series} {compatibility} ")
-
                     return found
+
+    @staticmethod
+    def grade_char_match(target: str, options: Union[list[str] | dict[str:Any]]) -> str | None:
+        """Compare text to a sequence of texts and pick the closest match between them\n
+        :param target: The ideal text
+        :param options: The possible text matches
+        :return: The closest match as a string, or `None`
+        """
+
+        closest_match = None
+        min_difference = float("inf")
+        for idx, opt in enumerate(options):
+            entry = opt.lower()
+            target_lower = target.lower()
+            if target_lower in entry:
+                if idx == target:
+                    closest_match = idx
+                    break
+                common_prefix_length = len(os.path.commonprefix([entry, target_lower]))
+                difference = abs(len(entry) - len(target_lower)) + (len(entry) - common_prefix_length)
+                if difference < min_difference:
+                    min_difference = difference
+                    closest_match = idx
+        return closest_match, entry
 
 
 def build_mir_unet(mir_db: MIRDatabase):
@@ -403,6 +426,7 @@ def build_mir_dit(mir_db: MIRDatabase):
             comp="mini",
             repo=["TencentARC/flux-mini"],
             dep_alt={"diffusers": ["diffusers"]},
+            dep_repo=["TencentARC/FluxKits"],
             layer_256=["e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"],
         ),
     )
@@ -866,7 +890,6 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
 
 
 if __name__ == "__main__":
-    import os
     import sys
 
     sys.path.append(os.getcwd())
