@@ -4,10 +4,10 @@
 """神经网络的数据注册"""
 
 # pylint: disable=possibly-used-before-assignment, line-too-long
-from typing import Any, Callable
+from typing import Any, Callable, Union
+import os
 
-
-from nnll_01 import debug_monitor, dbug, nfo
+from nnll_01 import debug_monitor, nfo  # , dbug
 from nnll_60 import MIR_PATH, JSONCache
 from nnll_07 import mir_entry
 
@@ -33,7 +33,7 @@ class MIRDatabase:
             self.database[parent_key] = resource[parent_key]
 
     @mir_file.decorator
-    def write_to_disk(self, data: dict = None) -> None:
+    def write_to_disk(self, data: dict = None) -> None:  # pylint:disable=unused-argument
         """Save data to JSON file\n"""
         # from pprint import pprint
 
@@ -64,30 +64,35 @@ class MIRDatabase:
                 if parameter is not None and query.lower() in parameter:
                     found = "".join([series, compatibility]) if join_tag else [series, compatibility]
                     nfo(f" maid found path {parameter} {found} {series} {compatibility} ")
-
                     return found
-        # query = query.lower()
-        # return [
-        #     "".join([series, compatibility])
-        #     if join_tag
-        #     else [
-        #         series,
-        #         compatibility,
-        #     ]
-        #     for series, comp in self.database.items()
-        #     for compatibility, entry in comp.items()
-        #     if entry.get(key) is not None and query in entry[key]
-        # ][0]
-        # for series, comp in self.database.items():
-        #     for compatibility, entry in comp.items():
-        #         if entry.get(key) is not None and query in entry[key]:
-        #             return "".join([series, compatibility]) if join_tag else [series, compatibility]
-        # compatibility = next((k for k, v in self.database[next(iter(self.database))].items() if query in v.get(key)), "")
-        # return "".join([series, compatibility]) if join_tag else [series, compatibility]
+
+    @staticmethod
+    def grade_char_match(target: str, options: Union[list[str] | dict[str:Any]]) -> str | None:
+        """Compare text to a sequence of texts and pick the closest match between them\n
+        :param target: The ideal text
+        :param options: The possible text matches
+        :return: The closest match as a string, or `None`
+        """
+
+        closest_match = None
+        min_difference = float("inf")
+        for idx, opt in enumerate(options):
+            entry = opt.lower()
+            target_lower = target.lower()
+            if target_lower in entry:
+                if idx == target:
+                    closest_match = idx
+                    break
+                common_prefix_length = len(os.path.commonprefix([entry, target_lower]))
+                difference = abs(len(entry) - len(target_lower)) + (len(entry) - common_prefix_length)
+                if difference < min_difference:
+                    min_difference = difference
+                    closest_match = idx
+        return closest_match, entry
 
 
 def build_mir_unet(mir_db: MIRDatabase):
-    """Create mir info database"""
+    """Create mir unet info database"""
     # from nnll_01 import nfo
     mir_db.add(
         mir_entry(
@@ -136,14 +141,27 @@ def build_mir_unet(mir_db: MIRDatabase):
             dep_pkg={"diffusers": ["KolorsPipeline"]},
         )
     )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="unet",
+            series="stable-cascade",
+            comp="combined",
+            repo=["stabilityai/stable-cascade"],
+            dep_pkg={"diffusers": ["StableCascadeCombinedPipeline"]},
+            gen_kwargs={"negative_prompt": "", "num_inference_steps": 10, "prior_num_inference_steps": 20, "prior_guidance_scale": 3.0, "width": 1024, "height": 1024},
+            init_kwargs={"variant": "bf16", "torch_dtype": "torch.bfloat16"},
+        )
+    )
 
     mir_db.add(
         mir_entry(
             domain="info",
             arch="unet",
             series="stable-cascade",
-            dep_pkg={"diffusers": "StableCascadeCombinedPipeline"},
-            comp="c",
+            comp="prior",
+            repo=["stabilityai/stable-cascade-prior"],
+            dep_alt={"diffusers": ["StableCascadePriorPipeline"]},
             layer_256=[
                 "2b6986954d9d2b0c702911504f78f5021843bd7050bb10444d70fa915cb495ea",
                 "2aa5a461c4cd0e2079e81554081854a2fa01f9b876d7124c8fff9bf1308b9df7",
@@ -151,6 +169,8 @@ def build_mir_unet(mir_db: MIRDatabase):
                 "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
                 "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147",
             ],
+            init_kwargs={"variant": "bf16", "torch_dtype": "torch.bfloat16"},
+            gen_kwargs={"height": 1024, "width": 1024, "negative_prompt": "", "guidance_scale": 4.0, "num_images_per_prompt": 1, "num_inference_steps": 20},
         )
     )
     mir_db.add(
@@ -158,7 +178,9 @@ def build_mir_unet(mir_db: MIRDatabase):
             domain="info",
             arch="unet",
             series="stable-cascade",
-            comp="b",
+            comp="decoder",
+            repo=["stabilityai/stable-cascade"],
+            dep_apt={"diffusers": ["StableCascadeDecoderPipeline"]},
             layer_256=[
                 "fde5a91a908e8cb969f97bcd20e852fb028cc039a19633b0e1559ae41edeb16f",
                 "24fa8b55d12bf904878b7f2cda47c04c1a92da702fe149e28341686c080dfd4f",
@@ -166,6 +188,8 @@ def build_mir_unet(mir_db: MIRDatabase):
                 "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
                 "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64",
             ],
+            init_kwargs={"variant": "bf16", "torch_dtype": "torch.bfloat16"},
+            gen_kwargs={"guidance_scale": 0.0, "output_type": "pil", "num_inference_steps": 10},
         )
     )
     mir_db.add(
@@ -234,7 +258,7 @@ def build_mir_unet(mir_db: MIRDatabase):
 
 
 def build_mir_dit(mir_db: MIRDatabase):
-    """Create mir info database"""
+    """Create mir diffusion transformer info database"""
     mir_db.add(
         mir_entry(
             domain="info",
@@ -348,8 +372,21 @@ def build_mir_dit(mir_db: MIRDatabase):
             domain="info",
             arch="dit",
             series="flux-1",
-            comp="lite-8b",
+            comp="f-lite-8b",
             repo=["freepik/flux.1-lite-8b"],
+            dep_repo=["github.com/fal-ai/f-lite.git"],
+            dep_alt={"f_lite": ["FLitePipeline"]},
+            gen_kwargs={"num_inference_steps": 28, "guidance_scale": 3.5, "height": 1024, "width": 1024},
+            init_kwargs={"torch_dtype": "torch.bfloat16"},
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series="flux-1",
+            comp="f-lite-7b",
+            repo=["freepik/f-lite-7b"],
             dep_repo=["github.com/fal-ai/f-lite.git"],
             dep_alt={"f_lite": ["FLitePipeline"]},
             gen_kwargs={"num_inference_steps": 28, "guidance_scale": 3.5, "height": 1024, "width": 1024},
@@ -389,6 +426,7 @@ def build_mir_dit(mir_db: MIRDatabase):
             comp="mini",
             repo=["TencentARC/flux-mini"],
             dep_alt={"diffusers": ["diffusers"]},
+            dep_repo=["TencentARC/FluxKits"],
             layer_256=["e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"],
         ),
     )
@@ -480,10 +518,28 @@ def build_mir_dit(mir_db: MIRDatabase):
             init_kwargs={"torch_dtype": "torch.bfloat16"},
         )
     )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series="fuse-dit",
+            comp="2b",
+            repo=["ooutlierr/fuse-dit"],
+            dep_repo=["github.com/tang-bd/fuse-dit.git"],
+            dep_pkg={"diffusion": ["pipelines.FuseDiTPipeline"]},
+            gen_kwargs={
+                "width": 512,
+                "height": 512,
+                "num_inference_steps": 25,
+                "guidance_scale": 6.0,
+                "use_cache": True,
+            },
+        )
+    )
 
 
 def build_mir_art(mir_db: MIRDatabase):
-    """Create mir info database"""
+    """Create mir autoregressive info database"""
     mir_db.add(
         mir_entry(
             domain="info",
@@ -513,6 +569,7 @@ def build_mir_art(mir_db: MIRDatabase):
             comp="tiny-v1",
             repo=["parler-tts/parler-tts-tiny-v1"],
             dep_pkg={"parler_tts": ["ParlerTTSForConditionalGeneration"], "transformers": ["AutoTokenizer"]},
+            init_kwargs={"AutoTokenizer": {"return_tensors": "pt"}},
         )
     )
     mir_db.add(
@@ -541,8 +598,22 @@ def build_mir_art(mir_db: MIRDatabase):
     )
 
 
+def build_mir_mix(mir_db: MIRDatabase):
+    """mixed-type architecture"""
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="mix",
+            series="bagel",
+            comp="7B-MoT",
+            repo="ByteDance-Seed/BAGEL-7B-MoT",
+            dep_repo=["github.com/ByteDance-Seed/Bagel/"],
+        )
+    )
+
+
 def build_mir_lora(mir_db: MIRDatabase):
-    """Create mir info database"""
+    """Create mir lora database"""
     mir_db.add(
         mir_entry(
             domain="info",
@@ -819,7 +890,6 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
 
 
 if __name__ == "__main__":
-    import os
     import sys
 
     sys.path.append(os.getcwd())
