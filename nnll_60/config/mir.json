@@ -118,7 +118,7 @@
                 "variant": "fp16"
             },
             "repo": [
-                "Kwai-Kolors/Kolors-diffusers"
+                "kwai-kolors/kolors-diffusers"
             ]
         },
         "[init]": {
@@ -231,6 +231,9 @@
                 "ce474fd5da12f1d465a9d236d61ea7e98458c1b9d58d35bb8412b2acb9594f08",
                 "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
                 "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147"
+            ],
+            "repo": [
+                "stabilityai/stable-cascade-prior"
             ]
         },
         "decoder": {
@@ -249,6 +252,9 @@
                 "a7c96afb54e60386b7d077bf3f00d04596f4b877d58e6a577f0e1a08dc4a0190",
                 "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
                 "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64"
+            ],
+            "repo": [
+                "stabilityai/stable-cascade"
             ]
         }
     },
@@ -630,7 +636,7 @@
                 "torch_dtype": "torch.bfloat16"
             },
             "repo": [
-                "Alpha-VLLM/Lumina-Image-2.0"
+                "alpha-vllm/lumina-image-2.0"
             ]
         },
         "[init]": {
