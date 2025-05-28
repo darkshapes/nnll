@@ -107,24 +107,37 @@ class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
 
-    def __init__(self, sig: dspy.Signature = QASignature, max_workers=4, stream: bool = True) -> None:
+    model = None
+    lora = None
+    library = None
+    sig: dspy.Signature = QASignature
+    mir_arch = None
+    mir_db = None
+    pipe = None
+    pipe_kwargs = None
+    completion = None
+    import_pkg = None
+
+    def __init__(self, max_workers=4, streaming=True) -> None:
         """
         Instantiate the module, setup parameters, create async streaming generator.\n
         Does not load any models until forward pass
         :param signature: The format of messages sent to the model
         :param max_workers: Maximum number of async processes, based on system resources
         """
-        super().__init__()
-        self.max_workers = max_workers
-        if stream:
-            generator = dspy.asyncify(program=dspy.Predict(signature=sig))  # this should only be used in the case of text
-            self.completion = dspy.streamify(generator)
+        from nnll_16 import first_available
+        from nnll_60.mir_maid import MIRDatabase
+        from nnll_62 import ConstructPipeline
 
-    # Reminder: Don't capture user prompts - this is the crucial stage
-    async def forward(self, tx_data: dict[str | list[float]], model: str, library: LibType, streaming=True) -> Any:
-        """
-        Forward pass for LLM Chat process\n
-        :param tx_data: prompt transmission values for all media formats
+        super().__init__()
+        self.mir_db = MIRDatabase()
+        self.factory = ConstructPipeline()
+        self.device = first_available()
+        self.max_workers = max_workers
+        self.streaming = streaming
+
+    async def prepare_model(self) -> None:
+        """Load model in preparation of
         :param model: path to model
         :param library: LibType of model origin
         :param streaming: output type flag, defaults to True
@@ -132,38 +145,110 @@ class ChatMachineWithMemory(dspy.Module):
         """
         from httpx import ResponseNotRead
 
-        dbug(f"libtype hub req : {vars(self.completion)} {model} {library}")
-        try:
-            api_kwargs = await get_api(model=model, library=library)
-        except (ValueError, ResponseNotRead) as error_log:
-            nfo(f"Library '{library}' not found in configuration.")
-            dbug(error_log)
-            yield {
-                "choices": {
-                    "0": {"delta": {"content": "The attempt to gather resources for this request was rejected. Have files changed?"}},
-                },
-            }
-        else:
-            model = dspy.LM(**api_kwargs)
-            dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
-            #        history = dspy.History(messages=[{"question":tx_data["text"], "answer":last_answer}
-            yield self.completion(message=tx_data["text"], stream=streaming)  # history=history)
-
-    def forward_hub(self, tx_data: dict[str | list[float]], model: str, library: LibType, out_type: str = "image") -> None:
-        """Forward pass for non-streaming processes\n
-        :param tx_data: prompt transmission values for all media formats
-        :param model: path to model # this will need to accept multiple models
-
-        :param library: LibType of model origin
-        :param streaming: output type flag, defaults to False
-        """
-        if library == LibType.HUB:
+        if self.library == LibType.HUB:
             # api_kwargs = await get_api(model=model, library=library)
-            from nnll_05 import lookup_function_for
-
-            constructor, mir_arch = lookup_function_for(model)
-            dbug(constructor, mir_arch)
             # generator = dspy.asyncify(constructor)
             # self.completion = dspy.streamify(generator)
-            constructor(mir_arch, tx_data, out_type)
 
+            mir_arch = self.mir_db.find_path("repo", self.model.lower())
+            series = self.mir_arch[0]
+            arch_data = self.mir_db.database[series].get(mir_arch[1])
+            init_modules = self.mir_db.database[series]["[init]"]
+            self.pipe, self.model, self.import_pkg, self.pipe_kwargs = self.factory.create_pipeline(arch_data, init_modules)
+
+            # lora=lora_opt)
+            lora_arch = self.mir_db.database[series].get(self.lora[1])
+            lora_repo = next(iter(lora_arch["repo"]))  # <- user location here OR this
+            scheduler = self.mir_db.database[series]["[init]"].get("scheduler")
+            kwargs = {}
+            if scheduler:
+                sched = self.mir_db.database[scheduler]["[init]"]
+                scheduler_kwargs = self.mir_db.database[series]["[init]"].get("scheduler_kwargs")
+                kwargs = {sched: sched, scheduler_kwargs: scheduler_kwargs}
+            init_kwargs = lora_arch.get("init_kwargs")
+            self.pipe = self.factory.add_lora(self.pipe, lora_repo=lora_repo, init_kwargs=init_kwargs, **kwargs)
+        else:
+            try:
+                api_kwargs = await get_api(model=self.model, library=self.library)
+            except (ValueError, ResponseNotRead) as error_log:
+                nfo(f"Library '{self.library}' not found in configuration.")
+                dbug(error_log)
+                yield {
+                    "choices": {
+                        "0": {"delta": {"content": "Request attempt failed. Have file locations changed?"}},
+                    },
+                }
+            else:
+                if self.streaming:
+                    generator = dspy.asyncify(program=dspy.Predict(signature=self.sig))  # this should only be used in the case of text
+                    self.completion = dspy.streamify(generator)
+                else:
+                    self.completion = dspy.Predict(signature=self.sig)
+                model = dspy.LM(**api_kwargs)
+                dspy.settings.configure(lm=model, async_max_workers=self.max_workers)
+                dbug(f"libtype hub req : {self.completion} {model} {self.library}")
+        self.model = model
+
+    # Reminder: Don't capture user prompts - this is the crucial stage
+    async def forward(self, tx_data: dict[str | list[float]], out_type: str) -> Any:
+        """
+        Forward pass for multimodal process\n
+        :param tx_data: prompt transmission values for all media formats
+        :param streaming: output type flag, defaults to False
+        """
+
+        if self.library != LibType.HUB:
+            #        history = dspy.History(messages=[{"question":tx_data["text"], "answer":last_answer}
+            yield self.completion(message=tx_data["text"], stream=self.streaming)  # history=history)
+        else:
+            from nnll_16 import soft_random, seed_planter
+            import nnll_56 as techniques
+            import nnll_59 as disk
+
+            noise_seed = seed_planter(soft_random())
+            user_set = {
+                "output_type": "pil",
+            }
+            # memory threshold formula function returns boolean value here
+            prompt = tx_data.get("text", "")
+
+            nfo(f"Pre-generator Model {self.model}  Pipe {self.pipe} Arguments {self.pipe_kwargs}")  # Lora {lora_opt}
+            self.pipe_kwargs.update(user_set)
+            metadata = None
+            content = None
+            gen_data = {"parameters": {}}
+
+            if "diffusers" in self.import_pkg:
+                self.pipe.to(self.device)
+                self.pipe = techniques.add_generator(pipe=self.pipe, noise_seed=noise_seed)
+                content = self.pipe(prompt=prompt, **self.pipe_kwargs).images[0]
+                gen_data = disk.add_to_metadata(pipe=self.pipe, model=self.model, prompt=[prompt], kwargs=self.pipe_kwargs)
+                # may also be video or audio!!
+
+            elif "audiogen" in self.import_pkg:
+                self.pipe = next(iter(self.pipe))
+                metadata = self.pipe.sample_rate
+                self.pipe.to(self.device)
+                content = self.pipe.generate([prompt])
+                self.pipe_kwargs.update({"sample_rate": self.pipe.config.sampling_rate})
+                gen_data = disk.add_to_metadata(pipe=self.pipe, model=self.model, prompt=[prompt], kwargs=self.pipe_kwargs)
+
+            elif "parler_tts" in self.import_pkg:
+                input_ids = self.pipe[1](prompt).input_ids.to(self.device)
+                prompt_input_ids = self.pipe[1](prompt).input_ids.to(self.device)
+                self.pipe = self.pipe[0]
+                self.pipe.to(self.device)
+                generation = self.pipe.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+                content = generation.cpu().numpy().squeeze()
+                self.pipe_kwargs.update({"sampling_rate": self.pipe.config.sampling_rate})
+                gen_data = disk.add_to_metadata(pipe=self.pipe, model=self.model, prompt=[prompt], kwargs=self.pipe_kwargs)
+
+            if content:
+                metadata = gen_data.get("parameters")
+                nfo(f"content type output {content}, {type(content)}")
+                disk.write_to_disk(content, metadata)
+
+                # Uniqueness Tag
+                # from nnll_61 import HyperChain
+                # data_chain = HyperChain()
+                # data_chain.add_block(f"{pipe}{model}{kwargs}")

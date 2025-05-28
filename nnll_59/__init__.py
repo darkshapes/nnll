@@ -48,7 +48,7 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
 
 
 # do not log here
-def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:
+def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:  #  negative_prompt=None
     """
     Create metadata from active hf inference pipes\n
     :param pipe: Active HuggingFace pipe from diffusers/transformers
@@ -63,6 +63,7 @@ def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str],
     gen_data = {
         "parameters": {
             "Prompt": prompt,
+            # "\nNegative prompt": negative_prompt if negative_prompt else "\n",
             "\nData": kwargs,
             "\nPipe": pipe,
             "\nModels": model_data,

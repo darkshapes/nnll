@@ -8,7 +8,7 @@ import secrets
 import os
 import sys
 
-from nnll_08 import soft_random, hard_random
+from nnll_16 import soft_random, hard_random
 
 
 class TestRandom:

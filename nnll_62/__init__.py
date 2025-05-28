@@ -7,7 +7,6 @@
 import os
 from typing import Callable
 from nnll_01 import debug_monitor, dbug, nfo
-from nnll_60.mir_maid import MIRDatabase
 
 
 @debug_monitor
@@ -29,8 +28,7 @@ def pipe_call(func):
 class ConstructPipeline:
     """Build and configure Diffusers pipelines"""
 
-    data = MIRDatabase()
-    construct = data.read_from_disk()
+    last_pipe: Callable = None
 
     def _get_module(self, import_pkg: dict[str, list[str]]) -> list[Callable]:
         """Accept two lists of importable dependencies and modules\n
@@ -92,21 +90,14 @@ class ConstructPipeline:
         if pipe_class is None:
             raise TypeError("Pipe should be Callable `class` object, not `None`")
 
-    def add_lora(self, pipe, lora):
-        series = lora[0]
-        arch_data = self.construct[series].get(lora[1])
-        nfo(arch_data)
-        lora_repo = next(iter(arch_data["repo"]))  # <- user location here OR this
-        scheduler = self.construct[series]["[init]"].get("scheduler")
-        if scheduler:
-            sched = self.construct[scheduler]["[init]"]
+    def add_lora(self, pipe, lora_repo, init_kwargs: dict, sched=None, scheduler_kwargs=None):
+        if sched:
             import_pkg = sched["dep_pkg"]
             scheduler_class = self._get_module(import_pkg)
-            scheduler_kwargs = self.construct[series]["[init]"].get("scheduler_kwargs")
             pipe.scheduler = scheduler_class[0]({**scheduler_kwargs})
-            nfo(f"mid sched {sched}, {scheduler_class}, {series}")
-        nfo(f"status mid-lora: {lora}, {arch_data}, {pipe}, {scheduler}, ")
-        init_kwargs = arch_data.get("init_kwargs")
+            nfo(f"mid sched {sched}, {scheduler_class}")
+        # nfo(f"status mid-lora: {lora}, {arch_data}, {pipe}, {scheduler}, ")
+
         fuse = 0
         if init_kwargs is not None:
             fuse = init_kwargs.get("fuse", 0)
@@ -118,24 +109,20 @@ class ConstructPipeline:
 
     @debug_monitor
     @pipe_call
-    def create_pipeline(self, architecture: list[str], *args, granular: bool = False, lora: list | None = None, **kwargs):
+    def create_pipeline(self, arch_data: str, init_modules: dict, *args, granular: bool = False, **kwargs):
         """
         Build an inference pipe based on model type\n
         :param architecture: Identifier of model architecture
         :return: `tuple` constructed pipe, model/repo name `str`, and a `dict` of default settings
         """
-        series = architecture[0]
-        arch_data = self.construct[series].get(architecture[1])
+
         # if series.split(".")[1] == "lora":
         #     scheduler = arch_data.get("solver", 0)
-        init_modules = self.construct[series]["[init]"]
         # granular should be set by spec check
         import_pkg = init_modules["dep_pkg"]  # a dictionary of dependencies
-
         # handle alternate external dependencies that are not installed
         # if arch_data.get("dep_alt", 0):
         #     import_pkg.update(arch_data["dep_alt"])
-
         pipe_classes = self._get_module(import_pkg)  # now a list of classes
         if granular and ("diffusers" in import_pkg or "transformers" in import_pkg):
             # break down pipeline for low-spec machine
@@ -162,6 +149,4 @@ class ConstructPipeline:
             pkg,
             **init_kwargs,  # apply kwargs per-pipe if possible
         )
-        if lora:
-            pipe = self.add_lora(pipe, lora)
         return (pipe, repo, pkg, kwargs)
