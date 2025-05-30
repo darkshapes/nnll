@@ -154,8 +154,8 @@ dev-dependencies = ["nnll[dev]"]
 prerelease       = "allow"
 preview          = true
 
-[tool.uv.pip]
-torch-backend = "auto"
+# [tool.uv.pip]
+# torch-backend = "auto"
 
 [[tool.uv.index]]
 name     = "pytorch-cpu"
@@ -217,9 +217,6 @@ extend-exclude = ["^tests/.*$", "test.*$"]
 max-line-length = 140
 ignore-paths    = ["^tests/.*$", "test_.*$"]
 disable         = ["C0415"]
-
-[tool.ruff.format]
-# exclude = ["*.py"]
 
 [tool.ruff.lint.pycodestyle]
 max-line-length               = 140

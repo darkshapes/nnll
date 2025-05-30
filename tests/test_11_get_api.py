@@ -28,7 +28,7 @@ class LibType(Enum):
     VLLM: tuple = (has_api("VLLM"), "VLLM")
 
 
-@pytest_asyncio.fixture(loop_scope="session")
+@pytest_asyncio.fixture(loop_scope="module")
 async def mock_has_api():
     with patch("nnll_15.constants.has_api", return_value=True) as mocked:
         yield mocked

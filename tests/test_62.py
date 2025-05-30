@@ -153,7 +153,7 @@ class TestConstructPipeline(unittest.TestCase):
         with patch("diffusers.LCMScheduler") as mock_scheduler_class:
             mock_scheduler_instance = MagicMock()
             mock_scheduler_class.return_value = mock_scheduler_instance
-            pipe = pipeline.add_lora(mock_pipe, lora=["info.lora.lcm", "stable-diffusion-xl"])
+            pipe = pipeline.add_lora(mock_pipe, lora_repo=["info.lora.lcm", "stable-diffusion-xl"], init_kwargs={}, sched="ops.scheduler.lcm")
             mock_scheduler_class.assert_called_once_with({"timestep_spacing": "trailing"})
             self.assertEqual(mock_pipe.scheduler, mock_scheduler_instance)
             pipe.load_lora_weights.assert_called_once_with("latent-consistency/lcm-lora-sdxl", adapter_name="mock_adapter")

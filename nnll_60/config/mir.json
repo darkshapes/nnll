@@ -130,66 +130,6 @@
         }
     },
     "info.unet.stable-cascade": {
-        "c": {
-            "layer_256": [
-                "2b6986954d9d2b0c702911504f78f5021843bd7050bb10444d70fa915cb495ea",
-                "2aa5a461c4cd0e2079e81554081854a2fa01f9b876d7124c8fff9bf1308b9df7",
-                "ce474fd5da12f1d465a9d236d61ea7e98458c1b9d58d35bb8412b2acb9594f08",
-                "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
-                "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147"
-            ]
-        },
-        "[init]": {
-            "dep_pkg": {
-                "diffusers": [
-                    "StableCascadeCombinedPipeline"
-                ]
-            }
-        },
-        "b": {
-            "layer_256": [
-                "fde5a91a908e8cb969f97bcd20e852fb028cc039a19633b0e1559ae41edeb16f",
-                "24fa8b55d12bf904878b7f2cda47c04c1a92da702fe149e28341686c080dfd4f",
-                "a7c96afb54e60386b7d077bf3f00d04596f4b877d58e6a577f0e1a08dc4a0190",
-                "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
-                "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64"
-            ]
-        },
-        "stage-abc": {
-            "gen_kwargs": {
-                "negative_prompt": "",
-                "num_inference_steps": 10,
-                "prior_num_inference_steps": 20,
-                "prior_guidance_scale": 3.0,
-                "width": 1024,
-                "height": 1024
-            },
-            "init_kwargs": {
-                "variant": "bf16",
-                "torch_dtype": "torch.bfloat16"
-            },
-            "repo": [
-                "stabilityai/stable-cascade"
-            ]
-        },
-        "stage-c": {
-            "layer_256": [
-                "2b6986954d9d2b0c702911504f78f5021843bd7050bb10444d70fa915cb495ea",
-                "2aa5a461c4cd0e2079e81554081854a2fa01f9b876d7124c8fff9bf1308b9df7",
-                "ce474fd5da12f1d465a9d236d61ea7e98458c1b9d58d35bb8412b2acb9594f08",
-                "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
-                "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147"
-            ]
-        },
-        "stage-b": {
-            "layer_256": [
-                "fde5a91a908e8cb969f97bcd20e852fb028cc039a19633b0e1559ae41edeb16f",
-                "24fa8b55d12bf904878b7f2cda47c04c1a92da702fe149e28341686c080dfd4f",
-                "a7c96afb54e60386b7d077bf3f00d04596f4b877d58e6a577f0e1a08dc4a0190",
-                "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
-                "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64"
-            ]
-        },
         "combined": {
             "gen_kwargs": {
                 "negative_prompt": "",
@@ -206,6 +146,13 @@
             "repo": [
                 "stabilityai/stable-cascade"
             ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "diffusers": [
+                    "StableCascadeCombinedPipeline"
+                ]
+            }
         },
         "prior": {
             "dep_alt": {
@@ -413,7 +360,7 @@
                 "cocktailpeanut/xulf-d"
             ]
         },
-        "lite-8b": {
+        "f-lite-8b": {
             "dep_alt": {
                 "f_lite": [
                     "FLitePipeline"
@@ -430,6 +377,25 @@
             },
             "repo": [
                 "freepik/flux.1-lite-8b"
+            ]
+        },
+        "f-lite-7b": {
+            "dep_alt": {
+                "f_lite": [
+                    "FLitePipeline"
+                ]
+            },
+            "gen_kwargs": {
+                "num_inference_steps": 28,
+                "guidance_scale": 3.5,
+                "height": 1024,
+                "width": 1024
+            },
+            "init_kwargs": {
+                "torch_dtype": "torch.bfloat16"
+            },
+            "repo": [
+                "freepik/f-lite-7b"
             ]
         },
         "lite-texture": {
@@ -468,44 +434,6 @@
             ],
             "repo": [
                 "TencentARC/flux-mini"
-            ]
-        },
-        "f-lite-8b": {
-            "dep_alt": {
-                "f_lite": [
-                    "FLitePipeline"
-                ]
-            },
-            "gen_kwargs": {
-                "num_inference_steps": 28,
-                "guidance_scale": 3.5,
-                "height": 1024,
-                "width": 1024
-            },
-            "init_kwargs": {
-                "torch_dtype": "torch.bfloat16"
-            },
-            "repo": [
-                "freepik/flux.1-lite-8b"
-            ]
-        },
-        "f-lite-7b": {
-            "dep_alt": {
-                "f_lite": [
-                    "FLitePipeline"
-                ]
-            },
-            "gen_kwargs": {
-                "num_inference_steps": 28,
-                "guidance_scale": 3.5,
-                "height": 1024,
-                "width": 1024
-            },
-            "init_kwargs": {
-                "torch_dtype": "torch.bfloat16"
-            },
-            "repo": [
-                "freepik/f-lite-7b"
             ]
         }
     },
@@ -643,6 +571,27 @@
             "dep_pkg": {
                 "diffusers": [
                     "Lumina2Pipeline"
+                ]
+            }
+        }
+    },
+    "info.dit.fuse-dit": {
+        "2b": {
+            "gen_kwargs": {
+                "width": 512,
+                "height": 512,
+                "num_inference_steps": 25,
+                "guidance_scale": 6.0,
+                "use_cache": true
+            },
+            "repo": [
+                "ooutlierr/fuse-dit"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "diffusion": [
+                    "pipelines.FuseDiTPipeline"
                 ]
             }
         }
@@ -1307,27 +1256,6 @@
             "dep_pkg": {
                 "hidiffusion": [
                     "apply_hidiffusion"
-                ]
-            }
-        }
-    },
-    "info.dit.fuse-dit": {
-        "2b": {
-            "gen_kwargs": {
-                "width": 512,
-                "height": 512,
-                "num_inference_steps": 25,
-                "guidance_scale": 6.0,
-                "use_cache": true
-            },
-            "repo": [
-                "ooutlierr/fuse-dit"
-            ]
-        },
-        "[init]": {
-            "dep_pkg": {
-                "diffusion": [
-                    "pipelines.FuseDiTPipeline"
                 ]
             }
         }

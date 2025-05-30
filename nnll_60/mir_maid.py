@@ -4,7 +4,8 @@
 """神经网络的数据注册"""
 
 # pylint: disable=possibly-used-before-assignment, line-too-long
-from typing import Any, Callable, Union
+from ctypes.wintypes import tagSIZE
+from typing import Any, Callable, Union, List, Optional
 import os
 
 from nnll_01 import debug_monitor, nfo  # , dbug
@@ -15,7 +16,7 @@ from nnll_07 import mir_entry
 class MIRDatabase:
     """Machine Intelligence Resource Database"""
 
-    database: dict
+    database: Optional[dict[str, Any]]
     mir_file = JSONCache(MIR_PATH)
 
     def __init__(self) -> None:
@@ -27,13 +28,14 @@ class MIRDatabase:
         :param element: _description_
         """
         parent_key = next(iter(resource))
-        if self.database.get(parent_key, 0):
-            self.database[parent_key] = {**self.database[parent_key], **resource[parent_key]}
-        else:
-            self.database[parent_key] = resource[parent_key]
+        if self.database is not None:
+            if self.database.get(parent_key, 0):
+                self.database[parent_key] = {**self.database[parent_key], **resource[parent_key]}
+            else:
+                self.database[parent_key] = resource[parent_key]
 
     @mir_file.decorator
-    def write_to_disk(self, data: dict = None) -> None:  # pylint:disable=unused-argument
+    def write_to_disk(self, data: Optional[dict] = None) -> None:  # pylint:disable=unused-argument
         """Save data to JSON file\n"""
         # from pprint import pprint
 
@@ -43,52 +45,88 @@ class MIRDatabase:
         nfo(f"Wrote {len(self.database)} lines to MIR database file.")
 
     @mir_file.decorator
-    def read_from_disk(self, data: dict = None) -> dict:
+    def read_from_disk(self, data: Optional[dict] = None) -> dict[str, Any]:
         """Populate mir database\n
         :param data: mir decorater auto-populated, defaults to None
         :return: dict of MIR data"""
         self.database = data
         return self.database
 
-    @debug_monitor
-    def find_path(self, key: str, query: str, join_tag: bool = False) -> Any:
-        """Retrieve MIR path based on nested value search\n
-        :param key: Known field to look within
-        :param query: Search pattern for field
-        :param join_tag: Combine tag elements, defaults to False
-        :return: A list or string of the found tag"""
-        for series, comp in self.database.items():
-            for compatibility, entry in comp.items():
-                parameter = entry.get(key)
-                nfo(f" maid found path {parameter} {key} {series} {compatibility} ")
-                if parameter is not None and query.lower() in parameter:
-                    found = "".join([series, compatibility]) if join_tag else [series, compatibility]
-                    nfo(f" maid found path {parameter} {found} {series} {compatibility} ")
-                    return found
-
     @staticmethod
-    def grade_char_match(target: str, options: Union[list[str] | dict[str:Any]]) -> str | None:
-        """Compare text to a sequence of texts and pick the closest match between them\n
+    def grade_char_match(target: str, option: str) -> float:
+        """Measure the difference between strings\n
         :param target: The ideal text
-        :param options: The possible text matches
-        :return: The closest match as a string, or `None`
-        """
+        :param option: Text to compare to `target`
+        :return: A float representing the calculated gap"""
+        max_len = len(os.path.commonprefix([option, target]))
+        gap = abs(len(option) - len(target)) + (len(option) - max_len)
+        return gap
 
-        closest_match = None
-        min_difference = float("inf")
-        for idx, opt in enumerate(options):
-            entry = opt.lower()
-            target_lower = target.lower()
-            if target_lower in entry:
-                if idx == target:
-                    closest_match = idx
-                    break
-                common_prefix_length = len(os.path.commonprefix([entry, target_lower]))
-                difference = abs(len(entry) - len(target_lower)) + (len(entry) - common_prefix_length)
-                if difference < min_difference:
-                    min_difference = difference
-                    closest_match = idx
-        return closest_match, entry
+    @debug_monitor
+    def _ready_value(self, value: str, target: str, series: str, compatibility: str) -> List[str]:
+        """Process a single value for matching against the target\n
+        :param value: An unknown string value
+        :param target: The search target
+        :param series: MIR URI domain.arch.series identifier
+        :param compatibility: MIR URI compatibility identifier
+        :return: _description_
+        """
+        results = []
+        if isinstance(value, str):
+            value = [value]
+        for option in value:
+            option_lower = option.lower()
+            if option_lower == target:
+                return [option, series, compatibility, True]
+            elif target in option_lower:
+                results.append([option, series, compatibility, False])
+        return results
+
+    @debug_monitor
+    def _evaluate_matches(self, matches: List[List[str]], target: str) -> list[str, str]:
+        """Evaluate and select the best match from a list of potential matches\n
+        :param matches: Possible matches to compare
+        :param target: Desired entry to match
+        :return: The closest matching dictionary elements
+        """
+        if not matches:
+            return None
+        min_gap = float("inf")
+        best_match = None
+        for match in matches:
+            option, series, compatibility, _ = match
+            gap = self.grade_char_match(target, option)
+            if gap < min_gap:
+                min_gap = gap
+                best_match = [series, compatibility]
+        return best_match
+
+    @debug_monitor
+    def find_path(self, field: str, target: str) -> list[str]:
+        """Retrieve MIR path based on nested value search\n
+        :param field: Known field to look within
+        :param target: Search pattern for field
+        :param join_tag: Combine tag elements, defaults to False
+        :return: A list or string of the found tag
+        :raises KeyError: Target string not found
+        """
+        target = target.lower()
+        matches = []
+        for series, comp in self.database.items():
+            for compatibility, fields in comp.items():
+                value = fields.get(field)
+                if value is not None:
+                    match_results = self._ready_value(value, target, series, compatibility)
+                    if next(iter(match_results), 0):
+                        if next(iter(match_results))[3]:
+                            best_match = [series, compatibility]
+                            return best_match
+                        matches.extend(match_results)
+        best_match = self._evaluate_matches(matches, target)
+        if best_match is not None:
+            nfo(best_match)
+            return best_match
+        raise KeyError(f"Query '{target}' not found when searched {len(self.database)}'{field}' options")
 
 
 def build_mir_unet(mir_db: MIRDatabase):

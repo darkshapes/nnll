@@ -50,9 +50,9 @@ USER_PATH_NAMED = os.path.join(HOME_FOLDER_PATH, "config.toml")
 MIR_PATH = set_path_stable("mir.json")
 HASH_PATH_NAMED = set_path_stable("hashes.json")
 LIBTYPE_PATH_NAMED = set_path_stable("libtype.json")
+CHAIN_PATH_NAMED = set_path_stable("hyperchain.json")
 
 # CONFIG_PATH_NAMED = set_path_stable("config.json")
-# CHAIN_PATH_NAMED = set_path_stable("hyperchain.json")
 
 
 class JSONCache:
