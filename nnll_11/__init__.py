@@ -3,7 +3,7 @@
 
 # pylint: disable=pointless-statement, unsubscriptable-object
 import array
-from typing import Any
+from typing import Any, Optional
 import dspy
 # from pydantic import BaseModel, Field
 
@@ -98,7 +98,7 @@ async def get_api(model: str, library: LibType) -> dict:
             "model": model,
             **config["api_kwargs"],
         }
-        dbug("Pushing form : %s", req_form)
+        dbug("Returning form : %s", req_form)
         return req_form
     raise ValueError(f"Library '{library}' not found in configuration.")
 
@@ -107,14 +107,6 @@ async def get_api(model: str, library: LibType) -> dict:
 class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
     Defaults to 5 question history, 4 max workers, and `HistorySignature` query"""
-
-    sig: dspy.Signature = QASignature
-    mir_arch = None
-    mir_db = None
-    pipe = None
-    pipe_kwargs = None
-    import_pkg = None
-    streaming = None
 
     def __init__(self, max_workers=4) -> None:
         """
@@ -132,8 +124,15 @@ class ChatMachineWithMemory(dspy.Module):
         self.factory = ConstructPipeline()
         self.device = first_available()
         self.max_workers = max_workers
+        self.reg_entries = None
+        self.sig: dspy.Signature = QASignature
+        self.mir_arch = None
+        self.pipe = None
+        self.pipe_kwargs = None
+        self.import_pkg = None
+        self.streaming = True
 
-    async def ready_model(self, reg_entries: RegistryEntry, sig: dspy.Signature, streaming: bool = True) -> Any:
+    def __call__(self, reg_entries: RegistryEntry, sig: dspy.Signature, streaming: bool = True) -> Any:
         """Load model in preparation of
         :param model: path to model
         :param library: LibType of model origin
@@ -150,12 +149,12 @@ class ChatMachineWithMemory(dspy.Module):
         lora = None
         if library != LibType.HUB:
             try:
-                api_kwargs = await get_api(model=model, library=library)
+                api_kwargs = get_api(model=model, library=library)
                 dspy.settings.configure(lm=dspy.LM(**api_kwargs), async_max_workers=self.max_workers)
             except (ValueError, ResponseNotRead) as error_log:
                 nfo(f"Library '{library}' not found in configuration.")
                 dbug(error_log)
-                yield {
+                return {
                     "choices": {
                         "0": {"delta": {"content": "Request attempt failed. Have file locations changed?"}},
                     },
@@ -166,8 +165,8 @@ class ChatMachineWithMemory(dspy.Module):
                     self.pipe = dspy.streamify(generator)
                 else:
                     self.pipe = dspy.Predict(signature=self.sig)
-                yield self.pipe
-            nfo(f"libtype hub req : {self.completion} {model} {library}")
+                return self.pipe
+            nfo(f"libtype hub req : {self.pipe} {model} {library}")
         else:
             # api_kwargs = await get_api(model=model, library=library)
             # generator = dspy.asyncify(constructor)
@@ -177,7 +176,7 @@ class ChatMachineWithMemory(dspy.Module):
 
             mir_arch = self.mir_db.find_path("repo", model.lower())
             series = self.mir_arch[0]
-            arch_data = self.mir_db.database[series].get(mir_arch[1])
+            arch_data = self.mir_db.database[series][mir_arch[1]]
             init_modules = self.mir_db.database[series]["[init]"]
             self.pipe, model, self.import_pkg, self.pipe_kwargs = self.factory.create_pipeline(arch_data, init_modules)
 
@@ -211,10 +210,10 @@ class ChatMachineWithMemory(dspy.Module):
             elif "parler_tts" in self.import_pkg:
                 self.pipe_kwargs.update({"sampling_rate": self.pipe.config.sampling_rate})
 
-        yield self.pipe
+        return self.pipe, self.import_pkg, self.pipe_kwargs
 
     # Reminder: Don't capture user prompts - this is the crucial stage
-    async def forward(self, tx_data: dict[str | list[float]], mode_out: str = "text") -> Any:
+    async def forward(self, tx_data: dict[str | list[float]], mode_out: str = "text", metadata: Optional[dict] = None) -> Any:
         """
         Forward pass for multimodal process\n
         :param tx_data: prompt transmission values for all media formats
@@ -243,7 +242,7 @@ class ChatMachineWithMemory(dspy.Module):
                 # metadata = self.pipe.sampling_rate
             gen_data = disk.add_to_metadata(pipe=self.pipe, model=self.reg_entries.model, prompt=[prompt], kwargs=self.pipe_kwargs)
             if content:
-                metadata = gen_data.get("parameters")
+                metadata.update(gen_data.get("parameters"))
                 nfo(f"content type output {content}, {type(content)}")
             yield disk.write_to_disk(content, metadata)
 

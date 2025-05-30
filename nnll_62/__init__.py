@@ -5,7 +5,7 @@
 
 # pylint: disable=unsubscriptable-object, import-outside-toplevel, unused-argument, line-too-long
 import os
-from typing import Callable
+from typing import Callable, List, Union
 from nnll_01 import debug_monitor, dbug, nfo
 
 
@@ -90,12 +90,12 @@ class ConstructPipeline:
         if pipe_class is None:
             raise TypeError("Pipe should be Callable `class` object, not `None`")
 
-    def add_lora(self, pipe, lora_repo, init_kwargs: dict, sched=None, scheduler_kwargs=None):
-        if sched:
-            import_pkg = sched["dep_pkg"]
+    def add_lora(self, pipe: Callable, lora_repo: str, init_kwargs: dict, scheduler_data=None, scheduler_kwargs=None):
+        if scheduler_data:
+            import_pkg = scheduler_data["dep_pkg"]
             scheduler_class = self._get_module(import_pkg)
             pipe.scheduler = scheduler_class[0]({**scheduler_kwargs})
-            nfo(f"mid sched {sched}, {scheduler_class}")
+            nfo(f"mid sched {scheduler_data}, {scheduler_class}")
         # nfo(f"status mid-lora: {lora}, {arch_data}, {pipe}, {scheduler}, ")
 
         fuse = 0
@@ -109,13 +109,16 @@ class ConstructPipeline:
 
     @debug_monitor
     @pipe_call
-    def create_pipeline(self, arch_data: str, init_modules: dict, *args, granular: bool = False, **kwargs):
+    def create_pipeline(self, arch_data: Union[List[str], str], init_modules: dict, *args, granular: bool = False, **kwargs):
         """
         Build an inference pipe based on model type\n
-        :param architecture: Identifier of model architecture
+        :param arch_data: Identifier of model architecture
+        :param init_modules: Parameters for initialiing the pipeline
         :return: `tuple` constructed pipe, model/repo name `str`, and a `dict` of default settings
         """
 
+        if isinstance(arch_data, str):
+            "".join(arch_data)
         # if series.split(".")[1] == "lora":
         #     scheduler = arch_data.get("solver", 0)
         # granular should be set by spec check
