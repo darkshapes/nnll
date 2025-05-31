@@ -175,7 +175,7 @@ class RegistryEntry(BaseModel):
         #     nfo("Unsupported source")
         #     raise ValueError("Unsupported source")
         # nfo(f"entries {entries}")
-        return sorted(entries, key=lambda x: x.timestamp, reverse=True)
+        return entries
 
 
 @debug_monitor

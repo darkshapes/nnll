@@ -45,7 +45,7 @@ class QASignature(dspy.Signature):
 
 # signature: dspy.Signature = BasicQAHistory
 @debug_monitor
-async def get_api(model: str, library: LibType) -> dict:
+def get_api(model: str, library: LibType) -> dict:
     """
     Load model into chat completion method based on library and run query\n
     :param model: The model to create a reply with the question

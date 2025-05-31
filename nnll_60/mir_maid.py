@@ -41,7 +41,7 @@ class MIRDatabase:
 
         self.mir_file.update_cache(self.database, replace=True)
         self.database = self.read_from_disk()
-        nfo(self.database)
+        # nfo(self.database)
         nfo(f"Wrote {len(self.database)} lines to MIR database file.")
 
     @mir_file.decorator
@@ -51,16 +51,6 @@ class MIRDatabase:
         :return: dict of MIR data"""
         self.database = data
         return self.database
-
-    @staticmethod
-    def grade_char_match(target: str, option: str) -> float:
-        """Measure the difference between strings\n
-        :param target: The ideal text
-        :param option: Text to compare to `target`
-        :return: A float representing the calculated gap"""
-        max_len = len(os.path.commonprefix([option, target]))
-        gap = abs(len(option) - len(target)) + (len(option) - max_len)
-        return gap
 
     @debug_monitor
     def _ready_value(self, value: str, target: str, series: str, compatibility: str) -> List[str]:
@@ -82,8 +72,8 @@ class MIRDatabase:
                 results.append([option, series, compatibility, False])
         return results
 
-    @debug_monitor
-    def _evaluate_matches(self, matches: List[List[str]], target: str) -> list[str, str]:
+    @staticmethod
+    def grade_char_match(matches: List[List[str]], target: str) -> list[str, str]:
         """Evaluate and select the best match from a list of potential matches\n
         :param matches: Possible matches to compare
         :param target: Desired entry to match
@@ -95,10 +85,12 @@ class MIRDatabase:
         best_match = None
         for match in matches:
             option, series, compatibility, _ = match
-            gap = self.grade_char_match(target, option)
-            if gap < min_gap:
-                min_gap = gap
-                best_match = [series, compatibility]
+            if target in option or option in target:
+                max_len = len(os.path.commonprefix([option, target]))
+                gap = abs(len(option) - len(target)) + (len(option) - max_len)
+                if gap < min_gap:
+                    min_gap = gap
+                    best_match = [series, compatibility]
         return best_match
 
     @debug_monitor
@@ -122,7 +114,7 @@ class MIRDatabase:
                             best_match = [series, compatibility]
                             return best_match
                         matches.extend(match_results)
-        best_match = self._evaluate_matches(matches, target)
+        best_match = self.grade_char_match(matches, target)
         if best_match is not None:
             nfo(best_match)
             return best_match
@@ -927,8 +919,8 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
     mir_db.write_to_disk()
 
 
-if __name__ == "__main__":
-    import sys
+# if __name__ == "__main__":
+# import sys
 
-    sys.path.append(os.getcwd())
-    main()
+# sys.path.append(os.getcwd())
+# main()
