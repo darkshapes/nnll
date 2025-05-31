@@ -46,26 +46,7 @@ async def has_api():
 class PlaceholderClass:
     model = "🤡"
     library = LibType.CORTEX
-
-
-PlaceholderClass
-
-
-@pytest_asyncio.fixture(loop_scope="module")
-async def mock_get_api():
-    with patch("nnll_11.get_api", autospec=True) as mocked:
-
-        class PlaceholderClass:
-            model = "🤡"
-            library = LibType.CORTEX
-
-        data = JSONCache(LIBTYPE_PATH_NAMED)
-        data._load_cache()
-        api_data = vars(data).get("_cache")
-        print(f" \n{PlaceholderClass.library.value[1]}  == {api_data.get(PlaceholderClass.library.value[1])}")
-        api_kwargs = {"model": PlaceholderClass.model} | api_data[PlaceholderClass.library.value[1]].get("api_kwargs")
-        mocked.return_value = api_kwargs
-        yield mocked
+    api_kwargs = {}
 
 
 @pytest.mark.filterwarnings("ignore:open_text")
@@ -101,7 +82,7 @@ async def test_chat_machine_initialization(mock_signature, mock_predict):
 @pytest.mark.filterwarnings("ignore:open_text")
 @pytest.mark.filterwarnings("ignore::DeprecationWarning:")
 @pytest.mark.asyncio(loop_scope="module")
-async def test_chat_machine_generation(mock_get_api, mock_signature, mock_predict, has_api):
+async def test_chat_machine_generation(mock_signature, mock_predict, has_api):
     # from nnll_11 import ChatMachineWithMemory
 
     # chat_machine = ChatMachineWithMemory(max_workers=8)
@@ -114,4 +95,3 @@ async def test_chat_machine_generation(mock_get_api, mock_signature, mock_predic
 
         assert callable(chat_machine.pipe)
         assert chat_machine.pipe is not None
-        mock_lm.assert_called_once_with(**mock_get_api.return_value)

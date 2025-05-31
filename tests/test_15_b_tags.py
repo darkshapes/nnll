@@ -12,6 +12,8 @@ def registry_entry_ollama():
         size=1024,
         tags=["mllama", "llava", "text"],
         library=LibType.OLLAMA,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -23,6 +25,8 @@ def registry_entry_hub():
         size=512,
         tags=["text-generation", "image-to-text", "text-to-speech", "text"],
         library=LibType.HUB,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -44,6 +48,8 @@ def hub_xlate():
         size=1024,
         tags=["speech-translation"],
         library=LibType.HUB,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -55,6 +61,8 @@ def hub_sum():
         size=1024,
         tags=["speech-summarization"],
         library=LibType.HUB,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -66,6 +74,8 @@ def hub_asr():
         size=1024,
         tags=["automatic-speech-recognition"],
         library=LibType.HUB,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -79,6 +89,8 @@ def hub_tts():
             "text-to-speech",
         ],
         library=LibType.HUB,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -120,6 +132,8 @@ def registry_entry_hub_extra():
         size=1024,
         tags=["speech-translation", "speech-summarization", "automatic-speech-recognition", "text-to-speech", "video generation"],
         library=LibType.HUB,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -140,6 +154,8 @@ def registry_entry_cortex():
         size=1024,
         tags=["speech-translation", "speech-summarization", "automatic-speech-recognition", "text-to-speech", "video generation"],
         library=LibType.CORTEX,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -158,6 +174,8 @@ def registry_entry_vllm():
         size=1024,
         tags=["text", "vision"],
         library=LibType.VLLM,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -177,6 +195,8 @@ def registry_entry_llamafile():
         size=1024,
         tags=[],
         library=LibType.LLAMAFILE,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
@@ -195,6 +215,8 @@ def registry_entry_lm_studio():
         size=1024,
         tags=["text", "llm"],
         library=LibType.LM_STUDIO,
+        mir=None,
+        api_kwargs=None,
         timestamp=int(datetime.now().timestamp()),
     )
 
