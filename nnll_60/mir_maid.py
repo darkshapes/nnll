@@ -115,7 +115,7 @@ class MIRDatabase:
                             return best_match
                         matches.extend(match_results)
         best_match = self.grade_char_match(matches, target)
-        if best_match is not None:
+        if best_match:
             nfo(best_match)
             return best_match
         raise KeyError(f"Query '{target}' not found when searched {len(self.database)}'{field}' options")
@@ -626,6 +626,74 @@ def build_mir_art(mir_db: MIRDatabase):
             gen_kwargs={"images": [], "qas": [["q1", None]], "max_gen_len": 8192, "temperature": 1.0},
         )
     )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series="llama-3.1",
+            comp="8b-instruct",
+            repo=["meta-llama/llama-3.1-8b-instruct"],
+            dep_pkg={"transformers": ["AutoModel"]},
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series="orpheus",
+            comp="3b-0.1-ft",
+            repo=["canopylabs/orpheus-3b-0.1-ft"],
+            dep_pkg={"orpheus_tts": ["OrpheusModel"]},
+            dep_repo=["github.com/canopyai/Orpheus-TTS"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series="t5",
+            comp="large",
+            repo=["google-t5/t5-large"],
+            dep_pkg={"transformers": ["pipeline"]},
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series="outetts-0.3",
+            comp="1b",
+            repo=["outeai/outetts-0.3-1b"],
+            dep_pkg={"outetts": ["InterfaceHF"]},
+        )
+    )
+
+
+def build_mir_seq2seq(mir_db: MIRDatabase):
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="seq2seq",
+            series="utravox",
+            comp="v0_5-llama-3_1-8b",
+            repo=["fixie-ai/ultravox-v0_5-llama-3_1-8b"],
+            dep_pkg={"transformers": ["pipeline"]},
+        )
+    )
+
+
+def build_mir_embedding(mir_db: MIRDatabase):
+    """embedding model information"""
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="embedding",
+            series="all-MiniLM",
+            comp="L6-v2",
+            repo=["sentence-transformers/all-minilm-l6-v2"],
+            dep_pkg={"transformers": ["pipeline"]},
+        )
+    )
 
 
 def build_mir_mix(mir_db: MIRDatabase):
@@ -636,7 +704,7 @@ def build_mir_mix(mir_db: MIRDatabase):
             arch="mix",
             series="bagel",
             comp="7B-MoT",
-            repo="ByteDance-Seed/BAGEL-7B-MoT",
+            repo=["ByteDance-Seed/BAGEL-7B-MoT"],
             dep_repo=["github.com/ByteDance-Seed/Bagel/"],
         )
     )
@@ -912,6 +980,9 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
     build_mir_unet(mir_db)
     build_mir_dit(mir_db)
     build_mir_art(mir_db)
+    build_mir_seq2seq(mir_db)
+    build_mir_embedding(mir_db)
+    build_mir_mix(mir_db)
     build_mir_lora(mir_db)
     build_mir_scheduler(mir_db)
     build_mir_float(mir_db)

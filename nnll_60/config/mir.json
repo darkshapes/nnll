@@ -1259,5 +1259,96 @@
                 ]
             }
         }
+    },
+    "info.art.llama-3.1": {
+        "8b-instruct": {
+            "repo": [
+                "meta-llama/llama-3.1-8b-instruct"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "transformers": [
+                    "AutoModel"
+                ]
+            }
+        }
+    },
+    "info.art.orpheus": {
+        "3b-0.1-ft": {
+            "repo": [
+                "canopylabs/orpheus-3b-0.1-ft"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "orpheus_tts": [
+                    "OrpheusModel"
+                ]
+            }
+        }
+    },
+    "info.art.t5": {
+        "large": {
+            "repo": [
+                "google-t5/t5-large"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "transformers": [
+                    "pipeline"
+                ]
+            }
+        }
+    },
+    "info.art.outetts-0.3": {
+        "1b": {
+            "repo": [
+                "outeai/outetts-0.3-1b"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "outetts": [
+                    "InterfaceHF"
+                ]
+            }
+        }
+    },
+    "info.seq2seq.utravox": {
+        "v0_5-llama-3_1-8b": {
+            "repo": [
+                "fixie-ai/ultravox-v0_5-llama-3_1-8b"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "transformers": [
+                    "pipeline"
+                ]
+            }
+        }
+    },
+    "info.embedding.all-minilm": {
+        "L6-v2": {
+            "repo": [
+                "sentence-transformers/all-minilm-l6-v2"
+            ]
+        },
+        "[init]": {
+            "dep_pkg": {
+                "transformers": [
+                    "pipeline"
+                ]
+            }
+        }
+    },
+    "info.mix.bagel": {
+        "7B-MoT": {
+            "repo": [
+                "ByteDance-Seed/BAGEL-7B-MoT"
+            ]
+        }
     }
 }

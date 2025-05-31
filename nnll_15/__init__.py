@@ -5,11 +5,12 @@
 
 # pylint: disable=line-too-long, import-outside-toplevel, protected-access, unsubscriptable-object
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 from pydantic import BaseModel, computed_field
 
 from nnll_01 import dbug, debug_monitor, nfo
 from nnll_15.constants import LIBTYPE_CONFIG, VALID_CONVERSIONS, VALID_TASKS, LibType, has_api
+from nnll_60.mir_maid import MIRDatabase
 
 
 class RegistryEntry(BaseModel):
@@ -20,6 +21,8 @@ class RegistryEntry(BaseModel):
     tags: list[str]
     library: LibType
     timestamp: int
+    mir: Optional[list[str]]
+    api_kwargs: Optional[dict]
     # tokenizer: None
 
     @computed_field
@@ -73,11 +76,13 @@ class RegistryEntry(BaseModel):
         def _read_data(data: dict = None):
             return data
 
+        mir_db = MIRDatabase()
         api_data = _read_data()
 
         if next(iter(LibType.OLLAMA.value)) and has_api("OLLAMA"):  # check that server is still up!
             from ollama import ListResponse, list as ollama_list
 
+            config = api_data[LibType.OLLAMA.value[1]]
             model_data: ListResponse = ollama_list()  # type: ignore
             for model in model_data.models:  # pylint:disable=no-member
                 entry = cls(
@@ -85,6 +90,8 @@ class RegistryEntry(BaseModel):
                     size=model.size.real,
                     tags=[model.details.family],
                     library=LibType.OLLAMA,
+                    mir=None,
+                    api_kwargs={**config["api_kwargs"]},
                     timestamp=int(model.modified_at.timestamp()),
                 )
                 entries.append(entry)
@@ -104,7 +111,15 @@ class RegistryEntry(BaseModel):
                             tags.extend(meta.tags)
                         if hasattr(meta, "pipeline_tag"):
                             tags.append(meta.pipeline_tag)
-                        entry = cls(model=repo.repo_id, size=repo.size_on_disk, tags=tags, library=LibType.HUB, timestamp=int(repo.last_modified))  # pylint: disable=undefined-loop-variable
+                        entry = cls(
+                            model=repo.repo_id,
+                            size=repo.size_on_disk,
+                            tags=tags,
+                            library=LibType.HUB,
+                            mir=mir_db.find_path("repo", repo.repo_id.lower()),
+                            api_kwargs=None,
+                            timestamp=int(repo.last_modified),
+                        )  # pylint: disable=undefined-loop-variable
                         entries.append(entry)
             except CacheNotFound as error_log:
                 dbug(error_log)
@@ -113,6 +128,7 @@ class RegistryEntry(BaseModel):
             import requests
             from datetime import datetime
 
+            config = api_data[LibType.CORTEX.value[1]]
             response: requests.models.Request = requests.get(api_data["CORTEX"]["api_kwargs"]["api_base"], timeout=(3, 3))
             model: dict = response.json()
             for model_data in model["data"]:
@@ -121,6 +137,8 @@ class RegistryEntry(BaseModel):
                     size=model_data.get("size", 0),
                     tags=[str(model_data.get("modalities", "text"))],
                     library=LibType.CORTEX,
+                    mir=None,
+                    api_kwargs={**config["api_kwargs"]},
                     timestamp=int(datetime.timestamp(datetime.now())),  # no api for time data in cortex
                 )
                 entries.append(entry)
@@ -129,19 +147,22 @@ class RegistryEntry(BaseModel):
             from openai import OpenAI
 
             model_data: OpenAI = OpenAI(base_url=api_data["LLAMAFILE"]["api_kwargs"]["api_base"], api_key="sk-no-key-required")
+            config = api_data[LibType.LLAMAFILE.value[1]]
             for model in model_data.models.list().data:
                 entry = cls(
                     model=f"{api_data[LibType.LLAMAFILE.value[1]].get('prefix')}/{model.id}",
                     size=0,
                     tags=["text"],
                     library=LibType.LLAMAFILE,
+                    mir=None,
+                    api_kwargs={**config["api_kwargs"]},
                     timestamp=int(model.created),  # no api for time data in cortex
                 )
                 entries.append(entry)
 
         if next(iter(LibType.VLLM.value)) and has_api("VLLM"):  # placeholder
             # import vllm
-
+            config = api_data[LibType.VLLM.value[1]]
             model_data = OpenAI(base_url=api_data["VLLM"]["api_kwargs"]["api_base"], api_key=api_data["VLLM"]["api_kwargs"]["api_key"])
             for model in model_data.models.list().data:
                 entry = cls(
@@ -149,6 +170,8 @@ class RegistryEntry(BaseModel):
                     size=0,
                     tags=["text"],
                     library=LibType.VLLM,
+                    mir=None,
+                    api_kwargs={**config["api_kwargs"]},
                     timestamp=int(model.created),  # no api for time data in cortex
                 )
                 entries.append(entry)
@@ -156,6 +179,7 @@ class RegistryEntry(BaseModel):
         if next(iter(LibType.LM_STUDIO.value)) and has_api("LM_STUDIO"):
             from lmstudio import list_downloaded_models  # pylint: disable=import-error, # type: ignore
 
+            config = api_data[LibType.LM_STUDIO.value[1]]
             model_data = list_downloaded_models()
             for model in model_data:  # pylint:disable=no-member
                 tags = []
@@ -168,6 +192,8 @@ class RegistryEntry(BaseModel):
                     size=model._data.size_bytes,
                     tags=tags,
                     library=LibType.LM_STUDIO,
+                    mir=None,
+                    api_kwargs={**config["api_kwargs"]},
                     timestamp=int(model.modified_at.timestamp()),
                 )
                 entries.append(entry)

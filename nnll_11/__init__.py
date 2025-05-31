@@ -43,66 +43,6 @@ class QASignature(dspy.Signature):
     answer = dspy.OutputField(desc="Often between 60 and 90 words and limited to 10000 character code blocks")
 
 
-# signature: dspy.Signature = BasicQAHistory
-@debug_monitor
-def get_api(model: str, library: LibType) -> dict:
-    """
-    Load model into chat completion method based on library and run query\n
-    :param model: The model to create a reply with the question
-    :param library: API Library to use
-    :param _data: filled by config decorator, ignore, defaults to None
-    :return: Arguments to pass to the LM constructor
-
-    ====================================================
-    #### IMPLIED
-    Since model Libraries only populate registry if:
-    - X : Library modules are detected at launch
-    - Y : Library server was available on index
-
-    THUS
-    #### Safely assume only valid Libraries are processed
-    `valid` in this case meaning available to the system out of the set of all Zodiac supported
-
-    However, server status can change. This must be validated. So:
-
-    #### GIVEN
-    For any supported Library Type:
-    - A: Library call modules MUST be detected in CONFIG data
-    - B: Library server MUST be available
-    - If A is True AND B is True: Library index operations will be run
-
-    In theory a model can be removed while the server is rebooted in between these checks.\n
-    We would have to repopulate and reconstruct the index to know. An expensive computation.\n
-    It would be ideal to have a lookup method inside 'from_cache' that confirms\n
-    - A : the model remains available in the library
-    - B : the location of the model is real
-    - C : the file exists
-     Unfortunately, several local model API's do not have a method to determine model file location.
-
-    Therefore:
-    #### MODEL AVAILABILITY IS UNCERTAIN
-    #### ALWAYS prepare a case where the model file itself cannot be found
-
-    """
-
-    @LIBTYPE_CONFIG.decorator
-    def _read_data(data: dict = None):
-        return data
-
-    data = _read_data()
-    req_form = {}
-
-    if data.get(library.value[1], 0) and has_api(library.value[1]):
-        config = data[library.value[1]]
-        req_form = {
-            "model": model,
-            **config["api_kwargs"],
-        }
-        dbug("Returning form : %s", req_form)
-        return req_form
-    raise ValueError(f"Library '{library}' not found in configuration.")
-
-
 # Don't capture user prompts: AVOID logging this class as much as possible
 class ChatMachineWithMemory(dspy.Module):
     """Base module for Q/A chats using async and `dspy.Predict` List-based memory
@@ -125,12 +65,11 @@ class ChatMachineWithMemory(dspy.Module):
         self.device = first_available()
         self.max_workers = max_workers
         self.reg_entries = None
-        self.sig: dspy.Signature = QASignature
-        self.mir_arch = None
         self.pipe = None
         self.pipe_kwargs = None
         self.import_pkg = None
         self.streaming = True
+        self.sig: dspy.Signature = QASignature
 
     def __call__(self, reg_entries: RegistryEntry, sig: dspy.Signature, streaming: bool = True) -> Any:
         """Load model in preparation of
@@ -149,8 +88,9 @@ class ChatMachineWithMemory(dspy.Module):
         lora = None
         if library != LibType.HUB:
             try:
-                api_kwargs = get_api(model=model, library=library)
-                dspy.settings.configure(lm=dspy.LM(**api_kwargs), async_max_workers=self.max_workers)
+                api_kwargs = self.reg_entries.api_kwargs
+                nfo(f"api_kwargs_passed = {api_kwargs}")
+                dspy.settings.configure(lm=dspy.LM(model=model, **api_kwargs), async_max_workers=self.max_workers)
             except (ValueError, ResponseNotRead) as error_log:
                 nfo(f"Library '{library}' not found in configuration.")
                 dbug(error_log)
@@ -174,24 +114,25 @@ class ChatMachineWithMemory(dspy.Module):
             import nnll_56 as techniques
             from nnll_16 import soft_random, seed_planter
 
-            mir_arch = self.mir_db.find_path("repo", model.lower())
-            series = self.mir_arch[0]
+            mir_arch = self.reg_entries.mir
+            series = mir_arch[0]
             arch_data = self.mir_db.database[series][mir_arch[1]]
             init_modules = self.mir_db.database[series]["[init]"]
             self.pipe, model, self.import_pkg, self.pipe_kwargs = self.factory.create_pipeline(arch_data, init_modules)
 
             # lora=lora_opt)
-            lora_arch = self.mir_db.database[series].get(lora[1])
-            lora_repo = next(iter(lora_arch["repo"]))  # <- user location here OR this
-            scheduler = self.mir_db.database[series]["[init]"].get("scheduler")
-            kwargs = {}
-            if scheduler:
-                sched = self.mir_db.database[scheduler]["[init]"]
-                scheduler_kwargs = self.mir_db.database[series]["[init]"].get("scheduler_kwargs")
-                kwargs = {sched: sched, scheduler_kwargs: scheduler_kwargs}
-            init_kwargs = lora_arch.get("init_kwargs")
-            if lora:
-                self.pipe = self.factory.add_lora(self.pipe, lora_repo=lora_repo, init_kwargs=init_kwargs, **kwargs)
+            if lora is not None:
+                lora_arch = self.mir_db.database[series].get(lora[1])
+                lora_repo = next(iter(lora_arch["repo"]))  # <- user location here OR this
+                scheduler = self.mir_db.database[series]["[init]"].get("scheduler")
+                kwargs = {}
+                if scheduler:
+                    sched = self.mir_db.database[scheduler]["[init]"]
+                    scheduler_kwargs = self.mir_db.database[series]["[init]"].get("scheduler_kwargs")
+                    kwargs = {sched: sched, scheduler_kwargs: scheduler_kwargs}
+                init_kwargs = lora_arch.get("init_kwargs")
+                if lora:
+                    self.pipe = self.factory.add_lora(self.pipe, lora_repo=lora_repo, init_kwargs=init_kwargs, **kwargs)
 
             noise_seed = seed_planter(soft_random())
             user_set = {
@@ -219,34 +160,33 @@ class ChatMachineWithMemory(dspy.Module):
         :param tx_data: prompt transmission values for all media formats
         :param mode_out: output type flag, defaults to "text"
         """
-        import nnll_59 as disk
+        yield self.pipe(message=tx_data["text"], stream=self.streaming)  # history=history)
+        # else:
+        #     if metadata is None:
+        #         metadata = {}
+        #     # memory threshold formula function returns boolean value here
+        #     prompt = tx_data.get("text", "")
+        #     content = None
+        #     nfo(f"content = {metadata}")
 
-        if self.reg_entries.library != LibType.HUB:
-            #        history = dspy.History(messages=[{"question":tx_data["text"], "answer":last_answer}
-            yield self.pipe(message=tx_data["text"], stream=self.streaming)  # history=history)
-        else:
-            # memory threshold formula function returns boolean value here
-            prompt = tx_data.get("text", "")
-            content = None
-            if "diffusers" in self.import_pkg:
-                content = self.pipe(prompt=prompt, **self.pipe_kwargs).images[0]
-                # may also be video!!
-            elif "audiogen" in self.import_pkg:
-                content = self.pipe.generate([prompt])
-                # metadata = self.pipe.sample_rate
-            elif "parler_tts" in self.import_pkg:
-                input_ids = self.pipe[1](prompt).input_ids.to(self.device)
-                prompt_input_ids = self.pipe[1](prompt).input_ids.to(self.device)
-                generation = self.pipe.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
-                content = generation.cpu().numpy().squeeze()
-                # metadata = self.pipe.sampling_rate
-            gen_data = disk.add_to_metadata(pipe=self.pipe, model=self.reg_entries.model, prompt=[prompt], kwargs=self.pipe_kwargs)
-            if content:
-                metadata.update(gen_data.get("parameters"))
-                nfo(f"content type output {content}, {type(content)}")
-            yield disk.write_to_disk(content, metadata)
-
-            # Uniqueness Tag
-            # from nnll_61 import HyperChain
-            # data_chain = HyperChain()
-            # data_chain.add_block(f"{pipe}{model}{kwargs}")
+        #     content = self.pipe(prompt=prompt, **self.pipe_kwargs).images[0]
+        #         # may also be video!!
+        #     elif self.import_pkg.get("audiogen", 0):
+        #         content = self.pipe.generate([prompt])
+        #         # metadata = self.pipe.sample_rate
+        #     elif self.import_pkg.get("parler_tts", 0):
+        #         input_ids = self.pipe[1](prompt).input_ids.to(self.device)
+        #         prompt_input_ids = self.pipe[1](prompt).input_ids.to(self.device)
+        #         generation = self.pipe.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+        #         content = generation.cpu().numpy().squeeze()
+        #         # metadata = self.pipe.sampling_rate
+        #     gen_data = disk.add_to_metadata(pipe=self.pipe, model=self.reg_entries.model, prompt=[prompt], kwargs=self.pipe_kwargs)
+        #     if content:
+        #         nfo(f"content = {content}")
+        #         metadata.update(gen_data.get("parameters"))
+        #         nfo(f"content type output {content}, {type(content)}")
+        #     disk.write_to_disk(content, metadata)
+        #     # Uniqueness Tag
+        # from nnll_61 import HyperChain
+        # data_chain = HyperChain()
+        # data_chain.add_block(f"{pipe}{model}{kwargs}")
