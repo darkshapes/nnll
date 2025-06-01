@@ -11,7 +11,7 @@ from typing import Literal, Any, Optional, Dict
 from pathlib import Path
 import PIL.Image
 from nnll.monitor.file import debug_monitor
-from nnll.metadata.json_io import read_json_file
+from nnll.metadata.read_tags import MetadataFileReader
 from nnll.integrity.hashing import collect_hashes
 from nnll.configure import USER_PATH_NAMED, HOME_FOLDER_PATH
 
@@ -23,8 +23,8 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
     :param extension: The extension of the file
     :return: `str` A file path with a name
     """
-
-    user_settings = read_json_file(USER_PATH_NAMED)
+    file_reader = MetadataFileReader(headers=False)
+    user_settings = file_reader.read_header(USER_PATH_NAMED)
     save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable-object
     if save_folder_path_absolute == "output":
         save_folder_path_absolute = os.path.join(HOME_FOLDER_PATH, "output")
@@ -74,7 +74,7 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, libr
     if isinstance(content, PIL.Image.Image):
         from PIL import PngImagePlugin
 
-        file_path_absolute = name_save_file_as(extension or ".png")
+        file_path_absolute = name_save_file_as(".png")
         embed = PngImagePlugin.PngInfo()
         embed.add_text("parameters", str(metadata))
         content.save(file_path_absolute, "PNG", pnginfo=embed)
