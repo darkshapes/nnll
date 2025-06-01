@@ -11,12 +11,13 @@ from nnll.monitor.file import debug_monitor
 class MetadataFileReader:
     """Interface for metadata and text read operations"""
 
-    def __init__(self):
+    def __init__(self, headers: bool = True):
         self.show_content = None
         import nnll.monitor.file as file
 
         self.nfo = file.nfo
         self.dbug = file.dbug
+        self.headers = headers
         # debug_monitor = nnll.monitor.debug_monitor
 
     @debug_monitor
@@ -85,7 +86,7 @@ class MetadataFileReader:
             self.dbug(error_log)
             return None
 
-    def read_schema_file(self, file_path_named: str, mode="r") -> dict:
+    def read_schema_file(self, file_path_named: str, headers: bool, mode="r") -> dict:
         """
         Open .json or toml files\n
         :param file_path_named: The path and file name of the json file
@@ -93,28 +94,29 @@ class MetadataFileReader:
         """
         import os
         import json
-        import toml
+        import tomllib
+        from nnll.monitor.file import nfo
 
         from nnll.metadata.constants import ExtensionType as Ext, DownField, EmptyField
 
-        header_field = DownField.RAW_DATA
         _, ext = os.path.splitext(file_path_named)
-        if ext == Ext.TOML:
-            loader, mode = (toml.load, "rb")
-            header_field = DownField.JSON_DATA
+        if ext in Ext.TOML:
+            loader, mode = (tomllib.load, {"mode": "rb"})
         else:
-            loader, mode = (json.load, "r")
-            header_field = DownField.JSON_DATA
-        with open(file_path_named, mode, encoding="utf_8") as open_file:
+            loader, mode = (json.load, {"model": "r", "encoding": "utf_8"})
+        with open(file_path_named, **mode) as open_file:  # pylint:disable=unspecified-encoding
             try:
                 file_contents = loader(open_file)
-            except (toml.TomlDecodeError, json.decoder.JSONDecodeError) as error_log:
+            except (tomllib.TOMLDecodeError, json.decoder.JSONDecodeError) as error_log:
                 raise SyntaxError(f"Couldn't read file {file_path_named}") from error_log
-            else:
+            if headers:
+                header_field = DownField.JSON_DATA if ext == Ext.JSON else DownField.RAW_DATA
                 metadata = {
                     EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
                     header_field: file_contents,
                 }
+            else:
+                metadata = file_contents
         return metadata
 
     @debug_monitor
@@ -135,7 +137,7 @@ class MetadataFileReader:
             return self.read_png_header(file_path_named)
         for file_types in Ext.SCHEMA:
             if ext in file_types:
-                return self.read_txt_contents(file_path_named)
+                return self.read_schema_file(file_path_named, self.headers)
         for file_types in Ext.PLAIN:
             if ext in file_types:
                 return self.read_txt_contents(file_path_named)
