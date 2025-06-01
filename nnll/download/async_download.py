@@ -1,14 +1,14 @@
 ### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-# pylint: disable=import-outside-toplevel,unused-variable, assignment-from-no-return
+# pylint: disable=import-outside-toplevel,unused-variable, assignment-from-no-return, redefined-outer-name
 # ruff: noqa: F841
 
 import os
 from typing import Any, Callable, Tuple
 
-from nnll.monitoring.file import dbug, debug_monitor
-from nnll.monitoring.file import nfo
+from nnll.monitor.file import dbug, debug_monitor
+from nnll.monitor.file import nfo
 
 
 @debug_monitor
@@ -120,7 +120,6 @@ async def async_download_session(remote_url: str, save_file_path_absolute: str) 
     :return: None
     """
     import asyncio
-
     import aiohttp
     import requests
 
@@ -155,7 +154,7 @@ async def bulk_download(
     """
     from tqdm.auto import tqdm
 
-    from nnll.monitoring.console import pretty_tabled_output
+    from nnll.monitor.console import pretty_tabled_output
 
     url_segments = await gather_text_lines_from(remote_file_segments)
     for file_prefix in tqdm(url_segments, total=len(url_segments), position=0, leave=True):

@@ -5,7 +5,7 @@
 
 # pylint: disable=import-outside-toplevel
 
-from nnll.monitoring.file import debug_monitor
+from nnll.monitor.file import debug_monitor
 
 
 class MetadataFileReader:
@@ -13,11 +13,11 @@ class MetadataFileReader:
 
     def __init__(self):
         self.show_content = None
-        import nnll.monitoring.file as file
+        import nnll.monitor.file as file
 
         self.nfo = file.nfo
         self.dbug = file.dbug
-        # debug_monitor = nnll.monitoring.debug_monitor
+        # debug_monitor = nnll.monitor.debug_monitor
 
     @debug_monitor
     def read_jpg_header(self, file_path_named: str) -> dict | None:

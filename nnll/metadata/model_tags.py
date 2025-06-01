@@ -6,9 +6,9 @@
 # pylint: disable=import-outside-toplevel
 from pathlib import Path
 
-from nnll.monitoring.file import dbug
-from nnll.monitoring.file import debug_monitor
-from nnll.monitoring.file import nfo
+from nnll.monitor.file import dbug
+from nnll.monitor.file import debug_monitor
+from nnll.monitor.file import nfo
 
 
 class ReadModelTags:

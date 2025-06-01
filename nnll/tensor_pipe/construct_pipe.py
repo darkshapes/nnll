@@ -6,7 +6,7 @@
 # pylint: disable=unsubscriptable-object, import-outside-toplevel, unused-argument, line-too-long
 import os
 from typing import Callable, List, Union
-from nnll.monitoring.file import debug_monitor, dbug, nfo
+from nnll.monitor.file import debug_monitor, dbug, nfo
 
 
 @debug_monitor

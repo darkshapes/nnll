@@ -4,7 +4,7 @@
 # pylint: disable=import-outside-toplevel
 
 from typing import Callable, Tuple
-from nnll.monitoring.file import debug_monitor
+from nnll.monitor.file import debug_monitor
 
 
 @debug_monitor

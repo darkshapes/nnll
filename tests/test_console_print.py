@@ -6,7 +6,7 @@ import sys
 import unittest
 from unittest.mock import patch, MagicMock
 
-from nnll.monitoring.console import wipe_printer, pretty_tabled_output
+from nnll.monitor.console import wipe_printer, pretty_tabled_output
 
 
 class TestPrinterMethods(unittest.TestCase):
@@ -54,7 +54,7 @@ class TestPrinterMethods(unittest.TestCase):
         expected_data = "        1         |        2         |        3         |        4         |"
 
         # Call the method under test
-        with patch("nnll.monitoring.console.wipe_printer") as mock_wipe_printer:
+        with patch("nnll.monitor.console.wipe_printer") as mock_wipe_printer:
             result = pretty_tabled_output(title, aggregate_data)
 
         # Verify the calls to wipe_printer

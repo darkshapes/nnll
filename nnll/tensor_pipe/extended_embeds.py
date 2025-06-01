@@ -5,7 +5,7 @@
 
 # courtesy HamenderSingh https://github.com/huggingface/diffusers/issues/2136#issuecomment-1952590982
 
-from nnll.monitoring.file import debug_monitor
+from nnll.monitor.file import debug_monitor
 
 
 @debug_monitor

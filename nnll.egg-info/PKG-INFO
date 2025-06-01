@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev513+g735ed0c.d20250601
+Version: 0.1.dev514+gfca1359.d20250601
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: “Commons Clause” License Condition v1.0
@@ -23,152 +23,62 @@ Keywords: ML,AI,neural network,library,diffusion,LLM,torch
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Provides-Extra: nnll-01
-Requires-Dist: structlog>=25.2.0; extra == "nnll-01"
-Requires-Dist: viztracer>=1.0.3; extra == "nnll-01"
-Requires-Dist: rich>=13.9.4; extra == "nnll-01"
-Provides-Extra: nnll-02
-Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-02"
-Requires-Dist: litellm==1.67.1; extra == "nnll-02"
-Provides-Extra: nnll-03
-Requires-Dist: aiofiles>=24.1.0; extra == "nnll-03"
-Requires-Dist: aiohttp<=3.11.13,>=3.9.5; extra == "nnll-03"
-Requires-Dist: tqdm; extra == "nnll-03"
-Provides-Extra: nnll-04
-Requires-Dist: gguf>=0.14.0; extra == "nnll-04"
-Requires-Dist: llama-cpp-python>=0.3.9; extra == "nnll-04"
-Requires-Dist: safetensors>=0.5.3; extra == "nnll-04"
-Provides-Extra: nnll-05
-Requires-Dist: networkx>=3.4.2; extra == "nnll-05"
-Provides-Extra: nnll-06
-Requires-Dist: litellm>=1.65.0; extra == "nnll-06"
-Requires-Dist: ollama>=0.4.7; extra == "nnll-06"
-Requires-Dist: tiktoken>=0.9.0; extra == "nnll-06"
-Provides-Extra: nnll-08
-Requires-Dist: numpy>=2.2.5; extra == "nnll-08"
-Requires-Dist: torch>=2.7.0; extra == "nnll-08"
-Provides-Extra: nnll-09
-Requires-Dist: torch>=2.7.0; extra == "nnll-09"
-Requires-Dist: torchvision>=0.22.0; extra == "nnll-09"
-Requires-Dist: transformers>=4.51.3; extra == "nnll-09"
-Provides-Extra: nnll-11
-Requires-Dist: dspy>=2.6.13; extra == "nnll-11"
-Requires-Dist: pydantic>=2.10.6; extra == "nnll-11"
-Provides-Extra: nnll-12
-Requires-Dist: textual[syntax]>=3.1.1; extra == "nnll-12"
-Requires-Dist: networkx>=3.4.2; extra == "nnll-12"
-Requires-Dist: tree-sitter>=0.24.0; extra == "nnll-12"
-Provides-Extra: nnll-13
-Requires-Dist: sounddevice>=0.5.1; extra == "nnll-13"
-Requires-Dist: textual-plotext>=1.0.1; extra == "nnll-13"
-Provides-Extra: nnll-14
-Requires-Dist: matplotlib>=3.10.1; extra == "nnll-14"
-Requires-Dist: networkx>=3.4.2; extra == "nnll-14"
-Requires-Dist: textual[syntax]>=3.1.1; extra == "nnll-14"
-Requires-Dist: tree-sitter>=0.24.0; extra == "nnll-14"
-Provides-Extra: nnll-15
-Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-15"
-Requires-Dist: ollama>=0.4.7; extra == "nnll-15"
-Requires-Dist: pydantic>=2.10.6; extra == "nnll-15"
-Provides-Extra: nnll-16
-Requires-Dist: torch>=2.7.0; extra == "nnll-16"
-Provides-Extra: nnll-18
-Requires-Dist: torch>=2.7.0; extra == "nnll-18"
-Provides-Extra: nnll-26
-Requires-Dist: torch>=2.7.0; extra == "nnll-26"
-Provides-Extra: nnll-36
-Requires-Dist: torch>=2.7.0; extra == "nnll-36"
-Provides-Extra: nnll-44
-Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-44"
-Provides-Extra: nnll-45
-Requires-Dist: huggingface-hub[hf-transfer,hf_xet]>=0.30.2; extra == "nnll-45"
-Provides-Extra: nnll-47
-Requires-Dist: pydantic>=2.10.6; extra == "nnll-47"
-Requires-Dist: pydantic-core>=2.27.2; extra == "nnll-47"
-Provides-Extra: nnll-48
-Requires-Dist: pillow>=11.1.0; extra == "nnll-48"
-Requires-Dist: toml>=0.10.2; extra == "nnll-48"
-Provides-Extra: nnll-49
-Requires-Dist: pydantic>=2.10.6; extra == "nnll-49"
-Provides-Extra: nnll-56
-Requires-Dist: hidiffusion>=0.1.10; extra == "nnll-56"
-Requires-Dist: torch>=2.7.0; extra == "nnll-56"
-Requires-Dist: torchvision>=0.22.0; extra == "nnll-56"
-Provides-Extra: nnll-62
-Requires-Dist: accelerate>=1.6.0; extra == "nnll-62"
-Requires-Dist: diffusers>=0.32.2; extra == "nnll-62"
-Requires-Dist: peft>=0.15.2; extra == "nnll-62"
-Requires-Dist: sentencepiece>=0.2.0; extra == "nnll-62"
-Requires-Dist: torch>=2.7.0; extra == "nnll-62"
-Requires-Dist: torchvision>=0.22.0; extra == "nnll-62"
-Requires-Dist: transformers>=4.51.3; extra == "nnll-62"
-Provides-Extra: nnll-64
-Requires-Dist: pillow>=11.1.0; extra == "nnll-64"
-Requires-Dist: protobuf>=6.31.0; extra == "nnll-64"
-Provides-Extra: all
-Requires-Dist: nnll[nnll_01]; extra == "all"
-Requires-Dist: nnll[nnll_02]; extra == "all"
-Requires-Dist: nnll[nnll_03]; extra == "all"
-Requires-Dist: nnll[nnll_04]; extra == "all"
-Requires-Dist: nnll[nnll_05]; extra == "all"
-Requires-Dist: nnll[nnll_06]; extra == "all"
-Requires-Dist: nnll[nnll_08]; extra == "all"
-Requires-Dist: nnll[nnll_09]; extra == "all"
-Requires-Dist: nnll[nnll_11]; extra == "all"
-Requires-Dist: nnll[nnll_12]; extra == "all"
-Requires-Dist: nnll[nnll_13]; extra == "all"
-Requires-Dist: nnll[nnll_14]; extra == "all"
-Requires-Dist: nnll[nnll_15]; extra == "all"
-Requires-Dist: nnll[nnll_16]; extra == "all"
-Requires-Dist: nnll[nnll_18]; extra == "all"
-Requires-Dist: nnll[nnll_26]; extra == "all"
-Requires-Dist: nnll[nnll_36]; extra == "all"
-Requires-Dist: nnll[nnll_44]; extra == "all"
-Requires-Dist: nnll[nnll_45]; extra == "all"
-Requires-Dist: nnll[nnll_47]; extra == "all"
-Requires-Dist: nnll[nnll_48]; extra == "all"
-Requires-Dist: nnll[nnll_49]; extra == "all"
-Requires-Dist: nnll[nnll_56]; extra == "all"
-Requires-Dist: nnll[nnll_62]; extra == "all"
-Requires-Dist: nnll[nnll_64]; extra == "all"
+Requires-Dist: accelerate>=1.7.0
+Requires-Dist: aiofiles>=24.1.0
+Requires-Dist: aiohttp>=3.12.6
+Requires-Dist: diffusers>=0.33.1
+Requires-Dist: gguf>=0.17.0
+Requires-Dist: hidiffusion>=0.1.10
+Requires-Dist: huggingface-hub[hf-transfer,hf-xet]>=0.32.3
+Requires-Dist: llama-cpp-python>=0.3.9
+Requires-Dist: numpy>=2.2.6
+Requires-Dist: peft>=0.15.2
+Requires-Dist: pillow>=11.2.1
+Requires-Dist: pydantic>=2.11.5
+Requires-Dist: pydantic-core>=2.33.2
+Requires-Dist: rich>=14.0.0
+Requires-Dist: safetensors>=0.5.3
+Requires-Dist: sentencepiece>=0.2.0
+Requires-Dist: structlog>=25.3.0
+Requires-Dist: tqdm>=4.67.1
+Requires-Dist: transformers>=4.52.4
 Provides-Extra: cpu
 Requires-Dist: torch; extra == "cpu"
 Requires-Dist: torchvision; extra == "cpu"
 Requires-Dist: torchaudio; extra == "cpu"
-Provides-Extra: cpu-darwin
-Requires-Dist: torch>=2.8; extra == "cpu-darwin"
-Requires-Dist: torchvision; extra == "cpu-darwin"
-Requires-Dist: torchaudio; extra == "cpu-darwin"
+Provides-Extra: nightly
+Requires-Dist: torch; extra == "nightly"
+Requires-Dist: torchvision; extra == "nightly"
+Requires-Dist: torchaudio; extra == "nightly"
 Provides-Extra: cu126
 Requires-Dist: torch; extra == "cu126"
 Requires-Dist: torchvision; extra == "cu126"
 Requires-Dist: torchaudio; extra == "cu126"
-Requires-Dist: triton; platform_system == "linux" and extra == "cu126"
-Requires-Dist: triton-windows; platform_system == "windows" and extra == "cu126"
+Requires-Dist: triton; sys_platform == "Linux" and extra == "cu126"
+Requires-Dist: triton-windows; sys_platform == "win32" and extra == "cu126"
 Provides-Extra: cu128
 Requires-Dist: torch; extra == "cu128"
 Requires-Dist: torchvision; extra == "cu128"
 Requires-Dist: torchaudio; extra == "cu128"
-Requires-Dist: triton; platform_system == "linux" and extra == "cu128"
-Requires-Dist: triton-windows; platform_system == "windows" and extra == "cu128"
+Requires-Dist: triton; sys_platform == "Linux" and extra == "cu128"
+Requires-Dist: triton-windows; sys_platform == "win32" and extra == "cu128"
+Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "cu128"
+Requires-Dist: sageattention; sys_platform != "darwin" and extra == "cu128"
 Provides-Extra: rocm
 Requires-Dist: torch; extra == "rocm"
 Requires-Dist: torchvision; extra == "rocm"
 Requires-Dist: torchaudio; extra == "rocm"
 Requires-Dist: pytorch-triton-rocm; extra == "rocm"
-Provides-Extra: attention
-Requires-Dist: sageattention; extra == "attention"
-Requires-Dist: flash_attn; platform_system == "linux" and extra == "attention"
+Requires-Dist: sageattention; sys_platform != "darwin" and extra == "rocm"
+Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "rocm"
 Provides-Extra: dev
-Requires-Dist: nnll[all]; extra == "dev"
 Requires-Dist: aioresponses>=0.7.8; extra == "dev"
-Requires-Dist: pytest-asyncio>=0.25.3; extra == "dev"
-Requires-Dist: pytest>=8.3.4; extra == "dev"
-Requires-Dist: ruff>=0.9.7; extra == "dev"
-Requires-Dist: textual-dev>=1.7.0; extra == "dev"
+Requires-Dist: pytest>=8.3.5; extra == "dev"
+Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
-Requires-Dist: viztracer>=1.0.3; extra == "dev"
+Requires-Dist: ruff>=0.11.12; extra == "dev"
+Requires-Dist: textual-dev>=1.7.0; extra == "dev"
 Dynamic: license-file
 
 <div align="center">

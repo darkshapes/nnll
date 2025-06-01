@@ -25,10 +25,11 @@ nnll/metadata/json_io.py
 nnll/metadata/model_tags.py
 nnll/metadata/read_tags.py
 nnll/metadata/save_generation.py
+nnll/metadata/sd_xl_base.yaml
 nnll/metadata/tensor_data.py
 nnll/metadata/webui_tags.py
-nnll/monitoring/console.py
-nnll/monitoring/file.py
+nnll/monitor/console.py
+nnll/monitor/file.py
 nnll/tensor_pipe/construct_pipe.py
 nnll/tensor_pipe/encode_prompt.py
 nnll/tensor_pipe/extended_embeds.py
@@ -41,10 +42,12 @@ tests/test_async_download_session.py
 tests/test_async_transfer_retry.py
 tests/test_console_print.py
 tests/test_construct_pipe.py
+tests/test_gguf_tag_expected.json
 tests/test_gguf_tags.py
 tests/test_img.png
 tests/test_init_gpu_random.py
 tests/test_json_io.py
 tests/test_png_tag_parsing.py
+tests/test_safetensor_tag_expected.json
 tests/test_safetensors_tags.py
 tests/test_tag_parsing.py

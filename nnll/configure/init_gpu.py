@@ -5,7 +5,7 @@
 
 
 from typing import Callable
-from nnll.monitoring.file import debug_monitor, nfo
+from nnll.monitor.file import debug_monitor, nfo
 
 
 @debug_monitor

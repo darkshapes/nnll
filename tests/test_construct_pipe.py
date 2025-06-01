@@ -4,7 +4,7 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
-from nnll.monitoring.file import nfo
+from nnll.monitor.file import nfo
 from nnll.tensor_pipe.construct_pipe import ConstructPipeline  # , pipe_call
 
 # todo - mock MIR db entry

@@ -10,7 +10,7 @@ import os
 from typing import Literal, Any, Optional, Dict
 from pathlib import Path
 import PIL.Image
-from nnll.monitoring.file import debug_monitor
+from nnll.monitor.file import debug_monitor
 from nnll.metadata.json_io import read_json_file
 from nnll.integrity.hashing import collect_hashes
 from nnll.configure import USER_PATH_NAMED, HOME_FOLDER_PATH
