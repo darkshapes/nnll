@@ -32,7 +32,7 @@ dependencies = [
     "diffusers>=0.33.1",
     "gguf>=0.17.0",
     "hidiffusion>=0.1.10",
-    "huggingface-hub[hf-transfer,hf-xet]>=0.32.3",
+    "huggingface-hub[hf-transfer,hf-xet,cli]>=0.32.3",
     "llama-cpp-python>=0.3.9",
     "numpy>=2.2.6",
     "peft>=0.15.2",
@@ -164,12 +164,13 @@ torchaudio = [
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 
-
 [tool.ruff]
 line-length    = 140
 include        = ["*.py"]
 extend-exclude = ["^tests/.*$", "test.*$"]
 
+[tool.ruff.lint]
+unfixable = ["E731"]
 [tool.pylint]
 max-line-length = 140
 ignore-paths    = ["^tests/.*$", "test_.*$"]
@@ -178,6 +179,7 @@ disable         = ["C0415"]
 [tool.ruff.lint.pycodestyle]
 max-line-length               = 140
 ignore-overlong-task-comments = true
+
 
 [tool.typos]
 files.extend-exclude = ["^tests/.*$", "test.*$"]

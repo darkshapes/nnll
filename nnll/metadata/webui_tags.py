@@ -6,12 +6,14 @@
 
 # pylint: disable=line-too-long, import-outside-toplevel
 
+from pathlib import Path
 from typing import List, Tuple
 from nnll.monitor.file import debug_monitor, dbug, nfo
 from nnll.metadata.constants import (
     BracketedDict,
     DownField,
     EmptyField,
+    ExtensionType as Ext,
     IsThisNode,
     ListOfDelineatedStr,
     NodeNames,
@@ -414,7 +416,6 @@ def coordinate_metadata_operations(header_data: dict | str, metadata: dict = Non
     if not metadata:
         nfo("Failed to find/load metadata : %s", header_data)
         metadata = {EmptyField.PLACEHOLDER: {EmptyField.PLACEHOLDER: EmptyField.EMPTY}}
-
     return metadata
 
 
@@ -493,8 +494,20 @@ def parse_metadata(file_path_named: str) -> dict:
     """
 
     reader = MetadataFileReader()
-    metadata = {}
+    header_data = {}
     header_data = reader.read_header(file_path_named)
+    ext = Path(file_path_named).suffix.lower()
+    if ext in Ext.SCHEMA:
+        bottom_header = DownField.JSON_DATA if ext == Ext.JSON else DownField.RAW_DATA
+        header_data = {
+            EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
+            bottom_header: header_data,
+        }
+    if ext in Ext.PLAIN:
+        header_data = {
+            UpField.TEXT_DATA: header_data,
+            EmptyField.EMPTY: {"": "EmptyField.PLACEHOLDER"},
+        }
     if header_data is not None:
         metadata = coordinate_metadata_operations(header_data)
         if metadata == {EmptyField.PLACEHOLDER: {"": EmptyField.PLACEHOLDER}} or not isinstance(metadata, dict):

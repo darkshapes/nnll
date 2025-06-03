@@ -16,10 +16,16 @@ def write_json_file(folder_path_named: str, file_name: str, data: Any, mode: str
     """
     import os
     import json
+    from nnll.monitor.file import dbug
 
     if ".json" not in file_name:
         file_name += ".json"
     document = os.path.join(folder_path_named, os.path.basename(file_name))
+    if os.path.exists(document):
+        try:
+            os.remove(document)
+        except FileNotFoundError as error_log:
+            dbug(f"'File was detected but not found to remove: {document}.'{error_log}", exc_info=True)
     with open(document, mode, encoding="UTF-8") as i:
         json.dump(data, i, ensure_ascii=False, indent=4, sort_keys=False)
 
