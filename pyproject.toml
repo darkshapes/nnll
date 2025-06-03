@@ -86,6 +86,16 @@ rocm = [
     "flash_attn ; sys_platform == 'Linux'",
 ]
 
+dev = [
+    "aioresponses>=0.7.8",
+    "nnll[dev]",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.11.12",
+]
+
 [tool.setuptools.packages.find]
 where   = ["."]
 include = ["nnll*"]
