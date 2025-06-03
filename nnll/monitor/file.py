@@ -4,51 +4,20 @@
 """初始化 init, argparse, 建立控制檯日誌 logging"""
 
 # pylint: disable=line-too-long, invalid-name, import-outside-toplevel
-# noqa: F401, pylint:disable=ungrouped-imports
+# noqa: F401
+# pylint:disable=ungrouped-imports
 
 import os
 from argparse import ArgumentParser
-from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING, Logger  # noqa: F401, pylint:disable=unused-import
+from logging import DEBUG, INFO, Logger  # noqa: F401, pylint:disable=unused-import
 from pathlib import Path
 from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
 from sys import modules as sys_modules, argv as sys_argv
-import sys
-
-
-# import viztracer
 
 
 exc_info = any(arg in sys_argv for arg in ["textual", "pytest"])
-
-
-def use_nouveau_theme():
-    """Set a a midnight blue and dark purple theme to console logs"""
-    from rich import style
-    from rich.theme import Theme
-
-    NOUVEAU: Theme = Theme(
-        {
-            "logging.level.notset": style.Style(dim=True),  # level ids
-            "logging.level.debug": style.Style(color="magenta3"),
-            "logging.level.info": style.Style(color="blue_violet"),
-            "logging.level.warning": style.Style(color="gold3"),
-            "logging.level.error": style.Style(color="dark_orange3", bold=True),
-            "logging.level.critical": style.Style(color="deep_pink4", bold=True, reverse=True),
-            "logging.keyword": style.Style(bold=True, color="cyan", dim=True),
-            "log.path": style.Style(dim=True, color="royal_blue1"),  # line number
-            "repr.str": style.Style(color="sky_blue3", dim=True),
-            "json.str": style.Style(color="gray53", italic=False, bold=False),
-            "log.message": style.Style(color="steel_blue1"),  # variable name, normal strings
-            "repr.tag_start": style.Style(color="white"),  # class name tag
-            "repr.tag_end": style.Style(color="white"),  # class name tag
-            "repr.tag_contents": style.Style(color="deep_sky_blue4"),  # class readout
-            "repr.ellipsis": style.Style(color="purple4"),
-            "log.level": style.Style(color="gray37"),
-        }
-    )
-    return NOUVEAU
 
 
 def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
@@ -148,14 +117,18 @@ def debug_monitor(func: Callable = None) -> Callable:
 
 
 def info_stream():
+    """info console logging\n
+    :return: INFO level logging object
+    """
     from rich.console import Console
     from rich.logging import RichHandler
     from logging import StreamHandler, Formatter, getLogger
+    from nnll.configure.color_map import grey_nouveau_theme
 
     # from logging import root
     from sys import stderr as sys_stderr
 
-    console_out = Console(stderr=True, theme=use_nouveau_theme())
+    console_out = Console(stderr=True, theme=grey_nouveau_theme())
     log_handler = RichHandler(console=console_out)
     if log_handler is None:
         log_handler = StreamHandler(sys_stderr)
@@ -165,21 +138,21 @@ def info_stream():
         datefmt="%Y-%m-%d %H:%M:%S",
     )
     log_handler.setFormatter(formatter)
-    info_obj = getLogger(name="nfo")
-    info_obj.setLevel(INFO)
-    info_obj.addHandler(log_handler)
-    return info_obj
+    info_log = getLogger(name="nfo")
+    info_log.setLevel(INFO)
+    info_log.addHandler(log_handler)
+    return info_log
 
 
 info_obj = info_stream()
 
 
-def nfo(*args, **kwargs):
+def nfo(*args, **kwargs) -> None:  # pylint:disable=unused-argument
     """Info log output"""
     info_obj.info("%s", f"{args}")
 
 
-def dbug(*args, **kwargs):
+def dbug(*args, **kwargs) -> None:
     """Info log output"""
     logger_obj.debug(f"{args, kwargs}", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=exc_info)
 

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev515+g5ef8cf0.d20250601
+Version: 0.1.dev523+g404b092.d20250603
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 License: “Commons Clause” License Condition v1.0
@@ -29,7 +29,7 @@ Requires-Dist: aiohttp>=3.12.6
 Requires-Dist: diffusers>=0.33.1
 Requires-Dist: gguf>=0.17.0
 Requires-Dist: hidiffusion>=0.1.10
-Requires-Dist: huggingface-hub[hf-transfer,hf-xet]>=0.32.3
+Requires-Dist: huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
 Requires-Dist: llama-cpp-python>=0.3.9
 Requires-Dist: numpy>=2.2.6
 Requires-Dist: peft>=0.15.2

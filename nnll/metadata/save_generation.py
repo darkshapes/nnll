@@ -23,7 +23,7 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
     :param extension: The extension of the file
     :return: `str` A file path with a name
     """
-    file_reader = MetadataFileReader(headers=False)
+    file_reader = MetadataFileReader()
     user_settings = file_reader.read_header(USER_PATH_NAMED)
     save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable-object
     if save_folder_path_absolute == "output":

@@ -13,6 +13,8 @@ nnll.egg-info/dependency_links.txt
 nnll.egg-info/requires.txt
 nnll.egg-info/top_level.txt
 nnll/configure/__init__.py
+nnll/configure/chip_stats.py
+nnll/configure/color_map.py
 nnll/configure/init_gpu.py
 nnll/download/__init__.py
 nnll/download/async_download.py
@@ -30,6 +32,7 @@ nnll/metadata/tensor_data.py
 nnll/metadata/webui_tags.py
 nnll/monitor/console.py
 nnll/monitor/file.py
+nnll/tensor_pipe/__init__.py
 nnll/tensor_pipe/construct_pipe.py
 nnll/tensor_pipe/encode_prompt.py
 nnll/tensor_pipe/extended_embeds.py

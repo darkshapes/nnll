@@ -211,7 +211,7 @@ class ReadModelTags:
                 length_of_header = struct.unpack("<Q", file_contents_to.read(8))[0]
                 header_data = file_contents_to.read(length_of_header)
                 header_data = json.loads(header_data.decode("utf-8", errors="strict"))
-            except json.JSONDecodeError as error_log:
+            except (json.JSONDecodeError, MemoryError) as error_log:
                 dbug("Failed to read json from file : %s", file_path_named, error_log, tb=error_log.__traceback__)
 
             else:
