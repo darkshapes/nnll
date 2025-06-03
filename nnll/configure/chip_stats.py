@@ -60,7 +60,7 @@ class ChipStats:
         stats["data"]["devices"]["cpu"] = psutil.virtual_memory().total
         # consider: set cpu floats fp32?
 
-        write_json_file(folder_path_named=folder_path_named, file_name="chip_stats.json", data=stats, mode="w")
+        write_json_file(folder_path_named=folder_path_named, file_name="chip_stats.json", data=stats, mode="x")
         self.stats = stats
 
     @lru_cache
