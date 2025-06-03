@@ -1,33 +1,17 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev523+g404b092.d20250603
+Version: 0.1.dev527+g91f13c3.d20250603
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
-License: “Commons Clause” License Condition v1.0
-        
-        The Software is provided to you by the Licensor under the License, as defined below, subject to the following condition.
-        
-        Without limiting other conditions in the License, the grant of rights under the License will not include, and the License does not grant to you, the right to Sell the Software.
-        
-        For purposes of the foregoing, “Sell” means practicing any or all of the rights granted to you under the License to provide to third parties, for a fee or other consideration (including without limitation fees for hosting or consulting/ support services related to the Software), a product or service whose value derives, entirely or substantially, from the functionality of the Software. Any license notice or attribution required by the License must also include this Commons Clause License Condition notice.
-        
-        Software: nnll
-        
-        License : Mozilla Public License v. 2.0
-        
-        Licensor: darkshapes github.com/darkshapes
-        
-        This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 Project-URL: source, https://github.com/darkshapes/nnll
 Keywords: ML,AI,neural network,library,diffusion,LLM,torch
-Requires-Python: >=3.10
+Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: accelerate>=1.7.0
 Requires-Dist: aiofiles>=24.1.0
 Requires-Dist: aiohttp>=3.12.6
 Requires-Dist: diffusers>=0.33.1
-Requires-Dist: gguf>=0.17.0
 Requires-Dist: hidiffusion>=0.1.10
 Requires-Dist: huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
 Requires-Dist: llama-cpp-python>=0.3.9
@@ -38,8 +22,7 @@ Requires-Dist: pydantic>=2.11.5
 Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: rich>=14.0.0
 Requires-Dist: safetensors>=0.5.3
-Requires-Dist: sentencepiece>=0.2.0
-Requires-Dist: structlog>=25.3.0
+Requires-Dist: structlog>=25.4.0
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: transformers>=4.52.4
 Provides-Extra: cpu
@@ -71,14 +54,6 @@ Requires-Dist: torchaudio; extra == "rocm"
 Requires-Dist: pytorch-triton-rocm; extra == "rocm"
 Requires-Dist: sageattention; sys_platform != "darwin" and extra == "rocm"
 Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "rocm"
-Provides-Extra: dev
-Requires-Dist: aioresponses>=0.7.8; extra == "dev"
-Requires-Dist: pytest>=8.3.5; extra == "dev"
-Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
-Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
-Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
-Requires-Dist: ruff>=0.11.12; extra == "dev"
-Requires-Dist: textual-dev>=1.7.0; extra == "dev"
 Dynamic: license-file
 
 <div align="center">
