@@ -9,6 +9,7 @@ from functools import lru_cache
 from typing import Any, Dict
 from nnll.metadata.json_io import write_json_file
 from nnll.configure import HOME_FOLDER_PATH
+from nnll.monitor.file import dbug
 
 
 class ChipStats:
@@ -25,6 +26,7 @@ class ChipStats:
         import platform
         import psutil
         import torch
+        import os
         import multiprocessing as mp
         from nnll.configure.init_gpu import first_available
 
@@ -50,8 +52,6 @@ class ChipStats:
                 if testing:
                     stats["data"]["mps"]["memory_fraction"] = 1.7
                     torch.mps.set_per_process_memory_fraction(stats["data"]["mps"]["memory_fraction"])
-                    import os
-
                     os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = 0.0
         if "xpu" in device:
             stats["data"]["devices"]["xps"] = torch.xpu.mem_get_info()  # mostly just placeholder
@@ -59,8 +59,16 @@ class ChipStats:
             stats["data"]["devices"]["mtia"] = torch.mtia.memory_stats()  # also mostly just placeholder
         stats["data"]["devices"]["cpu"] = psutil.virtual_memory().total
         # consider: set cpu floats fp32?
-
-        write_json_file(folder_path_named=folder_path_named, file_name="chip_stats.json", data=stats, mode="x")
+        if not os.path.exists(folder_path_named):
+            os.mkdir(folder_path_named)
+        write_paths = [folder_path_named, "."]
+        for folder_path in write_paths:
+            try:
+                write_json_file(folder_path_named=folder_path, file_name="chip_stats.json", data=stats, mode="x")
+            except FileNotFoundError as error_log:
+                dbug(error_log)
+            else:
+                break
         self.stats = stats
 
     @lru_cache
@@ -75,7 +83,14 @@ class ChipStats:
 
         reader = MetadataFileReader()
         if not self.stats:
-            self.stats = reader.read_header(file_path_named=os.path.join(folder_path_named, "chip_stats.json"))
+            write_paths = [folder_path_named, "."]
+            for folder_path in write_paths:
+                try:
+                    self.stats = reader.read_header(file_path_named=os.path.join(folder_path, "chip_stats.json"))
+                except FileNotFoundError as error_log:
+                    dbug(error_log)
+                else:
+                    break
         stats = self.stats.get("data")
         chip_stats = {
             "attention_slicing": stats.get("attention_slicing", 0),

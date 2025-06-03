@@ -169,8 +169,6 @@ line-length    = 140
 include        = ["*.py"]
 extend-exclude = ["^tests/.*$", "test.*$"]
 
-[tool.ruff.lint]
-unfixable = ["E731"]
 [tool.pylint]
 max-line-length = 140
 ignore-paths    = ["^tests/.*$", "test_.*$"]
