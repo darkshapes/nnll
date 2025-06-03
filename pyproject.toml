@@ -10,9 +10,7 @@ description = "Neural Network Link Library : A comprehensive modular toolkit for
 authors = [
     { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
 ]
-
-requires-python = ">= 3.10"
-license = { file = "LICENSE" }
+requires-python = ">= 3.11"
 readme = "README.md"
 urls = { source = "https://github.com/darkshapes/nnll" }
 dynamic = ["version"]
@@ -30,9 +28,8 @@ dependencies = [
     "aiofiles>=24.1.0",
     "aiohttp>=3.12.6",
     "diffusers>=0.33.1",
-    "gguf>=0.17.0",
     "hidiffusion>=0.1.10",
-    "huggingface-hub[hf-transfer,hf-xet,cli]>=0.32.3",
+    "huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3",
     "llama-cpp-python>=0.3.9",
     "numpy>=2.2.6",
     "peft>=0.15.2",
@@ -41,12 +38,21 @@ dependencies = [
     "pydantic-core>=2.33.2",
     "rich>=14.0.0",
     "safetensors>=0.5.3",
-    "sentencepiece>=0.2.0",
-    "structlog>=25.3.0",
+    "structlog>=25.4.0",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
 ]
 
+[dependency-groups]
+dev = [
+    "aioresponses>=0.7.8",
+    "nnll[dev]",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.11.12",
+]
 
 [project.optional-dependencies]
 cpu = ["torch", "torchvision", "torchaudio"]
@@ -79,14 +85,15 @@ rocm = [
     "sageattention; sys_platform != 'darwin'",
     "flash_attn ; sys_platform == 'Linux'",
 ]
+
 dev = [
     "aioresponses>=0.7.8",
+    "nnll[dev]",
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
     "ruff>=0.11.12",
-    "textual-dev>=1.7.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -101,7 +108,15 @@ write_to = "_version.py"
 # torch-backend = "auto"
 
 [tool.uv]
-dev-dependencies = ["nnll[dev]"]
+dev-dependencies = [
+    "aioresponses>=0.7.8",
+    "nnll[dev]",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.11.12",
+]
 prerelease = "allow"
 preview = true
 conflicts = [

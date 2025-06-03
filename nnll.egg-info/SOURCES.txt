@@ -39,7 +39,6 @@ nnll/tensor_pipe/extended_embeds.py
 nnll/tensor_pipe/segments.py
 tests/.test.json
 tests/__init__.py
-tests/test.py
 tests/test_async_download_queue.py
 tests/test_async_download_session.py
 tests/test_async_transfer_retry.py
