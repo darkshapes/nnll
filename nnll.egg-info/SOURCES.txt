@@ -7,7 +7,6 @@ _version.py
 pyproject.toml
 pytest.ini
 uv.lock
-.github/workflows/python-app.yml
 nnll.egg-info/PKG-INFO
 nnll.egg-info/SOURCES.txt
 nnll.egg-info/dependency_links.txt
