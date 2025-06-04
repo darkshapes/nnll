@@ -5,15 +5,14 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "nnll"
-description = "Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes."
 authors = [
     { name = "darkshapes", email = "91800957+exdysa@users.noreply.github.com" },
 ]
-requires-python = ">= 3.11"
-readme = "README.md"
-urls = { source = "https://github.com/darkshapes/nnll" }
+description = "Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes."
 dynamic = ["version"]
+name = "nnll"
+readme = "README.md"
+requires-python = ">= 3.11"
 keywords = [
     "ML",
     "AI",
@@ -34,10 +33,12 @@ dependencies = [
     "numpy>=2.2.6",
     "peft>=0.15.2",
     "pillow>=11.2.1",
+    "protobuf>=6.31.1",
     "pydantic>=2.11.5",
     "pydantic-core>=2.33.2",
     "rich>=14.0.0",
     "safetensors>=0.5.3",
+    "sentencepiece>=0.2.0",
     "structlog>=25.4.0",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
@@ -95,6 +96,9 @@ dev = [
     "pytest-trio>=0.8.0",
     "ruff>=0.11.12",
 ]
+
+[project.urls]
+Homepage = "https://github.com/darkshapes/nnll"
 
 [tool.setuptools.packages.find]
 where   = ["."]
@@ -159,21 +163,21 @@ explicit = true
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-nightly", marker = "python_version >= '3.13' and sys_platform == 'darwin' " },
+    { index = "pytorch-nightly",extra="nightly", marker = "sys_platform == 'darwin' " },
     { index = "pytorch-cu126", extra = "cu126", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 torchvision = [
     { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-nightly", marker = "python_version >= '3.13' and sys_platform == 'darwin' " },
+    { index = "pytorch-nightly", extra="nightly", marker = "sys_platform == 'darwin' " },
     { index = "pytorch-cu126", extra = "cu126", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 torchaudio = [
     { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-nightly", marker = "python_version >= '3.13' and sys_platform == 'darwin'" },
+    { index = "pytorch-nightly", extra = "nightly", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu126", extra = "cu126", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
