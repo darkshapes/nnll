@@ -55,7 +55,7 @@ def random_int_from_gpu(input_seed: int = soft_random()) -> int:
 
 
 @debug_monitor
-def seed_planter(seed: int = soft_random(), deterministic: bool = True, device: str = "cpu") -> int:
+def seed_planter(seed: int = soft_random(), deterministic: bool = False, device: str = "cpu") -> int:
     """Force seed number to all available devices\n
     :param seed: The number to grow all random generation from, defaults to `soft_random` function
     :param deterministic: Identical number provides identical output, defaults to True
@@ -68,13 +68,14 @@ def seed_planter(seed: int = soft_random(), deterministic: bool = True, device: 
     torch.manual_seed(seed)
     random.seed(seed)
     if "cuda" in device:
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
         if deterministic:
             torch.backends.cudnn.deterministic = True
             torch.backends.cudnn.benchmark = False
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
     if "mps" in device:
         torch.mps.manual_seed(seed)
+        torch.backends.mps.torch.use_deterministic_algorithms(deterministic)
     if "xpo" in device:
         torch.xpu.manual_seed(seed)
         torch.xpu.manual_seed_all(seed)
