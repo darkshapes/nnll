@@ -14,10 +14,9 @@ from pathlib import Path
 from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
-from sys import modules as sys_modules, argv as sys_argv
+from sys import modules as sys_modules
 
-
-exc_info = any(arg in sys_argv for arg in ["textual", "pytest"])
+EXC_INFO = any(mod in sys_modules for mod in ["textual"] if "pytest" not in sys_modules)
 
 
 def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
@@ -95,7 +94,7 @@ def debug_monitor(func: Callable = None) -> Callable:
         """Wrap log"""
         try:
             return_data = func(*args, **kwargs)
-            logger_obj.debug(
+            DBUG_OBJ.debug(
                 {
                     str(return_data): {
                         "filename": func.__module__,
@@ -144,29 +143,27 @@ def info_stream():
     return info_log
 
 
-info_obj = info_stream()
+INFO_OBJ = info_stream()
 
 
 def nfo(*args, **kwargs) -> None:  # pylint:disable=unused-argument
     """Info log output"""
-    info_obj.info("%s", f"{args}")
+    try:
+        INFO_OBJ.info("%s", f"{args}")
+    except ImportError:
+        pass
 
 
 def dbug(*args, **kwargs) -> None:
     """Info log output"""
-    logger_obj.debug(f"{args, kwargs}", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=exc_info)
+    try:
+        DBUG_OBJ.debug(f"{args, kwargs}", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=EXC_INFO)
+    except ImportError:
+        pass
 
-
-os.makedirs("log", exist_ok=True)
-log_folder = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "log",
-)
-os.makedirs(log_folder, exist_ok=True)
 
 if __name__ == "__main__":
     if "pytest" not in sys_modules:
-        exc_info = False
         parser = ArgumentParser(description="Set logging level.")
         group = parser.add_mutually_exclusive_group()
 
@@ -182,10 +179,9 @@ if __name__ == "__main__":
         # Resolve log_level from args dynamically
         LOG_LEVEL = levels[next(iter([k for k, v in levels.items() if getattr(cli_args, v.lower(), False)]), cli_args.log_level)]
     else:
-        exc_info = True
         LOG_LEVEL = DEBUG
 
-    logger_obj = configure_logging(level=LOG_LEVEL)
+    DBUG_OBJ = configure_logging(level=LOG_LEVEL)
 
     try:
         from importlib import metadata
@@ -195,4 +191,4 @@ if __name__ == "__main__":
         dbug(f"nnll package is not installed. Did you run `pip install .`? {error_log}", tb=error_log.__traceback__)
 else:
     LOG_LEVEL = DEBUG
-    logger_obj = configure_logging()
+    DBUG_OBJ = configure_logging()

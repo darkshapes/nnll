@@ -1,10 +1,20 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev531+g97c0660.d20250604
+Version: 0.1.dev532+g2fbd052.d20250604
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
+Project-URL: Documentation, https://github.com/darkshapes/sdbx/wiki
 Keywords: ML,AI,neural network,library,diffusion,LLM,torch
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Scientific/Engineering :: Image Processing
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
@@ -18,7 +28,7 @@ Requires-Dist: llama-cpp-python>=0.3.9
 Requires-Dist: numpy>=2.2.6
 Requires-Dist: peft>=0.15.2
 Requires-Dist: pillow>=11.2.1
-Requires-Dist: protobuf>=6.31.1
+Requires-Dist: protobuf>=5.29.5
 Requires-Dist: pydantic>=2.11.5
 Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: rich>=14.0.0

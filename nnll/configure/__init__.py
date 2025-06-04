@@ -4,6 +4,7 @@
 import os
 from functools import cache
 from pathlib import Path
+from sys import argv as sys_argv, modules as sys_modules
 
 
 @cache
@@ -27,5 +28,26 @@ def set_home_stable(folder: str = "Shadowbox") -> Path:
     )
 
 
+def set_log(folder_path_named: str = "log", child: bool = False) -> str:
+    """Create logging path\n
+    :param folder_path_named: Name of the log folder, defaults to "log"
+    :param child: Put log folder inside current working folder, defaults to False
+    :return: Path object logging assignment
+    """
+    prefix = HOME_FOLDER_PATH if not child else os.path.dirname(os.path.abspath(__file__))
+    log_folder = os.path.join(
+        prefix,
+        folder_path_named,
+    )
+    folder_paths = (folder_path_named, log_folder)
+    for path in folder_paths:
+        if not os.path.exists(path):
+            try:
+                os.makedirs(path, exist_ok=False)
+            except OSError:
+                pass
+
+
 HOME_FOLDER_PATH = set_home_stable()
 USER_PATH_NAMED = os.path.join(HOME_FOLDER_PATH, "config.toml")
+LOG_FOLDER_PATH = set_log
