@@ -15,11 +15,12 @@ from typing import Callable, Literal
 from threading import get_native_id
 from datetime import datetime
 from sys import modules as sys_modules
+from nnll.configure import LOG_FOLDER_PATH
 
 EXC_INFO = any(mod in sys_modules for mod in ["textual"] if "pytest" not in sys_modules)
 
 
-def configure_logging(file_name: str = ".nnll", folder_path_named: str = "log", time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
+def configure_logging(file_name: str = ".nnll", folder_path_named: str = LOG_FOLDER_PATH, time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
     """
     Configure and launch *structured* logger integration
     base python logger + formatter + custom logger\n

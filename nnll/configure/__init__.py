@@ -45,9 +45,12 @@ def set_log(folder_path_named: str = "log", child: bool = False) -> str:
             try:
                 os.makedirs(path, exist_ok=False)
             except OSError:
-                pass
+                continue
+        log_folder_path = path
+        break
+    return log_folder_path
 
 
 HOME_FOLDER_PATH = set_home_stable()
 USER_PATH_NAMED = os.path.join(HOME_FOLDER_PATH, "config.toml")
-LOG_FOLDER_PATH = set_log
+LOG_FOLDER_PATH = set_log()
