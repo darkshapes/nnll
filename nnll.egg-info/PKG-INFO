@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev533+gc8da14c.d20250604
+Version: 0.1.dev534+gd21396f.d20250604
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -33,7 +33,7 @@ Requires-Dist: pydantic>=2.11.5
 Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: rich>=14.0.0
 Requires-Dist: safetensors>=0.5.3
-Requires-Dist: sentencepiece>=0.2.0
+Requires-Dist: sentencepiece<1.0,>=0.2.0; python_full_version < "3.13"
 Requires-Dist: structlog>=25.4.0
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: transformers>=4.52.4
@@ -45,6 +45,7 @@ Provides-Extra: nightly
 Requires-Dist: torch; extra == "nightly"
 Requires-Dist: torchvision; extra == "nightly"
 Requires-Dist: torchaudio; extra == "nightly"
+Requires-Dist: mflux; extra == "nightly"
 Provides-Extra: cu126
 Requires-Dist: torch; extra == "cu126"
 Requires-Dist: torchvision; extra == "cu126"
