@@ -20,6 +20,9 @@ transformers>=4.52.4
 [:python_full_version < "3.13"]
 sentencepiece<1.0,>=0.2.0
 
+[:sys_platform == "darwin"]
+mflux
+
 [cpu]
 torch
 torchvision
@@ -64,7 +67,6 @@ ruff>=0.11.12
 torch
 torchvision
 torchaudio
-mflux
 
 [rocm]
 torch
