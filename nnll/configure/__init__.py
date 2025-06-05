@@ -6,6 +6,8 @@ from functools import cache
 from pathlib import Path
 from typing import Optional
 
+# https://huggingface.co/models?library=diffusers
+
 
 @cache
 def set_home_stable(folder: str = "Shadowbox") -> Path:
@@ -28,11 +30,8 @@ def set_home_stable(folder: str = "Shadowbox") -> Path:
     )
 
 
-HOME_FOLDER_PATH = set_home_stable()
-
-
 def ensure_path(
-    folder_path_named: Path = os.path.dirname(HOME_FOLDER_PATH),
+    folder_path_named: Path = set_home_stable(),
     file_name: Optional[str] = None,
 ):
     """Provide absolute certainty a file location exists\n
@@ -40,15 +39,29 @@ def ensure_path(
     :param file_name:Optional file name to test, defaults to None
     :return: _description_
     """
-    if not os.path.exists(folder_path_named):
-        os.makedirs(folder_path_named, exist_ok=False)
+    if not Path(folder_path_named).exists():
+        try:
+            folder_path_named.mkdir(parents=True, exist_ok=True)  # Ensure the directory is created resiliently
+        except OSError:
+            try:
+                os.makedirs(folder_path_named, exist_ok=False)
+            except OSError:
+                return None
+
     if file_name:
         full_path = os.path.join(folder_path_named, file_name)
-        if not os.path.exists(full_path):
-            with open(full_path, mode="x"):  # pylint:disable=unspecified-encoding
-                pass
-        return full_path
-    return folder_path_named
+        if Path(full_path).exists():
+            return full_path
+        try:
+            full_path.touch(exist_ok=False)  # Create the file only if it doesn't exist
+        except (FileExistsError, OSError):
+            pass
+        return str(full_path)
+
+    return folder_path_named if Path(folder_path_named).exists() else None
+
+
+HOME_FOLDER_PATH = ensure_path()
 
 
 def set_log(folder_path_named: str = "log", child: bool = False) -> str:
@@ -65,5 +78,5 @@ def set_log(folder_path_named: str = "log", child: bool = False) -> str:
     return log_folder
 
 
-USER_PATH_NAMED = os.path.join(HOME_FOLDER_PATH, "config.toml")
-LOG_FOLDER_PATH = set_log()
+USER_PATH_NAMED = ensure_path(Path(os.path.join(HOME_FOLDER_PATH, "config.toml")))
+LOG_FOLDER_PATH = ensure_path(Path(set_log()))
