@@ -39,7 +39,8 @@ def ensure_path(
     :param file_name:Optional file name to test, defaults to None
     :return: _description_
     """
-    if not Path(folder_path_named).exists():
+    folder_path_named = Path(folder_path_named)
+    if not folder_path_named.exists():
         try:
             folder_path_named.mkdir(parents=True, exist_ok=True)  # Ensure the directory is created resiliently
         except OSError:
@@ -50,7 +51,8 @@ def ensure_path(
 
     if file_name:
         full_path = os.path.join(folder_path_named, file_name)
-        if Path(full_path).exists():
+        full_path = Path(full_path)
+        if full_path.exists():
             return full_path
         try:
             full_path.touch(exist_ok=False)  # Create the file only if it doesn't exist
@@ -58,7 +60,7 @@ def ensure_path(
             pass
         return str(full_path)
 
-    return folder_path_named if Path(folder_path_named).exists() else None
+    return str(folder_path_named) if folder_path_named.exists() else None
 
 
 HOME_FOLDER_PATH = ensure_path()
