@@ -4,7 +4,6 @@
 import os
 from functools import cache
 from pathlib import Path
-from sys import argv as sys_argv, modules as sys_modules
 from typing import Optional
 
 
@@ -59,10 +58,9 @@ def ensure_path(
         os.makedirs(folder_path_named, exist_ok=False)
     if file_name:
         full_path = os.path.join(folder_path_named, file_name)
-        print(full_path)
         if not os.path.exists(full_path):
-            with open(full_path, mode="x"):
-                pass  # pylint:disable=unspecified-encoding
+            with open(full_path, mode="x"):  # pylint:disable=unspecified-encoding
+                pass
         return full_path
     return folder_path_named
 

@@ -128,20 +128,23 @@ def info_stream():
     # from logging import root
     from sys import stderr as sys_stderr
 
-    console_out = Console(stderr=True, theme=grey_nouveau_theme())
-    log_handler = RichHandler(console=console_out)
-    if log_handler is None:
-        log_handler = StreamHandler(sys_stderr)
-        log_handler.propagate = False
-    formatter = Formatter(
-        fmt="%(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-    log_handler.setFormatter(formatter)
-    info_log = getLogger(name="nfo")
-    info_log.setLevel(INFO)
-    info_log.addHandler(log_handler)
-    return info_log
+    try:
+        console_out = Console(stderr=True, theme=grey_nouveau_theme())
+        log_handler = RichHandler(console=console_out)
+        if log_handler is None:
+            log_handler = StreamHandler(sys_stderr)
+            log_handler.propagate = False
+        formatter = Formatter(
+            fmt="%(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+        log_handler.setFormatter(formatter)
+        info_log = getLogger(name="nfo")
+        info_log.setLevel(INFO)
+        info_log.addHandler(log_handler)
+        return info_log
+    except ImportError:
+        pass
 
 
 INFO_OBJ = info_stream()
