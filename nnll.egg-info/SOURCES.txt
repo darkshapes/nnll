@@ -7,6 +7,7 @@ _version.py
 pyproject.toml
 pytest.ini
 uv.lock
+.github/workflows/nnll.yml
 nnll.egg-info/PKG-INFO
 nnll.egg-info/SOURCES.txt
 nnll.egg-info/dependency_links.txt
@@ -23,6 +24,7 @@ nnll/integrity/__init__.py
 nnll/integrity/hashing.py
 nnll/metadata/__init__.py
 nnll/metadata/constants.py
+nnll/metadata/helpers.py
 nnll/metadata/json_io.py
 nnll/metadata/model_tags.py
 nnll/metadata/read_tags.py

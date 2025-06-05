@@ -5,6 +5,7 @@ import os
 from functools import cache
 from pathlib import Path
 from sys import argv as sys_argv, modules as sys_modules
+from typing import Optional
 
 
 @cache
@@ -39,18 +40,32 @@ def set_log(folder_path_named: str = "log", child: bool = False) -> str:
         prefix,
         folder_path_named,
     )
-    folder_paths = (folder_path_named, log_folder)
-    for path in folder_paths:
-        if not os.path.exists(path):
-            try:
-                os.makedirs(path, exist_ok=False)
-            except OSError:
-                continue
-        log_folder_path = path
-        break
-    return log_folder_path
+    return log_folder
 
 
 HOME_FOLDER_PATH = set_home_stable()
+
+
+def ensure_path(
+    folder_path_named: Path = os.path.dirname(HOME_FOLDER_PATH),
+    file_name: Optional[str] = None,
+):
+    """Provide absolute certainty a file location exists\n
+    :param folder_path_named: Location to test, defaults to os.path.dirname(HOME_FOLDER_PATH)
+    :param file_name:Optional file name to test, defaults to None
+    :return: _description_
+    """
+    if not os.path.exists(folder_path_named):
+        os.makedirs(folder_path_named, exist_ok=False)
+    if file_name:
+        full_path = os.path.join(folder_path_named, file_name)
+        print(full_path)
+        if not os.path.exists(full_path):
+            with open(full_path, mode="x"):
+                pass  # pylint:disable=unspecified-encoding
+        return full_path
+    return folder_path_named
+
+
 USER_PATH_NAMED = os.path.join(HOME_FOLDER_PATH, "config.toml")
 LOG_FOLDER_PATH = set_log()
