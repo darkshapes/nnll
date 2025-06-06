@@ -39,6 +39,7 @@ dependencies = [
     "aiofiles>=24.1.0",
     "aiohttp>=3.12.6",
     "diffusers>=0.33.1",
+    #"gguf>=0.10.0",
     "hidiffusion>=0.1.10",
     "huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3",
     "llama-cpp-python>=0.3.9",
@@ -50,7 +51,7 @@ dependencies = [
     "pydantic-core>=2.33.2",
     "rich>=14.0.0",
     "safetensors>=0.5.3",
-    "sentencepiece",
+    "sentencepiece @ https://github.com/google/sentencepiece.git#subdirectory=python",
     "structlog>=25.4.0",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
@@ -108,7 +109,6 @@ dev = [
     "pytest-trio>=0.8.0",
     "ruff>=0.11.12",
 ]
-sentencepiece = ["sentencepiece"]
 
 [project.urls]
 Homepage      = "https://github.com/darkshapes/nnll"
@@ -123,8 +123,8 @@ exclude = ["tests*"]
 [tool.setuptools_scm]
 write_to = "_version.py"
 
-# [tool.uv.pip]
-# torch-backend = "auto"
+[tool.uv.pip]
+torch-backend = "auto"
 
 [tool.uv]
 dev-dependencies = [
@@ -146,7 +146,6 @@ conflicts = [
         { extra = "cu128" },
         { extra = "rocm" },
         { extra = "attention" },
-        { extra = "sentencepiece" },
 
     ],
 ]
@@ -176,18 +175,6 @@ name     = "pytorch-rocm"
 url      = "https://download.pytorch.org/whl/rocm6.3"
 explicit = true
 
-[[tool.uv.index]]
-name     = "sentencepiece"
-url      = "https://download.pytorch.org/whl/rocm6.3"
-explicit = true
-
-[tool.uv.sources]
-sentencepiece = [
-    { git = "https://github.com/google/sentencepiece.git", subdirectory = "python", marker = "sys_platform == 'Linux'" },
-    { url = "https://github.com/anthonywu/sentencepiece/releases/download/0.2.1-py13dev/sentencepiece-0.2.1-cp313-cp313-macosx_11_0_arm64.whl", marker = "sys_platform == 'darwin'" },
-    { url = "https://github.com/NeoAnthropocene/wheels/blob/f76a39a2c1158b9c8ffcfdc7c0f914f5d2835256/sentencepiece-0.2.1-cp313-cp313-win_amd64.whl", marker = "sys_platform == 'win32'" },
-]
-
 torch = [
     { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
     { index = "pytorch-nightly", extra = "nightly", marker = "sys_platform == 'darwin' " },
@@ -209,6 +196,9 @@ torchaudio = [
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
+
+[tool.uv.sources]
+sentencepiece = { git = "https://github.com/google/sentencepiece.git", subdirectory = "python" }
 
 [tool.ruff]
 line-length    = 140
