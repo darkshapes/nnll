@@ -13,15 +13,10 @@ pydantic>=2.11.5
 pydantic-core>=2.33.2
 rich>=14.0.0
 safetensors>=0.5.3
+sentencepiece
 structlog>=25.4.0
 tqdm>=4.67.1
 transformers>=4.52.4
-
-[:python_full_version < "3.13"]
-sentencepiece<1.0,>=0.2.0
-
-[:sys_platform == "darwin"]
-mflux
 
 [cpu]
 torch
@@ -79,3 +74,6 @@ sageattention
 
 [rocm:sys_platform == "Linux"]
 flash_attn
+
+[sentencepiece]
+sentencepiece

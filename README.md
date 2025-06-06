@@ -12,7 +12,7 @@
 * 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
 * :shipit: <br><br>
 
-[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
+[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
 ![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
 ![Discord](https://img.shields.io/discord/1266757128249675867?color=black)

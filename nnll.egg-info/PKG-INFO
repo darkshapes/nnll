@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev539+gdf22108.d20250605
+Version: 0.1.dev545+g2d35dfa.d20250606
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -33,11 +33,10 @@ Requires-Dist: pydantic>=2.11.5
 Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: rich>=14.0.0
 Requires-Dist: safetensors>=0.5.3
+Requires-Dist: sentencepiece
 Requires-Dist: structlog>=25.4.0
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: transformers>=4.52.4
-Requires-Dist: sentencepiece<1.0,>=0.2.0; python_full_version < "3.13"
-Requires-Dist: mflux; sys_platform == "darwin"
 Provides-Extra: cpu
 Requires-Dist: torch; extra == "cpu"
 Requires-Dist: torchvision; extra == "cpu"
@@ -75,6 +74,8 @@ Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
 Requires-Dist: ruff>=0.11.12; extra == "dev"
+Provides-Extra: sentencepiece
+Requires-Dist: sentencepiece; extra == "sentencepiece"
 Dynamic: license-file
 
 <div align="center">
@@ -91,7 +92,7 @@ Dynamic: license-file
 * 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
 * :shipit: <br><br>
 
-[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
+[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
 ![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
 ![Discord](https://img.shields.io/discord/1266757128249675867?color=black)

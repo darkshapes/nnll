@@ -36,6 +36,7 @@ nnll/monitor/console.py
 nnll/monitor/file.py
 nnll/tensor_pipe/__init__.py
 nnll/tensor_pipe/construct_pipe.py
+nnll/tensor_pipe/deconstructors.py
 nnll/tensor_pipe/encode_prompt.py
 nnll/tensor_pipe/extended_embeds.py
 nnll/tensor_pipe/segments.py
@@ -51,6 +52,7 @@ tests/test_gguf_tags.py
 tests/test_img.png
 tests/test_init_gpu_random.py
 tests/test_json_io.py
+tests/test_path_create.py
 tests/test_png_tag_parsing.py
 tests/test_safetensor_tag_expected.json
 tests/test_safetensors_tags.py
