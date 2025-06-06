@@ -13,7 +13,7 @@ pydantic>=2.11.5
 pydantic-core>=2.33.2
 rich>=14.0.0
 safetensors>=0.5.3
-sentencepiece
+sentencepiece@ https://github.com/google/sentencepiece.git#subdirectory=python
 structlog>=25.4.0
 tqdm>=4.67.1
 transformers>=4.52.4
@@ -74,6 +74,3 @@ sageattention
 
 [rocm:sys_platform == "Linux"]
 flash_attn
-
-[sentencepiece]
-sentencepiece

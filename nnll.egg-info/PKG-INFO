@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev545+g2d35dfa.d20250606
+Version: 0.1.dev547+g81302e9.d20250606
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -33,7 +33,7 @@ Requires-Dist: pydantic>=2.11.5
 Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: rich>=14.0.0
 Requires-Dist: safetensors>=0.5.3
-Requires-Dist: sentencepiece
+Requires-Dist: sentencepiece@ https://github.com/google/sentencepiece.git#subdirectory=python
 Requires-Dist: structlog>=25.4.0
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: transformers>=4.52.4
@@ -74,8 +74,6 @@ Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
 Requires-Dist: ruff>=0.11.12; extra == "dev"
-Provides-Extra: sentencepiece
-Requires-Dist: sentencepiece; extra == "sentencepiece"
 Dynamic: license-file
 
 <div align="center">
