@@ -50,10 +50,10 @@ dependencies = [
     "pydantic-core>=2.33.2",
     "rich>=14.0.0",
     "safetensors>=0.5.3",
+    "sentencepiece @ https://github.com/anthonywu/sentencepiece/releases/download/0.2.1-py13dev/sentencepiece-0.2.1-cp313-cp313-macosx_11_0_arm64.whl",
     "structlog>=25.4.0",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
-    "sentencepiece>=0.2.0,<1.0 ; python_full_version < '3.13'",
 ]
 
 [dependency-groups]
@@ -196,6 +196,7 @@ torchaudio = [
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
+sentencepiece = { url = "https://github.com/anthonywu/sentencepiece/releases/download/0.2.1-py13dev/sentencepiece-0.2.1-cp313-cp313-macosx_11_0_arm64.whl" }
 
 [tool.ruff]
 line-length    = 140

@@ -1,49 +1,72 @@
-# ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
-# ### <!-- // /*  d a r k s h a p e s */ -->
+# # ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+# # ### <!-- // /*  d a r k s h a p e s */ -->
 
-# """动态函数工厂"""
-from typing import Callable, Dict, List
-from importlib import import_module
-# from mir.mir_maid import MIRDatabase
+# # """动态函数工厂"""
+# from typing import Callable, Dict, List
+# from importlib import import_module
+# # from mir.mir_maid import MIRDatabase
 
-from diffusers.loaders.single_file_utils import DIFFUSERS_DEFAULT_PIPELINE_PATHS
-# from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
+# from diffusers.loaders.single_file_utils import DIFFUSERS_DEFAULT_PIPELINE_PATHS
+# # from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
 
-short_name = next(iter(x for x in DIFFUSERS_DEFAULT_PIPELINE_PATHS if "refiner" in x))
+# short_name = next(iter(x for x in DIFFUSERS_DEFAULT_PIPELINE_PATHS if "refiner" in x))
 
-# infer_diffusers_model_type
-
-
-def _get_task_pipe(pkg_name: dict, i2i: bool = False) -> list[Callable]:
-    """Convert normal diffusers pipe to a task-specific pipe\n
-    :return: a list of Callable element to import
-    """
-    from diffusers.pipelines.auto_pipeline import SUPPORTED_TASKS_MAPPINGS, _get_task_class
-
-    task = "IMAGE2IMAGE" if i2i else "INPAINT"
-    task_pipe = _get_task_class(next(iter(x for x in SUPPORTED_TASKS_MAPPINGS if task in x)), pkg_name.get("diffusers"))
-    return [task_pipe]
+# # infer_diffusers_model_type
 
 
-def root_class(init_module: Callable) -> Dict[str : List[str, str]]:
-    """Pick apart a Diffusers or Transformers pipeline class and find its constituent parts\n
-    :param init_module: Origin pipeline
-    :return: Dictionary of
-    """
-    import inspect
+# def _get_task_pipe(pkg_name: dict, i2i: bool = False) -> list[Callable]:
+#     """Convert normal diffusers pipe to a task-specific pipe\n
+#     :return: a list of Callable element to import
+#     """
+#     from diffusers.pipelines.auto_pipeline import SUPPORTED_TASKS_MAPPINGS, _get_task_class
 
-    signature = inspect.signature(init_module.__init__)
-    class_names = {}
-    for folder, param in signature.parameters.items():
-        if folder != "self":
-            sub_module = str(param.annotation).split("'")
-            if len(sub_module) > 1 and sub_module[1] not in ["bool", "int", "float", "complex", "str", "list", "tuple", "dict", "set"]:
-                class_names.setdefault(folder, sub_module[1].split("."))
-    return class_names
+#     task = "IMAGE2IMAGE" if i2i else "INPAINT"
+#     task_pipe = _get_task_class(next(iter(x for x in SUPPORTED_TASKS_MAPPINGS if task in x)), pkg_name.get("diffusers"))
+#     return [task_pipe]
 
 
-def find_pipe(query: str):
-    from diffusers.pipelines.auto_pipeline import AUTO_TEXT2IMAGE_PIPELINES_MAPPING
+# def root_class(init_module: Callable) -> Dict[str : List[str, str]]:
+#     """Pick apart a Diffusers or Transformers pipeline class and find its constituent parts\n
+#     :param init_module: Origin pipeline
+#     :return: Dictionary of
+#     """
+#     import inspect
+
+#     signature = inspect.signature(init_module.__init__)
+#     class_names = {}
+#     for folder, param in signature.parameters.items():
+#         if folder != "self":
+#             sub_module = str(param.annotation).split("'")
+#             if len(sub_module) > 1 and sub_module[1] not in ["bool", "int", "float", "complex", "str", "list", "tuple", "dict", "set"]:
+#                 class_names.setdefault(folder, sub_module[1].split("."))
+#     return class_names
+
+
+# def find_pipe(query: str):
+#     from diffusers.pipelines.auto_pipeline import AUTO_TEXT2IMAGE_PIPELINES_MAPPING
+
+
+# import ast
+# import importlib
+# from pathlib import Path
+# import os
+
+# package = importlib.import_module('diffusers.schedulers')
+# file_path = Path(package.__file__).parent / '__init__.py'
+
+# with open(os.path.abspath(file_path.resolve()), 'r') as file:
+#     tree = ast.parse(file.read())
+
+# class_imports = []
+
+# for node in ast.walk(tree):
+#     if isinstance(node, (ast.Import, ast.ImportFrom)):
+#         for alias in node.names:
+#             # Assuming class names are capitalized
+#             if alias.name[0].isupper():
+#                 class_imports.append(alias.name)
+
+# print(class_imports)
 
 
 # mir_db = MIRDatabase()
