@@ -54,7 +54,6 @@ dependencies = [
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
     "sentencepiece>=0.2.0,<1.0 ; python_full_version < '3.13'",
-    "mflux ; sys_platform == 'darwin'",
 ]
 
 [dependency-groups]

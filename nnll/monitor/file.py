@@ -9,13 +9,21 @@
 
 import os
 from argparse import ArgumentParser
-from logging import DEBUG, INFO, Logger  # noqa: F401, pylint:disable=unused-import
-from pathlib import Path
-from typing import Callable, Literal
-from threading import get_native_id
 from datetime import datetime
+from logging import DEBUG, INFO, Formatter, Logger, StreamHandler, getLogger  # noqa: F401, pylint:disable=unused-import
+from pathlib import Path
 from sys import modules as sys_modules
+
+# from logging import root
+from sys import stderr as sys_stderr
+from threading import get_native_id
+from typing import Callable, Literal
+
+from rich.console import Console
+from rich.logging import RichHandler
+
 from nnll.configure import LOG_FOLDER_PATH
+from nnll.configure.color_map import grey_nouveau_theme
 
 EXC_INFO = any(mod in sys_modules for mod in ["textual"] if "pytest" not in sys_modules)
 
@@ -31,11 +39,12 @@ def configure_logging(file_name: str = ".nnll", folder_path_named: str = LOG_FOL
     """
 
     import logging
-    import structlog
 
-    from structlog.processors import ExceptionPrettyPrinter, StackInfoRenderer, format_exc_info, dict_tracebacks, TimeStamper, JSONRenderer
-    from structlog.stdlib import add_log_level, PositionalArgumentsFormatter
-    from structlog import configure as structlog_conf, make_filtering_bound_logger, WriteLoggerFactory, get_logger
+    import structlog
+    from structlog import WriteLoggerFactory, get_logger, make_filtering_bound_logger
+    from structlog import configure as structlog_conf
+    from structlog.processors import ExceptionPrettyPrinter, JSONRenderer, StackInfoRenderer, TimeStamper, dict_tracebacks, format_exc_info
+    from structlog.stdlib import PositionalArgumentsFormatter, add_log_level
 
     file_name += f"{datetime.now().strftime('%Y%m%d')}"
     assembled_path = os.path.join(folder_path_named, file_name)
@@ -120,14 +129,6 @@ def info_stream():
     """info console logging\n
     :return: INFO level logging object
     """
-    from rich.console import Console
-    from rich.logging import RichHandler
-    from logging import StreamHandler, Formatter, getLogger
-    from nnll.configure.color_map import grey_nouveau_theme
-
-    # from logging import root
-    from sys import stderr as sys_stderr
-
     try:
         console_out = Console(stderr=True, theme=grey_nouveau_theme())
         log_handler = RichHandler(console=console_out)
