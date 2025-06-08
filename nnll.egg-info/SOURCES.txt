@@ -47,6 +47,7 @@ tests/test_async_download_session.py
 tests/test_async_transfer_retry.py
 tests/test_console_print.py
 tests/test_construct_pipe.py
+tests/test_deconstructors.py
 tests/test_gguf_tag_expected.json
 tests/test_gguf_tags.py
 tests/test_img.png

@@ -107,7 +107,7 @@ class ReadModelTags:
 
         try:  # method using gguf library, better for LDM conversions
             reader = GGUFReader(file_path_named, "r")  # obsolete in numpy 2, also slower
-        except (UnboundLocalError, ValueError) as error_log:
+        except (UnboundLocalError, ValueError, AttributeError) as error_log:
             dbug("Value error assembling GGUFReader >:V %s", error_log, tb=error_log.__traceback__)
         else:
             arch = reader.fields.get("general.architecture")  # model type
