@@ -3,24 +3,24 @@
 
 """類發現和拆卸"""
 
-from typing import Callable, Dict
+from typing import Callable, Tuple, List, Any, Dict
 from nnll.monitor.file import nfo, dbug
-# from nnll.metadata.helpers import snake_caseify
 
 
-def scrape_docs(doc_string: str) -> Dict[str, str]:
+def scrape_docs(doc_string: str) -> Tuple[str,]:
     """Eat the 🤗Diffusers docstrings as a treat, leaving any tasty repo and class morsels neatly arranged as a dictionary.\n
     Nom.
     :param doc_string: String literal from library describing the class
     :return: A yummy dictionary of relevant class and repo strings
     """
-    import os
 
-    pipe_prefix = [">>> pipe = ", ">>> pipeline = ", ">>> blip_diffusion_pipe = ", ">>> gen_pipe = ", ">>> prior_pipe = "]
+    pipe_prefix = [">>> adapter = ", ">>> pipe_prior = ", ">>> pipe = ", ">>> pipeline = ", ">>> blip_diffusion_pipe = ", ">>> gen_pipe = ", ">>> prior_pipe = "]
     repo_prefixes = ["repo_id", "model_ckpt", "model_id_or_path", "model_id", "repo"]
     pretrained_prefix = [".from_pretrained("]
     staged_prefix = ".from_pretrain("
     staged = None
+    staged_class = None
+    staged_repo = None
     joined_docstring = " ".join(doc_string.splitlines())
     for prefix in pipe_prefix:
         pipe_doc = joined_docstring.partition(prefix)[2]
@@ -33,30 +33,25 @@ def scrape_docs(doc_string: str) -> Dict[str, str]:
         repo_path = pipe_doc.partition(prefix)
         repo_path = repo_path[2].partition('")')[0]
         repo_path = repo_path.replace("...", "").strip()
-        repo_path = repo_path.partition('",')[0].strip('"')
+        repo_path = repo_path.partition('",')[0]
+
         if staged:
             staged_class = staged.partition(staged_prefix)[0]
             staged_repo = staged.partition(staged_prefix)
             staged_repo = staged_repo[2].partition('")')[0]
             staged_repo = staged_repo.replace("...", "").strip()
-            staged_repo = staged_repo.partition('",')[0].strip('"')
+            staged_repo = staged_repo.partition('",')[0]
         break
     for prefix in repo_prefixes:
         if prefix in repo_path and not staged:
             prefix_assign = f"{prefix} = "
             repo_path = next(line.partition(prefix_assign)[2].split('",')[0] for line in doc_string.splitlines() if prefix_assign in line)
+            repo_path
             break
-    model_label = os.path.basename(repo_path).lower()
-    mir_label = model_label.lower()
-    pipe = {mir_label: {"repo": repo_path, "pipe": pipe_class}}
-    if staged:
-        model_label = os.path.basename(staged_repo).lower()
-        mir_label = model_label.lower()
-        pipe.setdefault(mir_label, {"repo": staged_repo, "staged_class": staged_class})
-    return pipe
+    return pipe_class, repo_path, staged_class, staged_repo
 
 
-def process_docs(callback: Callable = scrape_docs) -> dict:
+def cut_docs() -> Any:
     """Draw down docstrings from 🤗Diffusers library, minimizing internet requests\n
     :return: Docstrings for common diffusers models
     """
@@ -67,36 +62,44 @@ def process_docs(callback: Callable = scrape_docs) -> dict:
     non_standard = {
         "cogvideo": "cogvideox",
         "cogview3": "cogview3plus",
-        "controlnet_hunyuandit": "hunyuandit_controlnet",
-        "controlnet_sd3": "stable_diffusion_3_controlnet",
         "deepfloyd_if": "if",
-        "latent_consistency_models": "latent_consistency_text2img",
-        "ledits_pp": "leditspp_stable_diffusion",
     }
 
-    exclusion_list = [
-        "controlnet",  # task specific, can be found otherwise
+    exclusion_list = [  # task specific, adapter, or no doc string
+        "animatediff",  # adapter
+        "controlnet",
+        "controlnet_hunyuandit"  #: "hunyuandit_controlnet",
+        "controlnet_xs"
+        "controlnet_sd3",
+        "stable_diffusion_3_controlnet",
         "dance_diffusion",  # no doc_string
         "dit",
         "ddim",
         "ddpm",
         "deprecated",
-        "controlnet_hunyuandit",  # task specific
+        "controlnetxs",
+        "controlnet_hunyuandit",
         "latent_diffusion",  # no doc_string
+        "latent_consistency_models",  # "latent_consistency_text2img",
+        "ledits_pp",  # "leditspp_stable_diffusion",
         "marigold",  # specific processing routines
         "omnigen",  # tries to import torchvision
-        "pag",  # task specific pipe
+        "pag",  #
         "paint_by_example",  # no docstring
+        "pia",  # lora adapter
         "semantic_stable_diffusion",  # no_docstring
+        "stable_diffusion_attend_and_excite",
+        "stable_diffusion_diffedit",
         "stable_diffusion_k_diffusion",  # tries to import k_diffusion
+        "stable_diffusion_panorama",
         "stable_diffusion_safe",
-        "t2i_adapter",  # task specific
+        "stable_diffusion_sag",  #
+        "t2i_adapter",
         "text_to_video_synthesis",
         "unclip",
         "unidiffuser",
     ]
 
-    new_pipe = {}
     for _, name, is_pkg in pkgutil.iter_modules(diffusers.pipelines.__path__):
         if is_pkg and name not in exclusion_list:
             if name in non_standard:
@@ -110,17 +113,42 @@ def process_docs(callback: Callable = scrape_docs) -> dict:
                 nfo(f"Module Not Found for {name}")
                 dbug(error_log)
             try:
-                doc_string = pipe_file.EXAMPLE_DOC_STRING
+                yield pipe_file.EXAMPLE_DOC_STRING
             except AttributeError as error_log:
                 nfo(f"Doc String Not Found for {name}")
                 dbug(error_log)
-            else:
-                old_pipe = new_pipe
-                incoming_data = callback(doc_string)
-                new_pipe = old_pipe | incoming_data
+                # print(sub_classes)
 
-    print(new_pipe)
 
+def _get_task_pipe(pkg_name: dict, i2i: bool = False) -> list[Callable]:
+    """Convert normal diffusers pipe to a task-specific pipe\n
+    :return: a list of Callable element to import
+    """
+    from diffusers.pipelines.auto_pipeline import SUPPORTED_TASKS_MAPPINGS, _get_task_class
+
+    task = "IMAGE2IMAGE" if i2i else "INPAINT"
+    task_pipe = _get_task_class(next(iter(x for x in SUPPORTED_TASKS_MAPPINGS if task in x)), pkg_name.get("diffusers"))
+    return [task_pipe]
+
+
+def root_class(init_module: Callable) -> Dict[str, List[str]]:
+    """Pick apart a Diffusers or Transformers pipeline class and find its constituent parts\n
+    :param init_module: Origin pipeline
+    :return: Dictionary of
+    """
+    import inspect
+
+    signature = inspect.signature(init_module.__init__)
+    class_names = {}
+    for folder, param in signature.parameters.items():
+        if folder != "self":
+            sub_module = str(param.annotation).split("'")
+            if len(sub_module) > 1 and sub_module[1] not in ["bool", "int", "float", "complex", "str", "list", "tuple", "dict", "set"]:
+                class_names.setdefault(folder, sub_module[1].split("."))
+    return class_names
+
+
+from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
 
 # from typing import Callable, Dict, List
 # # from mir.mir_maid import MIRDatabase
@@ -213,34 +241,6 @@ def process_docs(callback: Callable = scrape_docs) -> dict:
 # ]
 
 # infer_diffusers_model_type
-
-
-# def _get_task_pipe(pkg_name: dict, i2i: bool = False) -> list[Callable]:
-#     """Convert normal diffusers pipe to a task-specific pipe\n
-#     :return: a list of Callable element to import
-#     """
-#     from diffusers.pipelines.auto_pipeline import SUPPORTED_TASKS_MAPPINGS, _get_task_class
-
-#     task = "IMAGE2IMAGE" if i2i else "INPAINT"
-#     task_pipe = _get_task_class(next(iter(x for x in SUPPORTED_TASKS_MAPPINGS if task in x)), pkg_name.get("diffusers"))
-#     return [task_pipe]
-
-
-# def root_class(init_module: Callable) -> Dict[str : List[str, str]]:
-#     """Pick apart a Diffusers or Transformers pipeline class and find its constituent parts\n
-#     :param init_module: Origin pipeline
-#     :return: Dictionary of
-#     """
-#     import inspect
-
-#     signature = inspect.signature(init_module.__init__)
-#     class_names = {}
-#     for folder, param in signature.parameters.items():
-#         if folder != "self":
-#             sub_module = str(param.annotation).split("'")
-#             if len(sub_module) > 1 and sub_module[1] not in ["bool", "int", "float", "complex", "str", "list", "tuple", "dict", "set"]:
-#                 class_names.setdefault(folder, sub_module[1].split("."))
-#     return class_names
 
 
 # def find_pipe(query: str):

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev547+g81302e9.d20250606
+Version: 0.1.dev554+g1965857.d20250608
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -22,9 +22,11 @@ Requires-Dist: accelerate>=1.7.0
 Requires-Dist: aiofiles>=24.1.0
 Requires-Dist: aiohttp>=3.12.6
 Requires-Dist: diffusers>=0.33.1
+Requires-Dist: gguf>=0.10.0
 Requires-Dist: hidiffusion>=0.1.10
 Requires-Dist: huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
 Requires-Dist: llama-cpp-python>=0.3.9
+Requires-Dist: mflux>=0.2.1; platform_system == "Darwin"
 Requires-Dist: numpy>=2.2.6
 Requires-Dist: peft>=0.15.2
 Requires-Dist: pillow>=11.2.1
@@ -33,7 +35,7 @@ Requires-Dist: pydantic>=2.11.5
 Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: rich>=14.0.0
 Requires-Dist: safetensors>=0.5.3
-Requires-Dist: sentencepiece@ https://github.com/google/sentencepiece.git#subdirectory=python
+Requires-Dist: sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python
 Requires-Dist: structlog>=25.4.0
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: transformers>=4.52.4
@@ -45,6 +47,7 @@ Provides-Extra: nightly
 Requires-Dist: torch; extra == "nightly"
 Requires-Dist: torchvision; extra == "nightly"
 Requires-Dist: torchaudio; extra == "nightly"
+Requires-Dist: mflux; extra == "nightly"
 Provides-Extra: cu126
 Requires-Dist: torch; extra == "cu126"
 Requires-Dist: torchvision; extra == "cu126"
@@ -58,13 +61,13 @@ Requires-Dist: torchaudio; extra == "cu128"
 Requires-Dist: triton; sys_platform == "Linux" and extra == "cu128"
 Requires-Dist: triton-windows; sys_platform == "win32" and extra == "cu128"
 Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "cu128"
-Requires-Dist: sageattention; sys_platform != "darwin" and extra == "cu128"
+Requires-Dist: sageattention; sys_platform != "Darwin" and extra == "cu128"
 Provides-Extra: rocm
 Requires-Dist: torch; extra == "rocm"
 Requires-Dist: torchvision; extra == "rocm"
 Requires-Dist: torchaudio; extra == "rocm"
 Requires-Dist: pytorch-triton-rocm; extra == "rocm"
-Requires-Dist: sageattention; sys_platform != "darwin" and extra == "rocm"
+Requires-Dist: sageattention; sys_platform != "Darwin" and extra == "rocm"
 Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "rocm"
 Provides-Extra: dev
 Requires-Dist: aioresponses>=0.7.8; extra == "dev"
