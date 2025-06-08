@@ -3,11 +3,11 @@
 
 import pytest
 from unittest import mock
-from nnll.tensor_pipe.deconstructors import process_docs
+from nnll.tensor_pipe.deconstructors import cut_docs
 
 
 def test_list_diffusers_models():
-    process_docs()
+    cut_docs()
 
 
 # @pytest.fixture

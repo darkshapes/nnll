@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev554+g1965857.d20250608
+Version: 0.1.dev555+g10c4499.d20250608
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
