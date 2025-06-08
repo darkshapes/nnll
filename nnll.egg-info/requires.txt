@@ -1,6 +1,5 @@
 aiofiles>=24.1.0
 aiohttp>=3.12.6
-aioresponses[dev]>=0.7.8
 gguf>=0.10.0
 hidiffusion>=0.1.10
 huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
@@ -9,12 +8,7 @@ pillow>=11.2.1
 protobuf>=5.29.5
 pydantic-core>=2.33.2
 pydantic>=2.11.5
-pytest-asyncio[dev]>=1.0.0
-pytest-tornasync[dev]>=0.6.0.post2
-pytest-trio[dev]>=0.8.0
-pytest[dev]>=8.4.0
 rich>=14.0.0
-ruff[dev]>=0.11.13
 safetensors>=0.5.3
 sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python
 structlog>=25.4.0
@@ -23,6 +17,11 @@ torchaudio
 torchvision
 tqdm>=4.67.1
 transformers>=4.52.4
+diffusers
+psutil>=7.0.0
+
+[:sys_platform == "Darwin" and platform_machine == "arm64"]
+mflux>=0.2.1
 
 [bitsandbytes]
 
@@ -62,25 +61,23 @@ triton-windows
 
 [dev]
 aioresponses>=0.7.8
-nnll[bitsandbytes,diffusers,mflux]
 pytest>=8.3.5
 pytest-asyncio>=1.0.0
 pytest-tornasync>=0.6.0.post2
 pytest-trio>=0.8.0
 ruff>=0.11.12
+nnll[nightly]
 
 [diffusers]
 diffusers>=0.33.1
-
-[mflux]
-
-[mflux:sys_platform == "darwin"]
-mflux>=0.2.1
 
 [nightly]
 torch
 torchvision
 torchaudio
+
+[nightly:platform_system == "Darwin"]
+mflux
 
 [rocm]
 torch

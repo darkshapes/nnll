@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev557+g4ecc450.d20250608
+Version: 0.1.dev559+g2ee2e8f.d20250608
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -20,21 +20,16 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: aiofiles>=24.1.0
 Requires-Dist: aiohttp>=3.12.6
-Requires-Dist: aioresponses[dev]>=0.7.8
 Requires-Dist: gguf>=0.10.0
 Requires-Dist: hidiffusion>=0.1.10
 Requires-Dist: huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
 Requires-Dist: llama-cpp-python>=0.3.9
+Requires-Dist: mflux>=0.2.1; sys_platform == "Darwin" and platform_machine == "arm64"
 Requires-Dist: pillow>=11.2.1
 Requires-Dist: protobuf>=5.29.5
 Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: pydantic>=2.11.5
-Requires-Dist: pytest-asyncio[dev]>=1.0.0
-Requires-Dist: pytest-tornasync[dev]>=0.6.0.post2
-Requires-Dist: pytest-trio[dev]>=0.8.0
-Requires-Dist: pytest[dev]>=8.4.0
 Requires-Dist: rich>=14.0.0
-Requires-Dist: ruff[dev]>=0.11.13
 Requires-Dist: safetensors>=0.5.3
 Requires-Dist: sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python
 Requires-Dist: structlog>=25.4.0
@@ -43,6 +38,16 @@ Requires-Dist: torchaudio
 Requires-Dist: torchvision
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: transformers>=4.52.4
+Requires-Dist: diffusers
+Requires-Dist: psutil>=7.0.0
+Provides-Extra: dev
+Requires-Dist: aioresponses>=0.7.8; extra == "dev"
+Requires-Dist: pytest>=8.3.5; extra == "dev"
+Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
+Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
+Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
+Requires-Dist: ruff>=0.11.12; extra == "dev"
+Requires-Dist: nnll[nightly]; extra == "dev"
 Provides-Extra: bitsandbytes
 Requires-Dist: bitsandbytes>=0.46.0; (platform_system == "linux" or platform_system == "windows") and extra == "bitsandbytes"
 Provides-Extra: diffusers
@@ -55,6 +60,7 @@ Provides-Extra: nightly
 Requires-Dist: torch; extra == "nightly"
 Requires-Dist: torchvision; extra == "nightly"
 Requires-Dist: torchaudio; extra == "nightly"
+Requires-Dist: mflux; platform_system == "Darwin" and extra == "nightly"
 Provides-Extra: cu126
 Requires-Dist: torch; extra == "cu126"
 Requires-Dist: torchvision; extra == "cu126"
@@ -76,16 +82,6 @@ Requires-Dist: torchaudio; extra == "rocm"
 Requires-Dist: pytorch-triton-rocm; extra == "rocm"
 Requires-Dist: sageattention; sys_platform != "Darwin" and extra == "rocm"
 Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "rocm"
-Provides-Extra: dev
-Requires-Dist: aioresponses>=0.7.8; extra == "dev"
-Requires-Dist: nnll[bitsandbytes,diffusers,mflux]; extra == "dev"
-Requires-Dist: pytest>=8.3.5; extra == "dev"
-Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
-Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
-Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
-Requires-Dist: ruff>=0.11.12; extra == "dev"
-Provides-Extra: mflux
-Requires-Dist: mflux>=0.2.1; sys_platform == "darwin" and extra == "mflux"
 Dynamic: license-file
 
 <div align="center">
