@@ -4,6 +4,7 @@
 """類發現和拆卸"""
 
 from typing import Callable, Tuple, List, Any, Dict
+from nnll.download import hub_cache
 from nnll.monitor.file import nfo, dbug
 
 
@@ -68,8 +69,8 @@ def cut_docs() -> Any:
     exclusion_list = [  # task specific, adapter, or no doc string
         "animatediff",  # adapter
         "controlnet",
-        "controlnet_hunyuandit"  #: "hunyuandit_controlnet",
-        "controlnet_xs"
+        "controlnet_hunyuandit",  #: "hunyuandit_controlnet",
+        "controlnet_xs",
         "controlnet_sd3",
         "stable_diffusion_3_controlnet",
         "dance_diffusion",  # no doc_string
@@ -148,7 +149,13 @@ def root_class(init_module: Callable) -> Dict[str, List[str]]:
     return class_names
 
 
-from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
+def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
+    from nnll.download.hub_cache import download_hub_file
+
+    model_file = download_hub_file(repo_id=f"{repo_id}/tree/main/{arch}", source="huggingface", file_name="diffusion_pytorch_model.safetensors.index.json", local_dir=".tmp")
+
+
+# from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
 
 # from typing import Callable, Dict, List
 # # from mir.mir_maid import MIRDatabase
