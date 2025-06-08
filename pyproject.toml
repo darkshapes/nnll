@@ -35,34 +35,37 @@ classifiers = [
 ]
 
 dependencies = [
-    "accelerate>=1.7.0",
     "aiofiles>=24.1.0",
     "aiohttp>=3.12.6",
-    "diffusers>=0.33.1",
+    "aioresponses[dev]>=0.7.8",
     "gguf>=0.10.0",
     "hidiffusion>=0.1.10",
     "huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3",
     "llama-cpp-python>=0.3.9",
-    "mflux>=0.2.1 ; platform_system == 'Darwin'",
-    "numpy>=2.2.6",
-    "peft>=0.15.2",
     "pillow>=11.2.1",
     "protobuf>=5.29.5",
-    "pydantic>=2.11.5",
     "pydantic-core>=2.33.2",
+    "pydantic>=2.11.5",
+    "pytest-asyncio[dev]>=1.0.0",
+    "pytest-tornasync[dev]>=0.6.0.post2",
+    "pytest-trio[dev]>=0.8.0",
+    "pytest[dev]>=8.4.0",
     "rich>=14.0.0",
+    "ruff[dev]>=0.11.13",
     "safetensors>=0.5.3",
     "sentencepiece @ git+https://github.com/google/sentencepiece.git#subdirectory=python",
     "structlog>=25.4.0",
+    "torch",
+    "torchaudio",
+    "torchvision",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
 ]
 
 [dependency-groups]
-
 dev = [
     "aioresponses>=0.7.8",
-    "nnll[dev]",
+    "nnll[dev,diffusers]",
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
     "pytest-tornasync>=0.6.0.post2",
@@ -71,9 +74,14 @@ dev = [
 ]
 
 [project.optional-dependencies]
-cpu = ["torch", "torchvision", "torchaudio"]
+bitsandbytes = [
+    "bitsandbytes>=0.46.0 ; platform_system == 'linux' or platform_system == 'windows'",
+]
 
-nightly = ["torch", "torchvision", "torchaudio", "mflux"]
+diffusers = ["diffusers>=0.33.1"]
+cpu       = ["torch", "torchvision", "torchaudio"]
+
+nightly = ["torch", "torchvision", "torchaudio"]
 
 cu126 = [
     "torch",
@@ -101,10 +109,11 @@ rocm = [
     "sageattention; sys_platform != 'Darwin'",
     "flash_attn ; sys_platform == 'Linux'",
 ]
+mflux = ["mflux>=0.2.1 ; sys_platform == 'darwin'"]
 
 dev = [
     "aioresponses>=0.7.8",
-    "nnll[dev]",
+    "nnll[diffusers,bitsandbytes,mflux]",
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
     "pytest-tornasync>=0.6.0.post2",
@@ -116,30 +125,17 @@ dev = [
 Homepage      = "https://github.com/darkshapes/nnll"
 Documentation = "https://github.com/darkshapes/sdbx/wiki"
 
+[tool.setuptools_scm]
+write_to = "_version.py"
 
 [tool.setuptools.packages.find]
 where   = ["."]
 include = ["nnll*"]
 exclude = ["tests*"]
 
-[tool.setuptools_scm]
-write_to = "_version.py"
-
-[tool.uv.pip]
-torch-backend = "auto"
-
 [tool.uv]
-dev-dependencies = [
-    "aioresponses>=0.7.8",
-    "nnll[dev]",
-    "pytest>=8.3.5",
-    "pytest-asyncio>=1.0.0",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
-    "ruff>=0.11.12",
-]
+
 prerelease = "allow"
-preview = true
 conflicts = [
     [
         { extra = "cpu" },
@@ -151,6 +147,18 @@ conflicts = [
 
     ],
 ]
+dev-dependencies = [
+    "aioresponses>=0.7.8",
+    "nnll[dev,diffusers]",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.11.12",
+]
+
+[tool.uv.pip] #ignore
+torch-backend = "auto"
 
 [[tool.uv.index]]
 name     = "pytorch-cpu"
@@ -201,6 +209,7 @@ torchaudio = [
 
 [tool.uv.sources]
 sentencepiece = { git = "https://github.com/google/sentencepiece.git", subdirectory = "python" }
+nnll          = { workspace = true }
 
 [tool.ruff]
 line-length    = 140
