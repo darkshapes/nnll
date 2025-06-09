@@ -27,7 +27,7 @@ def set_path(folder="test"):
 
 
 def test_ensure_path():
-    from nnll.configure import ensure_path
+    from nnll.integrity import ensure_path
 
     test_path = set_path()
     try:
@@ -41,7 +41,7 @@ def test_ensure_path():
 
 
 def test_ensure_sub_folder():
-    from nnll.configure import ensure_path
+    from nnll.integrity import ensure_path
 
     test_path = set_path(folder=os.path.join("test_2", "test_3"))
     try:
@@ -55,7 +55,7 @@ def test_ensure_sub_folder():
 
 
 def test_ensure_file():
-    from nnll.configure import ensure_path
+    from nnll.integrity import ensure_path
 
     test_path = set_path(folder="test_4")
     try:

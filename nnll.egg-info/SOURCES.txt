@@ -11,6 +11,7 @@ uv.lock
 nnll.egg-info/PKG-INFO
 nnll.egg-info/SOURCES.txt
 nnll.egg-info/dependency_links.txt
+nnll.egg-info/entry_points.txt
 nnll.egg-info/requires.txt
 nnll.egg-info/top_level.txt
 nnll/configure/__init__.py
@@ -23,6 +24,7 @@ nnll/download/hub_cache.py
 nnll/integrity/__init__.py
 nnll/integrity/hashing.py
 nnll/metadata/__init__.py
+nnll/metadata/autocard_quant.py
 nnll/metadata/constants.py
 nnll/metadata/helpers.py
 nnll/metadata/json_io.py
