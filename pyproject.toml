@@ -55,13 +55,11 @@ dependencies = [
     "torchvision",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
-    "diffusers",
     "psutil>=7.0.0",
 ]
 
 
-
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "aioresponses>=0.7.8",
     "pytest>=8.3.5",
@@ -72,14 +70,15 @@ dev = [
     "nnll[nightly]",
 ]
 
+[project.optional-dependencies]
 bitsandbytes = [
     "bitsandbytes>=0.46.0 ; platform_system == 'linux' or platform_system == 'windows'",
 ]
-
+mflux = ["mflux ; platform_system == 'Darwin'"]
 diffusers = ["diffusers>=0.33.1"]
 cpu       = ["torch", "torchvision", "torchaudio"]
 
-nightly = ["torch", "torchvision", "torchaudio","mflux ; platform_system == 'Darwin'"]
+nightly = ["torch", "torchvision", "torchaudio"]
 
 cu126 = [
     "torch",
