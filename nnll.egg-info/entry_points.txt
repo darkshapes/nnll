@@ -1,0 +1,2 @@
+[console_scripts]
+nnll-autocard = nnll.metadata.autocard_quant:main

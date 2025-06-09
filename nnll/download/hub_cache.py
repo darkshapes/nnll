@@ -68,5 +68,5 @@ def download_hub_file(repo_id: str, source: str = "huggingface", **kwargs) -> Tu
         local_folder_path_named = os.path.join(download_folder, "blobs")
     else:
         local_folder_path_named = kwargs["local_dir"]
-    folder_contents = os.listdir(local_folder_path_named)
+    folder_contents = os.listdir(local_folder_path_named)  # Did not use 'Path' type b/c might be relative directory??
     return local_folder_path_named, folder_contents

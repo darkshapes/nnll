@@ -47,8 +47,8 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
         if prefix in repo_path and not staged:
             prefix_assign = f"{prefix} = "
             repo_path = next(line.partition(prefix_assign)[2].split('",')[0] for line in doc_string.splitlines() if prefix_assign in line)
-            repo_path
             break
+
     return pipe_class, repo_path, staged_class, staged_repo
 
 
