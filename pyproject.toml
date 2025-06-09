@@ -60,7 +60,7 @@ dependencies = [
 
 
 [dependency-groups]
-dev = [
+dev = [ #has tobe here for uv
     "aioresponses>=0.7.8",
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
@@ -76,7 +76,7 @@ bitsandbytes = [
 ]
 mflux = ["mflux ; platform_system == 'Darwin'"]
 diffusers = ["diffusers>=0.33.1"]
-cpu       = ["torch", "torchvision", "torchaudio"]
+cpu = ["torch", "torchvision", "torchaudio"]
 
 nightly = ["torch", "torchvision", "torchaudio"]
 
@@ -107,6 +107,15 @@ rocm = [
     "flash_attn ; sys_platform == 'Linux'",
 ]
 
+dev = [ #has to be here for pip
+    "aioresponses>=0.7.8",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.11.12",
+    "nnll[nightly]",
+]
 [project.urls]
 Homepage      = "https://github.com/darkshapes/nnll"
 Documentation = "https://github.com/darkshapes/sdbx/wiki"
