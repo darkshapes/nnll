@@ -55,14 +55,14 @@ dependencies = [
     "torchvision",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
-    "diffusers",
     "psutil>=7.0.0",
+    "diffusers>=0.33.1",
+    "bitsandbytes>=0.46.0 ; platform_system == 'linux' or platform_system == 'windows'",
 ]
 
 
-
-[project.optional-dependencies]
-dev = [
+[dependency-groups]
+dev = [ #has tobe here for uv
     "aioresponses>=0.7.8",
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
@@ -72,14 +72,18 @@ dev = [
     "nnll[nightly]",
 ]
 
-bitsandbytes = [
-    "bitsandbytes>=0.46.0 ; platform_system == 'linux' or platform_system == 'windows'",
+[project.optional-dependencies]
+mflux = [
+    "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
 ]
+cpu = ["torch", "torchvision", "torchaudio"]
 
-diffusers = ["diffusers>=0.33.1"]
-cpu       = ["torch", "torchvision", "torchaudio"]
-
-nightly = ["torch", "torchvision", "torchaudio","mflux ; platform_system == 'Darwin'"]
+nightly = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
+]
 
 cu126 = [
     "torch",
@@ -106,6 +110,15 @@ rocm = [
     "pytorch-triton-rocm",
     "sageattention; sys_platform != 'Darwin'",
     "flash_attn ; sys_platform == 'Linux'",
+]
+dev = [ #has tobe here for uv
+    "aioresponses>=0.7.8",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.11.12",
+    "nnll[nightly]",
 ]
 
 [project.urls]
@@ -136,7 +149,6 @@ conflicts = [
 ]
 dev-dependencies = [
     "aioresponses>=0.7.8",
-    "nnll[dev,diffusers]",
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
     "pytest-tornasync>=0.6.0.post2",
