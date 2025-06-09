@@ -57,6 +57,15 @@ flash_attn
 [cu128:sys_platform == "win32"]
 triton-windows
 
+[dev]
+aioresponses>=0.7.8
+pytest>=8.3.5
+pytest-asyncio>=1.0.0
+pytest-tornasync>=0.6.0.post2
+pytest-trio>=0.8.0
+ruff>=0.11.12
+nnll[nightly]
+
 [mflux]
 
 [mflux:sys_platform == "darwin" and platform_machine == "arm64"]
