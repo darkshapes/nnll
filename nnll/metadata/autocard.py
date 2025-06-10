@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from nnll.integrity import ensure_path
+from nnll.metadata.helpers import ask_multi_input
 from nnll.monitor.file import nfo
 
 
@@ -25,25 +26,6 @@ def index_model_card(repo_path) -> Optional[Dict[str, Any]]:
     model_metadata = repocard.RepoCard.load(repo_path).data
     nfo(f"Metadata acquired from {repo_path}")
     return model_metadata
-
-
-def ask_multi_input(tag, polite_msg: str = "Please provide", preposition: str = "metadata for", required=True) -> List[str]:
-    """card"""
-    input_store = []
-    for prompt in [polite_msg, preposition]:
-        prompt = prompt.strip()
-    user_input = input(f"{polite_msg} {preposition} {tag}: ")
-    if not user_input and not required:
-        return None
-    input_store.append(user_input)
-    while True:
-        if user_input and input_store:
-            metadata = f"additional {preposition}"
-            user_input = input(f"{polite_msg} {metadata} {tag} (leave blank to skip): ")
-            if user_input:
-                input_store.append(user_input)
-            else:
-                return input_store
 
 
 def write_card(folder_path, model_card):
