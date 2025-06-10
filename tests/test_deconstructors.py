@@ -1,5 +1,5 @@
-# ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
-# ### <!-- // /*  d a r k s h a p e s */ -->
+### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
 
 import pytest
 from unittest import mock
