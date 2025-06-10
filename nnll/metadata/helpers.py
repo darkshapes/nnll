@@ -1,7 +1,7 @@
 ### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-from typing import Union
+from typing import Iterable, List, Union
 
 
 def slice_number(text: str) -> Union[int, float, str]:
@@ -42,7 +42,39 @@ def snake_caseify(camel_case: str, delimiter: str = "_") -> str:
                 result.append(char.lower())
                 continue
 
-            result.append("" + char.lower()) if index != 0 else result.append(char.lower())
+            result.append("" + char.lower()) if index != 0 else result.append(char.lower())  # pylint:disable=expression-not-assigned
         else:
             result.append(char)
     return "".join(result).lower()
+
+
+def ask_multi_input(
+    tag: str,
+    polite_msg: str = "Please provide",
+    preposition: str = "metadata for",
+    more: str = "additional",
+    required: bool = True,
+) -> List[str]:
+    """Looping `input` to create metadata survey lists of user input under a single label\n
+    :param tag: A label for the incoming metadata
+    :param polite_msg: Introduction prefix, defaults to "Please provide"
+    :param preposition: Partial sentence following the message, defaults to "metadata for"
+    "param more: Statement to append for repeated prompts
+    :param required: Whethr the field MUST be answered, defaults to True
+    :return: A list of answers from the user
+    """
+    input_store = []
+    for prompt in [polite_msg, preposition]:
+        prompt = prompt.strip()
+    user_input = input(f"{polite_msg} {preposition} {tag}: ")
+    if not user_input and not required:
+        return None
+    input_store.append(user_input)
+    while True:
+        if user_input and input_store:
+            metadata = f"{more} {preposition}"
+            user_input = input(f"{polite_msg} {metadata} {tag} (leave blank to skip): ")
+            if user_input:
+                input_store.append(user_input)
+            else:
+                return input_store
