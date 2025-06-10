@@ -1,2 +1,3 @@
 [console_scripts]
 nnll-autocard = nnll.metadata.autocard_quant:main
+nnll-inspect = nnll.metadata.model_tags:main

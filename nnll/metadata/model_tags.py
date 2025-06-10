@@ -6,6 +6,7 @@
 # pylint: disable=import-outside-toplevel
 from pathlib import Path
 
+from nnll.metadata.json_io import write_json_file
 from nnll.monitor.file import dbug
 from nnll.monitor.file import debug_monitor
 from nnll.monitor.file import nfo
@@ -43,7 +44,7 @@ class ReadModelTags:
             self.read_method = self.import_map.get(extension)
             metadata = self.read_method(file_path_named)
         if metadata is None:
-            nfo("Couldn't load model metadata for %s", file_path_named)
+            nfo(f"Couldn't load model metadata for {file_path_named}")
             return None
         return metadata
 
@@ -237,9 +238,33 @@ class ReadModelTags:
         :param file_path_named: `str` the full path to the file being opened
         :return: `dict` the key value pair structure found in the file
         """
-        from safetensors import safe_open
+        from safetensors import safe_open, SafetensorError
 
-        with safe_open(file_path_named, framework="pt", device="cpu") as layer_content:
-            metadata = {key: layer_content.get_tensor(key).shape for key in layer_content}
-            # metadata = layer_content.metadata()
-        return metadata
+        try:
+            with safe_open(file_path_named, framework="pt", device="cpu") as layer_content:
+                metadata = {key: layer_content.get_tensor(key).shape for key in layer_content}
+                # metadata = layer_content.metadata()
+            return metadata
+        except SafetensorError:
+            pass
+
+
+def main():
+    import os
+    import argparse
+    from nnll.integrity import ensure_path
+
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Output state dict from a model file at [path] to the console, then write to a json file at [save].", epilog="Example: nnll-parse ~/Downloads/models/images ~Downloads/models/metadata")
+    parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=".")
+    parser.add_argument("-s", "--save", required=False, help="Path where output should be stored. (default: current directory)", default=".")
+    args = parser.parse_args()
+    model_tool = ReadModelTags()
+    meta_data = model_tool.read_metadata_from(args.path)
+    file_name = f"{os.path.basename(args.path)}.json"
+    folder_path_named = ensure_path(args.save)
+    write_json_file(folder_path_named=folder_path_named, file_name=file_name, data=meta_data)
+
+
+if __name__ == "__main__":
+    main()

@@ -7,11 +7,11 @@ from typing import Any
 
 
 def write_json_file(folder_path_named: str, file_name: str, data: Any, mode: str = "tw") -> None:
-    """Save a file to disk as UTF8 JSON
+    """Save a file to disk as UTF8 JSON\n
     :param folder_path_named: The location to save
     :param file_name: A file name to save with
     :param data: The content to save
-    :param mode: Type of open to use
+    :param mode: Type of open to use (default truncate-write)
     :returns: Dictionary of json data
     """
     import os

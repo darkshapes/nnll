@@ -35,6 +35,7 @@ classifiers = [
 ]
 
 dependencies = [
+    "accelerate>=1.7.0",
     "aiofiles>=24.1.0",
     "aiohttp>=3.12.6",
     "bitsandbytes>=0.46.0 ; sys_platform == 'linux' or sys_platform == 'windows'",
@@ -127,7 +128,8 @@ Homepage      = "https://github.com/darkshapes/nnll"
 Documentation = "https://github.com/darkshapes/sdbx/wiki"
 
 [project.scripts]
-nnll-autocard = "nnll.metadata.autocard_quant:main"
+nnll-autocard = "nnll.metadata.autocard:main"
+nnll-inspect  = "nnll.metadata.model_tags:main"
 
 [tool.setuptools_scm]
 write_to = "_version.py"

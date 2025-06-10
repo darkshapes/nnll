@@ -82,12 +82,12 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, libr
 
     elif isinstance(content, ArrayType):
         if library == ["audiocraft"]:
-            from audiocraft.data.audio import audio_write
+            from audiocraft.data.audio import audio_write  # pyright: ignore[reportMissingImports] | pylint:disable=import-error
 
             for idx, one_wav in enumerate(content):
                 audio_write(f"{name_save_file_as('.wav')}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)
         else:
-            import soundfile as sf
+            import soundfile as sf  # pyright: ignore[reportMissingImports] | pylint:disable=import-error
 
             file_path_absolute = name_save_file_as(extension or ".wav")
             sf.write(file_path_absolute, content, metadata)

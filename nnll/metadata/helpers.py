@@ -42,7 +42,7 @@ def snake_caseify(camel_case: str, delimiter: str = "_") -> str:
                 result.append(char.lower())
                 continue
 
-            result.append("" + char.lower()) if index != 0 else result.append(char.lower())
+            result.append("" + char.lower()) if index != 0 else result.append(char.lower())  # pylint:disable=expression-not-assigned
         else:
             result.append(char)
     return "".join(result).lower()
