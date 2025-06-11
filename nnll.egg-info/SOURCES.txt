@@ -24,7 +24,7 @@ nnll/download/hub_cache.py
 nnll/integrity/__init__.py
 nnll/integrity/hashing.py
 nnll/metadata/__init__.py
-nnll/metadata/autocard_quant.py
+nnll/metadata/autocard.py
 nnll/metadata/constants.py
 nnll/metadata/helpers.py
 nnll/metadata/json_io.py
@@ -37,6 +37,7 @@ nnll/metadata/webui_tags.py
 nnll/monitor/console.py
 nnll/monitor/file.py
 nnll/tensor_pipe/__init__.py
+nnll/tensor_pipe/autoquant.py
 nnll/tensor_pipe/construct_pipe.py
 nnll/tensor_pipe/deconstructors.py
 nnll/tensor_pipe/encode_prompt.py
@@ -49,7 +50,8 @@ tests/test_async_download_session.py
 tests/test_async_transfer_retry.py
 tests/test_console_print.py
 tests/test_construct_pipe.py
-tests/test_deconstructors.py
+tests/test_deconstructors_cut.py
+tests/test_deconstructors_root.py
 tests/test_gguf_tag_expected.json
 tests/test_gguf_tags.py
 tests/test_img.png
