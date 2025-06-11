@@ -1,11 +1,12 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# ### <!-- // /*  SPDX-License-Identifier: LAL-1.3 */ -->
+# ### <!-- // /*  d a r k s h a p e s */ -->
 
 """類發現和拆卸"""
 
 from typing import Callable, Tuple, List, Any, Dict
 from nnll.download import hub_cache
 from nnll.monitor.file import nfo, dbug
+from importlib import import_module
 
 
 def scrape_docs(doc_string: str) -> Tuple[str,]:
@@ -23,32 +24,33 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
     staged_class = None
     staged_repo = None
     joined_docstring = " ".join(doc_string.splitlines())
+
     for prefix in pipe_prefix:
-        pipe_doc = joined_docstring.partition(prefix)[2]
+        pipe_doc = joined_docstring.partition(prefix)[2]  # get the string segment that follows pipe assignment
         if prefix == pipe_prefix[-2]:  # continue until loop end [exhaust last two items in list above]
             staged = pipe_doc
         elif pipe_doc and not staged:
             break
-    for prefix in pretrained_prefix:
-        pipe_class = pipe_doc.partition(prefix)[0]
-        repo_path = pipe_doc.partition(prefix)
-        repo_path = repo_path[2].partition('")')[0]
-        repo_path = repo_path.replace("...", "").strip()
-        repo_path = repo_path.partition('",')[0]
-
+    for pretrained in pretrained_prefix:  # its a loop to add to later
+        pipe_class = pipe_doc.partition(pretrained)[0]  # get the segment preceding the class' method call
+        repo_path = pipe_doc.partition(pretrained)  # break segment at method
+        repo_path = repo_path[2].partition(")")[0]  # segment after is either a repo path or a reference to it, capture the part before the parenthesis
+        repo_path = repo_path.replace("...", "").strip()  # remove any ellipsis and empty space
+        repo_path = repo_path.partition('",')[0]  # partition at commas, repo is always the first argument
+        repo_path = repo_path.strip('"')  # strip remaining quotes
+        # * the star below could go here?
         if staged:
-            staged_class = staged.partition(staged_prefix)[0]
+            staged_class = staged.partition(staged_prefix)[0]  # repeat with any secondary stages
             staged_repo = staged.partition(staged_prefix)
-            staged_repo = staged_repo[2].partition('")')[0]
+            staged_repo = staged_repo[2].partition(")")[0]
             staged_repo = staged_repo.replace("...", "").strip()
             staged_repo = staged_repo.partition('",')[0]
         break
-    for prefix in repo_prefixes:
-        if prefix in repo_path and not staged:
-            prefix_assign = f"{prefix} = "
-            repo_path = next(line.partition(prefix_assign)[2].split('",')[0] for line in doc_string.splitlines() if prefix_assign in line)
+    for prefix in repo_prefixes:  # * this could move up
+        if prefix in repo_path and not staged:  # if  don't have the repo path, but only a reference
+            prefix_assign = f"{prefix} = "  # find the variable assignment
+            repo_path = next(line.partition(prefix_assign)[2].split('",')[0] for line in doc_string.splitlines() if prefix_assign in line).strip('"')
             break
-
     return pipe_class, repo_path, staged_class, staged_repo
 
 
@@ -57,7 +59,8 @@ def cut_docs() -> Any:
     :return: Docstrings for common diffusers models
     """
     import pkgutil
-    from importlib import import_module
+
+    # from importlib import import_module
     import diffusers.pipelines
 
     non_standard = {
@@ -113,8 +116,10 @@ def cut_docs() -> Any:
             except ModuleNotFoundError as error_log:
                 nfo(f"Module Not Found for {name}")
                 dbug(error_log)
+                pipe_file = None
             try:
-                yield pipe_file.EXAMPLE_DOC_STRING
+                if pipe_file:
+                    yield pipe_file.EXAMPLE_DOC_STRING
             except AttributeError as error_log:
                 nfo(f"Doc String Not Found for {name}")
                 dbug(error_log)
@@ -275,27 +280,6 @@ def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
 #                 class_imports.append(alias.name)
 
 # print(class_imports)
-
-
-# mir_db = MIRDatabase()
-# package_tree = {}
-# pipe_list = ["FluxPipeline", "StableDiffusion3Pipeline", "StableDiffusionPipeline", "StableDiffusionXLPipeline", "StableCascadeCombinedPipeline"]
-# for i in pipe_list:
-#     pkg = import_module("diffusers")
-#     init_module = getattr(pkg, i)
-#     package_tree = root_class(init_module=init_module)
-#     for component, modules in package_tree.items()
-#         series_name = modules[-1]
-#         for minor in ["Discrete", "Scheduler", "Multistep", "Solver",]:
-#                 series_name = series_name.replace(minor, "")
-#         mir_db.database[f"ops.{component}")
-#                 domain="ops",
-#                 arch=component,
-#                 series=series_name.lower(),
-#                 comp="diffusers",
-#                 package={modules[0]:modules[1:]},
-#             )
-#         )
 
 
 # pylint: disable=unsubscriptable-object, import-outside-toplevel, unused-argument, line-too-long
