@@ -3,7 +3,7 @@
 
 """類發現和拆卸"""
 
-from typing import Callable, Tuple, List, Any, Dict
+from typing import Callable, Generator, Tuple, List, Dict
 from nnll.download import hub_cache
 from nnll.monitor.file import nfo, dbug
 from importlib import import_module
@@ -45,6 +45,7 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
             staged_repo = staged_repo[2].partition(")")[0]
             staged_repo = staged_repo.replace("...", "").strip()
             staged_repo = staged_repo.partition('",')[0]
+            staged_repo = staged_repo.strip('"')
         break
     for prefix in repo_prefixes:  # * this could move up
         if prefix in repo_path and not staged:  # if  don't have the repo path, but only a reference
@@ -54,7 +55,7 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
     return pipe_class, repo_path, staged_class, staged_repo
 
 
-def cut_docs() -> Any:
+def cut_docs() -> Generator:
     """Draw down docstrings from 🤗Diffusers library, minimizing internet requests\n
     :return: Docstrings for common diffusers models
     """
@@ -70,37 +71,39 @@ def cut_docs() -> Any:
     }
 
     exclusion_list = [  # task specific, adapter, or no doc string
+        # these will be handled eventually
         "animatediff",  # adapter
         "controlnet",
         "controlnet_hunyuandit",  #: "hunyuandit_controlnet",
         "controlnet_xs",
+        "controlnetxs",
+        "controlnet_hunyuandit",
         "controlnet_sd3",
+        "pag",  #
         "stable_diffusion_3_controlnet",
+        "stable_diffusion_attend_and_excite",
+        "stable_diffusion_sag",  #
+        "t2i_adapter",
+        "ledits_pp",  # "leditspp_stable_diffusion",
+        "latent_consistency_models",  # "latent_consistency_text2img",
+        "unclip",
+        # these are uncommon afaik
         "dance_diffusion",  # no doc_string
         "dit",
         "ddim",
         "ddpm",
         "deprecated",
-        "controlnetxs",
-        "controlnet_hunyuandit",
         "latent_diffusion",  # no doc_string
-        "latent_consistency_models",  # "latent_consistency_text2img",
-        "ledits_pp",  # "leditspp_stable_diffusion",
         "marigold",  # specific processing routines
         "omnigen",  # tries to import torchvision
-        "pag",  #
         "paint_by_example",  # no docstring
         "pia",  # lora adapter
         "semantic_stable_diffusion",  # no_docstring
-        "stable_diffusion_attend_and_excite",
         "stable_diffusion_diffedit",
         "stable_diffusion_k_diffusion",  # tries to import k_diffusion
         "stable_diffusion_panorama",
-        "stable_diffusion_safe",
-        "stable_diffusion_sag",  #
-        "t2i_adapter",
+        "stable_diffusion_safe",  # impossibru
         "text_to_video_synthesis",
-        "unclip",
         "unidiffuser",
     ]
 
