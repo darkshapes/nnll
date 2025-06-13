@@ -6,7 +6,6 @@ gguf>=0.10.0
 hidiffusion>=0.1.10
 huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
 llama-cpp-python>=0.3.9
-mlx-lm>=0.25.2
 pillow>=11.2.1
 protobuf>=5.29.5
 psutil>=7.0.0
@@ -15,9 +14,6 @@ pydantic>=2.11.5
 rich>=14.0.0
 safetensors>=0.5.3
 structlog>=25.4.0
-torch
-torchaudio
-torchvision
 tqdm>=4.67.1
 transformers>=4.52.4
 
@@ -26,9 +22,6 @@ sentencepiece
 
 [:python_version >= "3.13"]
 sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python
-
-[:sys_platform == "darwin" and platform_machine == "arm64"]
-mflux>=0.2.1
 
 [:sys_platform == "linux" or sys_platform == "windows"]
 bitsandbytes>=0.46.0
@@ -54,7 +47,7 @@ torch
 torchvision
 torchaudio
 
-[cu128:sys_platform != "Darwin"]
+[cu128:sys_platform != "darwin"]
 sageattention
 
 [cu128:sys_platform == "Linux"]
@@ -73,24 +66,27 @@ pytest-trio>=0.8.0
 ruff>=0.11.12
 pytest-mock>=3.14.1
 
-[dev:sys_platform != "darwin"]
+[dev:sys_platform != "darwin" and python_version < "3.12"]
+nnll[cpu,cu126,rocm]
+
+[dev:sys_platform != "darwin" and python_version >= "3.12"]
 nnll[cpu,cu128,rocm]
 
 [dev:sys_platform == "darwin"]
-nnll[nightly]
+nnll[mps]
 
-[mflux]
-
-[mflux:sys_platform == "darwin" and platform_machine == "arm64"]
-mflux>=0.2.1
-
-[nightly]
+[mps]
 torch
 torchvision
 torchaudio
+numpy<=2.3
 
-[nightly:sys_platform == "darwin" and platform_machine == "arm64"]
+[mps:python_version < "3.13"]
+misaki>=0.8.2
+
+[mps:sys_platform == "darwin" and platform_machine == "arm64"]
 mflux>=0.2.1
+mlx-lm<=0.24.1
 
 [rocm]
 torch
@@ -98,7 +94,7 @@ torchvision
 torchaudio
 pytorch-triton-rocm
 
-[rocm:sys_platform != "Darwin"]
+[rocm:sys_platform != "darwin"]
 sageattention
 
 [rocm:sys_platform == "Linux"]
