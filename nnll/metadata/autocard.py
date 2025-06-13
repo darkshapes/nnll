@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from nnll.integrity import ensure_path
 from nnll.metadata.helpers import ask_multi_input
-from nnll.monitor.file import nfo
+from nnll.monitor.file import nfo, dbug
 
 
 def index_model_card(repo_path) -> Optional[Dict[str, Any]]:
@@ -17,14 +17,20 @@ def index_model_card(repo_path) -> Optional[Dict[str, Any]]:
     :param repo_path: Path to repo for modelcard
     :return: The model card tags as dictionary
     """
+    from requests import HTTPError
     from huggingface_hub import repocard, constants
+    from huggingface_hub.errors import EntryNotFoundError, LocalEntryNotFoundError
 
     constants.HF_HUB_OFFLINE = 0
     constants.HF_XET_HIGH_PERFORMANCE = 1
     constants.HF_HUB_ENABLE_HF_TRANSFER = 1
+    try:
+        model_metadata = repocard.RepoCard.load(repo_path).data
+        nfo(f"Metadata acquired from {repo_path}")
 
-    model_metadata = repocard.RepoCard.load(repo_path).data
-    nfo(f"Metadata acquired from {repo_path}")
+    except (EntryNotFoundError, LocalEntryNotFoundError, HTTPError, ValueError) as error_log:
+        dbug(error_log)
+        return None
     return model_metadata
 
 

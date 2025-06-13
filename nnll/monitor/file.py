@@ -162,7 +162,7 @@ def nfo(*args, **kwargs) -> None:  # pylint:disable=unused-argument
 def dbug(*args, **kwargs) -> None:
     """Info log output"""
     try:
-        DBUG_OBJ.debug(f"{args, kwargs}", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=EXC_INFO)
+        DBUG_OBJ.debug("%s", f"{args, kwargs}", type_ain=type(args), ain=args, type_kin=type(kwargs), kin=kwargs, stack_info=True, exc_info=EXC_INFO)
     except ImportError:
         pass
 
