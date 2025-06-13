@@ -44,8 +44,6 @@ dependencies = [
     "hidiffusion>=0.1.10",
     "huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3",
     "llama-cpp-python>=0.3.9",
-    "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
-    "mlx-lm>=0.25.2",
     "pillow>=11.2.1",
     "protobuf>=5.29.5",
     "psutil>=7.0.0",
@@ -56,9 +54,6 @@ dependencies = [
     "sentencepiece @ git+https://github.com/google/sentencepiece.git#subdirectory=python ; python_version >= '3.13' ",
     "sentencepiece ; python_version < '3.13' ",
     "structlog>=25.4.0",
-    "torch",
-    "torchaudio",
-    "torchvision",
     "tqdm>=4.67.1",
     "transformers>=4.52.4",
 ]
@@ -72,23 +67,24 @@ dev = [
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
     "ruff>=0.11.12",
-    "nnll[nightly]; sys_platform == 'darwin'",
+    "nnll[mps]; sys_platform == 'darwin'",
     "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
     "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
     "pytest-mock>=3.14.1",
 ]
 
 [project.optional-dependencies]
-mflux = [
-    "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
-]
+
 cpu = ["torch", "torchvision", "torchaudio"]
 
-nightly = [
+mps = [
     "torch",
     "torchvision",
     "torchaudio",
+    "numpy<=2.3",
     "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
+    "mlx-lm<=0.24.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
+    "misaki>=0.8.2 ; python_version < '3.13'",
 ]
 
 cu126 = [
@@ -106,7 +102,7 @@ cu128 = [
     "triton ; sys_platform == 'Linux'",
     "triton-windows ; sys_platform == 'win32'",
     "flash_attn ; sys_platform == 'Linux'",
-    "sageattention; sys_platform != 'Darwin'",
+    "sageattention; sys_platform != 'darwin'",
 ]
 
 rocm = [
@@ -114,7 +110,7 @@ rocm = [
     "torchvision",
     "torchaudio",
     "pytorch-triton-rocm",
-    "sageattention; sys_platform != 'Darwin'",
+    "sageattention; sys_platform != 'darwin'",
     "flash_attn ; sys_platform == 'Linux'",
 ]
 dev = [
@@ -124,7 +120,7 @@ dev = [
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
     "ruff>=0.11.12",
-    "nnll[nightly]; sys_platform == 'darwin'",
+    "nnll[mps]; sys_platform == 'darwin'",
     "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
     "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
     "pytest-mock>=3.14.1",
@@ -153,7 +149,7 @@ prerelease = "allow"
 conflicts = [
     [
         { extra = "cpu" },
-        { extra = "nightly" },
+        { extra = "mps" },
         { extra = "cu126" },
         { extra = "cu128" },
         { extra = "rocm" },
@@ -168,7 +164,7 @@ dev-dependencies = [
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
     "ruff>=0.11.12",
-    "nnll[nightly]; sys_platform == 'darwin'",
+    "nnll[mps]; sys_platform == 'darwin'",
     "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
     "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
     "pytest-mock>=3.14.1",
@@ -187,6 +183,7 @@ name     = "pytorch-nightly"
 url      = "https://download.pytorch.org/whl/nightly/cpu"
 explicit = true
 
+
 [[tool.uv.index]]
 name     = "pytorch-cu126"
 url      = "https://download.pytorch.org/whl/cu126"
@@ -203,22 +200,22 @@ url      = "https://download.pytorch.org/whl/rocm6.3"
 explicit = true
 
 torch = [
-    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'Darwin'" },
-    { index = "pytorch-nightly", extra = "nightly", marker = "sys_platform == 'Darwin'" },
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 torchvision = [
-    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'Darwin'" },
-    { index = "pytorch-nightly", extra = "nightly", marker = "sys_platform == 'Darwin'" },
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 torchaudio = [
-    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'Darwin'" },
-    { index = "pytorch-nightly", extra = "nightly", marker = "sys_platform == 'Darwin'" },
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
