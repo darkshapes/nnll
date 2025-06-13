@@ -139,8 +139,9 @@ def first_available(processor: str = None, assign: bool = True, clean: bool = Fa
 
     if init:
         tensor = random_tensor_from_gpu(device=processor)
+        if tensor:
+            del tensor
         tensor = None
-        del tensor
 
     nfo(f"highest available torch device: {processor}")
     return torch.device(processor) if assign else processor
