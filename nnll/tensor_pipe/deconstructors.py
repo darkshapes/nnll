@@ -4,7 +4,6 @@
 """類發現和拆卸"""
 
 from typing import Callable, Generator, Tuple, List, Dict
-from nnll.download import hub_cache
 from nnll.monitor.file import nfo, dbug
 from importlib import import_module
 
