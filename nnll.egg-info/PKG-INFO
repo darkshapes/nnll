@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev570+g641c3a4.d20250611
+Version: 0.1.dev573+g5b756bb.d20250613
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -36,7 +36,8 @@ Requires-Dist: pydantic-core>=2.33.2
 Requires-Dist: pydantic>=2.11.5
 Requires-Dist: rich>=14.0.0
 Requires-Dist: safetensors>=0.5.3
-Requires-Dist: sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python
+Requires-Dist: sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python ; python_version >= "3.13"
+Requires-Dist: sentencepiece; python_version < "3.13"
 Requires-Dist: structlog>=25.4.0
 Requires-Dist: torch
 Requires-Dist: torchaudio
@@ -82,7 +83,9 @@ Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
 Requires-Dist: ruff>=0.11.12; extra == "dev"
-Requires-Dist: nnll[nightly]; extra == "dev"
+Requires-Dist: nnll[nightly]; sys_platform == "darwin" and extra == "dev"
+Requires-Dist: nnll[cpu,cu128,rocm]; sys_platform != "darwin" and extra == "dev"
+Requires-Dist: pytest-mock>=3.14.1; extra == "dev"
 Dynamic: license-file
 
 <div align="center">
