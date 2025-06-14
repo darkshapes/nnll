@@ -299,18 +299,18 @@ def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
 # PkgType.BITSANDBYTES
 # PkgType.TORCH
 
-# check = {LibType.HUB}
+# check = {CueType.HUB}
 
 
 # def filter_dependencies(model_path: str, mir_db: Callable = MIRDatabase()):
 #     mir_tag = mir_db.find_path(field="repo", target=model_path)
 
 
-#     if "".join(mir_tag).find("flux") > 0 and LibType.check_type("MFLUX") and "MPS" in ChipType._show_ready("mps"):
+#     if "".join(mir_tag).find("flux") > 0 and CueType.check_type("MFLUX") and "MPS" in ChipType._show_ready("mps"):
 #         nfo("HAS MFLUX")
 #     # pylint:disable=no-member
 #     return mir_tag
-#     # if LibType.HUB:
+#     # if CueType.HUB:
 
 
 #     from huggingface_hub import hf_hub_download
