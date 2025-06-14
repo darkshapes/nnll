@@ -39,8 +39,13 @@ def download_hub_file(repo_id: str, source: str = "huggingface", **kwargs) -> Tu
     :return: A tuple containing the default download folder and folder contents
     """
 
+    from nnll.monitor.file import dbuq
+
     if source == "huggingface":
-        from huggingface_hub import hf_hub_download  # pylint:disable=import-error
+        from huggingface_hub import hf_hub_download, constants  # pylint:disable=import-error
+
+        constants.HF_HUB_OFFLINE = 0
+        os.environ["HF_HUB_OFFLINE"] = "0"
 
         downloader = hf_hub_download
     elif source == "kaggle":
@@ -61,7 +66,13 @@ def download_hub_file(repo_id: str, source: str = "huggingface", **kwargs) -> Tu
     if source not in download_functions:
         raise ValueError(f"Unsupported source: {source}")
 
-    download_functions[source](**kwargs)
+    try:
+        download_functions[source](**kwargs)
+    except TimeoutError as error_log:
+        if source == "huggingface":
+            constants.HF_HUB_OFFLINE = 1
+            os.environ["HF_HUB_OFFLINE"] = "1"
+        dbuq(error_log)
     if not kwargs.get("local_dir"):
         repo_id = kwargs.get("repo_id")
         download_folder = "models--" + repo_id.replace("/", "--")
