@@ -73,6 +73,44 @@ dev = [
     "pytest-mock>=3.14.1",
 ]
 
+cpu = ["torch", "torchvision", "torchaudio"]
+
+mps = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "numpy<=2.3",
+    "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
+    "mlx-lm<=0.24.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
+    "misaki>=0.8.2 ; python_version < '3.13'",
+]
+
+cu126 = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "triton ; sys_platform == 'Linux'",
+    "triton-windows ; sys_platform == 'win32'",
+]
+
+cu128 = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "triton ; sys_platform == 'Linux'",
+    "triton-windows ; sys_platform == 'win32'",
+    "flash_attn ; sys_platform == 'Linux'",
+    "sageattention; sys_platform != 'darwin'",
+]
+
+rocm = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "pytorch-triton-rocm",
+    "sageattention; sys_platform != 'darwin'",
+    "flash_attn ; sys_platform == 'Linux'",
+]
 [project.optional-dependencies]
 
 cpu = ["torch", "torchvision", "torchaudio"]

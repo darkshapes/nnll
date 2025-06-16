@@ -76,7 +76,7 @@ def generate_model_card(conditions: tuple, full_tags: dict) -> None:
         f"""
 
 # {conditions["model_name"]}
-{conditions["model_name"]} {blurb}
+{conditions["model_name"]} {next(iter(blurb), "")}
 
 > [!WARNING]
 > MLX is a framework for METAL graphics supported by Apple computers with ARM M-series processors (M1/M2/M3/M4)
@@ -94,8 +94,7 @@ def generate_model_card(conditions: tuple, full_tags: dict) -> None:
 > ```
     """
     ]
-    model_card_elements = tag_block + model_field + content + tag_block + link_block + code_block + model_field + content + code_block
-    model_card_elements.extend(mlx_blurb)
+    model_card_elements = tag_block + model_field + content + tag_block + link_block + code_block + model_field + content + code_block + mlx_blurb
     model_card = "\n".join(model_card_elements)
     validate = input(f"""Generated_card:\n\n{model_card}\n\n  saving to {conditions["folder_path_named"]} Correct? (y and enter to submit, any other entry and enter to quit) """)
 

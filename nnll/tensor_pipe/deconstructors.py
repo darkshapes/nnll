@@ -17,7 +17,7 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
 
     pipe_prefix = [">>> adapter = ", ">>> pipe_prior = ", ">>> pipe = ", ">>> pipeline = ", ">>> blip_diffusion_pipe = ", ">>> gen_pipe = ", ">>> prior_pipe = "]
     repo_prefixes = ["repo_id", "model_ckpt", "model_id_or_path", "model_id", "repo"]
-    pretrained_prefix = [".from_pretrained("]
+    pretrained_prefix = [".from_pretrained(", ".from_single_file("]
     staged_prefix = ".from_pretrain("
     staged = None
     staged_class = None
@@ -30,7 +30,7 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
             staged = pipe_doc
         elif pipe_doc and not staged:
             break
-    for pretrained in pretrained_prefix:  # its a loop to add to later
+    for pretrained in pretrained_prefix:
         pipe_class = pipe_doc.partition(pretrained)[0]  # get the segment preceding the class' method call
         repo_path = pipe_doc.partition(pretrained)  # break segment at method
         repo_path = repo_path[2].partition(")")[0]  # segment after is either a repo path or a reference to it, capture the part before the parenthesis
