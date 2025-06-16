@@ -13,8 +13,6 @@ def convert_repo(conditions: tuple) -> str:
     constants.HF_XET_HIGH_PERFORMANCE = 1
     constants.HF_HUB_ENABLE_HF_TRANSFER = 1
 
-    ensure_path(conditions["folder_path_named"])
-
     if conditions["library"] == "gguf":
         folder_path_named = snapshot_download(repo_id=conditions["repo"], local_dir=conditions["folder_path_named"])
         command = ["convert_hf_to_gguf.py", folder_path_named]
