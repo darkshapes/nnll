@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev586+g9f30b18.d20250616
+Version: 0.1.dev587+g6fdb7ab.d20250616
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -84,86 +84,3 @@ Requires-Dist: nnll[cpu,cu128,rocm]; (sys_platform != "darwin" and python_versio
 Requires-Dist: nnll[cpu,cu126,rocm]; (sys_platform != "darwin" and python_version < "3.12") and extra == "dev"
 Requires-Dist: pytest-mock>=3.14.1; extra == "dev"
 Dynamic: license-file
-
----
-name: Pleias-Nano-MLX
-base_model: Pleias-nano-1.2b-Preview
-license: apache-2.0
-pipeline_tag: text-generation
-tasks :
- - text-generation
- - text2text-generation
- - retrieval-augmented-generation
-language :
- - en
- - fr
- - de
- - es
- - it
- - nl
- - la
- - pt
-datasets: PleIAs/common_corpus
-funded_by :
- - Mozilla Foundation
- - TractoAI
-hardware_type: ISEG GPU
-cloud_provider :
- - TractoAI
- - Nebius AI
-co2_emitted: 4 tons CO2eq
-get_started_code: uvx --from mlx-lm mlx_lm.generate --model  --model darkshapes/Pleias-Nano-MLX --prompt 'Test Prompt' --prompt 'Test prompt'
----
-> [!IMPORTANT]
-> Original Model Link : [https://huggingface.co/PleIAs/Pleias-Nano](https://huggingface.co/PleIAs/Pleias-Nano)
-> 
-
-```
-name: Pleias-Nano-MLX
-base_model: Pleias-nano-1.2b-Preview
-license: apache-2.0
-pipeline_tag: text-generation
-tasks :
- - text-generation
- - text2text-generation
- - retrieval-augmented-generation
-language :
- - en
- - fr
- - de
- - es
- - it
- - nl
- - la
- - pt
-datasets: PleIAs/common_corpus
-funded_by :
- - Mozilla Foundation
- - TractoAI
-hardware_type: ISEG GPU
-cloud_provider :
- - TractoAI
- - Nebius AI
-co2_emitted: 4 tons CO2eq
-get_started_code: uvx --from mlx-lm mlx_lm.generate --model  --model darkshapes/Pleias-Nano-MLX --prompt 'Test Prompt' --prompt 'Test prompt'
-```
-
-
-# Pleias-Nano-MLX
-Pleias-Nano-MLX ['is a language model specialized for Retrieval-Augmented-Generation tasks and trained exclusively on ']
-
-> [!WARNING]
-> MLX is a framework for METAL graphics supported by Apple computers with ARM M-series processors (M1/M2/M3/M4)
-
-> [!NOTE]
-> Generation using uv https://docs.astral.sh/uv/**:
-> ```
-> uvx --from mlx-lm mlx_lm.generate --model  --model darkshapes/Pleias-Nano-MLX --prompt 'Test Prompt'
->```
-
-> [!NOTE]
-> Generation using pip:
-> ```
-> pipx --from mlx-lm mlx_lm.generate --model  --model darkshapes/Pleias-Nano-MLX --prompt 'Test Prompt'
-> ```
-    

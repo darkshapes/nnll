@@ -66,10 +66,7 @@ def ask_multi_input(
     input_store = []
     for prompt in [polite_msg, preposition]:
         prompt = prompt.strip()
-    user_input = input(f"{polite_msg} {preposition} {tag}: ")
-    if not user_input and not required:
-        return None
-    input_store.append(user_input)
+    user_input = None
     while True:
         if user_input and input_store:
             metadata = f"{more} {preposition}"
@@ -78,3 +75,8 @@ def ask_multi_input(
                 input_store.append(user_input)
             else:
                 return input_store
+        elif not user_input and not required:
+            return None
+        else:
+            user_input = input(f"{polite_msg} {preposition} {tag}: ")
+            input_store.append(user_input)
