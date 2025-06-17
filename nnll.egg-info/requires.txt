@@ -1,7 +1,6 @@
 accelerate>=1.7.0
 aiofiles>=24.1.0
 aiohttp>=3.12.6
-diffusers>=0.33.1
 gguf>=0.10.0
 hidiffusion>=0.1.10
 huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
@@ -12,10 +11,11 @@ psutil>=7.0.0
 pydantic-core>=2.33.2
 pydantic>=2.11.5
 rich>=14.0.0
-safetensors>=0.5.3
 structlog>=25.4.0
 tqdm>=4.67.1
-transformers>=4.52.4
+transformers
+peft>=0.15.2
+diffusers
 
 [:python_version < "3.13"]
 sentencepiece

@@ -114,9 +114,11 @@ def autocard(conditions: tuple) -> None:  # pylint:disable=redefined-outer-name
         "pipeline_tag": None,
         "tasks": None,
         "language": None,
-        "datasets": None,
     }
     optional_tags = {
+        "license_link": None,
+        "datasets": None,
+        "paper_url": None,
         "funded_by": None,
         "hardware_type": None,
         "cloud_region": None,
