@@ -17,8 +17,8 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
 
     pipe_prefix = [">>> adapter = ", ">>> pipe_prior = ", ">>> pipe = ", ">>> pipeline = ", ">>> blip_diffusion_pipe = ", ">>> gen_pipe = ", ">>> prior_pipe = "]
     repo_prefixes = ["repo_id", "model_ckpt", "model_id_or_path", "model_id", "repo"]
-    pretrained_prefix = [".from_pretrained(", ".from_single_file("]
-    staged_prefix = ".from_pretrain("
+    class_method = [".from_pretrained(", ".from_single_file("]
+    staged_class_method = ".from_pretrain("
     staged = None
     staged_class = None
     staged_repo = None
@@ -30,26 +30,29 @@ def scrape_docs(doc_string: str) -> Tuple[str,]:
             staged = pipe_doc
         elif pipe_doc and not staged:
             break
-    for pretrained in pretrained_prefix:
-        pipe_class = pipe_doc.partition(pretrained)[0]  # get the segment preceding the class' method call
-        repo_path = pipe_doc.partition(pretrained)  # break segment at method
-        repo_path = repo_path[2].partition(")")[0]  # segment after is either a repo path or a reference to it, capture the part before the parenthesis
-        repo_path = repo_path.replace("...", "").strip()  # remove any ellipsis and empty space
-        repo_path = repo_path.partition('",')[0]  # partition at commas, repo is always the first argument
-        repo_path = repo_path.strip('"')  # strip remaining quotes
-        # * the star below could go here?
-        if staged:
-            staged_class = staged.partition(staged_prefix)[0]  # repeat with any secondary stages
-            staged_repo = staged.partition(staged_prefix)
-            staged_repo = staged_repo[2].partition(")")[0]
-            staged_repo = staged_repo.replace("...", "").strip()
-            staged_repo = staged_repo.partition('",')[0]
-            staged_repo = staged_repo.strip('"')
-        break
+    for method_name in class_method:
+        if method_name in pipe_doc:
+            pipe_class = pipe_doc.partition(method_name)[0]  # get the segment preceding the class' method call
+            repo_path = pipe_doc.partition(method_name)  # break segment at method
+            repo_path = repo_path[2].partition(")")[0]  # segment after is either a repo path or a reference to it, capture the part before the parenthesis
+            repo_path = repo_path.replace("...", "").strip()  # remove any ellipsis and empty space
+            repo_path = repo_path.partition('",')[0]  # partition at commas, repo is always the first argument
+            repo_path = repo_path.strip('"')  # strip remaining quotes
+            # * the star below could go here?
+            if staged:
+                staged_class = staged.partition(staged_class_method)[0]  # repeat with any secondary stages
+                staged_repo = staged.partition(staged_class_method)
+                staged_repo = staged_repo[2].partition(")")[0]
+                staged_repo = staged_repo.replace("...", "").strip()
+                staged_repo = staged_repo.partition('",')[0]
+                staged_repo = staged_repo.strip('"')
+            break
+        else:
+            continue
     for prefix in repo_prefixes:  # * this could move up
         if prefix in repo_path and not staged:  # if  don't have the repo path, but only a reference
-            prefix_assign = f"{prefix} = "  # find the variable assignment
-            repo_path = next(line.partition(prefix_assign)[2].split('",')[0] for line in doc_string.splitlines() if prefix_assign in line).strip('"')
+            repo_variable = f"{prefix} = "  # find the variable assignment
+            repo_path = next(line.partition(repo_variable)[2].split('",')[0] for line in doc_string.splitlines() if repo_variable in line).strip('"')
             break
     return pipe_class, repo_path, staged_class, staged_repo
 
@@ -67,6 +70,8 @@ def cut_docs() -> Generator:
         "cogvideo": "cogvideox",
         "cogview3": "cogview3plus",
         "deepfloyd_if": "if",
+        "cosmos": "cosmos2_text2image",  # search folder for all files containing 'EXAMPLE DOC STRING'
+        "visualcloze": "visualcloze_generation",
     }
 
     exclusion_list = [  # task specific, adapter, or no doc string

@@ -2,7 +2,6 @@
 .python-version
 .test.json
 LICENSE
-README.md
 _version.py
 pyproject.toml
 pytest.ini
