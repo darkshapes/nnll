@@ -178,8 +178,9 @@ def get_code_names(class_name: Optional[str] = None, diffusers: bool = False) ->
     return list(MAPPING_NAMES)
 
 
-def get_config_names(match_term: Optional[str] = None) -> List[str]:
-    """Produce all config classes within transformers package\n
+def get_config_with(match_term: Optional[str] = None) -> List[str]:
+    """Produce all relevant config classes within transformers package\n
+    :param match_term: Narrow the classes to only those with an exact key inside
     :return: A list of all Classes
     """
     model_data = stock_llm_data()
@@ -195,7 +196,7 @@ def get_config_names(match_term: Optional[str] = None) -> List[str]:
     return config_data
 
 
-def show_tasks(class_name: Optional[str] = None, code_name: Optional[str] = None) -> List[str]:
+def show_tasks_for(class_name: Optional[str] = None, code_name: Optional[str] = None) -> List[str]:
     """Return Diffusers/Transformers task pipes based on package-specific query\n
     :param class_name: To find task pipes from a Diffusers class pipe, defaults to None
     :param code_name: To find task pipes from a Transformers class pipe, defaults to None
@@ -232,7 +233,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
     folder_data.sort()
     for code_name in folder_data:
         if code_name and "__" not in code_name:
-            tasks = show_tasks(code_name=code_name)
+            tasks = show_tasks_for(code_name=code_name)
             if tasks:
                 task_pipe = next(iter(tasks))
                 if isinstance(task_pipe, tuple):
