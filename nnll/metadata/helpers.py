@@ -80,3 +80,9 @@ def ask_multi_input(
         else:
             user_input = input(f"{polite_msg} {preposition} {tag}: ")
             input_store.append(user_input)
+
+
+def prefix_inner_caps(text: str) -> str:
+    import re
+
+    return re.sub(r"(?<!^)([A-Z])(?!$)", r"_\1", text)
