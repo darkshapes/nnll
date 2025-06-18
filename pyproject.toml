@@ -56,6 +56,9 @@ dependencies = [
     "structlog>=25.4.0",
     "tqdm>=4.67.1",
     "transformers  @ git+https://github.com/huggingface/transformers",
+    "nnll[mps]; sys_platform == 'darwin'",
+    "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
+    "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
 ]
 
 
@@ -67,50 +70,9 @@ dev = [
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
     "ruff>=0.11.12",
-    "nnll[mps]; sys_platform == 'darwin'",
-    "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
-    "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
     "pytest-mock>=3.14.1",
 ]
 
-cpu = ["torch", "torchvision", "torchaudio"]
-
-mps = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "numpy<=2.3",
-    "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
-    "mlx-lm<=0.24.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
-    "misaki>=0.8.2 ; python_version < '3.13'",
-]
-
-cu126 = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "triton ; sys_platform == 'Linux'",
-    "triton-windows ; sys_platform == 'win32'",
-]
-
-cu128 = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "triton ; sys_platform == 'Linux'",
-    "triton-windows ; sys_platform == 'win32'",
-    "flash_attn ; sys_platform == 'Linux'",
-    "sageattention; sys_platform != 'darwin'",
-]
-
-rocm = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "pytorch-triton-rocm",
-    "sageattention; sys_platform != 'darwin'",
-    "flash_attn ; sys_platform == 'Linux'",
-]
 [project.optional-dependencies]
 
 cpu = ["torch", "torchvision", "torchaudio"]
@@ -151,18 +113,6 @@ rocm = [
     "sageattention; sys_platform != 'darwin'",
     "flash_attn ; sys_platform == 'Linux'",
 ]
-dev = [
-    "aioresponses>=0.7.8",
-    "pytest>=8.3.5",
-    "pytest-asyncio>=1.0.0",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
-    "ruff>=0.11.12",
-    "nnll[mps]; sys_platform == 'darwin'",
-    "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
-    "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
-    "pytest-mock>=3.14.1",
-]
 
 
 [project.urls]
@@ -195,18 +145,6 @@ conflicts = [
 
     ],
 ]
-dev-dependencies = [
-    "aioresponses>=0.7.8",
-    "pytest>=8.3.5",
-    "pytest-asyncio>=1.0.0",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
-    "ruff>=0.11.12",
-    "nnll[mps]; sys_platform == 'darwin'",
-    "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
-    "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
-    "pytest-mock>=3.14.1",
-]
 
 [tool.uv.pip]
 torch-backend = "auto"
@@ -238,25 +176,25 @@ url      = "https://download.pytorch.org/whl/rocm6.3"
 explicit = true
 
 torch = [
-    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
+    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
+    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
+    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
+    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 torchvision = [
-    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
+    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
+    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
+    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
+    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 torchaudio = [
-    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
+    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
+    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
+    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
+    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
 ]
 
 [tool.uv.sources]

@@ -23,6 +23,15 @@ sentencepiece
 [:python_version >= "3.13"]
 sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python
 
+[:sys_platform != "darwin" and python_version < "3.12"]
+nnll[cpu,cu126,rocm]
+
+[:sys_platform != "darwin" and python_version >= "3.12"]
+nnll[cpu,cu128,rocm]
+
+[:sys_platform == "darwin"]
+nnll[mps]
+
 [:sys_platform == "linux" or sys_platform == "windows"]
 bitsandbytes>=0.46.0
 
@@ -56,24 +65,6 @@ flash_attn
 
 [cu128:sys_platform == "win32"]
 triton-windows
-
-[dev]
-aioresponses>=0.7.8
-pytest>=8.3.5
-pytest-asyncio>=1.0.0
-pytest-tornasync>=0.6.0.post2
-pytest-trio>=0.8.0
-ruff>=0.11.12
-pytest-mock>=3.14.1
-
-[dev:sys_platform != "darwin" and python_version < "3.12"]
-nnll[cpu,cu126,rocm]
-
-[dev:sys_platform != "darwin" and python_version >= "3.12"]
-nnll[cpu,cu128,rocm]
-
-[dev:sys_platform == "darwin"]
-nnll[mps]
 
 [mps]
 torch

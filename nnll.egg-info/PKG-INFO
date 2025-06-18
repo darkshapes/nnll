@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev591+g4370f05.d20250618
+Version: 0.1.dev594+g3c03923.d20250618
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -39,6 +39,9 @@ Requires-Dist: sentencepiece@ git+https://github.com/google/sentencepiece.git#su
 Requires-Dist: structlog>=25.4.0
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: transformers@ git+https://github.com/huggingface/transformers
+Requires-Dist: nnll[mps]; sys_platform == "darwin"
+Requires-Dist: nnll[cpu,cu128,rocm]; sys_platform != "darwin" and python_version >= "3.12"
+Requires-Dist: nnll[cpu,cu126,rocm]; sys_platform != "darwin" and python_version < "3.12"
 Provides-Extra: cpu
 Requires-Dist: torch; extra == "cpu"
 Requires-Dist: torchvision; extra == "cpu"
@@ -72,17 +75,6 @@ Requires-Dist: torchaudio; extra == "rocm"
 Requires-Dist: pytorch-triton-rocm; extra == "rocm"
 Requires-Dist: sageattention; sys_platform != "darwin" and extra == "rocm"
 Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "rocm"
-Provides-Extra: dev
-Requires-Dist: aioresponses>=0.7.8; extra == "dev"
-Requires-Dist: pytest>=8.3.5; extra == "dev"
-Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
-Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
-Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
-Requires-Dist: ruff>=0.11.12; extra == "dev"
-Requires-Dist: nnll[mps]; sys_platform == "darwin" and extra == "dev"
-Requires-Dist: nnll[cpu,cu128,rocm]; (sys_platform != "darwin" and python_version >= "3.12") and extra == "dev"
-Requires-Dist: nnll[cpu,cu126,rocm]; (sys_platform != "darwin" and python_version < "3.12") and extra == "dev"
-Requires-Dist: pytest-mock>=3.14.1; extra == "dev"
 Dynamic: license-file
 
 <div align="center">
