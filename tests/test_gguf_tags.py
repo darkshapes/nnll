@@ -44,7 +44,7 @@ class TestLoadMetadataGGUF(unittest.TestCase):
         real_file = os.path.join(folder_path_named, file_name)
         virtual_data_00 = self.model_tool.attempt_file_open(real_file)
         gguf_state_dict = os.path.join(local_folder, "test_gguf_tag_expected.json")
-        expected_output_part_1 = {"architecture_name": "llama", "general_name": ("llama",)}
+        expected_output_part_1 = {"architecture_name": "llama", "general_name": ("Planck-OpenLAiNN-10M",)}
         expected_output_attempt_2 = {"dtype": "float32", "name": "Planck-OpenLAiNN-10M"}
         expected_output_part_2 = read_json_file(gguf_state_dict)
         try:
