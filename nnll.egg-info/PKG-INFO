@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev594+g3c03923.d20250618
+Version: 0.1.dev596+g5f64ede.d20250618
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -75,6 +75,14 @@ Requires-Dist: torchaudio; extra == "rocm"
 Requires-Dist: pytorch-triton-rocm; extra == "rocm"
 Requires-Dist: sageattention; sys_platform != "darwin" and extra == "rocm"
 Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "rocm"
+Provides-Extra: dev
+Requires-Dist: aioresponses>=0.7.8; extra == "dev"
+Requires-Dist: pytest>=8.3.5; extra == "dev"
+Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
+Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
+Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
+Requires-Dist: ruff>=0.11.12; extra == "dev"
+Requires-Dist: pytest-mock>=3.14.1; extra == "dev"
 Dynamic: license-file
 
 <div align="center">
