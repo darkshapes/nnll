@@ -6,7 +6,7 @@
 from typing import Callable, Generator, Optional, Tuple, List, Dict
 
 from gguf import Union
-from nnll.monitor.file import nfo, dbug
+from nnll.monitor.file import nfo, dbug, dbuq
 from importlib import import_module
 
 
@@ -146,7 +146,11 @@ def root_class(module: Union[Callable, str], library: Optional[str] = None) -> D
 
     if library and isinstance(module, str):
         base_library = importlib.import_module(library)
-        module = getattr(base_library, module)
+        try:
+            module = getattr(base_library, module)
+        except AttributeError as error_log:
+            dbuq(error_log)
+            return None
     signature = inspect.signature(module.__init__)
     class_names = {}
     for folder, param in signature.parameters.items():
@@ -178,24 +182,6 @@ def get_code_names(class_name: Optional[str] = None, diffusers: bool = False) ->
     return list(MAPPING_NAMES)
 
 
-def get_config_with(match_term: Optional[str] = None) -> List[str]:
-    """Produce all relevant config classes within transformers package\n
-    :param match_term: Narrow the classes to only those with an exact key inside
-    :return: A list of all Classes
-    """
-    model_data = stock_llm_data()
-    config_data = []
-    for model_name in list(model_data.values()):
-        config_class = model_name["config"][-1]
-        if match_term:
-            segments = root_class(config_class, library="transformers")
-            if match_term in list(segments):
-                config_data.append(config_class)
-        else:
-            config_data.append(config_class)
-    return config_data
-
-
 def show_tasks_for(class_name: Optional[str] = None, code_name: Optional[str] = None) -> List[str]:
     """Return Diffusers/Transformers task pipes based on package-specific query\n
     :param class_name: To find task pipes from a Diffusers class pipe, defaults to None
@@ -224,7 +210,6 @@ def stock_llm_data() -> Dict[str, List[str]]:
     """
     transformer_data = {}
     exclude_list = ["DistilBertModel", "SeamlessM4TModel", "SeamlessM4Tv2Model"]
-    # from nnll.metadata.helpers import prefix_inner_caps
     import os
     import transformers
 
@@ -255,3 +240,21 @@ def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
         file_name="diffusion_pytorch_model.safetensors.index.json",
         local_dir=".tmp",
     )
+
+
+def get_config_names(from_match: Optional[str] = None) -> List[str]:
+    """Produce all relevant config classes within transformers package\n
+    :param from_match: Narrow the classes to only those with an exact key inside
+    :return: A list of all Classes
+    """
+    model_data = stock_llm_data()
+    config_data = []
+    for model_name in list(model_data.values()):
+        config_class = model_name["config"][-1]
+        if from_match:
+            segments = root_class(config_class, library="transformers")
+            if from_match in list(segments):
+                config_data.append(config_class)
+        else:
+            config_data.append(config_class)
+    return config_data
