@@ -135,18 +135,19 @@ def cut_docs() -> Generator:
                 # print(sub_classes)
 
 
-def root_class(init_module: Union[Callable, str], library: Optional[str] = None) -> Dict[str, List[str]]:
+def root_class(module: Union[Callable, str], library: Optional[str] = None) -> Dict[str, List[str]]:
     """Pick apart a Diffusers or Transformers pipeline class and find its constituent parts\n
-    :param init_module: Origin pipeline
-    :return: Dictionary of
+    :param module: Origin pipeline as a class or as a string
+    :param library: name of a library to import the class from, only if a string is provided
+    :return: Dictionary of sub-classes from the `module`
     """
     import importlib
     import inspect
 
-    if library and isinstance(init_module, str):
+    if library and isinstance(module, str):
         base_library = importlib.import_module(library)
-        init_module = getattr(base_library, init_module)
-    signature = inspect.signature(init_module.__init__)
+        module = getattr(base_library, module)
+    signature = inspect.signature(module.__init__)
     class_names = {}
     for folder, param in signature.parameters.items():
         if folder != "self":
@@ -177,6 +178,23 @@ def get_code_names(class_name: Optional[str] = None, diffusers: bool = False) ->
     return list(MAPPING_NAMES)
 
 
+def get_config_names(match_term: Optional[str] = None) -> List[str]:
+    """Produce all config classes within transformers package\n
+    :return: A list of all Classes
+    """
+    model_data = stock_llm_data()
+    config_data = []
+    for model_name in list(model_data.values()):
+        config_class = model_name["config"][-1]
+        if match_term:
+            segments = root_class(config_class, library="transformers")
+            if match_term in list(segments):
+                config_data.append(config_class)
+        else:
+            config_data.append(config_class)
+    return config_data
+
+
 def show_tasks(class_name: Optional[str] = None, code_name: Optional[str] = None) -> List[str]:
     """Return Diffusers/Transformers task pipes based on package-specific query\n
     :param class_name: To find task pipes from a Diffusers class pipe, defaults to None
@@ -198,22 +216,41 @@ def show_tasks(class_name: Optional[str] = None, code_name: Optional[str] = None
     return alt_tasks
 
 
-def collate_transformer_data():
+def stock_llm_data() -> Dict[str, List[str]]:
+    """Eat the 🤗Transformers classes as a treat, leaving any tasty subclass class morsels neatly arranged as a dictionary.\n
+    Nom.
+    :return: _description_
+    """
     transformer_data = {}
     exclude_list = ["DistilBertModel", "SeamlessM4TModel", "SeamlessM4Tv2Model"]
-    for i in get_code_names():
-        task_pipe = next(iter(show_tasks(code_name=i)))
-        if isinstance(task_pipe, tuple):
-            task_pipe = task_pipe[0]
-        if task_pipe not in exclude_list:
-            model_class = getattr(__import__("transformers"), task_pipe)
-            model_data = root_class(model_class)
-            if model_data and "inspect" not in model_data["config"] and "deprecated" not in model_data["config"]:
-                transformer_data.setdefault(model_class.__name__, list(root_class(model_data["config"][-1], library="transformers")))
+    # from nnll.metadata.helpers import prefix_inner_caps
+    import os
+    import transformers
+
+    models_folder = os.path.join(os.path.dirname(transformers.__file__), "models")
+    folder_data = os.listdir(models_folder)
+    folder_data.sort()
+    for code_name in folder_data:
+        if code_name and "__" not in code_name:
+            tasks = show_tasks(code_name=code_name)
+            if tasks:
+                task_pipe = next(iter(tasks))
+                if isinstance(task_pipe, tuple):
+                    task_pipe = task_pipe[0]
+                if task_pipe not in exclude_list:
+                    model_class = getattr(__import__("transformers"), task_pipe)
+                    model_data = root_class(model_class)
+                    if model_data and "inspect" not in model_data["config"] and "deprecated" not in model_data["config"]:
+                        transformer_data.setdefault(model_class, model_data)
     return transformer_data
 
 
 def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
     from nnll.download.hub_cache import download_hub_file
 
-    model_file = download_hub_file(repo_id=f"{repo_id}/tree/main/{arch}", source="huggingface", file_name="diffusion_pytorch_model.safetensors.index.json", local_dir=".tmp")
+    model_file = download_hub_file(
+        repo_id=f"{repo_id}/tree/main/{arch}",
+        source="huggingface",
+        file_name="diffusion_pytorch_model.safetensors.index.json",
+        local_dir=".tmp",
+    )

@@ -39,18 +39,19 @@ class TestLoadMetadataGGUF(unittest.TestCase):
     def test_metadata_from_gguf(self):
         local_folder = os.path.dirname(os.path.abspath(__file__))
         local_folder_test = os.path.join(local_folder, "test_folder")
-        file_name = "TinyStories-LLaMA2-20M-256h-4l-colab.Q2_K.gguf"
-        folder_path_named, _ = download_hub_file(repo_id="exdysa/tinystories-llama-20m-gguf", filename=file_name, local_dir=local_folder_test)
+        file_name = "Pico-OpenLAiNN-10M_Q4_0.gguf"
+        folder_path_named, _ = download_hub_file(repo_id="exdysa/Pico-OpenLAiNN-10M-GGUF", filename=file_name, local_dir=local_folder_test)
         real_file = os.path.join(folder_path_named, file_name)
         virtual_data_00 = self.model_tool.attempt_file_open(real_file)
         gguf_state_dict = os.path.join(local_folder, "test_gguf_tag_expected.json")
-        expected_output_part_1 = {"architecture_name": "llama", "general_name": ("TinyStories LLaMA2 20M 256h 4l Colab",)}
-        expected_output_attempt_2 = {"dtype": "float32","name": "TinyStories-LLaMA2"}
+        expected_output_part_1 = {"architecture_name": "llama", "general_name": ("Planck-OpenLAiNN-10M",)}
+        expected_output_attempt_2 = {"dtype": "float32", "name": "Planck-OpenLAiNN-10M"}
         expected_output_part_2 = read_json_file(gguf_state_dict)
         try:
-            assert virtual_data_00 == (expected_output_part_1, expected_output_part_2)
-        except AssertionError:
             assert virtual_data_00 == (expected_output_attempt_2)
+        except AssertionError:
+            assert virtual_data_00 == (expected_output_part_1, expected_output_part_2)
+
         try:
             shutil.rmtree(local_folder_test)
             shutil.rmtree(os.path.join(local_folder, ".cache"))
