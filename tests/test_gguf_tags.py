@@ -48,9 +48,10 @@ class TestLoadMetadataGGUF(unittest.TestCase):
         expected_output_attempt_2 = {"dtype": "float32", "name": "Planck-OpenLAiNN-10M"}
         expected_output_part_2 = read_json_file(gguf_state_dict)
         try:
-            assert virtual_data_00 == (expected_output_part_1, expected_output_part_2)
-        except AssertionError:
             assert virtual_data_00 == (expected_output_attempt_2)
+        except AssertionError:
+            assert virtual_data_00 == (expected_output_part_1, expected_output_part_2)
+
         try:
             shutil.rmtree(local_folder_test)
             shutil.rmtree(os.path.join(local_folder, ".cache"))
