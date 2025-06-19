@@ -1,7 +1,8 @@
 ### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
 ### <!-- // /*  d a r k s h a p e s */ -->
 
-from typing import List, Union
+from typing import List, Optional, Union, Callable
+from nnll.monitor.file import dbuq
 
 
 def slice_number(text: str) -> Union[int, float, str]:
@@ -86,3 +87,22 @@ def prefix_inner_caps(text: str) -> str:
     import re
 
     return re.sub(r"(?<!^)([A-Z])(?!$)", r"_\1", text)
+
+
+def make_callable(module: str, library_path: str) -> Optional[Callable]:
+    """Convert two strings into a callable function or property\n
+    :param module: The name of the module to import
+    :param library_path: Base package for the module
+    :return: The callable attribute or property
+    """
+    import importlib
+
+    module = module.strip()
+    library = library_path.strip()
+    base_library = importlib.import_module(library, module)
+    try:
+        module = getattr(base_library, module)
+        return module
+    except AttributeError as error_log:
+        dbuq(error_log)
+        return base_library
