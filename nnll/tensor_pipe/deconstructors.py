@@ -165,25 +165,6 @@ def root_class(module: Union[Callable, str], library: Optional[str] = None) -> D
     return class_names
 
 
-def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
-    """Retrieve all compatible pipe forms\n
-    :param pipe_class: Origin pipe
-    :param pkg_name: Dependency package
-    :return: A dictionary of pipelines
-    """
-    if pkg_name == "diffusers":
-        folder = ".pipelines."
-    else:
-        folder = ".models"
-    addons = show_addons_for(pipe_class, pkg_name)
-    code_name = get_code_names(pipe_class, library=pkg_name)
-    full_import_path = pkg_name + folder + code_name
-    pkg_folder = make_callable(pkg_name, full_import_path)
-    pkg_imports = pkg_folder._import_structure
-    related_pipes = pkg_imports | addons
-    return related_pipes
-
-
 def get_code_names(class_name: Optional[Union[str, Callable]] = None, library: Optional[str] = "transformers") -> Union[List[str], str]:
     """Reveal code names for class names from Diffusers or Transformers\n
     :param class_name: To return only one class, defaults to None
@@ -239,18 +220,18 @@ def stock_llm_data() -> Dict[str, List[str]]:
     return transformer_data
 
 
-def get_config_names(from_match: Optional[str] = None) -> List[str]:
-    """Produce all relevant config classes within transformers package\n
+def find_config_classes(key_filter: Optional[str] = None) -> List[str]:
+    """Show all config classes transformers package\n
     :param from_match: Narrow the classes to only those with an exact key inside
     :return: A list of all Classes"""
 
-    model_data = stock_llm_data()
+    transformers_data = stock_llm_data()
     config_data = []
-    for model_name in list(model_data.values()):
-        config_class = model_name["config"][-1]
-        if from_match:
+    for model_path in list(transformers_data.values()):
+        config_class = model_path["config"][-1]
+        if key_filter:
             segments = root_class(config_class, library="transformers")
-            if from_match in list(segments):
+            if key_filter in list(segments):
                 config_data.append(config_class)
         else:
             config_data.append(config_class)
@@ -297,6 +278,29 @@ def show_tasks_for(class_name: Optional[str] = None, code_name: Optional[str] = 
 
         alt_tasks = _generate_supported_model_class_names(code_name)
     return alt_tasks
+
+
+def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
+    """Retrieve all compatible pipe forms\n
+    :param pipe_class: Origin pipe
+    :param pkg_name: Dependency package
+    :return: A dictionary of pipelines"""
+
+    auto_tasks = {}
+    addons = []
+    addons = show_addons_for(pipe_class, pkg_name)
+    code_name = get_code_names(pipe_class, library=pkg_name)
+    code_name_py = code_name.replace("-", "_")
+    if pkg_name == "diffusers":
+        folder = ".pipelines"  #
+        auto_tasks = {idx + len(addons): x[y].__name__ for idx, (x, y) in enumerate((x, y) for x in make_callable("SUPPORTED_TASKS_MAPPINGS", "diffusers.pipelines.auto_pipeline") for y in x if code_name in y)}
+    else:
+        folder = ".models"
+    pkg_folder = make_callable(code_name_py, pkg_name + folder)
+    pkg_imports = {idx + len(addons) + len(auto_tasks): value for idx, value in enumerate(pkg_folder._import_structure.values())}
+
+    related_pipes = pkg_imports | addons | auto_tasks
+    return related_pipes
 
 
 def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
