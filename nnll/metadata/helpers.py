@@ -89,7 +89,7 @@ def prefix_inner_caps(text: str) -> str:
     return re.sub(r"(?<!^)([A-Z])(?!$)", r"_\1", text)
 
 
-def make_callable(module: str, library_path: str) -> Optional[Callable]:
+def make_callable(module_name: str, pkg_name_or_abs_path: str) -> Optional[Callable]:
     """Convert two strings into a callable function or property\n
     :param module: The name of the module to import
     :param library_path: Base package for the module
@@ -97,8 +97,8 @@ def make_callable(module: str, library_path: str) -> Optional[Callable]:
     """
     import importlib
 
-    module = module.strip()
-    library = library_path.strip()
+    module = module_name.strip()
+    library = pkg_name_or_abs_path.strip()
     base_library = importlib.import_module(library, module)
     try:
         module = getattr(base_library, module)

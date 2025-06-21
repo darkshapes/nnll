@@ -76,7 +76,7 @@ def cut_docs() -> Generator:
         "visualcloze": "visualcloze_generation",
     }
 
-    exclusion_list = [  # task specific, adapter, or no doc string
+    exclusion_list = [  # task specific, adapter, or no doc string. all can be be gathered by other means
         # these will be handled eventually
         "animatediff",  # adapter
         "controlnet",
@@ -238,24 +238,24 @@ def find_config_classes(key_filter: Optional[str] = None) -> List[str]:
     return config_data
 
 
-def show_addons_for(module: Union[Callable, str], library: Optional[str] = None) -> Optional[Dict[str, List[str]]]:
+def show_addons_for(model_class: Union[Callable, str], pkg_name: Optional[str] = None, offset: int = 0) -> Optional[Dict[str, List[str]]]:
     """Strips <class> tags from module's base classes and extracts inherited class members.\n
     If `module` is a string, it requires the `library` argument to convert it into a callable.\n
     :param module: A module or string representing a module.
     :param library: Library name required if `module` is a string. Defaults to None.
     :returns: Mapping indices to class path segments, or None if invalid input."""
 
-    if isinstance(module, str):
-        if not library:
+    if isinstance(model_class, str):
+        if not pkg_name:
             nfo("Provide a library type argument to process strings")
             return None
-        module = make_callable(module, library)
-    signature = module.__bases__
+        model_class = make_callable(model_class, pkg_name)
+    signature = model_class.__bases__
     class_names = {}
     for index, class_annotation in enumerate(signature):
         tag_stripped = str(class_annotation)[8:-2]
         module_segments = tag_stripped.split(".")
-        class_names.setdefault(index, module_segments)
+        class_names.setdefault(index + offset, module_segments)
     return class_names
 
 
@@ -268,16 +268,29 @@ def show_tasks_for(class_name: Optional[str] = None, code_name: Optional[str] = 
     if class_name:
         from diffusers.pipelines.auto_pipeline import SUPPORTED_TASKS_MAPPINGS, _get_task_class
 
-        alt_tasks = []
-        for task_map in SUPPORTED_TASKS_MAPPINGS:
+        alt_tasks = {}
+        for idx, task_map in enumerate(SUPPORTED_TASKS_MAPPINGS):
             task_class = _get_task_class(task_map, class_name, False)
             if task_class:
-                alt_tasks.append(task_class.__name__)
+                alt_tasks.setdefault(len(alt_tasks), task_class.__name__)
+            code_name = get_code_names(class_name, library="diffusers")
+            for model_code, pipe_class_obj in task_map.items():
+                if code_name in model_code:
+                    alt_tasks.setdefault(len(alt_tasks), pipe_class_obj.__name__)
     elif code_name:
         from transformers.utils.fx import _generate_supported_model_class_names
 
-        alt_tasks = _generate_supported_model_class_names(code_name)
+        model_class_names = {*_generate_supported_model_class_names(code_name)}
+        alt_tasks = {idx: model for idx, model in enumerate(model_class_names)}
     return alt_tasks
+
+
+def class_parent(pkg_name: str, folder_name: str):
+    if pkg_name == "diffusers":
+        folder_path = "pipelines"
+    else:
+        folder_path = "models"
+    return [pkg_name, folder_path, folder_name]
 
 
 def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
@@ -286,29 +299,29 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     :param pkg_name: Dependency package
     :return: A dictionary of pipelines"""
 
-    auto_tasks = {}
-    addons = []
-    addons = show_addons_for(pipe_class, pkg_name)
+    pkg_imports = {}
     code_name = get_code_names(pipe_class, library=pkg_name)
-    code_name_py = code_name.replace("-", "_")
+    auto_tasks = show_tasks_for(class_name=pipe_class if pkg_name == "diffusers" else None, code_name=code_name)
+    addons = show_addons_for(model_class=pipe_class, pkg_name=pkg_name, offset=len(auto_tasks))
+    folder_name = code_name.replace("-", "_")
+    parent_folder = class_parent(pkg_name, folder_name)
     if pkg_name == "diffusers":
-        folder = ".pipelines"  #
-        auto_tasks = {idx + len(addons): x[y].__name__ for idx, (x, y) in enumerate((x, y) for x in make_callable("SUPPORTED_TASKS_MAPPINGS", "diffusers.pipelines.auto_pipeline") for y in x if code_name in y)}
+        pkg_folder = make_callable(parent_folder[0], ".".join(parent_folder))
     else:
-        folder = ".models"
-    pkg_folder = make_callable(code_name_py, pkg_name + folder)
-    pkg_imports = {idx + len(addons) + len(auto_tasks): value for idx, value in enumerate(pkg_folder._import_structure.values())}
-
+        pkg_folder = make_callable("__init__", ".".join(parent_folder[:-1]))
+    if hasattr(pkg_folder, "_import_structure"):
+        for idx, value in enumerate(pkg_folder._import_structure.values()):
+            pkg_imports.setdefault(idx + len(addons) + len(auto_tasks), value)
     related_pipes = pkg_imports | addons | auto_tasks
     return related_pipes
 
 
-def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
-    from nnll.download.hub_cache import download_hub_file
+# def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:
+#     from nnll.download.hub_cache import download_hub_file
 
-    model_file = download_hub_file(
-        repo_id=f"{repo_id}/tree/main/{arch}",
-        source="huggingface",
-        file_name="diffusion_pytorch_model.safetensors.index.json",
-        local_dir=".tmp",
-    )
+#     model_file = download_hub_file(
+#         repo_id=f"{repo_id}/tree/main/{arch}",
+#         source="huggingface",
+#         file_name="diffusion_pytorch_model.safetensors.index.json",
+#         local_dir=".tmp",
+#     )
