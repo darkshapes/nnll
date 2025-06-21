@@ -8,7 +8,7 @@
 from importlib import import_module
 from typing import Callable, Dict, Generator, List, Optional, Tuple, Union
 from nnll.metadata.helpers import make_callable
-from nnll.monitor.file import dbug, nfo
+from nnll.monitor.file import dbuq, nfo, dbug
 
 
 def scrape_docs(doc_string: str) -> Tuple[str,]:
@@ -213,6 +213,8 @@ def stock_llm_data() -> Dict[str, List[str]]:
                 if isinstance(task_pipe, tuple):
                     task_pipe = task_pipe[0]
                 if task_pipe not in exclude_list:
+                    nfo(code_name)
+                    nfo(task_pipe)
                     model_class = getattr(__import__("transformers"), task_pipe)
                     model_data = root_class(model_class)
                     if model_data and "inspect" not in model_data["config"] and "deprecated" not in model_data["config"]:
@@ -251,37 +253,36 @@ def show_addons_for(model_class: Union[Callable, str], pkg_name: Optional[str] =
             return None
         model_class = make_callable(model_class, pkg_name)
     signature = model_class.__bases__
-    class_names = {}
+    class_names = []
     for index, class_annotation in enumerate(signature):
         tag_stripped = str(class_annotation)[8:-2]
         module_segments = tag_stripped.split(".")
-        class_names.setdefault(index + offset, module_segments)
+        class_names.append(module_segments)
     return class_names
 
 
-def show_tasks_for(class_name: Optional[str] = None, code_name: Optional[str] = None) -> List[str]:
+def show_tasks_for(code_name: str, class_name: Optional[str] = None) -> List[str]:
     """Return Diffusers/Transformers task pipes based on package-specific query\n
     :param class_name: To find task pipes from a Diffusers class pipe, defaults to None
     :param code_name: To find task pipes from a Transformers class pipe, defaults to None
-    :return: _description_"""
+    :return: A list of alternate class pipelines derived from the specified class"""
 
     if class_name:
         from diffusers.pipelines.auto_pipeline import SUPPORTED_TASKS_MAPPINGS, _get_task_class
 
-        alt_tasks = {}
-        for idx, task_map in enumerate(SUPPORTED_TASKS_MAPPINGS):
+        alt_tasks = []
+        for task_map in SUPPORTED_TASKS_MAPPINGS:
             task_class = _get_task_class(task_map, class_name, False)
             if task_class:
-                alt_tasks.setdefault(len(alt_tasks), task_class.__name__)
-            code_name = get_code_names(class_name, library="diffusers")
+                alt_tasks.append(task_class.__name__)
             for model_code, pipe_class_obj in task_map.items():
                 if code_name in model_code:
-                    alt_tasks.setdefault(len(alt_tasks), pipe_class_obj.__name__)
+                    alt_tasks.append(pipe_class_obj.__name__)
+
     elif code_name:
         from transformers.utils.fx import _generate_supported_model_class_names
 
-        model_class_names = {*_generate_supported_model_class_names(code_name)}
-        alt_tasks = {idx: model for idx, model in enumerate(model_class_names)}
+        alt_tasks = _generate_supported_model_class_names(code_name)
     return alt_tasks
 
 
@@ -299,10 +300,13 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     :param pkg_name: Dependency package
     :return: A dictionary of pipelines"""
 
-    pkg_imports = {}
     code_name = get_code_names(pipe_class, library=pkg_name)
-    auto_tasks = show_tasks_for(class_name=pipe_class if pkg_name == "diffusers" else None, code_name=code_name)
-    addons = show_addons_for(model_class=pipe_class, pkg_name=pkg_name, offset=len(auto_tasks))
+    related_pipes: list[str] = show_tasks_for(
+        code_name=code_name,
+        class_name=pipe_class if pkg_name == "diffusers" else None,
+    )
+    # for i in range(len(auto_tasks)):
+    #     auto_tasks.setdefault(i, revealed_tasks[i])
     folder_name = code_name.replace("-", "_")
     parent_folder = class_parent(pkg_name, folder_name)
     if pkg_name == "diffusers":
@@ -310,9 +314,9 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     else:
         pkg_folder = make_callable("__init__", ".".join(parent_folder[:-1]))
     if hasattr(pkg_folder, "_import_structure"):
-        for idx, value in enumerate(pkg_folder._import_structure.values()):
-            pkg_imports.setdefault(idx + len(addons) + len(auto_tasks), value)
-    related_pipes = pkg_imports | addons | auto_tasks
+        related_pipes.extend(next(iter(x)) for x in pkg_folder._import_structure.values())
+    related_pipes = set(related_pipes)
+    related_pipes.update(tuple(x) for x in show_addons_for(model_class=pipe_class, pkg_name=pkg_name, offset=len(related_pipes)))
     return related_pipes
 
 
