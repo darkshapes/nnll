@@ -7,7 +7,7 @@
 
 from importlib import import_module
 from typing import Callable, Dict, Generator, List, Optional, Tuple, Union
-from nnll.metadata.helpers import make_callable
+from nnll.metadata.helpers import make_callable, class_parent
 from nnll.monitor.file import dbuq, nfo, dbug
 
 
@@ -135,7 +135,7 @@ def cut_docs() -> Generator:
                 # print(sub_classes)
 
 
-def root_class(module: Union[Callable, str], library: Optional[str] = None) -> Dict[str, List[str]]:
+def root_class(module: Union[Callable, str], pkg_name: Optional[str] = None) -> Dict[str, List[str]]:
     """Pick apart a Diffusers or Transformers pipeline class and find its constituent parts\n
     :param module: Origin pipeline as a class or as a string
     :param library: name of a library to import the class from, only if a string is provided
@@ -143,8 +143,8 @@ def root_class(module: Union[Callable, str], library: Optional[str] = None) -> D
 
     import inspect
 
-    if library and isinstance(module, str):
-        module = make_callable(module, library)
+    if pkg_name and isinstance(module, str):
+        module = make_callable(module, pkg_name)
     signature = inspect.signature(module.__init__)
     class_names = {}
     for folder, param in signature.parameters.items():
@@ -165,13 +165,13 @@ def root_class(module: Union[Callable, str], library: Optional[str] = None) -> D
     return class_names
 
 
-def get_code_names(class_name: Optional[Union[str, Callable]] = None, library: Optional[str] = "transformers") -> Union[List[str], str]:
+def get_code_names(class_name: Optional[Union[str, Callable]] = None, pkg_name: Optional[str] = "transformers") -> Union[List[str], str]:
     """Reveal code names for class names from Diffusers or Transformers\n
     :param class_name: To return only one class, defaults to None
     :param library: optional field for library, defaults to "transformers"
     :return: A list of all code names, or the one corresponding to the provided class"""
 
-    if library == "diffusers":
+    if pkg_name == "diffusers":
         if class_name:
             # if isinstance(class_name, str):
             #     class_name = make_callable(class_name, "diffusers")
@@ -213,8 +213,8 @@ def stock_llm_data() -> Dict[str, List[str]]:
                 if isinstance(task_pipe, tuple):
                     task_pipe = task_pipe[0]
                 if task_pipe not in exclude_list:
-                    nfo(code_name)
-                    nfo(task_pipe)
+                    dbuq(code_name)
+                    dbuq(task_pipe)
                     model_class = getattr(__import__("transformers"), task_pipe)
                     model_data = root_class(model_class)
                     if model_data and "inspect" not in model_data["config"] and "deprecated" not in model_data["config"]:
@@ -222,7 +222,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
     return transformer_data
 
 
-def find_config_classes(key_filter: Optional[str] = None) -> List[str]:
+def find_config_classes(parameter_filter: Optional[str] = None) -> List[str]:
     """Show all config classes transformers package\n
     :param from_match: Narrow the classes to only those with an exact key inside
     :return: A list of all Classes"""
@@ -231,9 +231,9 @@ def find_config_classes(key_filter: Optional[str] = None) -> List[str]:
     config_data = []
     for model_path in list(transformers_data.values()):
         config_class = model_path["config"][-1]
-        if key_filter:
-            segments = root_class(config_class, library="transformers")
-            if key_filter in list(segments):
+        if parameter_filter:
+            segments = root_class(config_class, pkg_name="transformers")
+            if parameter_filter in list(segments):
                 config_data.append(config_class)
         else:
             config_data.append(config_class)
@@ -286,29 +286,20 @@ def show_tasks_for(code_name: str, class_name: Optional[str] = None) -> List[str
     return alt_tasks
 
 
-def class_parent(pkg_name: str, folder_name: str):
-    if pkg_name == "diffusers":
-        folder_path = "pipelines"
-    else:
-        folder_path = "models"
-    return [pkg_name, folder_path, folder_name]
-
-
 def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     """Retrieve all compatible pipe forms\n
     :param pipe_class: Origin pipe
     :param pkg_name: Dependency package
     :return: A dictionary of pipelines"""
 
-    code_name = get_code_names(pipe_class, library=pkg_name)
+    code_name = get_code_names(pipe_class, pkg_name=pkg_name)
     related_pipes: list[str] = show_tasks_for(
         code_name=code_name,
         class_name=pipe_class if pkg_name == "diffusers" else None,
     )
     # for i in range(len(auto_tasks)):
     #     auto_tasks.setdefault(i, revealed_tasks[i])
-    folder_name = code_name.replace("-", "_")
-    parent_folder = class_parent(pkg_name, folder_name)
+    parent_folder = class_parent(pkg_name, code_name)
     if pkg_name == "diffusers":
         pkg_folder = make_callable(parent_folder[0], ".".join(parent_folder))
     else:
