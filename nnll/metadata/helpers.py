@@ -106,3 +106,12 @@ def make_callable(module_name: str, pkg_name_or_abs_path: str) -> Optional[Calla
     except AttributeError as error_log:
         dbuq(error_log)
         return base_library
+
+
+def class_parent(code_name: str, pkg_name: str) -> List[str]:
+    folder_name = code_name.replace("-", "_")
+    if pkg_name == "diffusers":
+        folder_path = "pipelines"
+    else:
+        folder_path = "models"
+    return [pkg_name, folder_path, folder_name]
