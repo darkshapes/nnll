@@ -223,4 +223,7 @@ class TestConstructPipeline(unittest.TestCase):
 
 if __name__ == "__main__":
     # import asyncio
-    unittest.main()
+    # unittest.main()
+    import pytest
+
+    pytest.main(["-vv", __file__])

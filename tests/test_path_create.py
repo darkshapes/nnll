@@ -1,3 +1,6 @@
+#  # # <!-- // /*  SPDX-License-Identifier: MPL-2.0 */ -->
+#  # # <!-- // /*  d a r k s h a p e s */ -->
+
 import os
 from platform import system
 from pathlib import Path
@@ -67,3 +70,9 @@ def test_ensure_file():
     assert Path(expected_path).exists() is True
     os.remove(expected_path)
     os.removedirs(os.path.dirname(expected_path))
+
+
+if __name__ == "__main__":
+    import pytest
+
+    pytest.main(["-vv", __file__])

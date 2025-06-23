@@ -1,3 +1,6 @@
+#  # # <!-- // /*  SPDX-License-Identifier: MPL-2.0 */ -->
+#  # # <!-- // /*  d a r k s h a p e s */ -->
+
 import os
 from unittest.mock import AsyncMock, patch
 import aiohttp
@@ -182,3 +185,7 @@ async def test_retry_no_retries():
             await retry(max_retries=0, delay_seconds=1, operation=mock_operation, exception_type=Exception)
 
         mock_operation.assert_called_once()  # dead?
+
+
+if __name__ == "__main__":
+    pytest.main(["-vv", __file__])

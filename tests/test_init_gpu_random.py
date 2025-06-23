@@ -91,3 +91,8 @@ class TestRandom:
 #         random_tensor_from_gpu()  # Again, no seed provided
 #         value2 = torch.rand(1).item()
 #         self.assertNotEqual(value1, value2)
+
+if __name__ == "__main__":
+    import pytest
+
+    pytest.main(["-vv", __file__])

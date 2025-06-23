@@ -38,3 +38,9 @@ class TestFileOperations(unittest.TestCase):
     def tearDown(self):
         # Clean up the temporary directory
         self.temp_dir.cleanup()
+
+
+if __name__ == "__main__":
+    import pytest
+
+    pytest.main(["-vv", __file__])

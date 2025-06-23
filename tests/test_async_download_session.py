@@ -1,3 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 import asyncio
 from unittest import mock
 import pytest
@@ -83,3 +86,6 @@ class AsyncContextManager:
 
 #         # Assert that content was written to the file
 #         mock_file.write.assert_called_once_with(expected_content)
+
+if __name__ == "__main__":
+    pytest.main(["-vv", __file__])
