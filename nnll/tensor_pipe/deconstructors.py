@@ -6,7 +6,7 @@
 # pylint:disable=protected-access
 
 from importlib import import_module
-from typing import Callable, Dict, Generator, List, Optional, Tuple, Union
+from typing import Callable, Dict, Generator, List, Optional, Tuple, Union, Type
 from nnll.metadata.helpers import make_callable, class_parent
 from nnll.monitor.file import dbuq, nfo, dbug
 
@@ -165,26 +165,27 @@ def root_class(module: Union[Callable, str], pkg_name: Optional[str] = None) -> 
     return class_names
 
 
-def get_code_names(class_name: Optional[Union[str, Callable]] = None, pkg_name: Optional[str] = "transformers") -> Union[List[str], str]:
+def get_code_names(
+    class_name: Optional[Union[str, Type]] = None,
+    pkg_name: Optional[str] = "transformers",
+    path_format: Optional[bool] = False,
+) -> Union[List[str], str]:
     """Reveal code names for class names from Diffusers or Transformers\n
     :param class_name: To return only one class, defaults to None
     :param library: optional field for library, defaults to "transformers"
     :return: A list of all code names, or the one corresponding to the provided class"""
 
-    if pkg_name == "diffusers":
-        if class_name:
-            # if isinstance(class_name, str):
-            #     class_name = make_callable(class_name, "diffusers")
-            from diffusers.pipelines.auto_pipeline import AUTO_TEXT2IMAGE_PIPELINES_MAPPING
-
-            return next(iter(k for k, v in AUTO_TEXT2IMAGE_PIPELINES_MAPPING.items() if class_name in str(v)), "")
-        from diffusers.pipelines.auto_pipeline import AUTO_TEXT2IMAGE_PIPELINES_MAPPING as MAPPING_NAMES
-    else:
-        if class_name:
-            from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
-
-            return next(iter(k for k, v in MODEL_MAPPING_NAMES.items() if class_name in v), "")
-        from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES as MAPPING_NAMES
+    package_map = {
+        "diffusers": ("_import_structure", "diffusers.pipelines"),
+        "transformers": ("MODEL_MAPPING_NAMES", "transformers.models.auto.modeling_auto"),
+    }
+    pkg_name = pkg_name.lower()
+    MAPPING_NAMES = make_callable(*package_map[pkg_name])
+    if class_name:
+        if isinstance(class_name, Type):
+            class_name = class_name.__name__
+        code_name = next(iter(key for key, value in MAPPING_NAMES.items() if class_name in str(value)), "")
+        return class_parent(code_name, pkg_name) if path_format else code_name.replace("_", "-")
     return list(MAPPING_NAMES)
 
 
@@ -240,7 +241,7 @@ def find_config_classes(parameter_filter: Optional[str] = None) -> List[str]:
     return config_data
 
 
-def show_addons_for(model_class: Union[Callable, str], pkg_name: Optional[str] = None, offset: int = 0) -> Optional[Dict[str, List[str]]]:
+def show_addons_for(model_class: Union[Callable, str], pkg_name: Optional[str] = None) -> Optional[Dict[str, List[str]]]:
     """Strips <class> tags from module's base classes and extracts inherited class members.\n
     If `module` is a string, it requires the `library` argument to convert it into a callable.\n
     :param module: A module or string representing a module.
@@ -307,8 +308,24 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     if hasattr(pkg_folder, "_import_structure"):
         related_pipes.extend(next(iter(x)) for x in pkg_folder._import_structure.values())
     related_pipes = set(related_pipes)
-    related_pipes.update(tuple(x) for x in show_addons_for(model_class=pipe_class, pkg_name=pkg_name, offset=len(related_pipes)))
+    related_pipes.update(tuple(x) for x in show_addons_for(model_class=pipe_class, pkg_name=pkg_name))
     return related_pipes
+
+
+def seek_class_path(class_name: str, pkg_name: str) -> List[str]:
+    from nnll.monitor.file import dbuq
+    from nnll.tensor_pipe.deconstructors import get_code_names, root_class
+
+    pkg_name = pkg_name.lower()
+    if pkg_name == "diffusers":
+        parent_folder: List[str] = get_code_names(class_name=class_name, pkg_name=pkg_name, path_format=True)
+        if not parent_folder or not parent_folder[-1].strip():
+            dbuq("Data not found for", " class_name = {class_name},pkg_name = {pkg_name},{parent_folder} = parent_folder")
+            return None
+    elif pkg_name == "transformers":
+        module_path = root_class(class_name, "transformers").get("config")
+        parent_folder = module_path[:3]
+    return parent_folder
 
 
 # def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:

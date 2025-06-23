@@ -161,3 +161,8 @@ def test_cut_docs_yield_docstrings(mock_import_module, mock_pkgutil_iter_modules
 
 #
 # # repo_id = [line.strip().replace(repo_prefix, "") for line in doc_string.splitlines() if ")" in line]
+
+if __name__ == "__main__":
+    import pytest
+
+    pytest.main(["-vv", __file__])

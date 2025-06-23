@@ -1,3 +1,6 @@
+### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
+### <!-- // /*  d a r k s h a p e s */ -->
+
 from unittest import mock
 import pytest
 import pytest_asyncio
@@ -83,3 +86,7 @@ async def test_bulk_download_file_error(mock_async_download_session, mock_prepar
 
     mock_prepare_download.assert_not_awaited()
     mock_async_download_session.assert_not_awaited()
+
+
+if __name__ == "__main__":
+    pytest.main(["-vv", __file__])

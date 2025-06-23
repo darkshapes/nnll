@@ -25,4 +25,7 @@ class TestDiskInterface(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+    import pytest
+
+    pytest.main(["-vv", __file__])

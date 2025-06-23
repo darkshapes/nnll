@@ -31,7 +31,6 @@ nnll/metadata/json_io.py
 nnll/metadata/model_tags.py
 nnll/metadata/read_tags.py
 nnll/metadata/save_generation.py
-nnll/metadata/sd_xl_base.yaml
 nnll/metadata/tensor_data.py
 nnll/metadata/webui_tags.py
 nnll/monitor/console.py
@@ -48,10 +47,12 @@ tests/__init__.py
 tests/test_async_download_queue.py
 tests/test_async_download_session.py
 tests/test_async_transfer_retry.py
+tests/test_class_parent.py
 tests/test_console_print.py
 tests/test_construct_pipe.py
 tests/test_deconstructors_cut.py
 tests/test_deconstructors_root.py
+tests/test_get_code_names.py
 tests/test_gguf_tag_expected.json
 tests/test_gguf_tags.py
 tests/test_img.png
