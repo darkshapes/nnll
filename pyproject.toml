@@ -33,97 +33,25 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Image Processing",
 ]
-
 dependencies = [
-    "accelerate>=1.7.0",
+    "accelerate>=1.8.1",
     "aiofiles>=24.1.0",
-    "aiohttp>=3.12.6",
-    "bitsandbytes>=0.46.0 ; sys_platform == 'linux' or sys_platform == 'windows'",
-    "diffusers  @ git+https://github.com/huggingface/diffusers",
-    "gguf>=0.10.0",
-    "hidiffusion>=0.1.10",
-    "huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3",
+    "aiohttp>=3.12.13",
+    "bitsandbytes>=0.46.0 ; sys_platform != 'darwin'",
+    "gguf>=0.17.1",
+    "huggingface-hub[cli,hf-transfer,hf-xet]>=0.33.0",
     "llama-cpp-python>=0.3.9",
     "peft>=0.15.2",
     "pillow>=11.2.1",
     "protobuf>=5.29.5",
     "psutil>=7.0.0",
-    "pydantic-core>=2.33.2",
-    "pydantic>=2.11.5",
+    "pydantic>=2.11.7",
     "rich>=14.0.0",
-    "sentencepiece ; python_version < '3.13' ",
-    "sentencepiece @ git+https://github.com/google/sentencepiece.git#subdirectory=python ; python_version >= '3.13' ",
     "structlog>=25.4.0",
-    "tqdm>=4.67.1",
-    "transformers  @ git+https://github.com/huggingface/transformers",
-    "nnll[mps]; sys_platform == 'darwin'",
-    "nnll[cu128,rocm,cpu]; sys_platform != 'darwin' and python_version >= '3.12' ",
-    "nnll[cu126,rocm,cpu]; sys_platform != 'darwin' and python_version < '3.12'",
+    "nnll[mps] ; sys_platform == 'darwin'",
+    "nnll[cu128] ; sys_platform != 'darwin' and python_version >='3.12'",
+    "nnll[cu126] ; sys_platform != 'darwin' and python_version <'3.12'",
 ]
-
-
-[dependency-groups]
-dev = [
-    "aioresponses>=0.7.8",
-    "pytest>=8.3.5",
-    "pytest-asyncio>=1.0.0",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
-    "ruff>=0.11.12",
-    "pytest-mock>=3.14.1",
-]
-
-[project.optional-dependencies]
-
-cpu = ["torch", "torchvision", "torchaudio"]
-
-mps = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "numpy<=2.3",
-    "mflux>=0.2.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
-    "mlx-lm<=0.24.1 ; sys_platform == 'darwin' and platform_machine=='arm64'",
-    "misaki>=0.8.2 ; python_version < '3.13'",
-]
-
-cu126 = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "triton ; sys_platform == 'Linux'",
-    "triton-windows ; sys_platform == 'win32'",
-]
-
-cu128 = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "triton ; sys_platform == 'Linux'",
-    "triton-windows ; sys_platform == 'win32'",
-    "flash_attn ; sys_platform == 'Linux'",
-    "sageattention; sys_platform != 'darwin'",
-]
-
-rocm = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "pytorch-triton-rocm",
-    "sageattention; sys_platform != 'darwin'",
-    "flash_attn ; sys_platform == 'Linux'",
-]
-
-dev = [
-    "aioresponses>=0.7.8",
-    "pytest>=8.3.5",
-    "pytest-asyncio>=1.0.0",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
-    "ruff>=0.11.12",
-    "pytest-mock>=3.14.1",
-]
-
 
 [project.urls]
 Homepage      = "https://github.com/darkshapes/nnll"
@@ -132,6 +60,51 @@ Documentation = "https://github.com/darkshapes/sdbx/wiki"
 [project.scripts]
 nnll-autocard = "nnll.metadata.autocard:main"
 nnll-inspect  = "nnll.metadata.model_tags:main"
+nnll-find     = "nnll.compare_layers:main"
+nnll-hash     = "nnll.hash256:main"
+nnll-parse    = "nnll.read_state_dict:main"
+
+[project.optional-dependencies]
+mps = [
+    "mir[mps] @ git+https://github.com/darkshapes/mir@main ; sys_platform == 'darwin'",
+]
+
+cu128 = [
+    "mir[cu128,rocm] @ git+https://github.com/darkshapes/mir@main ; python_full_version >= '3.12' and sys_platform != 'darwin'",
+]
+cu126 = [
+    "mir[cu126,rocm] @ git+https://github.com/darkshapes/mir@main ; python_full_version < '3.12' and sys_platform != 'darwin'",
+]
+lmstudio = ["lmstudio>=1.3.1"]
+ollama = ["ollama>=0.5.1"]
+openai = [
+    "openai>=1.84.0",
+    "openai-whisper @ git+https://github.com/openai/whisper.git ; python_version >'3.12'",
+    "openai-whisper @ git+https://github.com/openai/whisper.git ; python_version <='3.12'",
+    "llvmlite>=0.44 ; python_version > '3.12'",
+    "llvmlite>=0.36 ; python_version <= '3.12'",
+    "numba>=0.61.2 ; python_version > '3.12'",
+    "numba>=0.47.0 ; python_version <= '3.12'",
+]
+outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
+mlx-audio = [
+    "nnll[openai]",
+    "mlx-audio ; sys_platform == 'darwin'",
+    "mlx-vlm<=0.1.26",
+    "mlx-lm<=0.24.1",
+    "numpy<=2.3",
+    "misaki>=0.8.2 ; python_version < '3.13'",
+]
+full = ["nnll[lmstudio,ollama,outetts,hidiffusion,cu126,cu128,mps,mlx-audio]"]
+
+# vllm = ["vllm>=0.9.0.1 ; sys_platform != 'darwin'"]
+
+# audiocraft = ["audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev"]
+# bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
+# orpheus_tts = ["orpheus_tts @ git+https://github.com/canopyai/Orpheus-TTS.git"]
+# parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
+# xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
+# tts = [ "mir[audiocraft, bagel, parler_tts]", "mir[audiocraft, bagel, parler_tts,vllm] ; platform_system != 'darwin'",]
 
 [tool.setuptools_scm]
 write_to = "_version.py"
@@ -141,77 +114,9 @@ where   = ["."]
 include = ["nnll*"]
 exclude = ["tests*"]
 
-[tool.uv]
-preview = true
-prerelease = "allow"
-conflicts = [
-    [
-        { extra = "cpu" },
-        { extra = "mps" },
-        { extra = "cu126" },
-        { extra = "cu128" },
-        { extra = "rocm" },
-        { extra = "attention" },
+[tool.setuptools.package-data]
+mir = ['nnll/integrity/*.json']
 
-    ],
-]
-
-[tool.uv.pip]
-torch-backend = "auto"
-
-[[tool.uv.index]]
-name     = "pytorch-cpu"
-url      = "https://download.pytorch.org/whl/cpu"
-explicit = true
-
-[[tool.uv.index]]
-name     = "pytorch-nightly"
-url      = "https://download.pytorch.org/whl/nightly/cpu"
-explicit = true
-
-
-[[tool.uv.index]]
-name     = "pytorch-cu126"
-url      = "https://download.pytorch.org/whl/cu126"
-explicit = true
-
-[[tool.uv.index]]
-name     = "pytorch-cu128"
-url      = "https://download.pytorch.org/whl/cu128"
-explicit = true
-
-[[tool.uv.index]]
-name     = "pytorch-rocm"
-url      = "https://download.pytorch.org/whl/rocm6.3"
-explicit = true
-
-torch = [
-    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-]
-torchvision = [
-    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-]
-torchaudio = [
-    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-]
-
-[tool.uv.sources]
-diffusers     = { git = "https://github.com/huggingface/diffusers" }
-nnll          = { workspace = true }
-sentencepiece = { git = "https://github.com/google/sentencepiece.git", subdirectory = "python" }
-transformers  = { git = "https://github.com/huggingface/transformers" }
 
 [tool.ruff]
 line-length    = 140
@@ -231,3 +136,21 @@ ignore-overlong-task-comments = true
 [tool.typos]
 files.extend-exclude = ["^tests/.*$", "test.*$"]
 default.extend-words = { "ot" = "ot" }
+
+[tool.uv.sources]
+mir = { git = "https://github.com/darkshapes/mir", rev = "main" }
+
+[dependency-groups]
+dev = [
+    "nnll[full]",
+    "aioresponses>=0.7.8",
+    "mir[cu126,dev,rocm] ; python_full_version < '3.12' and sys_platform != 'darwin'",
+    "mir[cu128,dev,rocm] ; python_full_version >= '3.12' and sys_platform != 'darwin'",
+    "mir[dev,mps] ; sys_platform == 'darwin'",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.0.0",
+    "pytest-mock>=3.14.1",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.12.0",
+]

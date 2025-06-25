@@ -5,7 +5,8 @@
 
 
 from typing import Callable, Union
-from nnll.monitor.file import debug_monitor, nfo
+from nnll.monitor.file import debug_monitor
+from nnll.monitor.console import nfo
 
 
 @debug_monitor
@@ -143,5 +144,5 @@ def first_available(processor: str = None, assign: bool = True, clean: bool = Fa
             del tensor
         tensor = None
 
-    nfo(f"highest available torch device: {processor}")
+    nfo(f"Available torch devices: {processor}")
     return torch.device(processor) if assign else processor

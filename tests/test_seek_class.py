@@ -1,7 +1,7 @@
 import pytest
 from enum import Enum
 from unittest.mock import patch
-from nnll.metadata.helpers import make_callable
+from mir.inspectors import make_callable
 from nnll.tensor_pipe.deconstructors import seek_class_path
 
 

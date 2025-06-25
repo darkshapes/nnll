@@ -5,11 +5,12 @@
 
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional
 
 from nnll.integrity import ensure_path
 from nnll.metadata.helpers import ask_multi_input
-from nnll.monitor.file import nfo, dbug
+from nnll.monitor.file import dbug
+from nnll.monitor.console import nfo
 
 
 def index_model_card(repo_path) -> Optional[Dict[str, Any]]:

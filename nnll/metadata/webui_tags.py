@@ -8,7 +8,8 @@
 
 from pathlib import Path
 from typing import List, Tuple
-from nnll.monitor.file import debug_monitor, dbug, nfo
+from nnll.monitor.file import debug_monitor, dbug
+from nnll.monitor.console import nfo
 from nnll.metadata.constants import (
     BracketedDict,
     DownField,

@@ -2,8 +2,15 @@
 ### <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
+from sys import stderr as sys_stderr
 
 from nnll.monitor.file import debug_monitor
+from logging import DEBUG, CRITICAL, INFO, StreamHandler, getLogger, Formatter  # noqa: F401, pylint:disable=unused-import
+
+from rich.console import Console
+from rich.logging import RichHandler
+
+from nnll.configure.color_map import grey_nouveau_theme
 
 
 @debug_monitor
@@ -43,3 +50,37 @@ def pretty_tabled_output(table_title: str, aggregate_data: dict, width: int = 18
     horizontal_bar += "----"
     formatted_data = tuple(table_contents.values())
     wipe_printer(table_title, info_format.format(*header_keys, width=width), horizontal_bar, info_format.format(*formatted_data, width=width))
+
+
+def info_stream():
+    """info console logging\n
+    :return: INFO level logging object
+    """
+    try:
+        console_out = Console(stderr=True, theme=grey_nouveau_theme())
+        log_handler = RichHandler(console=console_out)
+        if log_handler is None:
+            log_handler = StreamHandler(sys_stderr)
+            log_handler.propagate = False
+        formatter = Formatter(
+            fmt="%(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+        log_handler.setFormatter(formatter)
+        info_log = getLogger(name="nfo")
+        info_log.setLevel(INFO)
+        info_log.addHandler(log_handler)
+        return info_log
+    except ImportError:
+        pass
+
+
+INFO_OBJ = info_stream()
+
+
+def nfo(*args, **kwargs) -> None:  # pylint:disable=unused-argument
+    """Info log output"""
+    try:
+        INFO_OBJ.info("%s", f"{args}")
+    except ImportError:
+        pass

@@ -5,22 +5,6 @@ from typing import List, Optional, Union, Callable
 from nnll.monitor.file import dbuq
 
 
-def slice_number(text: str) -> Union[int, float, str]:
-    """Separate a numeral value appended to a string\n
-    :return: Converted value as int or float, or unmodified string
-    """
-    for index, char in enumerate(text):  # Traverse forwards
-        if char.isdigit():
-            numbers = text[index:]
-            if "." in numbers:
-                return float(numbers)
-            try:
-                return int(numbers)
-            except ValueError:
-                return numbers
-    return text
-
-
 def snake_caseify(camel_case: str, delimiter: str = "_") -> str:
     """
     Turn mixed case string with potential acronyms into delimiter-separated string.\n
@@ -87,49 +71,3 @@ def prefix_inner_caps(text: str) -> str:
     import re
 
     return re.sub(r"(?<!^)([A-Z])(?!$)", r"_\1", text)
-
-
-def make_callable(module_name: str, pkg_name_or_abs_path: str) -> Optional[Callable]:
-    """Convert two strings into a callable function or property\n
-    :param module: The name of the module to import
-    :param library_path: Base package for the module
-    :return: The callable attribute or property
-    """
-    import importlib
-
-    module = module_name.strip()
-    library = pkg_name_or_abs_path.strip()
-    base_library = importlib.import_module(library, module)
-    try:
-        module = getattr(base_library, module)
-        return module
-    except AttributeError as error_log:
-        dbuq(error_log)
-        return base_library
-
-
-def class_parent(code_name: str, pkg_name: str) -> Optional[List[str]]:
-    """Retrieve the folder path within. Only returns if it is a valid path in the system\n
-    :param code_name: The internal name for the model in the third-party API.
-    :param pkg_name: The API Package
-    :return: A list corresponding to the path of the model, or None if not found
-    :raises KeyError: for invalid pkg_name
-    """
-    import os
-    from importlib import import_module
-
-    pkg_paths = {
-        "diffusers": "pipelines",
-        "transformers": "models",
-    }
-    folder_name = code_name.replace("-", "_")
-    pkg_name = pkg_name.lower()
-    folder_path = pkg_paths[pkg_name]
-    package_obj = import_module(pkg_name)
-    folder_path_named = [folder_path, folder_name]
-    pkg_folder = os.path.dirname(getattr(package_obj, "__file__"))
-    print(os.path.exists(os.path.join(pkg_folder, *folder_path_named)))
-    if os.path.exists(os.path.join(pkg_folder, *folder_path_named)) is True:
-        import_path = [pkg_name]
-        import_path.extend(folder_path_named)
-        return import_path

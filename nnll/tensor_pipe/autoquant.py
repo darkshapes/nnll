@@ -3,9 +3,11 @@
 
 
 def convert_repo(conditions: tuple) -> str:
-    """card"""
-    from nnll.configure import ensure_path
-    from nnll.monitor.file import nfo
+    """Converts a Hugging Face model repository to a specified library format.\n
+    :param conditions: A dictionary containing the necessary parameters for conversion.
+    :return: The path to the converted repository.
+    """
+    from nnll.monitor.console import nfo
     from huggingface_hub import constants, snapshot_download
     import subprocess
 

@@ -15,8 +15,9 @@ class MetadataFileReader:
     def __init__(self) -> None:
         self.show_content = None
         import nnll.monitor.file as file
+        import nnll.monitor.console as console
 
-        self.nfo = file.nfo
+        self.nfo = console.nfo
         self.dbug = file.dbug
 
     @debug_monitor
