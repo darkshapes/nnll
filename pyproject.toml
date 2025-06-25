@@ -97,6 +97,20 @@ mlx-audio = [
 ]
 full = ["nnll[lmstudio,ollama,outetts,hidiffusion,cu126,cu128,mps,mlx-audio]"]
 
+dev = [
+    "nnll[full]",
+    "aioresponses>=0.7.8",
+    "mir[cu126,dev,rocm] ; python_full_version < '3.12' and sys_platform != 'darwin'",
+    "mir[cu128,dev,rocm] ; python_full_version >= '3.12' and sys_platform != 'darwin'",
+    "mir[dev,mps] ; sys_platform == 'darwin'",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.0.0",
+    "pytest-mock>=3.14.1",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.12.0",
+]
+
 # vllm = ["vllm>=0.9.0.1 ; sys_platform != 'darwin'"]
 
 # audiocraft = ["audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev"]
