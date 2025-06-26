@@ -34,25 +34,30 @@ mir[cu126,rocm]@ git+https://github.com/darkshapes/mir@main
 [cu128:python_full_version >= "3.12" and sys_platform != "darwin"]
 mir[cu128,rocm]@ git+https://github.com/darkshapes/mir@main
 
+[dev]
+nnll[full]
+aioresponses>=0.7.8
+pytest>=8.4.1
+pytest-asyncio>=1.0.0
+pytest-mock>=3.14.1
+pytest-tornasync>=0.6.0.post2
+pytest-trio>=0.8.0
+ruff>=0.12.0
+
 [full]
-nnll[cu126,cu128,hidiffusion,lmstudio,mlx-audio,mps,ollama,outetts]
+nnll[cu126,cu128,hidiffusion,lmstudio,mps,ollama,outetts]
+
+[hidiffusion]
+hidiffusion>=0.1.10
 
 [lmstudio]
 lmstudio>=1.3.1
 
-[mlx-audio]
-nnll[openai]
+[mps]
 mlx-vlm<=0.1.26
 mlx-lm<=0.24.1
-numpy<=2.3
-
-[mlx-audio:python_version < "3.13"]
-misaki>=0.8.2
-
-[mlx-audio:sys_platform == "darwin"]
-mlx-audio
-
-[mps]
+numpy<=2.2
+nnll[openai]
 
 [mps:sys_platform == "darwin"]
 mir[mps]@ git+https://github.com/darkshapes/mir@main

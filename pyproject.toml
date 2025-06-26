@@ -13,15 +13,7 @@ dynamic = ["version"]
 name = "nnll"
 readme = "README.md"
 requires-python = ">= 3.11"
-keywords = [
-    "ML",
-    "AI",
-    "neural network",
-    "library",
-    "diffusion",
-    "LLM",
-    "torch",
-]
+keywords = ["AI", "neural network", "library", "Diffusion", "LLM"]
 classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -53,20 +45,24 @@ dependencies = [
     "nnll[cu126] ; sys_platform != 'darwin' and python_version <'3.12'",
 ]
 
-[project.urls]
-Homepage      = "https://github.com/darkshapes/nnll"
-Documentation = "https://github.com/darkshapes/sdbx/wiki"
-
-[project.scripts]
-nnll-autocard = "nnll.metadata.autocard:main"
-nnll-inspect  = "nnll.metadata.model_tags:main"
-nnll-find     = "nnll.compare_layers:main"
-nnll-hash     = "nnll.hash256:main"
-nnll-parse    = "nnll.read_state_dict:main"
-
+[dependency-groups]
+dev = [
+    "nnll[full]",
+    "aioresponses>=0.7.8",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.0.0",
+    "pytest-mock>=3.14.1",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "ruff>=0.12.0",
+]
 [project.optional-dependencies]
 mps = [
     "mir[mps] @ git+https://github.com/darkshapes/mir@main ; sys_platform == 'darwin'",
+    "mlx-vlm<=0.1.26",
+    "mlx-lm<=0.24.1",
+    "numpy<=2.2",
+    "nnll[openai]",
 ]
 
 cu128 = [
@@ -87,22 +83,19 @@ openai = [
     "numba>=0.47.0 ; python_version <= '3.12'",
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
-mlx-audio = [
-    "nnll[openai]",
-    "mlx-audio ; sys_platform == 'darwin'",
-    "mlx-vlm<=0.1.26",
-    "mlx-lm<=0.24.1",
-    "numpy<=2.3",
-    "misaki>=0.8.2 ; python_version < '3.13'",
-]
-full = ["nnll[lmstudio,ollama,outetts,hidiffusion,cu126,cu128,mps,mlx-audio]"]
+# mlx-audio = [
+#     "nnll[openai]",
+#     "pip>=25.0.1",
+#     "mlx-audio @ git+https://github.com/Blaizzy/mlx-audio",
+#     "misaki[en] @ git+https://github.com/hexgrad/misaki",
+# ]
+hidiffusion = ["hidiffusion>=0.1.10"]
+
+full = ["nnll[lmstudio,ollama,outetts,hidiffusion,cu126,cu128,mps]"]
 
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
-    "mir[cu126,dev,rocm,cpu] ; python_full_version < '3.12' and sys_platform != 'darwin'",
-    "mir[cu128,dev,rocm,cpu] ; python_full_version >= '3.12' and sys_platform != 'darwin'",
-    "mir[dev,mps] ; sys_platform == 'darwin'",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
     "pytest-mock>=3.14.1",
@@ -119,6 +112,17 @@ dev = [
 # parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
 # xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
 # tts = [ "mir[audiocraft, bagel, parler_tts]", "mir[audiocraft, bagel, parler_tts,vllm] ; platform_system != 'darwin'",]
+
+[project.urls]
+Homepage      = "https://github.com/darkshapes/nnll"
+Documentation = "https://github.com/darkshapes/sdbx/wiki"
+
+[project.scripts]
+nnll-autocard = "nnll.metadata.autocard:main"
+nnll-inspect  = "nnll.metadata.model_tags:main"
+nnll-find     = "nnll.compare_layers:main"
+nnll-hash     = "nnll.hash256:main"
+nnll-parse    = "nnll.read_state_dict:main"
 
 [tool.setuptools_scm]
 write_to = "_version.py"
@@ -153,18 +157,3 @@ default.extend-words = { "ot" = "ot" }
 
 [tool.uv.sources]
 mir = { git = "https://github.com/darkshapes/mir", rev = "main" }
-
-[dependency-groups]
-dev = [
-    "nnll[full]",
-    "aioresponses>=0.7.8",
-    "mir[cu126,dev,rocm,cpu] ; python_full_version < '3.12' and sys_platform != 'darwin'",
-    "mir[cu128,dev,rocm,cpu] ; python_full_version >= '3.12' and sys_platform != 'darwin'",
-    "mir[dev,mps] ; sys_platform == 'darwin'",
-    "pytest>=8.4.1",
-    "pytest-asyncio>=1.0.0",
-    "pytest-mock>=3.14.1",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
-    "ruff>=0.12.0",
-]

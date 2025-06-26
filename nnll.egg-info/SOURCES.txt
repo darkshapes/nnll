@@ -1,7 +1,6 @@
 .gitignore
 .python-version
 LICENSE
-README.md
 _version.py
 pyproject.toml
 pytest.ini
@@ -22,7 +21,9 @@ nnll/download/async_download.py
 nnll/download/hub_cache.py
 nnll/integrity/__init__.py
 nnll/integrity/hash_256.py
+nnll/integrity/hashes.json
 nnll/integrity/hashing.py
+nnll/integrity/hyper_chain.json
 nnll/integrity/hyper_chain.py
 nnll/metadata/__init__.py
 nnll/metadata/autocard.py
@@ -35,6 +36,7 @@ nnll/metadata/save_generation.py
 nnll/metadata/tensor_data.py
 nnll/metadata/webui_tags.py
 nnll/model_detect/__init__.py
+nnll/model_detect/filter.json
 nnll/model_detect/gather_metadata.py
 nnll/model_detect/id_conductor.py
 nnll/model_detect/key_trail.py
@@ -55,10 +57,10 @@ nnll/tensor_pipe/segments.py
 tests/.test.json
 tests/__init__.py
 tests/__main__.py
+tests/config.toml
 tests/test_async_download_queue.py
 tests/test_async_download_session.py
 tests/test_async_transfer_retry.py
-tests/test_class_parent.py
 tests/test_console_print.py
 tests/test_construct_pipe.py
 tests/test_gather_metadata.py
@@ -77,9 +79,9 @@ tests/test_layer_pattern.py
 tests/test_metadata_match.py
 tests/test_path_create.py
 tests/test_png_tag_parsing.py
-tests/test_read_state_dict.py
 tests/test_safetensor_tag_expected.json
 tests/test_safetensors_tags.py
 tests/test_seek_class.py
+tests/test_state_dict_json.py
 tests/test_tag_parsing.py
 tests/test_value_compare.py
