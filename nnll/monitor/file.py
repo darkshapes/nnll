@@ -10,20 +10,16 @@
 import os
 from argparse import ArgumentParser
 from datetime import datetime
-from logging import DEBUG, INFO, Formatter, Logger, StreamHandler, getLogger  # noqa: F401, pylint:disable=unused-import
+from logging import DEBUG, CRITICAL, INFO, Formatter, Logger, StreamHandler, getLogger  # noqa: F401, pylint:disable=unused-import
 from pathlib import Path
 from sys import modules as sys_modules
 
 # from logging import root
-from sys import stderr as sys_stderr
+
 from threading import get_native_id
 from typing import Callable, Literal
 
-from rich.console import Console
-from rich.logging import RichHandler
-
 from nnll.configure import LOG_FOLDER_PATH
-from nnll.configure.color_map import grey_nouveau_theme
 
 EXC_INFO = any(mod in sys_modules for mod in ["textual"] if "pytest" not in sys_modules)
 
@@ -125,40 +121,6 @@ def debug_monitor(func: Callable = None) -> Callable:
     return wrapper
 
 
-def info_stream():
-    """info console logging\n
-    :return: INFO level logging object
-    """
-    try:
-        console_out = Console(stderr=True, theme=grey_nouveau_theme())
-        log_handler = RichHandler(console=console_out)
-        if log_handler is None:
-            log_handler = StreamHandler(sys_stderr)
-            log_handler.propagate = False
-        formatter = Formatter(
-            fmt="%(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
-        log_handler.setFormatter(formatter)
-        info_log = getLogger(name="nfo")
-        info_log.setLevel(INFO)
-        info_log.addHandler(log_handler)
-        return info_log
-    except ImportError:
-        pass
-
-
-INFO_OBJ = info_stream()
-
-
-def nfo(*args, **kwargs) -> None:  # pylint:disable=unused-argument
-    """Info log output"""
-    try:
-        INFO_OBJ.info("%s", f"{args}")
-    except ImportError:
-        pass
-
-
 def dbuq(*args, **kwargs) -> None:
     """QUIET dbug log output, (no exc or stack info)"""
     try:
@@ -180,7 +142,13 @@ if __name__ == "__main__":
         parser = ArgumentParser(description="Set logging level.")
         group = parser.add_mutually_exclusive_group()
 
-        levels = {"d": "DEBUG", "w": "WARNING", "e": "ERROR", "c": "CRITICAL", "i": "INFO"}
+        levels = {
+            "c": "CRITICAL",
+            "e": "ERROR",
+            "w": "WARNING",
+            "i": "INFO",
+            "d": "DEBUG",
+        }
         choices = list(levels.keys()) + list(levels.values()) + [value.upper() for value in levels.values()]
         for short, long in levels.items():
             group.add_argument(f"-{short}", f"--{long.lower()}", f"--{long}", action="store_true", help=f"Set logging level {long}")
@@ -192,7 +160,7 @@ if __name__ == "__main__":
         # Resolve log_level from args dynamically
         LOG_LEVEL = levels[next(iter([k for k, v in levels.items() if getattr(cli_args, v.lower(), False)]), cli_args.log_level)]
     else:
-        LOG_LEVEL = DEBUG
+        LOG_LEVEL = CRITICAL
 
     DBUG_OBJ = configure_logging(level=LOG_LEVEL)
 
@@ -201,7 +169,7 @@ if __name__ == "__main__":
 
         __version__ = metadata.version("nnll")
     except metadata.PackageNotFoundError as error_log:
-        dbug(f"nnll package is not installed. Did you run `pip install .`? {error_log}", tb=error_log.__traceback__)
+        print(f"nnll package is not installed. Did you run `pip install .`? {error_log}", tb=error_log.__traceback__)
 else:
     LOG_LEVEL = DEBUG
     DBUG_OBJ = configure_logging()

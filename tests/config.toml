@@ -1,0 +1,45 @@
+
+[local]
+save_folder_path_absolute = "/Users/unauthorized/Pictures/Combo/"
+save_folder               = "/Users/unauthorized/Documents/Combo/02/"
+
+[cogview-3]
+model.dit.cogview-3 = "/Users/unauthorized/Downloads/models/image_synthesis/CogView3-Plus-3B"
+
+[lumina-2]
+model.dit.lumina-2 = "/Users/unauthorized/Downloads/models/image_synthesis/Lumina-Image-2.0"
+
+[pixart-sigma]
+model.dit.pixart-sigma = "/Users/unauthorized/Downloads/models/image_synthesis/PixArt-Sigma-XL-2-1024-MS"
+
+[kolors]
+model.unet.kolors = "/Users/unauthorized/Downloads/models/image_synthesis/Kolors-diffusers"
+
+[stable-diffusion-xl_base]
+info.config = "/Users/unauthorized/Documents/GitHub/darkshapes/combo/sd_sdxl_base.yaml"
+model.lora.dmd_4 = "/Users/unauthorized/Downloads/models/image_synthesis/lora/dmd/dmd2_sdxl_4step_lora.safetensors"
+model.lora.dpo = "/Users/unauthorized/Downloads/models/image_synthesis/lora/dpo/dpo-sdxl-comfyui.safetensors"
+model.lora.lcm = "/Users/unauthorized/Downloads/models/image_synthesis/lora/lcm/lcm.safetensors"
+model.lora.lightning = "/Users/unauthorized/Downloads/models/image_synthesis/lora/lightning/sdxl_lightning_4step_lora.safetensors"
+model.lora.slam = "/Users/unauthorized/Downloads/models/image_synthesis/lora/slam/slam-lora-sdxl.safetensors"
+model.lora.spo = "/Users/unauthorized/Downloads/models/image_synthesis/lora/spo/spo_sdxl_10ep_4k-data_lora_diffusers.safetensors"
+model.lora.tcd = "/Users/unauthorized/Downloads/models/image_synthesis/lora/tcd/tcd-sdxl.safetensors"
+model.unet.stable-diffusion-xl_base = [
+    "/Users/unauthorized/Downloads/models/image_synthesis/stable-diffusion-xl-base-1.0",
+    "/Users/unauthorized/Downloads/models/image/guofeng42fp16.3SbT.safetensors",
+]
+model.vae.stable-diffusion-xl = [
+    "/Users/unauthorized/Downloads/models/image_synthesis/sdxl-vae-fp16-fix",
+    "/Users/unauthorized/Downloads/models/image/flatpiecexlVAE_baseonA1579.safetensors",
+]
+
+[stable-diffusion-xl_refiner]
+model.unet.stable-diffusion-xl_refiner = "/Users/unauthorized/Downloads/models/image_synthesis/stable-diffusion-xl-refiner-1.0"
+
+[stable-diffusion]
+model.lora.flash = "/Users/unauthorized/Downloads/models/image_synthesis/lora/flash/flash-sd.safetensors"
+model.lora.spo   = "/Users/unauthorized/Downloads/models/image_synthesis/lora/spo/spo-sd-v1-5_4k-p_10ep_lora_diffusers.safetensors"
+
+[flux-1_dev]
+model.lora.hyper = "/Users/unauthorized/Downloads/models/image_synthesis/lora/hyper/Hyper-FLUX.1-dev-16steps-lora.safetensors"
+model.lora.turbo = "/Users/unauthorized/Downloads/models/image_synthesis/lora/turbo/flux1_turbo_alpha_lora.safetensors"

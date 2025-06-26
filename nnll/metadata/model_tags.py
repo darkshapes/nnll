@@ -9,7 +9,7 @@ from pathlib import Path
 from nnll.metadata.json_io import write_json_file
 from nnll.monitor.file import dbug
 from nnll.monitor.file import debug_monitor
-from nnll.monitor.file import nfo
+from nnll.monitor.console import nfo
 
 
 class ReadModelTags:

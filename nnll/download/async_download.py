@@ -8,7 +8,7 @@ import os
 from typing import Any, Callable, Tuple
 
 from nnll.monitor.file import dbug, debug_monitor
-from nnll.monitor.file import nfo
+from nnll.monitor.console import nfo
 
 
 @debug_monitor

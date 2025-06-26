@@ -1,11 +1,11 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev602+g3e85ae4.d20250623
+Version: 0.1.dev625+g68ef41c.d20250626
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
 Project-URL: Documentation, https://github.com/darkshapes/sdbx/wiki
-Keywords: ML,AI,neural network,library,diffusion,LLM,torch
+Keywords: AI,neural network,library,Diffusion,LLM
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Intended Audience :: Developers
@@ -18,93 +18,59 @@ Classifier: Topic :: Scientific/Engineering :: Image Processing
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: accelerate>=1.7.0
+Requires-Dist: accelerate>=1.8.1
 Requires-Dist: aiofiles>=24.1.0
-Requires-Dist: aiohttp>=3.12.6
-Requires-Dist: bitsandbytes>=0.46.0; sys_platform == "linux" or sys_platform == "windows"
-Requires-Dist: diffusers@ git+https://github.com/huggingface/diffusers
-Requires-Dist: gguf>=0.10.0
-Requires-Dist: hidiffusion>=0.1.10
-Requires-Dist: huggingface-hub[cli,hf-transfer,hf-xet]>=0.32.3
+Requires-Dist: aiohttp>=3.12.13
+Requires-Dist: bitsandbytes>=0.46.0; sys_platform != "darwin"
+Requires-Dist: gguf>=0.17.1
+Requires-Dist: huggingface-hub[cli,hf-transfer,hf-xet]>=0.33.0
 Requires-Dist: llama-cpp-python>=0.3.9
 Requires-Dist: peft>=0.15.2
 Requires-Dist: pillow>=11.2.1
 Requires-Dist: protobuf>=5.29.5
 Requires-Dist: psutil>=7.0.0
-Requires-Dist: pydantic-core>=2.33.2
-Requires-Dist: pydantic>=2.11.5
+Requires-Dist: pydantic>=2.11.7
 Requires-Dist: rich>=14.0.0
-Requires-Dist: sentencepiece; python_version < "3.13"
-Requires-Dist: sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python ; python_version >= "3.13"
 Requires-Dist: structlog>=25.4.0
-Requires-Dist: tqdm>=4.67.1
-Requires-Dist: transformers@ git+https://github.com/huggingface/transformers
 Requires-Dist: nnll[mps]; sys_platform == "darwin"
-Requires-Dist: nnll[cpu,cu128,rocm]; sys_platform != "darwin" and python_version >= "3.12"
-Requires-Dist: nnll[cpu,cu126,rocm]; sys_platform != "darwin" and python_version < "3.12"
-Provides-Extra: cpu
-Requires-Dist: torch; extra == "cpu"
-Requires-Dist: torchvision; extra == "cpu"
-Requires-Dist: torchaudio; extra == "cpu"
+Requires-Dist: nnll[cu128]; sys_platform != "darwin" and python_version >= "3.12"
+Requires-Dist: nnll[cu126]; sys_platform != "darwin" and python_version < "3.12"
 Provides-Extra: mps
-Requires-Dist: torch; extra == "mps"
-Requires-Dist: torchvision; extra == "mps"
-Requires-Dist: torchaudio; extra == "mps"
-Requires-Dist: numpy<=2.3; extra == "mps"
-Requires-Dist: mflux>=0.2.1; (sys_platform == "darwin" and platform_machine == "arm64") and extra == "mps"
-Requires-Dist: mlx-lm<=0.24.1; (sys_platform == "darwin" and platform_machine == "arm64") and extra == "mps"
-Requires-Dist: misaki>=0.8.2; python_version < "3.13" and extra == "mps"
-Provides-Extra: cu126
-Requires-Dist: torch; extra == "cu126"
-Requires-Dist: torchvision; extra == "cu126"
-Requires-Dist: torchaudio; extra == "cu126"
-Requires-Dist: triton; sys_platform == "Linux" and extra == "cu126"
-Requires-Dist: triton-windows; sys_platform == "win32" and extra == "cu126"
+Requires-Dist: mir[mps]@ git+https://github.com/darkshapes/mir@main ; sys_platform == "darwin" and extra == "mps"
+Requires-Dist: mlx-vlm<=0.1.26; extra == "mps"
+Requires-Dist: mlx-lm<=0.24.1; extra == "mps"
+Requires-Dist: numpy<=2.2; extra == "mps"
+Requires-Dist: nnll[openai]; extra == "mps"
 Provides-Extra: cu128
-Requires-Dist: torch; extra == "cu128"
-Requires-Dist: torchvision; extra == "cu128"
-Requires-Dist: torchaudio; extra == "cu128"
-Requires-Dist: triton; sys_platform == "Linux" and extra == "cu128"
-Requires-Dist: triton-windows; sys_platform == "win32" and extra == "cu128"
-Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "cu128"
-Requires-Dist: sageattention; sys_platform != "darwin" and extra == "cu128"
-Provides-Extra: rocm
-Requires-Dist: torch; extra == "rocm"
-Requires-Dist: torchvision; extra == "rocm"
-Requires-Dist: torchaudio; extra == "rocm"
-Requires-Dist: pytorch-triton-rocm; extra == "rocm"
-Requires-Dist: sageattention; sys_platform != "darwin" and extra == "rocm"
-Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "rocm"
+Requires-Dist: mir[cu128,rocm]@ git+https://github.com/darkshapes/mir@main ; (python_full_version >= "3.12" and sys_platform != "darwin") and extra == "cu128"
+Provides-Extra: cu126
+Requires-Dist: mir[cu126,rocm]@ git+https://github.com/darkshapes/mir@main ; (python_full_version < "3.12" and sys_platform != "darwin") and extra == "cu126"
+Provides-Extra: lmstudio
+Requires-Dist: lmstudio>=1.3.1; extra == "lmstudio"
+Provides-Extra: ollama
+Requires-Dist: ollama>=0.5.1; extra == "ollama"
+Provides-Extra: openai
+Requires-Dist: openai>=1.84.0; extra == "openai"
+Requires-Dist: openai-whisper@ git+https://github.com/openai/whisper.git ; python_version > "3.12" and extra == "openai"
+Requires-Dist: openai-whisper@ git+https://github.com/openai/whisper.git ; python_version <= "3.12" and extra == "openai"
+Requires-Dist: llvmlite>=0.44; python_version > "3.12" and extra == "openai"
+Requires-Dist: llvmlite>=0.36; python_version <= "3.12" and extra == "openai"
+Requires-Dist: numba>=0.61.2; python_version > "3.12" and extra == "openai"
+Requires-Dist: numba>=0.47.0; python_version <= "3.12" and extra == "openai"
+Provides-Extra: outetts
+Requires-Dist: nnll[openai]; extra == "outetts"
+Requires-Dist: outetts; sys_platform != "darwin" and extra == "outetts"
+Provides-Extra: hidiffusion
+Requires-Dist: hidiffusion>=0.1.10; extra == "hidiffusion"
+Provides-Extra: full
+Requires-Dist: nnll[cu126,cu128,hidiffusion,lmstudio,mps,ollama,outetts]; extra == "full"
 Provides-Extra: dev
+Requires-Dist: nnll[full]; extra == "dev"
 Requires-Dist: aioresponses>=0.7.8; extra == "dev"
-Requires-Dist: pytest>=8.3.5; extra == "dev"
+Requires-Dist: pytest>=8.4.1; extra == "dev"
 Requires-Dist: pytest-asyncio>=1.0.0; extra == "dev"
+Requires-Dist: pytest-mock>=3.14.1; extra == "dev"
 Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
-Requires-Dist: ruff>=0.11.12; extra == "dev"
-Requires-Dist: pytest-mock>=3.14.1; extra == "dev"
+Requires-Dist: ruff>=0.12.0; extra == "dev"
 Dynamic: license-file
-
-<div align="center">
-
-![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
-# nnll <br><sub>neural network link library: Flexible code for multimodal AI apps</sub>
-
-`nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs).  It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
-
-* Generative AI pipeline preparation & execution
-* Extracting and classifying metadata from images/models
-* Consumer-grade GPU/CPU inference optimization
-* Misc UX/UI Experimentation
-* 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
-* :shipit: <br><br>
-
-[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
-![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
-![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
-![Discord](https://img.shields.io/discord/1266757128249675867?color=black)
-
-### [installation instructions link](https://github.com/darkshapes/sdbx/wiki/Develop)
-<br>
-<!--
-![Alt](https://repobeats.axiom.co/api/embed/13fd2c53953a777ae8583f620fa8bd014baadef1.svg "Repobeats analytics image") -->

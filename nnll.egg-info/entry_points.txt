@@ -1,3 +1,6 @@
 [console_scripts]
 nnll-autocard = nnll.metadata.autocard:main
+nnll-find = nnll.compare_layers:main
+nnll-hash = nnll.hash256:main
 nnll-inspect = nnll.metadata.model_tags:main
+nnll-parse = nnll.read_state_dict:main
