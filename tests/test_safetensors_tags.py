@@ -16,7 +16,7 @@ class TestLoadMetadataSafetensors(unittest.TestCase):
         local_folder = os.path.dirname(os.path.abspath(__file__))
         local_folder_test = os.path.join(local_folder, "test_folder")
         file_name = "model.safetensors"
-        folder_path_named, _ = download_hub_file(repo_id="exdysa/tiny-random-gpt2-bfloat16", filename=file_name, local_dir=local_folder_test)
+        folder_path_named, _ = download_hub_file(repo_id="exdysa/RA-SAE-DINOv2-32k", filename=file_name, local_dir=local_folder_test)
         real_file = os.path.join(folder_path_named, file_name)
         virtual_data_00 = model_tool.metadata_from_safetensors(real_file)
         safetensors_state_dict = os.path.join(local_folder, "test_safetensor_tag_expected.json")

@@ -111,10 +111,12 @@ class ReadModelTags:
         except (UnboundLocalError, ValueError, AttributeError) as error_log:
             dbug("Value error assembling GGUFReader >:V %s", error_log, tb=error_log.__traceback__)
         else:
+            reader_data = None
             arch = reader.fields.get("general.architecture")  # model type
-            reader_data = {
-                "architecture_name": str(bytes(arch.parts[arch.data[0]]), encoding="utf-8"),
-            }
+            if arch and hasattr(arch.parts):
+                reader_data = {
+                    "architecture_name": str(bytes(arch.parts[arch.data[0]]), encoding="utf-8"),
+                }
             general_name_raw = reader.fields.get("general.name")
             if general_name_raw:
                 try:
@@ -133,7 +135,7 @@ class ReadModelTags:
             # retrieve model name from the dict data
             tensor_data = {
                 "dtype": reader.data.dtype.name,
-                "types": arch.types if len(arch.types) > 1 else "",
+                "types": arch.types if arch and hasattr(arch.types) else "",
             }
             # get dtype from metadata here
             for tensor in reader.tensors:
@@ -245,7 +247,7 @@ class ReadModelTags:
                 metadata = {key: layer_content.get_tensor(key).shape for key in layer_content}
                 # metadata = layer_content.metadata()
             return metadata
-        except SafetensorError:
+        except (SafetensorError, TypeError):
             pass
 
 

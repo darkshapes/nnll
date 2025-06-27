@@ -1,52 +1,44 @@
 {
     "dtype": "uint8",
-    "types": "",
-    "output.weight": {
-        "shape": "[  192 32000]",
-        "dtype": "Q8_0"
+    "tensor_0": {
+        "dtype": "F32",
+        "shape": "[10  4  9]"
     },
-    "output_norm.weight": {
-        "shape": "[192]",
-        "dtype": "F32"
+    "tensor_1": {
+        "dtype": "F32",
+        "shape": "[5]"
     },
-    "token_embd.weight": {
-        "shape": "[  192 32000]",
-        "dtype": "Q4_0"
+    "tensor_2": {
+        "dtype": "F32",
+        "shape": "[ 4 10]"
     },
-    "blk.0.attn_k.weight": {
-        "shape": "[192  96]",
-        "dtype": "Q4_0"
+    "tensor_3": {
+        "dtype": "F32",
+        "shape": "[3 3]"
     },
-    "blk.0.attn_norm.weight": {
-        "shape": "[192]",
-        "dtype": "F32"
+    "tensor_4": {
+        "dtype": "F32",
+        "shape": "[ 4  8 10]"
     },
-    "blk.0.attn_output.weight": {
-        "shape": "[192 192]",
-        "dtype": "Q4_0"
+    "tensor_5": {
+        "dtype": "F32",
+        "shape": "[4]"
     },
-    "blk.0.attn_q.weight": {
-        "shape": "[192 192]",
-        "dtype": "Q4_0"
+    "tensor_6": {
+        "dtype": "F32",
+        "shape": "[10  8]"
     },
-    "blk.0.attn_v.weight": {
-        "shape": "[192  96]",
-        "dtype": "Q4_0"
+    "tensor_7": {
+        "dtype": "F32",
+        "shape": "[4]"
     },
-    "blk.0.ffn_down.weight": {
-        "shape": "[1024  192]",
-        "dtype": "Q4_0"
+    "tensor_8": {
+        "dtype": "F32",
+        "shape": "[9 7 6 8]"
     },
-    "blk.0.ffn_gate.weight": {
-        "shape": "[ 192 1024]",
-        "dtype": "Q4_0"
+    "tensor_9": {
+        "dtype": "F32",
+        "shape": "[3 8]"
     },
-    "blk.0.ffn_norm.weight": {
-        "shape": "[192]",
-        "dtype": "F32"
-    },
-    "blk.0.ffn_up.weight": {
-        "shape": "[ 192 1024]",
-        "dtype": "Q4_0"
-    }
+    "types": ""
 }
