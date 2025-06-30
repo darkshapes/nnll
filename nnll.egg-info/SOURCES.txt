@@ -1,6 +1,7 @@
 .gitignore
 .python-version
 LICENSE
+README.md
 _version.py
 pyproject.toml
 pytest.ini

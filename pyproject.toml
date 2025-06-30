@@ -63,6 +63,7 @@ mps = [
     "mlx-lm<=0.24.1",
     "numpy<=2.2",
     "nnll[openai]",
+    "mflux>=0.2.1",
 ]
 
 cu128 = [
