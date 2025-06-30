@@ -58,6 +58,7 @@ mlx-vlm<=0.1.26
 mlx-lm<=0.24.1
 numpy<=2.2
 nnll[openai]
+mflux>=0.2.1
 
 [mps:sys_platform == "darwin"]
 mir[mps]@ git+https://github.com/darkshapes/mir@main

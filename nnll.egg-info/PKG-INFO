@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev625+g68ef41c.d20250626
+Version: 0.1.dev629+gfdc777a.d20250630
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
@@ -41,6 +41,7 @@ Requires-Dist: mlx-vlm<=0.1.26; extra == "mps"
 Requires-Dist: mlx-lm<=0.24.1; extra == "mps"
 Requires-Dist: numpy<=2.2; extra == "mps"
 Requires-Dist: nnll[openai]; extra == "mps"
+Requires-Dist: mflux>=0.2.1; extra == "mps"
 Provides-Extra: cu128
 Requires-Dist: mir[cu128,rocm]@ git+https://github.com/darkshapes/mir@main ; (python_full_version >= "3.12" and sys_platform != "darwin") and extra == "cu128"
 Provides-Extra: cu126
@@ -74,3 +75,27 @@ Requires-Dist: pytest-tornasync>=0.6.0.post2; extra == "dev"
 Requires-Dist: pytest-trio>=0.8.0; extra == "dev"
 Requires-Dist: ruff>=0.12.0; extra == "dev"
 Dynamic: license-file
+
+<div align="center">
+
+![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
+# nnll <br><sub>neural network link library: Flexible code for multimodal AI apps</sub>
+
+`nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs).  It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
+
+* Generative AI pipeline preparation & execution
+* Extracting and classifying metadata from images/models
+* Consumer-grade GPU/CPU inference optimization
+* Misc UX/UI Experimentation
+* 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
+* :shipit: <br><br>
+
+[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](https://github.com/darkshapes/nnll/actions/workflows/python-app.yml) <br>
+![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
+![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
+![Discord](https://img.shields.io/discord/1266757128249675867?color=black)
+
+### [installation instructions link](https://github.com/darkshapes/sdbx/wiki/Develop)
+<br>
+<!--
+![Alt](https://repobeats.axiom.co/api/embed/13fd2c53953a777ae8583f620fa8bd014baadef1.svg "Repobeats analytics image") -->

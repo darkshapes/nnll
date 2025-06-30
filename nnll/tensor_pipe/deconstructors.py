@@ -8,7 +8,7 @@
 from typing import Callable, Dict, List, Optional, Union, Type
 from nnll.monitor.file import dbuq
 from nnll.monitor.console import nfo
-from mir.inspectors import root_class, show_tasks_for, stock_llm_data, make_callable, class_parent
+from mir.mappers import root_class, show_tasks_for, stock_llm_data, make_callable, class_parent
 
 
 def get_code_names(
