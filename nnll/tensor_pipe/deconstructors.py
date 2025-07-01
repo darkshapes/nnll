@@ -76,18 +76,21 @@ def show_addons_for(model_class: Union[Callable, str], pkg_name: Optional[str] =
 
 def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     """Retrieve all compatible pipe forms\n
+    NOTE: Mainly for Diffusers
     :param pipe_class: Origin pipe
     :param pkg_name: Dependency package
     :return: A dictionary of pipelines"""
 
-    code_name = get_code_names(pipe_class, pkg_name=pkg_name)
-    related_pipes: list[str] = show_tasks_for(
-        code_name=code_name,
-        class_name=pipe_class if pkg_name == "diffusers" else None,
-    )
+    related_pipes = []
+    code_name = get_code_names(pipe_class, pkg_name)
+    if pkg_name == "diffusers":
+        related_pipe_class_name = pipe_class
+    else:
+        related_pipe_class_name = None
+    related_pipes: list[str] = show_tasks_for(code_name=code_name, class_name=related_pipe_class_name)
     # for i in range(len(auto_tasks)):
     #     auto_tasks.setdefault(i, revealed_tasks[i])
-    parent_folder = class_parent(pkg_name, code_name)
+    parent_folder = class_parent(code_name, pkg_name)
     if pkg_name == "diffusers":
         pkg_folder = make_callable(parent_folder[0], ".".join(parent_folder))
     else:
