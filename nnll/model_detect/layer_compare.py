@@ -10,7 +10,7 @@ def compare_layers(query: str, file_path: str) -> None:
     :param file_path: The folder of JSON files to scan
     """
     from nnll.monitor.console import nfo
-from nnll.metadata.json_io import read_json_file
+    from nnll.metadata.json_io import read_json_file
     import json
 
     try:
@@ -47,6 +47,7 @@ def main() -> None:
     import argparse
     import subprocess
     from nnll.monitor.console import nfo
+
     parser = argparse.ArgumentParser(description="Search layer name metadata in the current folder's models.")
     parser.add_argument("pattern", help="Pattern to search for")
     args = parser.parse_args()
