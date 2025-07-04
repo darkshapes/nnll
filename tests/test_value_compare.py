@@ -1,15 +1,13 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
-
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 import hashlib
-import unittest
 import os
-from unittest.mock import MagicMock, patch
+import unittest
+from unittest.mock import MagicMock
 
-from nnll.model_detect.value_compare import ValueComparison
 from nnll.model_detect.layer_pattern import ExtractAndMatchMetadata
-# from nnll_44 import compute_hash_for
+from nnll.model_detect.value_compare import ValueComparison
 
 
 class TestCompareValues(unittest.TestCase):

@@ -1,12 +1,12 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
-import sys
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 import os
+import sys
 
 sys.path.append(os.getcwd())
-from nnll.monitor.console import nfo
 
 from nnll.metadata.json_io import read_json_file
+from nnll.monitor.console import nfo
 
 
 def hash_layers_or_files(folder_path: str, layer: bool = True) -> dict[str:str]:
@@ -16,9 +16,10 @@ def hash_layers_or_files(folder_path: str, layer: bool = True) -> dict[str:str]:
     :return: `dict` Map of hashes(k) to filenames(v)
     """
     import os
-    from nnll.metadata.model_tags import ReadModelTags
-    from nnll.integrity.hashing import compute_hash_for
     from pathlib import Path
+
+    from nnll.integrity.hashing import compute_hash_for
+    from nnll.metadata.model_tags import ReadModelTags
 
     model_tool = ReadModelTags()
     nfo(folder_path)

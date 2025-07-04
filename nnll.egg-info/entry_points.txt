@@ -1,4 +1,6 @@
 [console_scripts]
+mir-add = nnll.mir.mir:main
+mir-maid = nnll.mir.maid:main
 nnll-autocard = nnll.metadata.autocard:main
 nnll-find = nnll.compare_layers:main
 nnll-hash = nnll.hash256:main

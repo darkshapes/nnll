@@ -1,19 +1,21 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 # # pylint: disable=line-too-long
 
 # pylint: disable=import-outside-toplevel
 
-from array import ArrayType
 import os
-from typing import Literal, Any, Optional, Dict
+from array import ArrayType
 from pathlib import Path
+from typing import Any, Dict, Literal, Optional
+
 import PIL.Image
-from nnll.monitor.file import debug_monitor
-from nnll.metadata.read_tags import MetadataFileReader
+
+from nnll.configure import HOME_FOLDER_PATH, USER_PATH_NAMED
 from nnll.integrity.hashing import collect_hashes
-from nnll.configure import USER_PATH_NAMED, HOME_FOLDER_PATH
+from nnll.metadata.read_tags import MetadataFileReader
+from nnll.monitor.file import debug_monitor
 
 
 @debug_monitor

@@ -1,21 +1,20 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 
 """確認 Data Type Validation"""
 
+from ast import Constant
 from platform import python_version_tuple
 
-from ast import Constant
-
-from pydantic import TypeAdapter, BaseModel, Field, AfterValidator, field_validator
+from pydantic import AfterValidator, BaseModel, Field, TypeAdapter, field_validator
 from pydantic_core import ValidationError
 
 if float(python_version_tuple()[0]) == 3.0 and float(python_version_tuple()[1]) <= 12.0:
-    from typing_extensions import TypedDict, Annotated, List, Union, Set
+    from typing_extensions import Annotated, List, Set, TypedDict, Union
 
 else:
-    from typing import TypedDict, Annotated, List, Union, Set
+    from typing import Annotated, List, Set, TypedDict, Union
 
 
 class EmptyField:

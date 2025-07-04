@@ -1,11 +1,11 @@
 Metadata-Version: 2.4
 Name: nnll
-Version: 0.1.dev629+gfdc777a.d20250630
+Version: 0.1.dev634+gf207824.d20250704
 Summary: Neural Network Link Library : A comprehensive modular toolkit for Diffusion and Large Language Model inference processes.
 Author-email: darkshapes <91800957+exdysa@users.noreply.github.com>
 Project-URL: Homepage, https://github.com/darkshapes/nnll
 Project-URL: Documentation, https://github.com/darkshapes/sdbx/wiki
-Keywords: AI,neural network,library,Diffusion,LLM
+Keywords: AI,neural network,library,Diffusion,LLM,identification,URI
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Intended Audience :: Developers
@@ -22,30 +22,58 @@ Requires-Dist: accelerate>=1.8.1
 Requires-Dist: aiofiles>=24.1.0
 Requires-Dist: aiohttp>=3.12.13
 Requires-Dist: bitsandbytes>=0.46.0; sys_platform != "darwin"
+Requires-Dist: diffusers@ git+https://github.com/huggingface/diffusers
 Requires-Dist: gguf>=0.17.1
 Requires-Dist: huggingface-hub[cli,hf-transfer,hf-xet]>=0.33.0
 Requires-Dist: llama-cpp-python>=0.3.9
+Requires-Dist: nnll[cpu,cu126,rocm]; sys_platform != "darwin" and python_version < "3.12"
+Requires-Dist: nnll[cpu,cu128,rocm]; sys_platform != "darwin" and python_version >= "3.12"
+Requires-Dist: nnll[mps]; sys_platform == "darwin"
 Requires-Dist: peft>=0.15.2
 Requires-Dist: pillow>=11.2.1
 Requires-Dist: protobuf>=5.29.5
 Requires-Dist: psutil>=7.0.0
 Requires-Dist: pydantic>=2.11.7
 Requires-Dist: rich>=14.0.0
+Requires-Dist: sentencepiece; python_version < "3.13"
+Requires-Dist: sentencepiece@ git+https://github.com/google/sentencepiece.git#subdirectory=python ; python_version >= "3.13"
 Requires-Dist: structlog>=25.4.0
-Requires-Dist: nnll[mps]; sys_platform == "darwin"
-Requires-Dist: nnll[cu128]; sys_platform != "darwin" and python_version >= "3.12"
-Requires-Dist: nnll[cu126]; sys_platform != "darwin" and python_version < "3.12"
+Requires-Dist: transformers@ git+https://github.com/huggingface/transformers
+Provides-Extra: cpu
+Requires-Dist: torch; extra == "cpu"
+Requires-Dist: torchvision; extra == "cpu"
+Requires-Dist: torchaudio; extra == "cpu"
 Provides-Extra: mps
-Requires-Dist: mir[mps]@ git+https://github.com/darkshapes/mir@main ; sys_platform == "darwin" and extra == "mps"
+Requires-Dist: torch; extra == "mps"
+Requires-Dist: torchvision; extra == "mps"
+Requires-Dist: torchaudio; extra == "mps"
 Requires-Dist: mlx-vlm<=0.1.26; extra == "mps"
 Requires-Dist: mlx-lm<=0.24.1; extra == "mps"
 Requires-Dist: numpy<=2.2; extra == "mps"
 Requires-Dist: nnll[openai]; extra == "mps"
 Requires-Dist: mflux>=0.2.1; extra == "mps"
-Provides-Extra: cu128
-Requires-Dist: mir[cu128,rocm]@ git+https://github.com/darkshapes/mir@main ; (python_full_version >= "3.12" and sys_platform != "darwin") and extra == "cu128"
 Provides-Extra: cu126
-Requires-Dist: mir[cu126,rocm]@ git+https://github.com/darkshapes/mir@main ; (python_full_version < "3.12" and sys_platform != "darwin") and extra == "cu126"
+Requires-Dist: torch; extra == "cu126"
+Requires-Dist: torchvision; extra == "cu126"
+Requires-Dist: torchaudio; extra == "cu126"
+Requires-Dist: nnll[triton]; extra == "cu126"
+Provides-Extra: cu128
+Requires-Dist: torch; extra == "cu128"
+Requires-Dist: torchvision; extra == "cu128"
+Requires-Dist: torchaudio; extra == "cu128"
+Requires-Dist: nnll[attention,triton]; extra == "cu128"
+Provides-Extra: rocm
+Requires-Dist: torch; extra == "rocm"
+Requires-Dist: torchvision; extra == "rocm"
+Requires-Dist: torchaudio; extra == "rocm"
+Requires-Dist: pytorch-triton-rocm; extra == "rocm"
+Requires-Dist: nnll[attention]; extra == "rocm"
+Provides-Extra: attention
+Requires-Dist: sageattention; sys_platform != "darwin" and extra == "attention"
+Requires-Dist: flash_attn; sys_platform == "Linux" and extra == "attention"
+Provides-Extra: triton
+Requires-Dist: triton; sys_platform == "Linux" and extra == "triton"
+Requires-Dist: triton-windows; sys_platform == "win32" and extra == "triton"
 Provides-Extra: lmstudio
 Requires-Dist: lmstudio>=1.3.1; extra == "lmstudio"
 Provides-Extra: ollama

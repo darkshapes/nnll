@@ -1,8 +1,42 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
-from typing import List, Optional, Union, Callable
-from nnll.monitor.file import dbuq
+from typing import Callable, List, Optional, Union
+
+
+def make_callable(module_name: str, pkg_name_or_abs_path: str) -> Optional[Callable]:
+    """Convert two strings into a callable function or property\n
+    :param module: The name of the module to import
+    :param library_path: Base package for the module
+    :return: The callable attribute or property
+    """
+    from importlib import import_module
+
+    module = module_name.strip()
+    library = pkg_name_or_abs_path.strip()
+    base_library = import_module(library, module)
+    try:
+        module = getattr(base_library, module)
+        return module
+    except AttributeError:  # as error_log:
+        # dbuq(error_log)
+        return base_library
+
+
+def slice_number(text: str) -> Union[int, float, str]:
+    """Separate a numeral value appended to a string\n
+    :return: Converted value as int or float, or unmodified string
+    """
+    for index, char in enumerate(text):  # Traverse forwards
+        if char.isdigit():
+            numbers = text[index:]
+            if "." in numbers:
+                return float(numbers)
+            try:
+                return int(numbers)
+            except ValueError:
+                return numbers
+    return text
 
 
 def snake_caseify(camel_case: str, delimiter: str = "_") -> str:

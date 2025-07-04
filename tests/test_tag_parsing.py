@@ -1,37 +1,37 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
-
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 """Test Parser"""
 
 # pylint: disable=line-too-long, missing-class-docstring
 
-import unittest
-from unittest.mock import Mock, patch, call
 import logging
+import unittest
+from unittest.mock import Mock, call, patch
+
 from pydantic import ValidationError
+
+from nnll.metadata.constants import DownField, EmptyField, UpField
 
 # from nnll.monitor.file import assign_logging_to
 from nnll.metadata.read_tags import MetadataFileReader
-from nnll.metadata.constants import UpField, DownField, EmptyField
 from nnll.metadata.webui_tags import (
+    arrange_nodeui_metadata,
     arrange_webui_metadata,
+    coordinate_metadata_operations,
     delineate_by_esc_codes,
-    make_paired_str_dict,
     extract_dict_by_delineation,
     extract_prompts,
-    coordinate_metadata_operations,
-    arrange_nodeui_metadata,
-    validate_mapping_bracket_pair_structure_of,
     filter_keys_of,
+    make_paired_str_dict,
     parse_metadata,
     redivide_nodeui_data_in,
+    validate_mapping_bracket_pair_structure_of,
     validate_typical,
     # clean_with_json
 )
 
 # logger = assign_logging_to()
-
 logger = logging.Logger("logger")
 
 
@@ -358,17 +358,8 @@ class TestParseMetadata(unittest.TestCase):
         mock_nfo.assert_called_with("Unexpected format", fake_file)
         assert result == expected_return
 
-    # @patch("nnll.metadata.read_tags.MetadataFileReader")
-    # def test_success(self, MockReader):
-    #     """test"""
-    #     mock_reader = MockReader.return_value
-    #     mock_reader.read_header.return_value = "header"
-    #     with patch("nnll.metadata.webui_tags.coordinate_metadata_operations", return_value={"key": "value"}):
-    #         self.assertEqual(parse_metadata("path"), {"key": "value"})
-
 
 if __name__ == "__main__":
-    # unittest.main()
     import pytest
 
     pytest.main(["-vv", __file__])

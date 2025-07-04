@@ -1,11 +1,11 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
-
-import unittest
 import shutil
-from nnll.model_detect.state_dict_json import read_state_dict_headers
+import unittest
+
 from nnll.download.hub_cache import download_hub_file
+from nnll.model_detect.state_dict_json import read_state_dict_headers
 
 
 class TestReadStateDictHeaders(unittest.TestCase):

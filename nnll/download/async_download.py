@@ -1,5 +1,5 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel,unused-variable, assignment-from-no-return, redefined-outer-name
 # ruff: noqa: F841
@@ -7,8 +7,8 @@
 import os
 from typing import Any, Callable, Tuple
 
-from nnll.monitor.file import dbug, debug_monitor
 from nnll.monitor.console import nfo
+from nnll.monitor.file import dbug, debug_monitor
 
 
 @debug_monitor
@@ -120,6 +120,7 @@ async def async_download_session(remote_url: str, save_file_path_absolute: str) 
     :return: None
     """
     import asyncio
+
     import aiohttp
     import requests
 
@@ -163,8 +164,8 @@ async def bulk_download(
         await async_download_session(remote_path, save_file_path_absolute)
 
 
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 
 if __name__ == "__main__":

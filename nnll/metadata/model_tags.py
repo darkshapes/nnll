@@ -1,5 +1,5 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 """Load model metadata"""
 
@@ -7,9 +7,8 @@
 from pathlib import Path
 
 from nnll.metadata.json_io import write_json_file
-from nnll.monitor.file import dbug
-from nnll.monitor.file import debug_monitor
 from nnll.monitor.console import nfo
+from nnll.monitor.file import dbug, debug_monitor
 
 
 class ReadModelTags:
@@ -240,7 +239,7 @@ class ReadModelTags:
         :param file_path_named: `str` the full path to the file being opened
         :return: `dict` the key value pair structure found in the file
         """
-        from safetensors import safe_open, SafetensorError
+        from safetensors import SafetensorError, safe_open
 
         try:
             with safe_open(file_path_named, framework="pt", device="cpu") as layer_content:
@@ -252,8 +251,9 @@ class ReadModelTags:
 
 
 def main():
-    import os
     import argparse
+    import os
+
     from nnll.integrity import ensure_path
 
     # Set up argument parser

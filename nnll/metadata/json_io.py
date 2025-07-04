@@ -1,5 +1,5 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
 
@@ -14,8 +14,9 @@ def write_json_file(folder_path_named: str, file_name: str, data: Any, mode: str
     :param mode: Type of open to use (default truncate-write)
     :returns: Dictionary of json data
     """
-    import os
     import json
+    import os
+
     from nnll.monitor.file import dbug
 
     if ".json" not in file_name:

@@ -1,12 +1,10 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 
 import os
-from unittest import TestCase, mock
+from unittest import mock
 import pytest
-import hashlib
-from unittest.mock import mock_open
 
 from nnll.model_detect.layer_pattern import ExtractAndMatchMetadata
 

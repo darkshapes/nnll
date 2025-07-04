@@ -1,8 +1,8 @@
-import pytest
-from enum import Enum
-from unittest.mock import patch
-from mir.mappers import make_callable
-from nnll.tensor_pipe.deconstructors import seek_class_path
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
+
+from nnll.metadata.helpers import make_callable
+from nnll.tensor_pipe.parenting import seek_class_path
 
 
 def test_seek_diffusers_path():
