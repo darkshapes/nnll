@@ -1,5 +1,5 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 
 """為使用者介面清理和安排元資料 Clean and arrange metadata"""
@@ -8,21 +8,23 @@
 
 from pathlib import Path
 from typing import List, Tuple
-from nnll.monitor.file import debug_monitor, dbug
-from nnll.monitor.console import nfo
+
 from nnll.metadata.constants import (
     BracketedDict,
     DownField,
     EmptyField,
-    ExtensionType as Ext,
     IsThisNode,
     ListOfDelineatedStr,
     NodeNames,
     NodeWorkflow,
     UpField,
 )
+from nnll.metadata.constants import (
+    ExtensionType as Ext,
+)
 from nnll.metadata.read_tags import MetadataFileReader
-
+from nnll.monitor.console import nfo
+from nnll.monitor.file import dbug, debug_monitor
 
 # /______________________________________________________________________________________________________________________ ComfyUI format
 

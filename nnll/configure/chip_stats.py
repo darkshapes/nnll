@@ -1,5 +1,5 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 # # pylint: disable=line-too-long
 
@@ -7,8 +7,9 @@
 
 from functools import lru_cache
 from typing import Any, Dict
-from nnll.metadata.json_io import write_json_file
+
 from nnll.configure import HOME_FOLDER_PATH
+from nnll.metadata.json_io import write_json_file
 from nnll.monitor.file import dbug
 
 
@@ -22,12 +23,14 @@ class ChipStats:
         """Create a configuration file for current system specifications\n
         :param folder_path_named: Path to the application configuration folder
         """
-        from collections import defaultdict
+        import multiprocessing as mp
+        import os
         import platform
+        from collections import defaultdict
+
         import psutil
         import torch
-        import os
-        import multiprocessing as mp
+
         from nnll.configure.init_gpu import first_available
 
         mp.set_start_method("spawn", force=True)
@@ -78,8 +81,9 @@ class ChipStats:
         :return: A mapping of the discovered flags
         """
 
-        from nnll.metadata.read_tags import MetadataFileReader
         import os
+
+        from nnll.metadata.read_tags import MetadataFileReader
 
         reader = MetadataFileReader()
         if not self.stats:

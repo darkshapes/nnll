@@ -1,5 +1,5 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 """為全人類製作模型卡！！"""
 
@@ -9,8 +9,8 @@ from typing import Any, Dict, Optional
 
 from nnll.integrity import ensure_path
 from nnll.metadata.helpers import ask_multi_input
-from nnll.monitor.file import dbug
 from nnll.monitor.console import nfo
+from nnll.monitor.file import dbug
 
 
 def index_model_card(repo_path) -> Optional[Dict[str, Any]]:
@@ -18,9 +18,9 @@ def index_model_card(repo_path) -> Optional[Dict[str, Any]]:
     :param repo_path: Path to repo for modelcard
     :return: The model card tags as dictionary
     """
-    from requests import HTTPError
-    from huggingface_hub import repocard, constants
+    from huggingface_hub import constants, repocard
     from huggingface_hub.errors import EntryNotFoundError, LocalEntryNotFoundError
+    from requests import HTTPError
 
     constants.HF_HUB_OFFLINE = 0
     constants.HF_XET_HIGH_PERFORMANCE = 1

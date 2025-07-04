@@ -1,11 +1,12 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 """Wrap Image/Model Metadata I/O"""
 
 # pylint: disable=import-outside-toplevel
 
 from typing import Optional
+
 from nnll.monitor.file import debug_monitor
 
 
@@ -14,8 +15,8 @@ class MetadataFileReader:
 
     def __init__(self) -> None:
         self.show_content = None
-        import nnll.monitor.file as file
         import nnll.monitor.console as console
+        import nnll.monitor.file as file
 
         self.nfo = console.nfo
         self.dbug = file.dbug
@@ -27,7 +28,7 @@ class MetadataFileReader:
         :param file_path_named: The path and file name of the jpg file
         :return: Generator element containing header tags
         """
-        from PIL import Image, ExifTags
+        from PIL import ExifTags, Image
 
         img = Image.open(file_path_named)  # pylint: disable=protected-access, line-too-long
         exif_tags = {ExifTags.TAGS[key]: val for key, val in img._getexif().items() if key in ExifTags.TAGS}  # pylint: disable=protected-access, line-too-long
@@ -81,8 +82,8 @@ class MetadataFileReader:
         :param file_path_named: The path and file name of the json file
         :return: Generator element containing content
         """
-        import os
         import json
+        import os
         import tomllib
 
         from nnll.metadata.constants import ExtensionType as Ext
@@ -105,9 +106,10 @@ class MetadataFileReader:
         :param file_path_named: Location of file with file name and path
         :return: A mapping of information contained within it
         """
-        from nnll.metadata.model_tags import ReadModelTags
         from pathlib import Path
+
         from nnll.metadata.constants import ExtensionType as Ext
+        from nnll.metadata.model_tags import ReadModelTags
 
         ext = Path(file_path_named).suffix.lower()
         if ext in Ext.JPEG:

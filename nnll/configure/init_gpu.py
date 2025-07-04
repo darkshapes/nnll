@@ -1,12 +1,13 @@
-### <!-- // /*  SPDX-License-Identifier: MPL-2.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 # pylint: disable=import-outside-toplevel
 
 
 from typing import Callable, Union
-from nnll.monitor.file import debug_monitor
+
 from nnll.monitor.console import nfo
+from nnll.monitor.file import debug_monitor
 
 
 @debug_monitor
@@ -19,7 +20,8 @@ def soft_random(size: int = 0x100000000) -> int:  # previously 0x2540BE3FF
     """
 
     import secrets
-    from numpy.random import SeedSequence, Generator, Philox
+
+    from numpy.random import Generator, Philox, SeedSequence
 
     entropy = f"0x{secrets.randbits(128):x}"  # good entropy
     rndmc = Generator(Philox(SeedSequence(int(entropy, 16))))
@@ -63,8 +65,8 @@ def seed_planter(seed: int = soft_random(), deterministic: bool = False, device:
     :param device: Processor to use, defaults to `first_available(assign=False)` function
     :return: The `int` seed that was provided to the functions.
     """
-    from numpy import random
     import torch
+    from numpy import random
 
     torch.manual_seed(seed)
     random.seed(seed)
@@ -111,6 +113,7 @@ def first_available(processor: str = None, assign: bool = True, clean: bool = Fa
     :return: _description_
     """
     from functools import reduce
+
     import torch
 
     if not processor:

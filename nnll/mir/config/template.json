@@ -1,0 +1,99 @@
+{
+    "domain": {
+        "dev": "",
+        "info": "",
+        "model": "",
+        "ops": ""
+    },
+    "arch": {
+        "unclassified": {
+            "brnn": "",
+            "rcnn": "",
+            "gru": "",
+            "lstm": "",
+            "rbm": "",
+            "taesd": "",
+            "vae": "",
+            "embedding": "",
+            "scheduler": "",
+            "resnet": ""
+        },
+        "transformer": {
+            "detr": [
+                "use_timm_backbone",
+                "_resnet_"
+            ],
+            "cnn": [
+                "bbox_cost"
+            ],
+            "rnn": [
+                "lru_width"
+            ],
+            "gan": [
+                "codebook_dim",
+                "kernel_size",
+                "kernel_predictor_conv_size"
+            ],
+            "mamba": [
+                "mamba_expand",
+                "parallel_attn"
+            ],
+            "vit": [
+                "use_swiglu_ffn",
+                "projection_dim",
+                "vlm_config",
+                "crop_size",
+                "out_indices",
+                "logit_scale_init_value",
+                "image_size",
+                "vision_config",
+                "hidden_sizes",
+                "image_token_id"
+            ],
+            "aetm": [
+                "classifier_proj_size",
+                "position_embedding_type",
+                "separate_cls",
+                "keypoint_detector_config",
+                "local_attention"
+            ],
+            "ststm": [
+                "encoder_attention_heads",
+                "encoder_layers",
+                "decoder_layers",
+                "decoder_hidden_size",
+                "encoder_hidden_size",
+                "is_encoder_decoder",
+                "encoder_config",
+                "audio_token_index"
+            ],
+            "artm": [
+                "ffn_dim",
+                "num_codebooks",
+                "vq_config",
+                "attn_config",
+                "n_head",
+                "rms_norm_eps",
+                "rope_theta",
+                "head_dim",
+                "hidden_dropout_prob"
+            ]
+        },
+        "diffuser": {
+            "lora": [
+                "motion_adapter"
+            ],
+            "controlnet": [
+                "controlnet"
+            ],
+            "unet": [
+                "unet",
+                "prior",
+                "decoder"
+            ],
+            "dit": [
+                "transformer"
+            ]
+        }
+    }
+}

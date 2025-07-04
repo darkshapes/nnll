@@ -6,9 +6,9 @@
 # pylint:disable=protected-access
 
 from typing import Callable, Dict, List, Optional, Union, Type
-from nnll.monitor.file import dbuq
 from nnll.monitor.console import nfo
-from mir.mappers import root_class, show_tasks_for, stock_llm_data, make_callable, class_parent
+from nnll.metadata.helpers import make_callable
+from nnll.tensor_pipe.parenting import class_parent, show_tasks_for
 
 
 def get_code_names(
@@ -33,24 +33,6 @@ def get_code_names(
         code_name = next(iter(key for key, value in MAPPING_NAMES.items() if class_name in str(value)), "")
         return class_parent(code_name, pkg_name) if path_format else code_name.replace("_", "-")
     return list(MAPPING_NAMES)
-
-
-def find_config_classes(parameter_filter: Optional[str] = None) -> List[str]:
-    """Show all config classes transformers package\n
-    :param from_match: Narrow the classes to only those with an exact key inside
-    :return: A list of all Classes"""
-
-    transformers_data = stock_llm_data()
-    config_data = []
-    for model_path in list(transformers_data.values()):
-        config_class = model_path["config"][-1]
-        if parameter_filter:
-            segments = root_class(config_class, pkg_name="transformers")
-            if parameter_filter in list(segments):
-                config_data.append(config_class)
-        else:
-            config_data.append(config_class)
-    return config_data
 
 
 def show_addons_for(model_class: Union[Callable, str], pkg_name: Optional[str] = None) -> Optional[Dict[str, List[str]]]:
@@ -102,20 +84,34 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     return related_pipes
 
 
-def seek_class_path(class_name: str, pkg_name: str) -> List[str]:
-    # from nnll.monitor.file import dbuq
-    from nnll.tensor_pipe.deconstructors import get_code_names, root_class
+def root_class(module: Union[Callable, str], pkg_name: Optional[str] = None) -> Dict[str, List[str]]:
+    """Pick apart a Diffusers or Transformers pipeline class and find its constituent parts\n
+    :param module: Origin pipeline as a class or as a string
+    :param library: name of a library to import the class from, only if a string is provided
+    :return: Dictionary of sub-classes from the `module`"""
 
-    pkg_name = pkg_name.lower()
-    if pkg_name == "diffusers":
-        parent_folder: List[str] = get_code_names(class_name=class_name, pkg_name=pkg_name, path_format=True)
-        if not parent_folder or not parent_folder[-1].strip():
-            # dbuq("Data not found for", " class_name = {class_name},pkg_name = {pkg_name},{parent_folder} = parent_folder")
-            return None
-    elif pkg_name == "transformers":
-        module_path = root_class(class_name, "transformers").get("config")
-        parent_folder = module_path[:3]
-    return parent_folder
+    import inspect
+
+    if pkg_name and isinstance(module, str):
+        module = make_callable(module, pkg_name)
+    signature = inspect.signature(module.__init__)
+    class_names = {}
+    for folder, param in signature.parameters.items():
+        if folder != "self":
+            sub_module = str(param.annotation).split("'")
+            if len(sub_module) > 1 and sub_module[1] not in [
+                "bool",
+                "int",
+                "float",
+                "complex",
+                "str",
+                "list",
+                "tuple",
+                "dict",
+                "set",
+            ]:
+                class_names.setdefault(folder, sub_module[1].split("."))
+    return class_names
 
 
 # def pull_weight_map(repo_id: str, arch: str) -> Dict[str, str]:

@@ -1,0 +1,4487 @@
+{
+    "info.dit.allegro": {
+        "*": {
+            "repo": "rhymes-ai/Allegro",
+            "pkg": {
+                "0": {
+                    "diffusers": "AllegroPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.amused": {
+        "512": {
+            "repo": "amused/amused-512",
+            "pkg": {
+                "0": {
+                    "diffusers": "AmusedInpaintPipeline"
+                }
+            }
+        }
+    },
+    "info.lora.animatediff-motion-adapter": {
+        "v1": {
+            "repo": "guoyww/animatediff-motion-adapter-v1-5-2",
+            "pkg": {
+                "0": {
+                    "diffusers": "AnimateDiffVideoToVideoPipeline"
+                }
+            }
+        }
+    },
+    "info.lora.animatediff-motion-adapter-sdxl-beta": {
+        "*": {
+            "repo": "a-r-r-o-w/animatediff-motion-adapter-sdxl-beta",
+            "pkg": {
+                "0": {
+                    "diffusers": "AnimateDiffSDXLPipeline"
+                }
+            }
+        }
+    },
+    "info.lora.realistic-vision": {
+        "v5": {
+            "repo": "SG161222/Realistic_Vision_V5.1_noVAE",
+            "pkg": {
+                "0": {
+                    "diffusers": "AnimateDiffSparseControlNetPipeline"
+                }
+            }
+        }
+    },
+    "info.lora.animatelcm": {
+        "*": {
+            "repo": "wangfuyun/AnimateLCM",
+            "pkg": {
+                "0": {
+                    "diffusers": "AnimateDiffVideoToVideoControlNetPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.audioldm-s-full": {
+        "v2": {
+            "repo": "cvssp/audioldm-s-full-v2",
+            "pkg": {
+                "0": {
+                    "diffusers": "AudioLDMPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.audioldm2": {
+        "*": {
+            "repo": "cvssp/audioldm2",
+            "pkg": {
+                "0": {
+                    "diffusers": "AudioLDM2Pipeline"
+                }
+            }
+        }
+    },
+    "info.dit.auraflow": {
+        "*": {
+            "repo": "fal/AuraFlow",
+            "pkg": {
+                "0": {
+                    "diffusers": "AuraFlowPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.blipdiffusion": {
+        "*": {
+            "repo": "Salesforce/blipdiffusion",
+            "pkg": {
+                "0": {
+                    "diffusers": "BlipDiffusionPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.chroma": {
+        "*": {
+            "repo": "lodestones/Chroma",
+            "pkg": {
+                "0": {
+                    "diffusers": "ChromaPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.cogvideox": {
+        "2b": {
+            "repo": "THUDM/CogVideoX-2b",
+            "pkg": {
+                "0": {
+                    "diffusers": "CogVideoXPipeline"
+                }
+            }
+        },
+        "5b": {
+            "repo": "THUDM/CogVideoX-5b",
+            "pkg": {
+                "0": {
+                    "diffusers": "CogVideoXVideoToVideoPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.cogvideox-fun-v1-1": {
+        "5b": {
+            "repo": "alibaba-pai/CogVideoX-Fun-V1.1-5b-Pose",
+            "pkg": {
+                "0": {
+                    "diffusers": "CogVideoXFunControlPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.cogview3-plus": {
+        "3b": {
+            "repo": "THUDM/CogView3-Plus-3B",
+            "pkg": {
+                "0": {
+                    "diffusers": "CogView3PlusPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.cogview4": {
+        "6b": {
+            "repo": "THUDM/CogView4-6B",
+            "pkg": {
+                "0": {
+                    "diffusers": "CogView4Pipeline"
+                }
+            }
+        }
+    },
+    "info.dit.consisid": {
+        "*": {
+            "repo": "BestWishYsh/ConsisID-preview",
+            "pkg": {
+                "0": {
+                    "diffusers": "ConsisIDPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.diffusers-cd-imagenet64-l2": {
+        "*": {
+            "repo": "openai/diffusers-cd_imagenet64_l2",
+            "pkg": {
+                "0": {
+                    "diffusers": "ConsistencyModelPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.stable-diffusion": {
+        "v1": {
+            "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionPipeline"
+                }
+            }
+        }
+    },
+    "info.controlnet.blipdiffusion-controlnet": {
+        "*": {
+            "repo": "Salesforce/blipdiffusion-controlnet",
+            "pkg": {
+                "0": {
+                    "diffusers": "BlipDiffusionControlNetPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.stable-diffusion-xl": {
+        "*": {
+            "repo": "stabilityai/stable-diffusion-xl-base-1.0",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionXLPipeline"
+                }
+            }
+        },
+        "refiner": {
+            "repo": "stabilityai/stable-diffusion-xl-refiner-1.0",
+            "pkg": {
+                "0": {
+                    "diffusers": "DiffusionPipeline",
+                    "generation": {
+                        "num_inference_steps": 40,
+                        "denoising_end": 0.8
+                    }
+                }
+            },
+            "layer_256": [
+                "8c2d0d32cff5a74786480bbaa932ee504bb140f97efdd1a3815f14a610cf6e4a"
+            ]
+        },
+        "pony-diffusion": {
+            "layer_256": [
+                "d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16"
+            ]
+        },
+        "animagine": {
+            "layer_256": [
+                "31164c11db41b007f15c94651a8b1fa4d24097c18782d20fabe13c59ee07aa3a"
+            ]
+        },
+        "illustrious": {
+            "layer_256": [
+                "c4a8d365e7fe07c6dbdd52be922aa6dc23215142342e3e7f8f967f1a123a6982"
+            ]
+        },
+        "turbo": {
+            "file_256": [
+                "a599c42a9f4f7494c7f410dbc0fd432cf0242720509e9d52fa41aac7a88d1b69"
+            ],
+            "layer_256": [
+                "fc94481f0c52b21c5ac1fdade8d9c5b210f7239253f86ef21e6198fe393ed60e"
+            ]
+        },
+        "playground-2-5-base": {
+            "layer_256": [
+                "a6f31493ceeb51c88c5239188b9078dc64ba66d3fc5958ad48c119115b06120c"
+            ]
+        },
+        "playground-2-5-aesthetic": {
+            "repo": "playgroundai/playground-v2.5-1024px-aesthetic",
+            "pkg": {
+                "0": {
+                    "precision": "ops.precision.float.f16",
+                    "generation": {
+                        "num_inference_steps": 50,
+                        "guidance_scale": 3
+                    }
+                }
+            },
+            "layer_256": [
+                "fe2e9edf7e3923a80e64c2552139d8bae926cc3b028ca4773573a6ba60e67c20",
+                "d4813e9f984aa76cb4ac9bf0972d55442923292d276e97e95cb2f49a57227843"
+            ]
+        },
+        "base": {
+            "pkg": {
+                "0": {
+                    "generation": {
+                        "denoising_end": 0.8,
+                        "output_type": "latent",
+                        "safety_checker": false,
+                        "width": 1024,
+                        "height": 1024
+                    }
+                },
+                "1": {
+                    "diffusers": "DiffusionPipeline"
+                }
+            },
+            "layer_256": [
+                "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"
+            ]
+        }
+    },
+    "info.dit.stable-diffusion-3-medium": {
+        "diffusers": {
+            "repo": "stabilityai/stable-diffusion-3-medium-diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusion3InpaintPipeline"
+                }
+            }
+        }
+    },
+    "info.controlnet.stable-diffusion-2-1": {
+        "*": {
+            "repo": "stabilityai/stable-diffusion-2-1-base",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionControlNetXSPipeline"
+                }
+            }
+        }
+    },
+    "info.controlnet.stable-diffusion-xl": {
+        "*": {
+            "repo": "stabilityai/stable-diffusion-xl-base-1.0",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionXLControlNetXSPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.cosmos-predict2": {
+        "2b": {
+            "repo": "nvidia/Cosmos-Predict2-2B-Video2World",
+            "pkg": {
+                "0": {
+                    "diffusers": "Cosmos2VideoToWorldPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.cosmos--diffusion": {
+        "7b": {
+            "repo": "nvidia/Cosmos-1.0-Diffusion-7B-Video2World",
+            "pkg": {
+                "0": {
+                    "diffusers": "CosmosVideoToWorldPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.if-i-xl-v": {
+        "*": {
+            "repo": "DeepFloyd/IF-I-XL-v1.0",
+            "pkg": {
+                "0": {
+                    "diffusers": "IFPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.easyanimatev5-1": {
+        "7b": {
+            "repo": "alibaba-pai/EasyAnimateV5.1-7b-zh-diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "EasyAnimatePipeline"
+                }
+            }
+        },
+        "12b": {
+            "repo": "alibaba-pai/EasyAnimateV5.1-12b-zh-InP-diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "EasyAnimateInpaintPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.flux-1-schnell": {
+        "*": {
+            "repo": "black-forest-labs/FLUX.1-schnell",
+            "pkg": {
+                "0": {
+                    "diffusers": "FluxInpaintPipeline"
+                }
+            }
+        },
+        "shuttle-3.1-aesthetic": {
+            "repo": "shuttleai/shuttle-3.1-aesthetic",
+            "pkg": {
+                "0": {
+                    "diffusers": "DiffusionPipeline",
+                    "generation": {
+                        "guidance_scale": 3.5,
+                        "num_inference_steps": 4
+                    }
+                }
+            }
+        },
+        "shuttle-3-diffusion": {
+            "repo": "shuttleai/shuttle-3-diffusion",
+            "pkg": {
+                "0": {
+                    "diffusers": "DiffusionPipeline",
+                    "generation": {
+                        "guidance_scale": 3.5,
+                        "num_inference_steps": 4
+                    }
+                }
+            }
+        },
+        "shuttle-jaguar": {
+            "repo": "shuttleai/shuttle-jaguar",
+            "pkg": {
+                "0": {
+                    "diffusers": "DiffusionPipeline",
+                    "generation": {
+                        "guidance_scale": 3.5,
+                        "num_inference_steps": 4
+                    }
+                }
+            }
+        },
+        "base": {
+            "pkg": {
+                "0": {
+                    "precision": "ops.precision.bfloat.b16",
+                    "generation": {
+                        "height": 1024,
+                        "width": 1024,
+                        "guidance_scale": 0.0,
+                        "num_inference_steps": 4,
+                        "max_sequence_length": 256
+                    }
+                },
+                "1": {
+                    "mflux": {
+                        "Flux1": {
+                            "model_name": "schnell"
+                        }
+                    },
+                    "generation": {
+                        "height": 1024,
+                        "width": 1024,
+                        "steps": 4
+                    }
+                }
+            }
+        }
+    },
+    "info.dit.flux-1-dev": {
+        "*": {
+            "repo": "black-forest-labs/FLUX.1-dev",
+            "pkg": {
+                "0": {
+                    "diffusers": "FluxPipeline"
+                },
+                "1": {
+                    "mflux": "Flux1"
+                }
+            }
+        },
+        "f-lite-8b": {
+            "repo": "freepik/flux.1-lite-8b",
+            "pkg": {
+                "0": {
+                    "generation": {
+                        "num_inference_steps": 28
+                    }
+                }
+            }
+        },
+        "f-lite-7b": {
+            "repo": "freepik/f-lite-7b",
+            "pkg": {
+                "0": {
+                    "f_lite": "FLitePipeline",
+                    "generation": {
+                        "num_inference_steps": 28
+                    }
+                }
+            }
+        },
+        "f-lite-texture": {
+            "repo": "freepik/f-lite-texture",
+            "pkg": {
+                "0": {
+                    "f_lite": "FLitePipeline",
+                    "generation": {
+                        "num_inference_steps": 28
+                    }
+                }
+            }
+        },
+        "f-lite": {
+            "repo": "freepik/f-lite",
+            "pkg": {
+                "0": {
+                    "f_lite": "FLitePipeline",
+                    "generation": {
+                        "num_inference_steps": 28
+                    }
+                }
+            }
+        },
+        "hybrid": {
+            "layer_256": [
+                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443",
+                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443"
+            ]
+        },
+        "mini": {
+            "repo": "TencentARC/flux-mini",
+            "layer_256": [
+                "e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"
+            ]
+        },
+        "base": {
+            "pkg": {
+                "0": {
+                    "precision": "ops.precision.bfloat.b16",
+                    "generation": {
+                        "height": 1024,
+                        "width": 1024,
+                        "guidance_scale": 3.5,
+                        "num_inference_steps": 50,
+                        "max_sequence_length": 512
+                    }
+                },
+                "1": {
+                    "mflux": {
+                        "Flux1": {
+                            "model_name": "dev"
+                        }
+                    },
+                    "generation": {
+                        "height": 1024,
+                        "width": 1024,
+                        "gudance": 3.5,
+                        "steps": 25
+                    }
+                }
+            },
+            "layer_256": [
+                "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",
+                "20d47474da0714979e543b6f21bd12be5b5f721119c4277f364a29e329e931b9"
+            ]
+        }
+    },
+    "info.dit.flux-1-canny-dev": {
+        "*": {
+            "repo": "black-forest-labs/FLUX.1-Canny-dev",
+            "pkg": {
+                "0": {
+                    "diffusers": "FluxControlPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.flux-1-fill-dev": {
+        "*": {
+            "repo": "black-forest-labs/FLUX.1-Fill-dev",
+            "pkg": {
+                "0": {
+                    "diffusers": "FluxFillPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.flux-1-kontext-dev": {
+        "*": {
+            "repo": "black-forest-labs/FLUX.1-Kontext-dev",
+            "pkg": {
+                "0": {
+                    "diffusers": "FluxKontextInpaintPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.hidream-i1": {
+        "*": {
+            "repo": "HiDream-ai/HiDream-I1-Full",
+            "pkg": {
+                "0": {
+                    "diffusers": "HiDreamImagePipeline"
+                }
+            }
+        }
+    },
+    "info.dit.hunyuanvideo": {
+        "*": {
+            "repo": "hunyuanvideo-community/HunyuanVideo",
+            "pkg": {
+                "0": {
+                    "diffusers": "HunyuanVideoFramepackPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.hunyuanvideo-i2v": {
+        "*": {
+            "repo": "hunyuanvideo-community/HunyuanVideo-I2V",
+            "pkg": {
+                "0": {
+                    "diffusers": "HunyuanVideoImageToVideoPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.hunyuandit": {
+        "v1": {
+            "repo": "tencent-hunyuan/hunyuandiT-v1.2-diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "HunyuanDiTPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.i2vgen-xl": {
+        "*": {
+            "repo": "ali-vilab/i2vgen-xl",
+            "pkg": {
+                "0": {
+                    "diffusers": "I2VGenXLPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.kandinsky-2-1": {
+        "prior": {
+            "repo": "kandinsky-community/kandinsky-2-1-prior",
+            "pkg": {
+                "0": {
+                    "diffusers": "KandinskyPriorPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.kandinsky-2-2": {
+        "prior": {
+            "repo": "kandinsky-community/kandinsky-2-2-prior",
+            "pkg": {
+                "0": {
+                    "diffusers": "KandinskyPriorPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.kandinsky-3": {
+        "*": {
+            "repo": "kandinsky-community/kandinsky-3",
+            "pkg": {
+                "0": {
+                    "diffusers": "AutoPipelineForImage2Image"
+                }
+            }
+        }
+    },
+    "info.unet.kolors": {
+        "diffusers": {
+            "repo": "Kwai-Kolors/Kolors-diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "KolorsPipeline",
+                    "precision": "ops.precision.float.f16",
+                    "generation": {
+                        "negative_prompt": "",
+                        "guidance_scale": 5.0,
+                        "num_inference_steps": 50,
+                        "width": 1024,
+                        "height": 1024
+                    }
+                },
+                "1": {
+                    "diffusers": "DiffusionPipeline"
+                }
+            },
+            "layer_256": [
+                "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"
+            ]
+        }
+    },
+    "info.dit.latte-1": {
+        "*": {
+            "repo": "maxin-cn/Latte-1",
+            "pkg": {
+                "0": {
+                    "diffusers": "LattePipeline"
+                }
+            }
+        }
+    },
+    "info.dit.ltx-video": {
+        "*": {
+            "repo": "Lightricks/LTX-Video",
+            "pkg": {
+                "0": {
+                    "diffusers": "LTXImageToVideoPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.ltx-video-0-9-5": {
+        "*": {
+            "repo": "Lightricks/LTX-Video-0.9.5",
+            "pkg": {
+                "0": {
+                    "diffusers": "LTXConditionPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.lumina-next-sft": {
+        "diffusers": {
+            "repo": "Alpha-VLLM/Lumina-Next-SFT-diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "LuminaPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.lumina-image-2-0": {
+        "*": {
+            "repo": "Alpha-VLLM/Lumina-Image-2.0",
+            "pkg": {
+                "0": {
+                    "diffusers": "Lumina2Pipeline"
+                }
+            }
+        }
+    },
+    "info.dit.mochi-1": {
+        "*": {
+            "repo": "genmo/mochi-1-preview",
+            "pkg": {
+                "0": {
+                    "diffusers": "MochiPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.musicldm": {
+        "*": {
+            "repo": "ucsd-reach/musicldm",
+            "pkg": {
+                "0": {
+                    "diffusers": "MusicLDMPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.pixart-xl-2": {
+        "1024-ms": {
+            "repo": "PixArt-alpha/PixArt-XL-2-1024-MS",
+            "pkg": {
+                "0": {
+                    "diffusers": "PixArtAlphaPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.pixart-sigma-xl-2": {
+        "1024-ms": {
+            "repo": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
+            "pkg": {
+                "0": {
+                    "diffusers": "PixArtSigmaPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.sana": {
+        "1600m-1024px-bf16-diffusers": {
+            "repo": "Efficient-Large-Model/Sana_1600M_1024px_BF16_diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "SanaPipeline"
+                }
+            }
+        }
+    },
+    "info.controlnet.sana-600m": {
+        "1024px-controlnetplus-diffusers": {
+            "repo": "ishan24/Sana_600M_1024px_ControlNetPlus_diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "SanaControlNetPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.sana-sprint-1": {
+        "6b": {
+            "repo": "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "SanaSprintPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.shap-e": {
+        "*": {
+            "repo": "openai/shap-e",
+            "pkg": {
+                "0": {
+                    "diffusers": "DiffusionPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.stable-audio-open-": {
+        "*": {
+            "repo": "stabilityai/stable-audio-open-1.0",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableAudioPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.stable-cascade": {
+        "prior": {
+            "repo": "stabilityai/stable-cascade-prior",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableCascadePriorPipeline",
+                    "precision": "ops.precision.bfloat.b16",
+                    "generation": {
+                        "negative_prompt": "",
+                        "num_images_per_prompt": 1,
+                        "num_inference_steps": 20,
+                        "guidance_scale": 4.0,
+                        "width": 1024,
+                        "height": 1024
+                    }
+                }
+            },
+            "layer_256": [
+                "2b6986954d9d2b0c702911504f78f5021843bd7050bb10444d70fa915cb495ea",
+                "2aa5a461c4cd0e2079e81554081854a2fa01f9b876d7124c8fff9bf1308b9df7",
+                "ce474fd5da12f1d465a9d236d61ea7e98458c1b9d58d35bb8412b2acb9594f08",
+                "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
+                "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147"
+            ]
+        },
+        "*": {
+            "repo": "stabilityai/stable-cascade",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableCascadeDecoderPipeline"
+                }
+            }
+        },
+        "base": {
+            "pkg": {
+                "0": {
+                    "generation": {
+                        "negative_prompt": "",
+                        "guidance_scale": 0.0,
+                        "output_type": "pil",
+                        "num_inference_steps": 10
+                    },
+                    "precision": "ops.precision.bfloat.b16"
+                },
+                "layer_256": [
+                    "fde5a91a908e8cb969f97bcd20e852fb028cc039a19633b0e1559ae41edeb16f",
+                    "24fa8b55d12bf904878b7f2cda47c04c1a92da702fe149e28341686c080dfd4f",
+                    "a7c96afb54e60386b7d077bf3f00d04596f4b877d58e6a577f0e1a08dc4a0190",
+                    "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
+                    "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64"
+                ]
+            }
+        }
+    },
+    "info.unet.stable-unclip-2-1-l": {
+        "*": {
+            "repo": "fusing/stable-unclip-2-1-l",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableUnCLIPPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.stable-diffusion-2-1-unclip-small": {
+        "*": {
+            "repo": "stabilityai/stable-diffusion-2-1-unclip-small",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableUnCLIPImg2ImgPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.stable-diffusion-3-5": {
+        "medium": {
+            "repo": "stabilityai/stable-diffusion-3.5-medium",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusion3Pipeline"
+                }
+            }
+        },
+        "large": {
+            "repo": "stabilityai/stable-diffusion-3.5-large",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusion3Pipeline"
+                }
+            }
+        }
+    },
+    "info.unet.gligen-1-4-inpainting-text": {
+        "*": {
+            "repo": "masterful/gligen-1-4-inpainting-text-box",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionGLIGENPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.gligen-inpainting-text-image": {
+        "*": {
+            "repo": "anhnct/Gligen_Inpainting_Text_Image",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionGLIGENTextImagePipeline"
+                }
+            }
+        }
+    },
+    "info.unet.ldm3d-4c": {
+        "*": {
+            "repo": "Intel/ldm3d-4c",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionLDM3DPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.stable-diffusion-xl-refiner-": {
+        "*": {
+            "repo": "stabilityai/stable-diffusion-xl-refiner-1.0",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionXLImg2ImgPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.sdxl-instructpix2pix": {
+        "768": {
+            "repo": "diffusers/sdxl-instructpix2pix-768",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableDiffusionXLInstructPix2PixPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.stable-video-diffusion-img2vid": {
+        "*": {
+            "repo": "stabilityai/stable-video-diffusion-img2vid-xt",
+            "pkg": {
+                "0": {
+                    "diffusers": "StableVideoDiffusionPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.visualclozepipeline": {
+        "384": {
+            "repo": "VisualCloze/VisualClozePipeline-384",
+            "pkg": {
+                "0": {
+                    "diffusers": "VisualClozeGenerationPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.wan2-1-t2v": {
+        "14b": {
+            "repo": "Wan-AI/Wan2.1-T2V-14B-Diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "WanPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.wan2-1-i2v": {
+        "14b": {
+            "repo": "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "WanImageToVideoPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.wan2-1-vace-1": {
+        "3b": {
+            "repo": "Wan-AI/Wan2.1-VACE-1.3B-diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "WanVACEPipeline"
+                }
+            }
+        }
+    },
+    "info.dit.wan2-1-t2v-1": {
+        "3b": {
+            "repo": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "WanVideoToVideoPipeline"
+                }
+            }
+        }
+    },
+    "info.unet.wuerstchen": {
+        "prior": {
+            "repo": "warp-ai/wuerstchen-prior",
+            "pkg": {
+                "0": {
+                    "diffusers": "WuerstchenPriorPipeline"
+                }
+            }
+        },
+        "*": {
+            "repo": "warp-ai/wuerstchen",
+            "pkg": {
+                "0": {
+                    "diffusers": "WuerstchenDecoderPipeline"
+                }
+            }
+        }
+    },
+    "info.artm.stablelm": {
+        "3b": {
+            "repo": "stabilityai/stablelm-3b-4e1t",
+            "pkg": {
+                "0": {
+                    "transformers": "StableLmModel"
+                }
+            }
+        }
+    },
+    "info.ststm.switch": {
+        "*": {
+            "repo": "google/switch-base-8",
+            "pkg": {
+                "0": {
+                    "transformers": "SwitchTransformersModel"
+                }
+            }
+        }
+    },
+    "info.vit.siglip": {
+        "*": {
+            "repo": "google/siglip-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "SiglipModel"
+                }
+            }
+        }
+    },
+    "info.mamba.zamba2-2": {
+        "7b": {
+            "repo": "Zyphra/Zamba2-2.7B",
+            "pkg": {
+                "0": {
+                    "transformers": "Zamba2Model"
+                }
+            }
+        }
+    },
+    "info.vit.glm-4-1v": {
+        "9b": {
+            "repo": "THUDM/GLM-4.1V-9B-Thinking",
+            "pkg": {
+                "0": {
+                    "transformers": "Glm4vTextModel"
+                }
+            }
+        }
+    },
+    "info.vit.llava-v1-6-mistral": {
+        "7b": {
+            "repo": "llava-hf/llava-v1.6-mistral-7b-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "LlavaNextModel"
+                }
+            }
+        }
+    },
+    "info.vit.instruct-blip-flan-t5": {
+        "*": {
+            "repo": "Salesforce/instruct-blip-flan-t5",
+            "pkg": {
+                "0": {
+                    "transformers": "InstructBlipModel"
+                }
+            }
+        }
+    },
+    "info.ststm.mvp": {
+        "*": {
+            "repo": "RUCAIBox/mvp",
+            "pkg": {
+                "0": {
+                    "transformers": "MvpModel"
+                }
+            }
+        }
+    },
+    "info.artm.helium": {
+        "2b": {
+            "repo": "kyutai/helium-2b",
+            "pkg": {
+                "0": {
+                    "transformers": "HeliumModel"
+                }
+            }
+        }
+    },
+    "info.artm.chameleon": {
+        "7b": {
+            "repo": "meta/chameleon-7B",
+            "pkg": {
+                "0": {
+                    "transformers": "ChameleonModel"
+                }
+            }
+        }
+    },
+    "info.ststm.pegasus-x": {
+        "large": {
+            "repo": "google/pegasus-x-large",
+            "pkg": {
+                "0": {
+                    "transformers": "PegasusXModel"
+                }
+            }
+        }
+    },
+    "info.aetm.wav2vec2": {
+        "*": {
+            "repo": "facebook/wav2vec2-base-960h",
+            "pkg": {
+                "0": {
+                    "transformers": "Wav2Vec2Model"
+                }
+            }
+        }
+    },
+    "info.vit.aria-chat": {
+        "*": {
+            "repo": "rhymes-ai/Aria-Chat",
+            "pkg": {
+                "0": {
+                    "transformers": "AriaModel"
+                }
+            }
+        }
+    },
+    "info.ststm.led": {
+        "*": {
+            "repo": "allenai/led-base-16384",
+            "pkg": {
+                "0": {
+                    "transformers": "LEDModel"
+                }
+            }
+        }
+    },
+    "info.detr.omdet-turbo-swin-tiny-hf": {
+        "*": {
+            "repo": "omlab/omdet-turbo-swin-tiny-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "OmDetTurboForObjectDetection"
+                }
+            }
+        }
+    },
+    "info.artm.olmoe": {
+        "1b": {
+            "repo": "allenai/OLMoE-1B-7B-0924",
+            "pkg": {
+                "0": {
+                    "transformers": "OlmoeModel"
+                }
+            }
+        }
+    },
+    "info.vit.vit": {
+        "*": {
+            "repo": "google/vit-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "ViTModel"
+                }
+            }
+        }
+    },
+    "info.ststm.blenderbot": {
+        "3b": {
+            "repo": "facebook/blenderbot-3B",
+            "pkg": {
+                "0": {
+                    "transformers": "BlenderbotModel"
+                }
+            }
+        }
+    },
+    "info.artm.mms-tts-eng": {
+        "*": {
+            "repo": "facebook/mms-tts-eng",
+            "pkg": {
+                "0": {
+                    "transformers": "VitsModel"
+                }
+            }
+        }
+    },
+    "info.vit.qwen2-vl": {
+        "7b": {
+            "repo": "Qwen/Qwen2-VL-7B-Instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen2VLModel"
+                }
+            }
+        }
+    },
+    "info.mamba.bamba-9": {
+        "8b": {
+            "repo": "ibm-fms/Bamba-9.8b-2.2T-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "BambaModel"
+                }
+            }
+        }
+    },
+    "info.ststm.qwen2-audio": {
+        "7b": {
+            "repo": "Qwen/Qwen2-Audio-7B",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen2AudioForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.vit.mobilenet": {
+        "v2": {
+            "repo": "google/mobilenet_v2_1.0_224",
+            "pkg": {
+                "0": {
+                    "transformers": "MobileNetV2Model"
+                }
+            }
+        }
+    },
+    "info.vit.paligemma": {
+        "2b": {
+            "repo": "paligemma-hf/paligemma-2b",
+            "pkg": {
+                "0": {
+                    "transformers": "PaliGemmaModel"
+                }
+            }
+        }
+    },
+    "info.vit.mobilevit-small": {
+        "*": {
+            "repo": "apple/mobilevit-small",
+            "pkg": {
+                "0": {
+                    "transformers": "MobileViTModel"
+                }
+            }
+        }
+    },
+    "info.ststm.granite-speech-3-3": {
+        "8b": {
+            "repo": "ibm-granite/granite-speech-3.3-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteSpeechForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.artm.bitnet-b1-58": {
+        "2b": {
+            "repo": "microsoft/bitnet-b1.58-2B-4T",
+            "pkg": {
+                "0": {
+                    "transformers": "BitNetModel"
+                }
+            }
+        }
+    },
+    "info.vit.sam-hq-vit-huge": {
+        "*": {
+            "repo": "facebook/sam_hq-vit-huge",
+            "pkg": {
+                "0": {
+                    "transformers": "SamHQVisionModel"
+                }
+            }
+        }
+    },
+    "info.vit.seggpt-vit": {
+        "large": {
+            "repo": "BAAI/seggpt-vit-large",
+            "pkg": {
+                "0": {
+                    "transformers": "SegGptModel"
+                }
+            }
+        }
+    },
+    "info.vit.clipseg-rd64": {
+        "*": {
+            "repo": "CIDAS/clipseg-rd64",
+            "pkg": {
+                "0": {
+                    "transformers": "CLIPSegModel"
+                }
+            }
+        }
+    },
+    "info.artm.powermoe": {
+        "3b": {
+            "repo": "ibm-research/PowerMoE-3b",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteMoeModel"
+                }
+            }
+        }
+    },
+    "info.aetm.hubert": {
+        "*": {
+            "repo": "facebook/hubert-base-ls960",
+            "pkg": {
+                "0": {
+                    "transformers": "HubertModel"
+                }
+            }
+        }
+    },
+    "info.detr.resnet18-a1-in1k": {
+        "*": {
+            "repo": "timm/resnet18.a1_in1k",
+            "pkg": {
+                "0": {
+                    "transformers": "TimmWrapperModel"
+                }
+            }
+        }
+    },
+    "info.artm.tiny-deepseek": {
+        "v3": {
+            "repo": "bzantium/tiny-deepseek-v3",
+            "pkg": {
+                "0": {
+                    "transformers": "DeepseekV3Model"
+                }
+            }
+        }
+    },
+    "info.aetm.dpr-question-encoder-single-nq": {
+        "*": {
+            "repo": "facebook/dpr-question_encoder-single-nq-base",
+            "pkg": {
+                "0": {
+                    "transformers": "DPRQuestionEncoder"
+                }
+            }
+        }
+    },
+    "info.vit.groupvit-gcc-yfcc": {
+        "*": {
+            "repo": "nvidia/groupvit-gcc-yfcc",
+            "pkg": {
+                "0": {
+                    "transformers": "GroupViTModel"
+                }
+            }
+        }
+    },
+    "info.vit.altclip": {
+        "*": {
+            "repo": "BAAI/AltCLIP",
+            "pkg": {
+                "0": {
+                    "transformers": "AltCLIPModel"
+                }
+            }
+        }
+    },
+    "info.artm.olmo2": {
+        "7b": {
+            "repo": "allenai/Olmo2-7B-1124-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "Olmo2Model"
+                }
+            }
+        }
+    },
+    "info.artm.glm-4": {
+        "9b": {
+            "repo": "THUDM/glm-4-9b-chat",
+            "pkg": {
+                "0": {
+                    "transformers": "GlmModel"
+                }
+            }
+        }
+    },
+    "info.vit.video-llava": {
+        "7b": {
+            "repo": "LanguageBind/Video-LLaVA-7B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "VideoLlavaModel"
+                }
+            }
+        }
+    },
+    "info.vit.dfine-x-coco": {
+        "*": {
+            "repo": "ustc-community/dfine_x_coco",
+            "pkg": {
+                "0": {
+                    "transformers": "HGNetV2Backbone"
+                }
+            }
+        }
+    },
+    "info.ststm.plbart": {
+        "*": {
+            "repo": "uclanlp/plbart-base",
+            "pkg": {
+                "0": {
+                    "transformers": "PLBartModel"
+                }
+            }
+        }
+    },
+    "info.artm.hf-moshiko": {
+        "*": {
+            "repo": "kmhf/hf-moshiko",
+            "pkg": {
+                "0": {
+                    "transformers": "MoshiModel"
+                }
+            }
+        }
+    },
+    "info.vit.kosmos-2-patch14": {
+        "224": {
+            "repo": "microsoft/kosmos-2-patch14-224",
+            "pkg": {
+                "0": {
+                    "transformers": "Kosmos2Model"
+                }
+            }
+        }
+    },
+    "info.artm.afm-4": {
+        "5b": {
+            "repo": "arcee-ai/AFM-4.5B",
+            "pkg": {
+                "0": {
+                    "transformers": "ArceeModel"
+                }
+            }
+        }
+    },
+    "info.artm.granite-3-3-2b": {
+        "*": {
+            "repo": "ibm-granite/granite-3.3-2b-base",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteModel"
+                }
+            }
+        }
+    },
+    "info.ststm.opus-mt-en-de": {
+        "*": {
+            "repo": "Helsinki-NLP/opus-mt-en-de",
+            "pkg": {
+                "0": {
+                    "transformers": "MarianModel"
+                }
+            }
+        }
+    },
+    "info.artm.phi-1": {
+        "*": {
+            "repo": "microsoft/phi-1",
+            "pkg": {
+                "0": {
+                    "transformers": "PhiModel"
+                }
+            }
+        }
+    },
+    "info.artm.opt-350m": {
+        "*": {
+            "repo": "facebook/opt-350m",
+            "pkg": {
+                "0": {
+                    "transformers": "OPTModel"
+                }
+            }
+        }
+    },
+    "info.aetm.whisper": {
+        "*": {
+            "repo": "openai/whisper-tiny",
+            "pkg": {
+                "0": {
+                    "transformers": "WhisperModel"
+                }
+            }
+        }
+    },
+    "info.vit.chinese-clip-vit": {
+        "*": {
+            "repo": "OFA-Sys/chinese-clip-vit-base-patch16",
+            "pkg": {
+                "0": {
+                    "transformers": "ChineseCLIPVisionModel"
+                }
+            }
+        }
+    },
+    "info.detr.deformable-detr": {
+        "*": {
+            "repo": "SenseTime/deformable-detr",
+            "pkg": {
+                "0": {
+                    "transformers": "DeformableDetrModel"
+                }
+            }
+        }
+    },
+    "info.artm.qwen3": {
+        "15b": {
+            "repo": "Qwen/Qwen3-15B-A2B",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen3MoeModel"
+                }
+            }
+        }
+    },
+    "info.artm.imagegpt-small": {
+        "*": {
+            "repo": "openai/imagegpt-small",
+            "pkg": {
+                "0": {
+                    "transformers": "ImageGPTModel"
+                }
+            }
+        }
+    },
+    "info.artm.biogpt": {
+        "*": {
+            "repo": "microsoft/biogpt",
+            "pkg": {
+                "0": {
+                    "transformers": "BioGptModel"
+                }
+            }
+        }
+    },
+    "info.vit.ijepa-vith14": {
+        "1k": {
+            "repo": "facebook/ijepa_vith14_1k",
+            "pkg": {
+                "0": {
+                    "transformers": "IJepaModel"
+                }
+            }
+        }
+    },
+    "info.aetm.wav2vec2-bert-rel-pos": {
+        "large": {
+            "repo": "facebook/wav2vec2-bert-rel-pos-large",
+            "pkg": {
+                "0": {
+                    "transformers": "Wav2Vec2BertModel"
+                }
+            }
+        }
+    },
+    "info.ststm.moonshine": {
+        "*": {
+            "repo": "UsefulSensors/moonshine-tiny",
+            "pkg": {
+                "0": {
+                    "transformers": "MoonshineModel"
+                }
+            }
+        }
+    },
+    "info.vit.idefics2": {
+        "8b": {
+            "repo": "HuggingFaceM4/idefics2-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "Idefics2Model"
+                }
+            }
+        }
+    },
+    "info.detr.dfine-xlarge-coco": {
+        "*": {
+            "repo": "ustc-community/dfine-xlarge-coco",
+            "pkg": {
+                "0": {
+                    "transformers": "DFineModel"
+                }
+            }
+        }
+    },
+    "info.artm.mixtral-8x7b": {
+        "*": {
+            "repo": "mixtralai/Mixtral-8x7B",
+            "pkg": {
+                "0": {
+                    "transformers": "MixtralModel"
+                }
+            }
+        }
+    },
+    "info.mamba.zamba": {
+        "7b": {
+            "repo": "Zyphra/Zamba-7B-v1",
+            "pkg": {
+                "0": {
+                    "transformers": "ZambaModel"
+                }
+            }
+        }
+    },
+    "info.ststm.bart": {
+        "large": {
+            "repo": "facebook/bart-large",
+            "pkg": {
+                "0": {
+                    "transformers": "BartModel"
+                }
+            }
+        }
+    },
+    "info.artm.bloom": {
+        "*": {
+            "repo": "bigscience/bloom",
+            "pkg": {
+                "0": {
+                    "transformers": "BloomModel"
+                }
+            }
+        }
+    },
+    "info.ststm.blenderbot-small": {
+        "90m": {
+            "repo": "facebook/blenderbot_small-90M",
+            "pkg": {
+                "0": {
+                    "transformers": "BlenderbotSmallModel"
+                }
+            }
+        }
+    },
+    "info.vit.got-ocr-2-0-hf": {
+        "*": {
+            "repo": "stepfun-ai/GOT-OCR-2.0-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "GotOcr2Model"
+                }
+            }
+        }
+    },
+    "info.vit.mgp-str": {
+        "*": {
+            "repo": "alibaba-damo/mgp-str-base",
+            "pkg": {
+                "0": {
+                    "transformers": "MgpstrForSceneTextRecognition"
+                }
+            }
+        }
+    },
+    "info.vit.sam-vit-huge": {
+        "*": {
+            "repo": "facebook/sam-vit-huge",
+            "pkg": {
+                "0": {
+                    "transformers": "SamVisionModel"
+                }
+            }
+        }
+    },
+    "info.vit.dinov2-with-registers": {
+        "*": {
+            "repo": "facebook/dinov2-with-registers-base",
+            "pkg": {
+                "0": {
+                    "transformers": "Dinov2WithRegistersModel"
+                }
+            }
+        }
+    },
+    "info.detr.table-transformer-detection": {
+        "*": {
+            "repo": "microsoft/table-transformer-detection",
+            "pkg": {
+                "0": {
+                    "transformers": "TableTransformerModel"
+                }
+            }
+        }
+    },
+    "info.artm.musicgen-melody": {
+        "*": {
+            "repo": "facebook/musicgen-melody",
+            "pkg": {
+                "0": {
+                    "transformers": "MusicgenMelodyModel"
+                }
+            }
+        }
+    },
+    "info.ststm.s2t-small-librispeech-asr": {
+        "*": {
+            "repo": "facebook/s2t-small-librispeech-asr",
+            "pkg": {
+                "0": {
+                    "transformers": "Speech2TextModel"
+                }
+            }
+        }
+    },
+    "info.artm.minimax-text-01-hf": {
+        "*": {
+            "repo": "MiniMaxAI/MiniMax-Text-01-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "MiniMaxModel"
+                }
+            }
+        }
+    },
+    "info.vit.colqwen2-v-hf": {
+        "*": {
+            "repo": "vidore/colqwen2-v1.0-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "ColQwen2ForRetrieval"
+                }
+            }
+        }
+    },
+    "info.artm.mpt": {
+        "7b": {
+            "repo": "mosaicml/mpt-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "MptModel"
+                }
+            }
+        }
+    },
+    "info.mamba.jamba": {
+        "v0": {
+            "repo": "ai21labs/Jamba-v0.1",
+            "pkg": {
+                "0": {
+                    "transformers": "JambaModel"
+                }
+            }
+        }
+    },
+    "info.artm.persimmon-8b": {
+        "*": {
+            "repo": "adept/persimmon-8b-base",
+            "pkg": {
+                "0": {
+                    "transformers": "PersimmonModel"
+                }
+            }
+        }
+    },
+    "info.ststm.mt5-small": {
+        "*": {
+            "repo": "google/mt5-small",
+            "pkg": {
+                "0": {
+                    "transformers": "MT5Model"
+                }
+            }
+        }
+    },
+    "info.artm.qwen2": {
+        "7b": {
+            "repo": "Qwen/Qwen2-7B-beta",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen2Model"
+                }
+            }
+        }
+    },
+    "info.vit.aya-vision": {
+        "8b": {
+            "repo": "CohereForAI/aya-vision-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "AyaVisionModel"
+                }
+            }
+        }
+    },
+    "info.ststm.pegasus": {
+        "large": {
+            "repo": "google/pegasus-large",
+            "pkg": {
+                "0": {
+                    "transformers": "PegasusModel"
+                }
+            }
+        }
+    },
+    "info.gan.encodec": {
+        "24k": {
+            "repo": "facebook/encodec_24khz",
+            "pkg": {
+                "0": {
+                    "transformers": "EncodecModel"
+                }
+            }
+        }
+    },
+    "info.artm.diffllama-0": {
+        "3b": {
+            "repo": "kajuma/DiffLlama-0.3B-handcut",
+            "pkg": {
+                "0": {
+                    "transformers": "DiffLlamaModel"
+                }
+            }
+        }
+    },
+    "info.vit.phi-4-multimodal-instruct": {
+        "*": {
+            "repo": "microsoft/Phi-4-multimodal-instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "Phi4MultimodalModel"
+                }
+            }
+        }
+    },
+    "info.artm.phi-3-mini": {
+        "4k": {
+            "repo": "microsoft/Phi-3-mini-4k-instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "Phi3Model"
+                }
+            }
+        }
+    },
+    "info.vit.llama-3-2": {
+        "11b": {
+            "repo": "meta-llama/Llama-3.2-11B-Vision",
+            "pkg": {
+                "0": {
+                    "transformers": "MllamaModel"
+                }
+            }
+        }
+    },
+    "info.aetm.sew-d-tiny-100k": {
+        "*": {
+            "repo": "asapp/sew-d-tiny-100k",
+            "pkg": {
+                "0": {
+                    "transformers": "SEWDModel"
+                }
+            }
+        }
+    },
+    "info.artm.luke": {
+        "*": {
+            "repo": "studio-ousia/luke-base",
+            "pkg": {
+                "0": {
+                    "transformers": "LukeModel"
+                }
+            }
+        }
+    },
+    "info.gan.dac": {
+        "16k": {
+            "repo": "descript/dac_16khz",
+            "pkg": {
+                "0": {
+                    "transformers": "DacModel"
+                }
+            }
+        }
+    },
+    "info.aetm.wav2vec2-conformer-rel-pos": {
+        "large": {
+            "repo": "facebook/wav2vec2-conformer-rel-pos-large",
+            "pkg": {
+                "0": {
+                    "transformers": "Wav2Vec2ConformerModel"
+                }
+            }
+        }
+    },
+    "info.ststm.long-t5-local": {
+        "*": {
+            "repo": "google/long-t5-local-base",
+            "pkg": {
+                "0": {
+                    "transformers": "LongT5Model"
+                }
+            }
+        }
+    },
+    "info.vit.vip-llava": {
+        "7b": {
+            "repo": "ybelkada/vip-llava-7b-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "VipLlavaModel"
+                }
+            }
+        }
+    },
+    "info.vit.siglip2": {
+        "*": {
+            "repo": "google/siglip2-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "Siglip2Model"
+                }
+            }
+        }
+    },
+    "info.vit.llama-4-scout": {
+        "17b": {
+            "repo": "meta-llama/Llama-4-Scout-17B-16E",
+            "pkg": {
+                "0": {
+                    "transformers": "Llama4ForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.mamba.falconh1-9": {
+        "8b": {
+            "repo": "ibm-fms/FalconH1-9.8b-2.2T-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "FalconH1Model"
+                }
+            }
+        }
+    },
+    "info.ststm.wmt19-en-ru": {
+        "*": {
+            "repo": "facebook/wmt19-en-ru",
+            "pkg": {
+                "0": {
+                    "transformers": "FSMTModel"
+                }
+            }
+        }
+    },
+    "info.aetm.unispeech-large": {
+        "1500h-cv": {
+            "repo": "microsoft/unispeech-large-1500h-cv",
+            "pkg": {
+                "0": {
+                    "transformers": "UniSpeechModel"
+                }
+            }
+        }
+    },
+    "info.mamba.falcon": {
+        "7b": {
+            "repo": "tiiuae/falcon-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "FalconModel"
+                }
+            }
+        }
+    },
+    "info.vit.idefics": {
+        "9b": {
+            "repo": "HuggingFaceM4/idefics-9b",
+            "pkg": {
+                "0": {
+                    "transformers": "IdeficsModel"
+                }
+            }
+        }
+    },
+    "info.vit.clip-vit": {
+        "*": {
+            "repo": "openai/clip-vit-base-patch32",
+            "pkg": {
+                "0": {
+                    "transformers": "CLIPVisionModel"
+                }
+            }
+        }
+    },
+    "info.artm.phi-3-5-moe-instruct": {
+        "*": {
+            "repo": "microsoft/Phi-3.5-MoE-instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "PhimoeModel"
+                }
+            }
+        }
+    },
+    "info.artm.smollm3": {
+        "3b": {
+            "repo": "HuggingFaceTB/SmolLM3-3B",
+            "pkg": {
+                "0": {
+                    "transformers": "SmolLM3Model"
+                }
+            }
+        }
+    },
+    "info.vit.gemma-3": {
+        "4b": {
+            "repo": "google/gemma-3-4b",
+            "pkg": {
+                "0": {
+                    "transformers": "ShieldGemma2ForImageClassification"
+                }
+            }
+        }
+    },
+    "info.detr.detr-resnet-50": {
+        "*": {
+            "repo": "facebook/detr-resnet-50",
+            "pkg": {
+                "0": {
+                    "transformers": "DetrModel"
+                }
+            }
+        }
+    },
+    "info.vit.internvl3": {
+        "1b": {
+            "repo": "OpenGVLab/InternVL3-1B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "InternVLVisionModel"
+                }
+            }
+        }
+    },
+    "info.mamba.powermoe": {
+        "3b": {
+            "repo": "ibm-research/PowerMoE-3b",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteMoeHybridModel"
+                }
+            }
+        }
+    },
+    "info.artm.c4ai-command-r": {
+        "v01": {
+            "repo": "CohereForAI/c4ai-command-r-v01",
+            "pkg": {
+                "0": {
+                    "transformers": "CohereModel"
+                }
+            }
+        }
+    },
+    "info.aetm.wavlm": {
+        "*": {
+            "repo": "microsoft/wavlm-base",
+            "pkg": {
+                "0": {
+                    "transformers": "WavLMModel"
+                }
+            }
+        }
+    },
+    "info.artm.llama-4-scout": {
+        "17b": {
+            "repo": "meta-llama/Llama-4-Scout-17B-16E",
+            "pkg": {
+                "0": {
+                    "transformers": "Llama4TextModel"
+                }
+            }
+        }
+    },
+    "info.vit.janus-pro": {
+        "1b": {
+            "repo": "deepseek-community/Janus-Pro-1B",
+            "pkg": {
+                "0": {
+                    "transformers": "JanusModel"
+                }
+            }
+        }
+    },
+    "info.vit.swiftformer-xs": {
+        "*": {
+            "repo": "MBZUAI/swiftformer-xs",
+            "pkg": {
+                "0": {
+                    "transformers": "SwiftFormerModel"
+                }
+            }
+        }
+    },
+    "info.ststm.t5-small": {
+        "*": {
+            "repo": "google-t5/t5-small",
+            "pkg": {
+                "0": {
+                    "transformers": "T5Model"
+                }
+            }
+        }
+    },
+    "info.vit.deit": {
+        "*": {
+            "repo": "facebook/deit-base-distilled-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "DeiTModel"
+                }
+            }
+        }
+    },
+    "info.ststm.mbart-large-cc25": {
+        "*": {
+            "repo": "facebook/mbart-large-cc25",
+            "pkg": {
+                "0": {
+                    "transformers": "MBartModel"
+                }
+            }
+        }
+    },
+    "info.detr.conditional-detr-resnet-50": {
+        "*": {
+            "repo": "microsoft/conditional-detr-resnet-50",
+            "pkg": {
+                "0": {
+                    "transformers": "ConditionalDetrModel"
+                }
+            }
+        }
+    },
+    "info.vit.siglip-so400m-patch14": {
+        "384": {
+            "repo": "google/siglip-so400m-patch14-384",
+            "pkg": {
+                "0": {
+                    "transformers": "SmolVLMVisionTransformer"
+                }
+            }
+        }
+    },
+    "info.artm.starcoder2": {
+        "7b": {
+            "repo": "bigcode/starcoder2-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Starcoder2Model"
+                }
+            }
+        }
+    },
+    "info.rnn.recurrentgemma": {
+        "2b": {
+            "repo": "google/recurrentgemma-2b",
+            "pkg": {
+                "0": {
+                    "transformers": "RecurrentGemmaModel"
+                }
+            }
+        }
+    },
+    "info.aetm.blip2-opt-2": {
+        "7b": {
+            "repo": "Salesforce/blip2-opt-2.7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Blip2QFormerModel"
+                }
+            }
+        }
+    },
+    "info.artm.ast-finetuned-audioset-10-10-0": {
+        "4593": {
+            "repo": "MIT/ast-finetuned-audioset-10-10-0.4593",
+            "pkg": {
+                "0": {
+                    "transformers": "ASTModel"
+                }
+            }
+        }
+    },
+    "info.ststm.bigbird-pegasus-large-arxiv": {
+        "*": {
+            "repo": "google/bigbird-pegasus-large-arxiv",
+            "pkg": {
+                "0": {
+                    "transformers": "BigBirdPegasusModel"
+                }
+            }
+        }
+    },
+    "info.ststm.pop2piano": {
+        "*": {
+            "repo": "sweetcocoa/pop2piano",
+            "pkg": {
+                "0": {
+                    "transformers": "Pop2PianoForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.vit.colpali": {
+        "v1": {
+            "repo": "vidore/colpali-v1.2",
+            "pkg": {
+                "0": {
+                    "transformers": "ColPaliForRetrieval"
+                }
+            }
+        }
+    },
+    "info.artm.moe": {
+        "7b": {
+            "repo": "ibm-research/moe-7b-1b-active-shared-experts",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteMoeSharedModel"
+                }
+            }
+        }
+    },
+    "info.detr.rtdetr-r50vd": {
+        "*": {
+            "repo": "PekingU/rtdetr_r50vd",
+            "pkg": {
+                "0": {
+                    "transformers": "RTDetrModel"
+                }
+            }
+        }
+    },
+    "info.artm.dots-llm1": {
+        "*": {
+            "repo": "rednote-hilab/dots.llm1.base",
+            "pkg": {
+                "0": {
+                    "transformers": "Dots1Model"
+                }
+            }
+        }
+    },
+    "info.artm.musicgen-small": {
+        "*": {
+            "repo": "facebook/musicgen-small",
+            "pkg": {
+                "0": {
+                    "transformers": "MusicgenModel"
+                }
+            }
+        }
+    },
+    "info.vit.fuyu": {
+        "8b": {
+            "repo": "adept/fuyu-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "FuyuModel"
+                }
+            }
+        }
+    },
+    "info.ststm.nllb-moe": {
+        "54b": {
+            "repo": "facebook/nllb-moe-54b",
+            "pkg": {
+                "0": {
+                    "transformers": "NllbMoeModel"
+                }
+            }
+        }
+    },
+    "info.artm.gemma": {
+        "7b": {
+            "repo": "google/gemma-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "GemmaModel"
+                }
+            }
+        }
+    },
+    "info.vit.mobilevitv2-": {
+        "*": {
+            "repo": "apple/mobilevitv2-1.0",
+            "pkg": {
+                "0": {
+                    "transformers": "MobileViTV2Model"
+                }
+            }
+        }
+    },
+    "info.vit.align": {
+        "*": {
+            "repo": "kakaobrain/align-base",
+            "pkg": {
+                "0": {
+                    "transformers": "AlignModel"
+                }
+            }
+        }
+    },
+    "info.artm.llama-2": {
+        "7b": {
+            "repo": "meta-llama/Llama-2-7b-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "LlamaModel"
+                }
+            }
+        }
+    },
+    "info.vit.vjepa2-vitl-fpc64": {
+        "256": {
+            "repo": "facebook/vjepa2-vitl-fpc64-256",
+            "pkg": {
+                "0": {
+                    "transformers": "VJEPA2Model"
+                }
+            }
+        }
+    },
+    "info.vit.vitpose": {
+        "*": {
+            "repo": "usyd-community/vitpose-base-simple",
+            "pkg": {
+                "0": {
+                    "transformers": "VitPoseBackbone"
+                }
+            }
+        }
+    },
+    "info.ststm.autoformer-tourism-monthly": {
+        "*": {
+            "repo": "huggingface/autoformer-tourism-monthly",
+            "pkg": {
+                "0": {
+                    "transformers": "AutoformerModel"
+                }
+            }
+        }
+    },
+    "info.gan.univnet-dev": {
+        "*": {
+            "repo": "dg845/univnet-dev",
+            "pkg": {
+                "0": {
+                    "transformers": "UnivNetModel"
+                }
+            }
+        }
+    },
+    "info.vit.mlcd-vit-bigg-patch14": {
+        "336": {
+            "repo": "DeepGlint-AI/mlcd-vit-bigG-patch14-336",
+            "pkg": {
+                "0": {
+                    "transformers": "MLCDVisionModel"
+                }
+            }
+        }
+    },
+    "info.detr.grounding-dino": {
+        "*": {
+            "repo": "IDEA-Research/grounding-dino-tiny",
+            "pkg": {
+                "0": {
+                    "transformers": "GroundingDinoModel"
+                }
+            }
+        }
+    },
+    "info.vit.dinov2": {
+        "*": {
+            "repo": "google/dinov2-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "Dinov2Model"
+                }
+            }
+        }
+    },
+    "info.detr.rtdetr-r18vd": {
+        "*": {
+            "repo": "PekingU/rtdetr_r18vd",
+            "pkg": {
+                "0": {
+                    "transformers": "RTDetrV2Model"
+                }
+            }
+        }
+    },
+    "info.vit.idefics3": {
+        "8b": {
+            "repo": "HuggingFaceM4/Idefics3-8B-Llama3",
+            "pkg": {
+                "0": {
+                    "transformers": "Idefics3Model"
+                }
+            }
+        }
+    },
+    "info.detr.dab-detr": {
+        "*": {
+            "repo": "IDEA-Research/dab_detr-base",
+            "pkg": {
+                "0": {
+                    "transformers": "DabDetrModel"
+                }
+            }
+        }
+    },
+    "info.vit.data2vec-vision": {
+        "*": {
+            "repo": "facebook/data2vec-vision-base",
+            "pkg": {
+                "0": {
+                    "transformers": "Data2VecVisionModel"
+                }
+            }
+        }
+    },
+    "info.aetm.small": {
+        "*": {
+            "repo": "funnel-transformer/small",
+            "pkg": {
+                "0": {
+                    "transformers": "FunnelModel"
+                }
+            }
+        }
+    },
+    "info.vit.llava": {
+        "9b": {
+            "repo": "llava-hf/llava-9b",
+            "pkg": {
+                "0": {
+                    "transformers": "LlavaModel"
+                }
+            }
+        }
+    },
+    "info.vit.llava-next-video": {
+        "7b": {
+            "repo": "llava-hf/LLaVA-NeXT-Video-7B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "LlavaNextVideoModel"
+                }
+            }
+        }
+    },
+    "info.aetm.modernbert": {
+        "*": {
+            "repo": "answerdotai/ModernBERT-base",
+            "pkg": {
+                "0": {
+                    "transformers": "ModernBertModel"
+                }
+            }
+        }
+    },
+    "info.vit.xclip": {
+        "*": {
+            "repo": "microsoft/xclip-base-patch32",
+            "pkg": {
+                "0": {
+                    "transformers": "XCLIPModel"
+                }
+            }
+        }
+    },
+    "info.artm.gemma2": {
+        "7b": {
+            "repo": "google/gemma2-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Gemma2Model"
+                }
+            }
+        }
+    },
+    "info.vit.hiera": {
+        "*": {
+            "repo": "facebook/hiera-base-224",
+            "pkg": {
+                "0": {
+                    "transformers": "HieraModel"
+                }
+            }
+        }
+    },
+    "info.aetm.albert-xxlarge": {
+        "v2": {
+            "repo": "albert/albert-xxlarge-v2",
+            "pkg": {
+                "0": {
+                    "transformers": "AlbertModel"
+                }
+            }
+        }
+    },
+    "info.vit.pvt": {
+        "v2": {
+            "repo": "OpenGVLab/pvt_v2_b0",
+            "pkg": {
+                "0": {
+                    "transformers": "PvtV2Model"
+                }
+            }
+        }
+    },
+    "info.gan.mimi": {
+        "*": {
+            "repo": "kyutai/mimi",
+            "pkg": {
+                "0": {
+                    "transformers": "MimiModel"
+                }
+            }
+        }
+    },
+    "info.vit.owlvit": {
+        "*": {
+            "repo": "google/owlvit-base-patch32",
+            "pkg": {
+                "0": {
+                    "transformers": "OwlViTModel"
+                }
+            }
+        }
+    },
+    "info.vit.owlv2": {
+        "*": {
+            "repo": "google/owlv2-base-patch16",
+            "pkg": {
+                "0": {
+                    "transformers": "Owlv2Model"
+                }
+            }
+        }
+    },
+    "info.artm.gemma3-text": {
+        "7b": {
+            "repo": "google/gemma3_text-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Gemma3TextModel"
+                }
+            }
+        }
+    },
+    "info.artm.mistral": {
+        "7b": {
+            "repo": "mistralai/Mistral-7B-v0.1",
+            "pkg": {
+                "0": {
+                    "transformers": "MistralModel"
+                }
+            }
+        }
+    },
+    "info.vit.blip-vqa": {
+        "*": {
+            "repo": "Salesforce/blip-vqa-base",
+            "pkg": {
+                "0": {
+                    "transformers": "BlipModel"
+                }
+            }
+        }
+    },
+    "info.vit.vitdet": {
+        "*": {
+            "repo": "google/vitdet-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "VitDetModel"
+                }
+            }
+        }
+    },
+    "info.aetm.unispeech-sat": {
+        "*": {
+            "repo": "microsoft/unispeech-sat-base-100h-libri-ft",
+            "pkg": {
+                "0": {
+                    "transformers": "UniSpeechSatModel"
+                }
+            }
+        }
+    },
+    "info.artm.aria": {
+        "*": {
+            "repo": "rhymes-ai/Aria",
+            "pkg": {
+                "0": {
+                    "transformers": "AriaTextModel"
+                }
+            }
+        }
+    },
+    "info.aetm.lightglue-superpoint": {
+        "*": {
+            "repo": "ETH-CVG/lightglue_superpoint",
+            "pkg": {
+                "0": {
+                    "transformers": "LightGlueForKeypointMatching"
+                }
+            }
+        }
+    },
+    "info.vit.clvp-dev": {
+        "*": {
+            "repo": "susnato/clvp_dev",
+            "pkg": {
+                "0": {
+                    "transformers": "ClvpModelForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.vit.vit-msn": {
+        "*": {
+            "repo": "facebook/vit_msn_base",
+            "pkg": {
+                "0": {
+                    "transformers": "ViTMSNModel"
+                }
+            }
+        }
+    },
+    "info.vit.blip2-opt-2": {
+        "7b": {
+            "repo": "Salesforce/blip2-opt-2.7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Blip2Model"
+                }
+            }
+        }
+    },
+    "info.vit.clap-htsat-fused": {
+        "*": {
+            "repo": "laion/clap-htsat-fused",
+            "pkg": {
+                "0": {
+                    "transformers": "ClapModel"
+                }
+            }
+        }
+    },
+    "info.aetm.data2vec-audio": {
+        "*": {
+            "repo": "facebook/data2vec-audio-base-960h",
+            "pkg": {
+                "0": {
+                    "transformers": "Data2VecAudioModel"
+                }
+            }
+        }
+    },
+    "info.ststm.fastspeech2-conformer": {
+        "*": {
+            "repo": "espnet/fastspeech2_conformer",
+            "pkg": {
+                "0": {
+                    "transformers": "FastSpeech2ConformerModel"
+                }
+            }
+        }
+    },
+    "info.ststm.m2m100-418m": {
+        "*": {
+            "repo": "facebook/m2m100_418M",
+            "pkg": {
+                "0": {
+                    "transformers": "M2M100Model"
+                }
+            }
+        }
+    },
+    "info.cnn.yolos": {
+        "*": {
+            "repo": "hustvl/yolos-base",
+            "pkg": {
+                "0": {
+                    "transformers": "YolosModel"
+                }
+            }
+        }
+    },
+    "info.vit.mistral-small-3-1": {
+        "24b": {
+            "repo": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
+            "pkg": {
+                "0": {
+                    "transformers": "Mistral3Model"
+                }
+            }
+        }
+    },
+    "info.artm.nemotron-3-8b": {
+        "*": {
+            "repo": "nvidia/nemotron-3-8b-base-4k-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "NemotronModel"
+                }
+            }
+        }
+    },
+    "info.aetm.sew-tiny-100k": {
+        "*": {
+            "repo": "asapp/sew-tiny-100k",
+            "pkg": {
+                "0": {
+                    "transformers": "SEWModel"
+                }
+            }
+        }
+    },
+    "info.artm.jetmoe": {
+        "8b": {
+            "repo": "jetmoe/jetmoe-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "JetMoeModel"
+                }
+            }
+        }
+    },
+    "info.artm.c4ai-command-r7b-12": {
+        "2024": {
+            "repo": "CohereLabs/c4ai-command-r7b-12-2024",
+            "pkg": {
+                "0": {
+                    "transformers": "Cohere2Model"
+                }
+            }
+        }
+    },
+    "info.artm.qwen1-5-moe-a2": {
+        "7b": {
+            "repo": "Qwen/Qwen1.5-MoE-A2.7B",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen2MoeModel"
+                }
+            }
+        }
+    },
+    "info.ststm.speecht5-asr": {
+        "*": {
+            "repo": "microsoft/speecht5_asr",
+            "pkg": {
+                "0": {
+                    "transformers": "SpeechT5Model"
+                }
+            }
+        }
+    },
+    "info.vit.smolvlm2-2": {
+        "2b": {
+            "repo": "HuggingFaceTB/SmolVLM2-2.2B-Instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "SmolVLMModel"
+                }
+            }
+        }
+    },
+    "info.artm.xglm-564m": {
+        "*": {
+            "repo": "facebook/xglm-564M",
+            "pkg": {
+                "0": {
+                    "transformers": "XGLMModel"
+                }
+            }
+        }
+    },
+    "info.artm.olmo": {
+        "7b": {
+            "repo": "allenai/OLMo-7B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "OlmoModel"
+                }
+            }
+        }
+    },
+    "info.vit.beit": {
+        "*": {
+            "repo": "microsoft/beit-base-patch16-224-pt22k",
+            "pkg": {
+                "0": {
+                    "transformers": "BeitModel"
+                }
+            }
+        }
+    },
+    "ops.precision.uint": {
+        "U8": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint8": {
+                            "variant": "uint8"
+                        }
+                    }
+                }
+            }
+        },
+        "U16": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint16": {
+                            "variant": "uint16"
+                        }
+                    }
+                }
+            }
+        },
+        "U32": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint32": {
+                            "variant": "uint32"
+                        }
+                    }
+                }
+            }
+        },
+        "U64": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint64": {
+                            "variant": "uint64"
+                        }
+                    }
+                }
+            }
+        },
+        "U1": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint1": {
+                            "variant": "uint1"
+                        }
+                    }
+                }
+            }
+        },
+        "U2": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint2": {
+                            "variant": "uint2"
+                        }
+                    }
+                }
+            }
+        },
+        "U3": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint3": {
+                            "variant": "uint3"
+                        }
+                    }
+                }
+            }
+        },
+        "U4": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint4": {
+                            "variant": "uint4"
+                        }
+                    }
+                }
+            }
+        },
+        "U5": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint5": {
+                            "variant": "uint5"
+                        }
+                    }
+                }
+            }
+        },
+        "U6": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint6": {
+                            "variant": "uint6"
+                        }
+                    }
+                }
+            }
+        },
+        "U7": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "uint7": {
+                            "variant": "uint7"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.precision.int": {
+        "I8": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int8": {
+                            "variant": "int8"
+                        }
+                    }
+                }
+            }
+        },
+        "I16": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int16": {
+                            "variant": "int16"
+                        }
+                    }
+                }
+            }
+        },
+        "I32": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int32": {
+                            "variant": "int32"
+                        }
+                    }
+                }
+            }
+        },
+        "I64": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int64": {
+                            "variant": "int64"
+                        }
+                    }
+                }
+            }
+        },
+        "Q8": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "qint8": {
+                            "variant": "qint8"
+                        }
+                    }
+                }
+            }
+        },
+        "Q32": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "qint32": {
+                            "variant": "qint32"
+                        }
+                    }
+                }
+            }
+        },
+        "I1": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int1": {
+                            "variant": "int1"
+                        }
+                    }
+                }
+            }
+        },
+        "I2": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int2": {
+                            "variant": "int2"
+                        }
+                    }
+                }
+            }
+        },
+        "I3": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int3": {
+                            "variant": "int3"
+                        }
+                    }
+                }
+            }
+        },
+        "I4": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int4": {
+                            "variant": "int4"
+                        }
+                    }
+                }
+            }
+        },
+        "I5": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int5": {
+                            "variant": "int5"
+                        }
+                    }
+                }
+            }
+        },
+        "I6": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int6": {
+                            "variant": "int6"
+                        }
+                    }
+                }
+            }
+        },
+        "I7": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "int7": {
+                            "variant": "int7"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.precision.float": {
+        "F16": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float16": {
+                            "variant": "fp16"
+                        }
+                    }
+                }
+            }
+        },
+        "F32": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float32": {
+                            "variant": "fp32"
+                        }
+                    }
+                }
+            }
+        },
+        "F64": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float64": {
+                            "variant": "fp64"
+                        }
+                    }
+                }
+            }
+        },
+        "F8_E5M2": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float8_e5m2": {
+                            "variant": "fp8_e5m2"
+                        }
+                    }
+                }
+            }
+        },
+        "F8_E4M3": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float8_e4m3fn": {
+                            "variant": "fp8_e4m3fn"
+                        }
+                    }
+                }
+            }
+        },
+        "F8_E5M2FNUZ": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float8_e5m2fnuz": {
+                            "variant": "fp8_e5m2fnuz"
+                        }
+                    }
+                }
+            }
+        },
+        "F8_E4M3FNUZ": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float8_e4m3fnuz": {
+                            "variant": "fp8_e4m3fnuz"
+                        }
+                    }
+                }
+            }
+        },
+        "F8_E8M0FNU": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "float8_e8m0fnu": {
+                            "variant": "fp8_e8m0fnu"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.precision.complex": {
+        "C32": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "complex32": {
+                            "variant": "complex32"
+                        }
+                    }
+                }
+            }
+        },
+        "C64": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "complex64": {
+                            "variant": "complex64"
+                        }
+                    }
+                }
+            }
+        },
+        "C128": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "complex128": {
+                            "variant": "complex128"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.precision.bool": {
+        "Bbool": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "bool": {
+                            "variant": "bool"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.precision.quint": {
+        "Q8": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "quint8": {
+                            "variant": "quint8"
+                        }
+                    }
+                }
+            }
+        },
+        "Q4x2": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "quint4x2": {
+                            "variant": "quint4x2"
+                        }
+                    }
+                }
+            }
+        },
+        "Q2x4": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "quint2x4": {
+                            "variant": "quint2x4"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.precision.bfloat": {
+        "B16": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "bfloat16": {
+                            "variant": "bfp16"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.precision.bits": {
+        "B1x8": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "bits1x8": {
+                            "variant": "bits1x8"
+                        }
+                    }
+                }
+            }
+        },
+        "B2x4": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "bits2x4": {
+                            "variant": "bits2x4"
+                        }
+                    }
+                }
+            }
+        },
+        "B4x2": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "bits4x2": {
+                            "variant": "bits4x2"
+                        }
+                    }
+                }
+            }
+        },
+        "B8": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "bits8": {
+                            "variant": "bits8"
+                        }
+                    }
+                }
+            }
+        },
+        "B16": {
+            "pkg": {
+                "0": {
+                    "torch": {
+                        "bits16": {
+                            "variant": "bits16"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.scheduler.amused": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "AmusedScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.cmstochasticiterative": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "CMStochasticIterativeScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.cogvideoxddim": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "CogVideoXDDIMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.cogvideoxdpm": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "CogVideoXDPMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.ddiminverse": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DDIMInverseScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.ddimparallel": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DDIMParallelScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.ddim": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DDIMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.ddpmparallel": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DDPMParallelScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.ddpm": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DDPMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.ddpmwuerstchen": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DDPMWuerstchenScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.deis": {
+        "multistep": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DEISMultistepScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.dpminverse": {
+        "multistep": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DPMSolverMultistepInverseScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.dpm": {
+        "multistep": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DPMSolverMultistepScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.dpmsinglestep": {
+        "solver": {
+            "pkg": {
+                "0": {
+                    "diffusers": "DPMSolverSinglestepScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.edmdpm": {
+        "multistep": {
+            "pkg": {
+                "0": {
+                    "diffusers": "EDMDPMSolverMultistepScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.edmeuler": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "EDMEulerScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.eulerancestral": {
+        "discrete": {
+            "pkg": {
+                "0": {
+                    "diffusers": "EulerAncestralDiscreteScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.euler": {
+        "discrete": {
+            "pkg": {
+                "0": {
+                    "diffusers": "EulerDiscreteScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.flowmatcheuler": {
+        "discrete": {
+            "pkg": {
+                "0": {
+                    "diffusers": "FlowMatchEulerDiscreteScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.flowmatchheun": {
+        "discrete": {
+            "pkg": {
+                "0": {
+                    "diffusers": "FlowMatchHeunDiscreteScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.flowmatchlcm": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "FlowMatchLCMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.heun": {
+        "discrete": {
+            "pkg": {
+                "0": {
+                    "diffusers": "HeunDiscreteScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.ipndm": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "IPNDMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.karrasve": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "KarrasVeScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.kdpm2ancestral": {
+        "discrete": {
+            "pkg": {
+                "0": {
+                    "diffusers": "KDPM2AncestralDiscreteScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.kdpm2": {
+        "discrete": {
+            "pkg": {
+                "0": {
+                    "diffusers": "KDPM2DiscreteScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.lcm": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "LCMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.pndm": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "PNDMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.repaint": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "RePaintScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.sa": {
+        "solver": {
+            "pkg": {
+                "0": {
+                    "diffusers": "SASolverScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.scm": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "SCMScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.scoresdeve": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "ScoreSdeVeScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.tcd": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "TCDScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.unclip": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "UnCLIPScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.unipc": {
+        "multistep": {
+            "pkg": {
+                "0": {
+                    "diffusers": "UniPCMultistepScheduler"
+                }
+            }
+        }
+    },
+    "ops.scheduler.vqdiffusion": {
+        "scheduler": {
+            "pkg": {
+                "0": {
+                    "diffusers": "VQDiffusionScheduler"
+                }
+            }
+        }
+    },
+    "info.lora.dmd": {
+        "stable-diffusion-xl": {
+            "repo": "tianweiy/DMD2",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "num_inference_steps": 4,
+                        "guidance_scale": 0,
+                        "timesteps": [
+                            999,
+                            749,
+                            499,
+                            249
+                        ]
+                    },
+                    "scheduler": {
+                        "ops.scheduler.lcm": ""
+                    }
+                }
+            },
+            "file_256": [
+                "b3d9173815a4b595991c3a7a0e0e63ad821080f314a0b2a3cc31ecd7fcf2cbb8",
+                "a374289e9446d7f14d2037c4b3770756b7b52c292142a691377c3c755010a1bb"
+            ]
+        }
+    },
+    "info.lora.dpo": {
+        "stable-diffusion-xl": {
+            "repo": "radames/sdxl-DPO-LoRA",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "guidance_scale": 7.5,
+                        "num_inference_steps": 4
+                    },
+                    "scheduler": {
+                        "ops.scheduler.dpm": {
+                            "algorithm_type": "sde-dpmsolver++",
+                            "use_karras_sigmas": true,
+                            "order": 2
+                        }
+                    }
+                }
+            },
+            "file_256": [
+                "666f71a833fc41229ec7e8a264fb7b0fcb8bf47a80e366ae7486c18f38ec9fc0",
+                "6b1dcbfb234d7b6000948b5b95ccebc8f903450ce2ba1b50bc3456987c9087ad"
+            ]
+        }
+    },
+    "info.lora.flash": {
+        "stable-diffusion-xl": {
+            "repo": "jasperai/flash-sdxl",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "scheduler": "ops.scheduler.lcm"
+                }
+            },
+            "file_256": [
+                "afe2ca6e27c4c6087f50ef42772c45d7b0efbc471b76e422492403f9cae724d7"
+            ]
+        },
+        "pixart-alpha": {
+            "repo": "jasperai/flash-pixart",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            },
+            "file_256": [
+                "99ef037fe3c1fb6d6bbefdbb85ad60df434fcc0577d34c768d752d60cf69681b"
+            ]
+        },
+        "stable-diffusion-3": {
+            "repo": "jasperai/flash-sd3",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            },
+            "file_256": [
+                "85fce13c36e3739aa42930f745eb9fceb6c53d53fb17e2a687e3234c1a58ee15"
+            ]
+        },
+        "stable-diffusion-1": {
+            "repo": "jasperai/flash-sd",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "num_inference_steps": 4,
+                        "guidance_scale": 0
+                    }
+                }
+            },
+            "file_256": [
+                "99353444c1a0f40719a1b3037049dbd24800317979a73c312025c05af3574a5f"
+            ]
+        }
+    },
+    "info.lora.hyper": {
+        "stable-diffusion-xl": {
+            "repo": "ByteDance/Hyper-SD",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {
+                            "fuse": 1.0
+                        }
+                    }
+                }
+            },
+            "file_256": {
+                "0b97f447b5878323a28fbe7c51ba7acebd21f4d77552ba77b04b11c8911825b6": {
+                    "num_inference_steps": 12
+                },
+                "55b51334c85061afff5eff7c550b61963c8b8607a5868bbe4f26db49374719b1": {
+                    "num_inference_steps": 8
+                },
+                "c912df184c5116792d2c604d26c6bc2aa916685f4a793755255cda1c43a3c78a": {
+                    "num_inference_steps": 1,
+                    "guidance_scale": 0.0
+                },
+                "69b25c0187ced301c3603c599c0bc509ac99b8ac34db89a2aecc3d5f77a35187": {
+                    "num_inference_steps": 2,
+                    "guidance_scale": 0.0
+                },
+                "12f81a27d00a751a40d68fd15597091896c5a90f3bd632fb6c475607cbdad76e": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 0.0
+                },
+                "ca689190e8c46038550384b5675488526cfe5a40d35f82b27acb75c100f417c1": {
+                    "num_inference_steps": 8,
+                    "guidance_scale": 0.0
+                }
+            }
+        },
+        "flux-1-dev": {
+            "repo": "ByteDance/Hyper-SD",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {
+                            "fuse": 0.125
+                        }
+                    }
+                }
+            },
+            "file_256": {
+                "6461f67dfc1a967ae60344c3b3f350877149ccab758c273cc37f5e8a87b5842e": {
+                    "num_inference_steps": 16,
+                    "guidance_scale": 0.0
+                },
+                "e0ab0fdf569cd01a382f19bd87681f628879dea7ad51fe5a3799b6c18c7b2d03": {
+                    "num_inference_steps": 8,
+                    "guidance_scale": 0.0
+                }
+            }
+        },
+        "stable-diffusion-3": {
+            "repo": "ByteDance/Hyper-SD",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {
+                            "fuse": 0.125
+                        }
+                    }
+                }
+            },
+            "file_256": {
+                "5b4d0b99d58deb811bdbbe521a06f4dbf56a2e9148ff3211c594e0502b656bc9": {
+                    "num_inference_steps": 16
+                },
+                "0ee4e529abd17b06d4295e3bb91c0d4ddae393afad86b2b43c4f5eeb9e401602": {
+                    "num_inference_steps": 4
+                },
+                "fc6a3e73e14ed11e21e4820e960d7befcffe7e333850ada9545f239e9aa6027e": {
+                    "num_inference_steps": 8
+                }
+            }
+        },
+        "stable-diffusion-1": {
+            "repo": "ByteDance/Hyper-SD",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            },
+            "file_256": {
+                "64b98437383537cd968fda6f87a05c33160ece9c79ff4757949a1e212ff78361": {
+                    "num_inference_steps": 12
+                },
+                "f6123d5b950d5250ab6c33600e27f4dcf71b3099ebf888685e01e9e8117ce482": {
+                    "num_inference_steps": 8
+                },
+                "a04fd9a535c1e56d38f7590ee72a13fd5ca0409853b4fff021e5a9482cf1ca3b": {
+                    "num_inference_steps": 1,
+                    "guidance_scale": 0.0
+                },
+                "2f26dcc1d883feb07557a552315baae2ca2a04ac08556b08a355a244547e8c3a": {
+                    "num_inference_steps": 2,
+                    "guidance_scale": 0.0
+                },
+                "c5dd058616461ed5053e2b14eec4dbe3fa0eea3b13688642f6d6c80ea2ba5958": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 0.0
+                },
+                "91fc3186236e956d64dbb4357f2e120c69b968b78af7d2db9884a5ca74d3cd13": {
+                    "num_inference_steps": 8,
+                    "guidance_scale": 0.0
+                }
+            }
+        }
+    },
+    "info.lora.lcm": {
+        "stable-diffusion-xl": {
+            "repo": "latent-consistency/lcm-lora-sdxl",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {
+                            "fuse": 1.0
+                        }
+                    },
+                    "scheduler": {
+                        "ops.scheduler.lcm": {
+                            "timestep_spacing": "trailing"
+                        }
+                    },
+                    "generation": {
+                        "num_inference_steps": 8
+                    }
+                }
+            },
+            "file_256": [
+                "a764e6859b6e04047cd761c08ff0cee96413a8e004c9f07707530cd776b19141"
+            ]
+        },
+        "ssd-1b": {
+            "repo": "latent-consistency/lcm-lora-ssd-1b",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "num_inference_steps": 8
+                    }
+                }
+            },
+            "file_256": [
+                "7adaaa69db6f011058a19fd1d5315fdf19ef79fcd513cdab30e173833fd5c59b"
+            ]
+        },
+        "vega": {
+            "repo": "segmind/Segmind-VegaRT",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "gen_kwargs": {
+                        "num_inference_steps": 8
+                    }
+                }
+            },
+            "file_256": [
+                "9b6e8cd833fa205eaeeed391ca623a6f2546e447470bd1c5dcce3fa8d2f26afb"
+            ]
+        },
+        "stable-diffusion-1": {
+            "repo": "latent-consistency/lcm-lora-sdv1-5",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "num_inference_steps": 8
+                    }
+                }
+            },
+            "file_256": [
+                "8f90d840e075ff588a58e22c6586e2ae9a6f7922996ee6649a7f01072333afe4",
+                "eaecb24a1cda4411eab67275b1d991071216ac93693e8fa0c9226c9df0386232"
+            ]
+        }
+    },
+    "info.lora.lightning": {
+        "stable-diffusion-xl": {
+            "repo": "ByteDance/SDXL-Lightning",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "num_inference_steps": 4,
+                        "guidance_scale": 0
+                    }
+                }
+            }
+        }
+    },
+    "info.lora.pcm": {
+        "stable-diffusion-xl": {
+            "repo": "wangfuyun/PCM_Weights",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            },
+            "file_256": {
+                "0365f6107250a4fed1b83e8ae6a070065e026a2ba54bff65f55a50284232bbe6": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 0.0
+                },
+                "04ea827435d5750e63d113dc509174b4f6e8a069ff8f91970c3d25299c10b1f8": {
+                    "num_inference_steps": 16
+                },
+                "7eb353b2abcaabab6251ba4e17d6cbe2e763feb0674b0f950555552212b44621": {
+                    "num_inference_steps": 16
+                },
+                "a85cf70ac16ed42011630a5cd6b5927722cb7c40a2107eff85e2670f9a38c893": {
+                    "num_inference_steps": 4
+                },
+                "9f7f13bb019925eacd89aeff678e4fd831f7b60245b986855dff6634aee4eba9": {
+                    "num_inference_steps": 4
+                },
+                "3b9c970a3e4c0e182931e71b3f769c1956f16c6b06db98b4d67236790d4d0b1d": {
+                    "num_inference_steps": 8
+                },
+                "7f04ba8911b4c25ef2c7cbf74abcb6daa3b4f0e4bc6a03896bdae7601f2f180b": {
+                    "num_inference_steps": 8
+                },
+                "13fb038025ce9dad93b8ee1b67fc81bac8affb59a77b67d408d286e0b0365a1d": {
+                    "num_inference_steps": 16,
+                    "guidance_scale": 0.0
+                },
+                "3442eff271aa3b60a094fd6f9169d03e49e4051044a974f6fcf690507959191f": {
+                    "num_inference_steps": 16,
+                    "guidance_scale": 0.0
+                },
+                "242cbe4695fe3f2e248faa71cf53f2ccbf248a316973e4b2f38ab9e34f35a5ab": {
+                    "num_inference_steps": 2,
+                    "guidance_scale": 0.0
+                },
+                "e1f600491bb8e0cd94f41144321e44fdb2cb346447f31e71f6e53f1c24cccfbf": {
+                    "num_inference_steps": 2,
+                    "guidance_scale": 0.0
+                },
+                "d0bf40a7f280829195563486bec7253f043a06b1f218602b20901c367641023e": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 0.0
+                },
+                "212150d7953627fb89df99aad579d6763645a1cb2ef26b19fee8b398d5e5ff4d": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 0.0
+                },
+                "e80fcf46d15f4d3821d3d9611bdb3022a4a8b647b2536833b168d317a91e4f74": {
+                    "num_inference_steps": 8,
+                    "guidance_scale": 0.0
+                },
+                "56ed9dc9f51f4bb0d6172e13b7947f215c347fc0da341c8951b2c12b9507d09e": {
+                    "num_inference_steps": 8,
+                    "guidance_scale": 0.0
+                }
+            }
+        },
+        "stable-diffusion-1": {
+            "repo": "wangfuyun/PCM_Weights",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            },
+            "file_256": {
+                "b80b27dd6504f1c3a7637237dda86bc7e26fa5766da30c4fc853c0a1d46bad31": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 0.0
+                },
+                "8f605ffde3616592deb37ed8c6bacb83fe98963c1fd0883c2a4f93787098aa45": {
+                    "num_inference_steps": 16
+                },
+                "fa6acb94f11dba3bf4120af5a12e3c88cd2b9572d43ec1a6fb04eede9f32829e": {
+                    "num_inference_steps": 4
+                },
+                "bff3d4499718b61455b0757b5f8d98fe23e73a768b538c82ecf91c693b69dbcd": {
+                    "num_inference_steps": 8
+                },
+                "c7ac2fa3df3a5b7080ebe63f259ab13630014f104c93c3c706d77b05cc48506b": {
+                    "num_inference_steps": 16,
+                    "guidance_scale": 0.0
+                },
+                "4c5f27a727d12146de4b1d987cee3343bca89b085d12b03c45297af05ce88ef4": {
+                    "num_inference_steps": 2,
+                    "guidance_scale": 0.0
+                },
+                "29278bc86274fdfc840961e3c250758ff5e2dc4666d940f103e78630d5b879d3": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 0.0
+                },
+                "41a7f0b966d18f643d16c4401f0b5ef6b9ef7362c20e17128322f17874709107": {
+                    "num_inference_steps": 8,
+                    "guidance_scale": 0.0
+                }
+            }
+        },
+        "stable-diffusion-3": {
+            "repo": "wangfuyun/PCM_Weights",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            },
+            "file_256": {
+                "8a45878ecc34e53855fe21146cb6ef32682053b7c4eacc013be89fb08c4c19d8": {
+                    "num_inference_steps": 2,
+                    "guidance_scale": 1.2
+                },
+                "9444a5cead551c56c4d1c455ce829ba9f96f01fbcca31294277e0862a6a15b76": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 1.2
+                },
+                "e365902c208cbc0456ca5e7c41a490f637c15f3f7b98691cbba21f96a8c960b4": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 1.2
+                },
+                "3550fa018cd0b60d9e36ac94c31b30f27e402d3855ed63e47668bb181b35a0ad": {
+                    "num_inference_steps": 4,
+                    "guidance_scale": 1.2
+                }
+            }
+        }
+    },
+    "info.lora.slam": {
+        "stable-diffusion-xl": {
+            "repo": "alimama-creative/slam-lora-sdxl",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "scheduler": {
+                        "ops.scheduler.lcm": {
+                            "timestep_spacing": "trailing"
+                        }
+                    },
+                    "generation": {
+                        "num_inference_steps": 4,
+                        "guidance_scale": 1
+                    }
+                }
+            },
+            "file_256": [
+                "22569a946b0db645aa3b8eb782c674c8e726a7cc0d655887c21fecf6dfe6ad91"
+            ]
+        },
+        "stable-diffusion-1": {
+            "repo": "alimama-creative/slam-sd1.5",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            }
+        }
+    },
+    "info.lora.spo": {
+        "stable-diffusion-xl": {
+            "repo": "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "guidance_scale": 5.0
+                    }
+                }
+            },
+            "file_256": [
+                "0b9896f30d29daa5eedcfc9e7ad03304df6efc5114508f6ca9c328c0b4f057df"
+            ]
+        },
+        "stable-diffusion-1": {
+            "repo": "SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "guidance_scale": 7.5
+                    }
+                }
+            },
+            "file_256": [
+                "1be130c5be2de0beacadd3bf0bafe3bedd7e7a380729932a1e369fb29efa86f4"
+            ]
+        }
+    },
+    "info.lora.tcd": {
+        "stable-diffusion-xl": {
+            "repo": "h1t/TCD-SDXL-LoRA",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    },
+                    "generation": {
+                        "num_inference_steps": 4,
+                        "guidance_scale": 0,
+                        "eta": 0.3
+                    },
+                    "scheduler": {
+                        "ops.scheduler.tcd": {}
+                    }
+                }
+            },
+            "file_256": [
+                "2c777bc60abf41d3eb0fe405d23d73c280a020eea5adf97a82a141592c33feba"
+            ]
+        },
+        "stable-diffusion-1": {
+            "repo": "h1t/TCD-SD15-LoRA",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {}
+                    }
+                }
+            },
+            "file_256": [
+                "eaecb24a1cda4411eab67275b1d991071216ac93693e8fa0c9226c9df0386232"
+            ]
+        }
+    },
+    "info.lora.turbo": {
+        "flux-1": {
+            "repo": "alimama-creative/FLUX.1-Turbo-Alpha",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {
+                            "fuse": 0.125
+                        }
+                    },
+                    "generation": {
+                        "guidance_scale": 3.5,
+                        "num_inference_steps": 8,
+                        "max_sequence_length": 512
+                    }
+                }
+            },
+            "file_256": [
+                "77f7523a5e9c3da6cfc730c6b07461129fa52997ea06168e9ed5312228aa0bff"
+            ]
+        },
+        "stable-diffusion-3-5-medium": {
+            "repo": "tensorart/stable-diffusion-3.5-medium-turbo",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {
+                            "fuse": 1.0
+                        }
+                    },
+                    "scheduler": {
+                        "ops.scheduler.flow-match": {
+                            "shift": 5
+                        }
+                    }
+                }
+            }
+        },
+        "stable-diffusion-3.5-large": {
+            "repo": "tensorart/stable-diffusion-3.5-large-TurboX",
+            "pkg": {
+                "0": {
+                    "diffusers": {
+                        "load_lora_weights": {
+                            "fuse": 1.0
+                        }
+                    },
+                    "scheduler": {
+                        "ops.scheduler.flow-match": {
+                            "shift": 5
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "info.artm.audiogen": {
+        "medium-1-5b": {
+            "repo": "facebook/audiogen-medium",
+            "pkg": {
+                "0": {
+                    "audiocraft.models": {
+                        "AudioGen": {
+                            "duration": 5
+                        }
+                    },
+                    "audiocraft.data.audio": {
+                        "audio_write": {
+                            "strategy": "loudness",
+                            "loudness_compressor": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "info.artm.parler-tts": {
+        "tiny-v1": {
+            "repo": "parler-tts/parler-tts-tiny-v1",
+            "pkg": {
+                "0": {
+                    "parler_tts": "ParlerTTSForConditionalGeneration",
+                    "transformers": {
+                        "AutoTokenizer": {
+                            "return_tensors": "pt"
+                        }
+                    }
+                }
+            }
+        },
+        "large-v1": {
+            "repo": "parler-tts/parler-tts-large-v1",
+            "pkg": {
+                "0": {
+                    "parler_tts": "ParlerTTSForConditionalGeneration",
+                    "transformers": {
+                        "AutoTokenizer": {
+                            "return_tensors": "pt"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "info.gan.kokoro": {
+        "82m": {
+            "repo": "hexgrad/Kokoro-82M",
+            "pkg": {
+                "0": {
+                    "mlx_audio ": "tts.generate.generate_audio"
+                }
+            }
+        }
+    },
+    "info.artm.lumina-mgpt": {
+        "7B-768": {
+            "repo": "Alpha-VLLM/Lumina-mGPT-7B-768",
+            "pkg": {
+                "0": {
+                    "inference_solver": {
+                        "FlexARInferenceSolver": {
+                            "precision": "bf16",
+                            "target_size": 768
+                        }
+                    },
+                    "generation": {
+                        "images": [],
+                        "qas": [
+                            [
+                                "q1",
+                                null
+                            ]
+                        ],
+                        "max_gen_len": 8192,
+                        "temperature": 1.0
+                    }
+                }
+            }
+        }
+    },
+    "info.artm.orpheus": {
+        "3b-0-1-ft": {
+            "repo": "canopylabs/orpheus-3b-0.1-ft",
+            "pkg": {
+                "0": {
+                    "orpheus_tts": {
+                        "OrpheusModel": {
+                            "max_model_len": 2048
+                        }
+                    }
+                }
+            }
+        },
+        "3b-0-1-ft-4b": {
+            "repo": "mlx-community/orpheus-3b-0.1-ft-4bit",
+            "pkg": {
+                "0": {
+                    "mlx_audio": {
+                        "tts.generate.generate_audio": {
+                            "audio_format": "wav",
+                            "join_audio": true,
+                            "verbose": false
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "info.artm.outetts-0-3": {
+        "1b": {
+            "repo": "OuteAI/OuteTTS-0.3-1B",
+            "pkg": {
+                "0": {
+                    "outetts": "InterfaceHF"
+                }
+            }
+        }
+    },
+    "info.artm.outetts-1.0-0": {
+        "6B-4bit": {
+            "repo": "mlx-community/OuteTTS-1.0-0.6B-4bit",
+            "pkg": {
+                "0": {
+                    "mlx_audio": {
+                        "tts.generate.generate_audio": {
+                            "audio_format": "wav",
+                            "join_audio": true,
+                            "verbose": false
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ops.patch.hidiffusion": {
+        "stable-diffusion-xl": {
+            "pkg": {
+                "0": {
+                    "hidiffusion": {
+                        "apply_hidiffusion": {
+                            "timesteps": "StableDiffusionXLTimesteps"
+                        }
+                    },
+                    "generation": {
+                        "height": 2048,
+                        "width": 2048,
+                        "eta": 1.0,
+                        "guidance_scale": 7.5,
+                        "num_inference_steps": 10
+                    }
+                }
+            }
+        }
+    },
+    "ops.scheduler.align-your-steps": {
+        "stable-diffusion-xl": {
+            "pkg": {
+                "0": {
+                    "diffusers.schedulers.scheduling_utils": {
+                        "AysSchedules": {
+                            "timesteps": "StableDiffusionXLTimesteps",
+                            "num_inference_steps": 10
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "info.aetm.bagel": {
+        "7B-MoT": {
+            "repo": "ByteDance-Seed/BAGEL-7B-MoT",
+            "pkg": {
+                "0": {
+                    "Bagel": "app"
+                }
+            }
+        }
+    }
+}

@@ -1,15 +1,16 @@
-### <!-- // /*  SPDX-License-Identifier: LGPL-3.0  */ -->
-### <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 
 """區塊鏈儲存 Linked-list storage"""
 
 # pylint:disable=line-too-long, import-outside-toplevel
 
-from dataclasses import dataclass
 import os
+from dataclasses import dataclass
+
+from nnll.mir.json_cache import JSONCache
 from nnll.monitor.file import debug_monitor
-from mir.json_cache import JSONCache
 
 HYPERCHAIN_PATH_NAMED = os.path.join(os.path.dirname(__file__), "hyper_chain.json")
 
