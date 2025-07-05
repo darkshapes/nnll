@@ -76,12 +76,12 @@ def test_grade_similar_fail_again(mock_test_database):
 
 def test_grade_cascade_prior_match(mock_test_database):
     result = mock_test_database.find_path(field="repo", target="stabilityai/stable-cascade-prior")
-    assert result == ["info.unet.stable-cascade", "prior"]
+    assert result == ["info.unet.stable-cascade-prior", "*"]
 
 
 def test_grade_cascade_match(mock_test_database):
     result = mock_test_database.find_path(field="repo", target="stabilityai/stable-cascade")
-    assert result == ["info.unet.stable-cascade", "*"]
+    assert result == ["info.unet.stable-cascade", "decoder"]
 
 
 def test_grade_field_change(mock_test_database):
@@ -101,7 +101,7 @@ def test_repo_case_change(mock_test_database):
 
 def test_sub_module_detection(mock_test_database):
     result = mock_test_database.find_path(field="repo", target="PixArt-alpha/PixArt-Sigma-XL-2-1024-Ms")
-    assert result == ["info.dit.pixart-sigma-xl-2", "1024-ms"]
+    assert result == ["info.dit.pixart-sigma-xl-2-ms", "*"]
 
 
 def test_find_path_truncated(mock_test_database):

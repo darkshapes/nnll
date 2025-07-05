@@ -265,7 +265,7 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.unet",
-            "kolors",
+            "kolors-diffusers",
             {
                 "diffusers": {
                     "pkg": {

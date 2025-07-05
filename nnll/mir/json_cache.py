@@ -21,10 +21,9 @@ def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__)
     :param prefix: Optional folder between `folder_path` and `file_name`, defaults to "config"
     :return: A combined path string of the given values
     """
-    folder_path_named = os.path.join(folder_path, prefix, file_name)
+    folder_path_named = os.path.join(folder_path, prefix)
     Path(folder_path_named).touch()
-    return folder_path_named
-    # return ensure_path(folder_path_named, file_name)
+    return ensure_path(folder_path_named, file_name)
 
 
 constants = [

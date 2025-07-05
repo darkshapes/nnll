@@ -36,3 +36,7 @@ jobs:
           python3 -m cyclonedx_py environment --spec-version 1.6 --output-format JSON --output-file nnll-sbom.json
           pip install ".[dev]"
           pytest -v
+
+  # call-workflow-in-another-repo:
+  #   uses: darkshapes/MIR/.github/workflows/mir.yml
+
