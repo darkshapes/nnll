@@ -29,11 +29,11 @@ def test_create_unet():
     assert len(result) == 2
     mir_series, prefixed_data = result
 
-    assert mir_series == "info.unet.standard-repo"
-    assert "repo" in prefixed_data.get("prior")
-    assert prefixed_data["prior"]["repo"] == repo_path
-    assert "pkg" in prefixed_data.get("prior")
-    assert prefixed_data["prior"]["pkg"][0]["diffusers"] == class_name
+    assert mir_series == "info.unet.standard-repo-prior"
+    assert "repo" in prefixed_data.get("*")
+    assert prefixed_data["*"]["repo"] == repo_path
+    assert "pkg" in prefixed_data.get("*")
+    assert prefixed_data["*"]["pkg"][0]["diffusers"] == class_name
 
 
 def test_create_transformer():
@@ -59,9 +59,9 @@ def test_create_kandinsky():
 
     mir_series, prefixed_data = result
 
-    assert mir_series == "info.unet.kandinsky-repo"
-    assert prefixed_data["v1"]["repo"] == repo_path
-    assert prefixed_data["v1"]["pkg"][0]["diffusers"] == class_name
+    assert mir_series == "info.unet.kandinsky-repo-v1"
+    assert prefixed_data["*"]["repo"] == repo_path
+    assert prefixed_data["*"]["pkg"][0]["diffusers"] == class_name
 
 
 def test_create_shap_e():
@@ -73,9 +73,9 @@ def test_create_shap_e():
 
     mir_series, prefixed_data = result
 
-    assert mir_series == "info.unet.shap-e"
-    assert prefixed_data["40496"]["repo"] == repo_path
-    assert prefixed_data["40496"]["pkg"][0]["diffusers"] == class_name
+    assert mir_series == "info.unet.shap-e-40496"
+    assert prefixed_data["*"]["repo"] == repo_path
+    assert prefixed_data["*"]["pkg"][0]["diffusers"] == class_name
 
 
 def test_create_flux():
@@ -114,9 +114,9 @@ def test_create_prior():
 
     mir_series, prefixed_data = result
 
-    assert mir_series == "info.unet.finish-him--kascade"
-    assert prefixed_data["prior"]["repo"] == repo_path
-    assert prefixed_data["prior"]["pkg"][0]["diffusers"] == class_name
+    assert mir_series == "info.unet.finish-him--kascade-prior"
+    assert prefixed_data["*"]["repo"] == repo_path
+    assert prefixed_data["*"]["pkg"][0]["diffusers"] == class_name
 
 
 def test_create_decoder():
@@ -129,5 +129,5 @@ def test_create_decoder():
     mir_series, prefixed_data = result
 
     assert mir_series == "info.unet.finish-him--kascade"
-    assert prefixed_data["*"]["repo"] == repo_path
-    assert prefixed_data["*"]["pkg"][0]["diffusers"] == class_name
+    assert prefixed_data["decoder"]["repo"] == repo_path
+    assert prefixed_data["decoder"]["pkg"][0]["diffusers"] == class_name

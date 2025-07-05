@@ -3,14 +3,14 @@
 
 """類發現和拆卸"""
 
-import os
 import sys
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional
 
 from nnll.metadata.helpers import make_callable
 from nnll.mir.doc_parser import parse_docs
-from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, VERSIONS_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
+from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
 from nnll.mir.mappers import cut_docs
+from nnll.mir.tag import make_mir_tag
 from nnll.tensor_pipe.deconstructors import root_class
 
 if "pytest" in sys.modules:
@@ -19,41 +19,6 @@ if "pytest" in sys.modules:
 nfo = sys.stderr.write
 
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
-VERSIONS_FILE = JSONCache(VERSIONS_PATH_NAMED)
-
-
-def mir_tag(mir_prefix: str, repo_path: str, decoder=False) -> Tuple[str]:
-    """Create a mir label from a repo path\n
-    :param mir_prefix: Known period-separated prefix and model type
-    :param repo_path: Typical remote source repo path, A URL without domain
-    :return: The assembled mir tag with compatibility pre-separated
-    """
-    import re
-
-    @VERSIONS_FILE.decorator
-    def _read_data(data: Optional[Dict[str, str]] = None):
-        return data
-
-    name = os.path.basename(repo_path).lower().replace("_", "-").replace("1.0", "").replace(".", "-")
-
-    versions = _read_data()
-    ignore_types = versions["ignore"]
-    suffix_types = versions["suffixes"]
-    all_versions = ignore_types + suffix_types
-    for pattern in all_versions:
-        compiled = re.compile(pattern)
-        if re.search(compiled, name):
-            within = re.search(compiled, name).group()
-            if within:
-                suffix = within.strip("-")
-                split_name = name.split(within)
-                if pattern in ignore_types:
-                    name = split_name[0]
-                    break
-                return mir_prefix + "." + split_name[0], suffix
-
-    suffix = "decoder" if decoder else "*"
-    return mir_prefix + "." + name, "*"
 
 
 def flag_config(transformers: bool = False, **kwargs):
@@ -158,7 +123,8 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
             nfo(f"Failed to detect type for {class_name} {list(sub_segments)}")
         else:
             mir_prefix = "info." + mir_prefix
-    mir_series, mir_comp = mir_tag(mir_prefix, repo_path, decoder)
+    mir_series, mir_comp = make_mir_tag(repo_path, decoder)
+    mir_series = mir_prefix + "." + mir_series
     prefixed_data = {
         "repo": repo_path,
         "pkg": {0: {"diffusers": class_name}},
@@ -246,7 +212,8 @@ def transformers_index():
                 continue
             else:
                 mir_prefix = "info." + mir_prefix
-            mir_series, mir_comp = mir_tag(mir_prefix, repo_path)
+            mir_series, mir_comp = make_mir_tag(repo_path)
+            mir_series = mir_prefix + "." + mir_series
             mir_data.setdefault(
                 mir_series,
                 {

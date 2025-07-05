@@ -1,14 +1,19 @@
 {
+    "semantic": [
+        "-?\\d+[bBmMkK]",
+        "-?v\\d+",
+        "(?<=\\d)[.-](?=\\d)",
+        "-prior$",
+        "-diffusers$",
+        "-large$",
+        "-medium$"
+    ],
     "suffixes": [
         "-\\d{1,2}[bBmMkK]",
         "-v\\d{1,2}",
         "-\\d{3,}$",
         "-\\d{4,}.*",
-        "-\\d{4,}[px].*",
-        "-prior$",
-        "-diffusers$",
-        "-large$",
-        "-medium$"
+        "-\\d{4,}[px].*"
     ],
     "ignore": [
         "-tiny$",
