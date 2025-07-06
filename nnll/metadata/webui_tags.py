@@ -9,7 +9,7 @@
 from pathlib import Path
 from typing import List, Tuple
 
-from nnll.metadata.constants import (
+from nnll.configure.constants import (
     BracketedDict,
     DownField,
     EmptyField,
@@ -19,7 +19,7 @@ from nnll.metadata.constants import (
     NodeWorkflow,
     UpField,
 )
-from nnll.metadata.constants import (
+from nnll.configure.constants import (
     ExtensionType as Ext,
 )
 from nnll.metadata.read_tags import MetadataFileReader

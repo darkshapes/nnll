@@ -137,8 +137,8 @@ def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> 
                                 update_nested_dict(mir_data[comp][field][definition], sub_def_data)
 
 
-def auto_diffusers(mir_db: MIRDatabase):
-    """Generate MIR Diffusion database"""
+def auto_hub(mir_db: MIRDatabase):
+    """Generate MIR HF Hub model database"""
 
     from nnll.mir.indexers import diffusers_index, transformers_index
 
@@ -400,12 +400,13 @@ def auto_detail(mir_db: MIRDatabase):
                 }
             },
         ),
+        ("info.aetm", "wavlm", {"kokoro": {"repo": "hexgrad/Kokoro-82M"}}),
     ]
     assimilate(mir_db, data_tuple)
 
 
 def auto_supplement(mir_db: MIRDatabase):
-    """Create MIR entries missing from the dtabase"""
+    """Create MIR entries missing from the database"""
     mir_db.add(
         mir_entry(
             domain="info",
@@ -862,7 +863,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="flash",
-            comp="stable-diffusion-1",
+            comp="stable-diffusion-v1",
             repo="jasperai/flash-sd",
             pkg={
                 0: {"diffusers": {"load_lora_weights": {}}, "generation": {"num_inference_steps": 4, "guidance_scale": 0}},
@@ -922,7 +923,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="hyper",
-            comp="stable-diffusion-1",
+            comp="stable-diffusion-v1",
             repo="ByteDance/Hyper-SD",
             pkg={0: {"diffusers": {"load_lora_weights": {}}}},
             file_256={
@@ -979,7 +980,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="lcm",
-            comp="stable-diffusion-1",
+            comp="stable-diffusion-v1",
             repo="latent-consistency/lcm-lora-sdv1-5",
             pkg={0: {"diffusers": {"load_lora_weights": {}}, "generation": {"num_inference_steps": 8}}},
             file_256=["8f90d840e075ff588a58e22c6586e2ae9a6f7922996ee6649a7f01072333afe4", "eaecb24a1cda4411eab67275b1d991071216ac93693e8fa0c9226c9df0386232"],
@@ -1027,7 +1028,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="pcm",
-            comp="stable-diffusion-1",
+            comp="stable-diffusion-v1",
             repo="wangfuyun/PCM_Weights",
             pkg={0: {"diffusers": {"load_lora_weights": {}}}},
             file_256={
@@ -1080,7 +1081,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="slam",
-            comp="stable-diffusion-1",
+            comp="stable-diffusion-v1",
             repo="alimama-creative/slam-sd1.5",
             pkg={0: {"diffusers": {"load_lora_weights": {}}}},
         )
@@ -1101,7 +1102,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="spo",
-            comp="stable-diffusion-1",
+            comp="stable-diffusion-v1",
             repo="SPO-Diffusion-Models/SPO-SD-v1-5_4k-p_10ep_LoRA",
             pkg={0: {"diffusers": {"load_lora_weights": {}}, "generation": {"guidance_scale": 7.5}}},
             file_256=["1be130c5be2de0beacadd3bf0bafe3bedd7e7a380729932a1e369fb29efa86f4"],
@@ -1129,7 +1130,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="tcd",
-            comp="stable-diffusion-1",
+            comp="stable-diffusion-v1",
             repo="h1t/TCD-SD15-LoRA",
             pkg={0: {"diffusers": {"load_lora_weights": {}}}},
             file_256=["eaecb24a1cda4411eab67275b1d991071216ac93693e8fa0c9226c9df0386232"],
@@ -1140,7 +1141,7 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="turbo",
-            comp="flux-1",
+            comp="flux-1-dev",
             repo="alimama-creative/FLUX.1-Turbo-Alpha",
             pkg={
                 0: {
@@ -1156,9 +1157,10 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="turbo",
-            comp="stable-diffusion-3-5-medium",
+            comp="stable-diffusion-3",
             repo="tensorart/stable-diffusion-3.5-medium-turbo",
             pkg={0: {"diffusers": {"load_lora_weights": {"fuse": 1.0}}, "scheduler": {"ops.scheduler.flow-match": {"shift": 5}}}},
+            file_256={"bdcbdfa3ec8ed838b77b1020eea3bc7917a2d42573688a034feb921fde8b1858": {"num_inference_steps": "4"}},
         )
     )
     mir_db.add(
@@ -1166,8 +1168,57 @@ def auto_lora(mir_db: MIRDatabase):
             domain="info",
             arch="lora",
             series="turbo",
-            comp="stable-diffusion-3.5-large",
+            comp="stable-diffusion-3",
             repo="tensorart/stable-diffusion-3.5-large-TurboX",
             pkg={0: {"diffusers": {"load_lora_weights": {"fuse": 1.0}}, "scheduler": {"ops.scheduler.flow-match": {"shift": 5}}}},
+            file_256={"fae59d1b749c0d14a8fd4c68cc94eaac92876cee7b91fa75cf8fde3160e09548": {"num_inference_steps": "8"}},
+        )
+    )
+
+
+def auto_vae(mir_db: MIRDatabase):
+    """Create MIR VAE missing from the dtabase"""
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp="stable-diffusion-3",
+            repo="madebyollin/taesd3",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp="stable-diffusion-xl",
+            repo="madebyollin/taesdxl",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp="stable-diffusion-v1",
+            repo="madebyollin/taesd",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp="flux-1",
+            repo="madebyollin/taef1 ",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"],
         )
     )
