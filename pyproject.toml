@@ -84,10 +84,9 @@ mps = [
     "mflux>=0.2.1",
     "nnll[openai]",
     "pip>=25.0.1",
-    "mlx-audio",
-    "misaki>=0.8.2 ; python_version < '3.13'",
-    "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version > '3.12'",
-    "pip",
+    "mlx-audio;  sys_platform == 'darwin'",
+    "misaki>=0.8.2 ; python_version < '3.13' and sys_platform == 'darwin'",
+    "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version > '3.12' and sys_platform == 'darwin'",
 ]
 
 cu126 = ["torch", "torchvision", "torchaudio", "nnll[triton]"]
