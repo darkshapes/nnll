@@ -21,6 +21,7 @@ class ValueComparison:
 
     @debug_monitor
     def check_inner_values(self, pattern_details: dict, tensor_dimension: dict, attributes: dict | None = None) -> bool:
+        import asyncio
         from nnll.integrity.hashing import compute_hash_for
 
         possible_attributes = ["tensors", "file_size", "shapes", "hash"]
@@ -40,7 +41,7 @@ class ValueComparison:
                                 tensor_dimensions.pop(attribute_detail)  # Prevents send of both pattern_detal tensor and unpacked tensor
 
             if "hash" in pattern_details and attributes.get("file_path_named", None) is not None:
-                tensor_dimensions["hash"] = compute_hash_for(attributes["file_path_named"])
+                tensor_dimensions["hash"] = asyncio.run(compute_hash_for(attributes["file_path_named"]))
             self.is_identical = all(self.extract.is_pattern_in_layer(pattern_details[k], v) for k, v in tensor_dimensions.items())
         return self.is_identical
 

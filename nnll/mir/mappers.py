@@ -51,14 +51,18 @@ def process_with_folder_path(pkg_name: str, folder_path: bool) -> Iterator[Tuple
     :yield: A tuple containing (pkg_name, file_name, EXAMPLE_DOC_STRING) if found.
     """
     from importlib import import_module
+    import os
 
     file_names = list(getattr(folder_path, "_import_structure").keys())
+    module_path = os.path.dirname(import_module("diffusers.pipelines").__file__)
     for file_name in file_names:
         if file_name == "pipeline_stable_diffusion_xl_inpaint":
             continue
         try:
             pkg_path = f"diffusers.pipelines.{pkg_name}.{file_name}"
-            pipe_file = make_callable(file_name, pkg_path)
+            path_exists = os.path.exists(os.path.join(module_path, pkg_name, file_name + ".py"))
+            if path_exists:
+                pipe_file = make_callable(file_name, pkg_path)
         except ModuleNotFoundError:
             nfo(f"Module Not Found for {pkg_name}")
             pipe_file = None
@@ -67,8 +71,9 @@ def process_with_folder_path(pkg_name: str, folder_path: bool) -> Iterator[Tuple
             if pipe_file and hasattr(pipe_file, "EXAMPLE_DOC_STRING"):
                 yield (pkg_name, file_name, pipe_file.EXAMPLE_DOC_STRING)
             else:
-                pipe_file = import_module(pkg_path)
-        except AttributeError:
+                if path_exists:
+                    pipe_file = import_module(pkg_path)
+        except (ModuleNotFoundError, AttributeError):
             nfo(f"Doc String Not Found for {pipe_file} {pkg_name}")
 
 

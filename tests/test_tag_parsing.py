@@ -11,7 +11,7 @@ from unittest.mock import Mock, call, patch
 
 from pydantic import ValidationError
 
-from nnll.metadata.constants import DownField, EmptyField, UpField
+from nnll.configure.constants import DownField, EmptyField, UpField
 
 # from nnll.monitor.file import assign_logging_to
 from nnll.metadata.read_tags import MetadataFileReader

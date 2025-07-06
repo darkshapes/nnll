@@ -86,7 +86,7 @@ class MetadataFileReader:
         import os
         import tomllib
 
-        from nnll.metadata.constants import ExtensionType as Ext
+        from nnll.configure.constants import ExtensionType as Ext
 
         _, ext = os.path.splitext(file_path_named)
         if ext in Ext.TOML:
@@ -108,7 +108,7 @@ class MetadataFileReader:
         """
         from pathlib import Path
 
-        from nnll.metadata.constants import ExtensionType as Ext
+        from nnll.configure.constants import ExtensionType as Ext
         from nnll.metadata.model_tags import ReadModelTags
 
         ext = Path(file_path_named).suffix.lower()

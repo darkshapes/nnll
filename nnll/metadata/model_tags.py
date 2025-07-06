@@ -5,7 +5,8 @@
 
 # pylint: disable=import-outside-toplevel
 from pathlib import Path
-
+from typing import Dict
+from nnll.configure.constants import ExtensionType
 from nnll.metadata.json_io import write_json_file
 from nnll.monitor.console import nfo
 from nnll.monitor.file import dbug, debug_monitor
@@ -17,37 +18,35 @@ class ReadModelTags:
     def __init__(self):
         self.read_method = None
         self.import_map = {
-            ".safetensors": self.attempt_file_open,
-            ".sft": self.attempt_file_open,
-            ".gguf": self.attempt_file_open,
-            ".pt": self.metadata_from_pickletensor,
-            ".pth": self.metadata_from_pickletensor,
-            ".ckpt": self.metadata_from_pickletensor,
+            tuple(ExtensionType.SAFE): self.attempt_file_open,
+            tuple(ExtensionType.GGUF): self.attempt_file_open,
+            tuple(ExtensionType.PICK): self.metadata_from_pickletensor,
         }
 
-    @debug_monitor
-    def read_metadata_from(self, file_path_named: str) -> dict:
+    # @debug_monitor
+    def read_metadata_from(self, file_path_named: str) -> Dict[str, str]:
         """
         Detect file type and skim metadata from a model file using the appropriate tools\n
+        This is the input method for this class.\n
         :param file_path_named: `str` The full path to the file being analyzed
         :return: `dict` a dictionary including the metadata header and external file attributes\n
         (model_header, disk_size, file_name, file_extension)
         """
 
         metadata = None
-        extension = Path(file_path_named).suffix
+        extension = Path(file_path_named).suffix.lower()
 
-        if extension not in self.import_map:
+        if not any(extension in ext_type for ext_type in ExtensionType.MODEL if extension):
             dbug("Unsupported file extension: %s", f"{extension}. Silently ignoring")
         else:
-            self.read_method = self.import_map.get(extension)
+            self.read_method = self.import_map.get(next(iter(imports for imports in self.import_map if extension in imports)))
             metadata = self.read_method(file_path_named)
         if metadata is None:
             nfo(f"Couldn't load model metadata for {file_path_named}")
             return None
         return metadata
 
-    @debug_monitor
+    # @debug_monitor
     def metadata_from_pickletensor(self, file_path_named: str) -> dict:
         """
         Collect metadata from a pickletensor file header\n
@@ -63,7 +62,7 @@ class ReadModelTags:
 
     GGUF_MAGIC_NUMBER = b"GGUF"
 
-    @debug_monitor
+    # @debug_monitor
     def gguf_check(self, file_path_named: str) -> tuple:
         """
         A magic word check to ensure a file is GGUF format\n
@@ -92,7 +91,7 @@ class ReadModelTags:
                 result = False
         return result
 
-    @debug_monitor
+    # @debug_monitor
     def create_gguf_reader(self, file_path_named: str) -> dict:
         """
         Attempt to open gguf file with method from gguf library\n
@@ -112,7 +111,7 @@ class ReadModelTags:
         else:
             reader_data = None
             arch = reader.fields.get("general.architecture")  # model type
-            if arch and hasattr(arch.parts):
+            if arch and hasattr(arch, "parts"):
                 reader_data = {
                     "architecture_name": str(bytes(arch.parts[arch.data[0]]), encoding="utf-8"),
                 }
@@ -134,7 +133,7 @@ class ReadModelTags:
             # retrieve model name from the dict data
             tensor_data = {
                 "dtype": reader.data.dtype.name,
-                "types": arch.types if arch and hasattr(arch.types) else "",
+                "types": arch.types if arch and hasattr(arch, "types") else "",
             }
             # get dtype from metadata here
             for tensor in reader.tensors:
@@ -143,7 +142,7 @@ class ReadModelTags:
             file_metadata = reader_data, tensor_data
             return file_metadata
 
-    @debug_monitor
+    # @debug_monitor
     def create_llama_parser(self, file_path_named: str) -> dict:
         """
         Llama handler for gguf file header\n
@@ -180,7 +179,7 @@ class ReadModelTags:
 
         return llama_data
 
-    @debug_monitor
+    # @debug_monitor
     def attempt_file_open(self, file_path_named: str) -> dict:
         """
         Try two methods of extracting the metadata from the file\n
@@ -189,7 +188,7 @@ class ReadModelTags:
         :return: A `dict` with the header data prepared to read
         """
         metadata = None
-        if Path(file_path_named).suffix in [".safetensors", ".sft"]:
+        if Path(file_path_named).suffix in ExtensionType.SAFE:
             metadata = self.metadata_from_safetensors(file_path_named)
             if not metadata or len(metadata) == 1:
                 metadata = self.metadata_from_safe_open(file_path_named)
@@ -200,7 +199,7 @@ class ReadModelTags:
                 metadata = self.create_llama_parser(file_path_named)
         return metadata
 
-    @debug_monitor
+    # @debug_monitor
     def metadata_from_safetensors(self, file_path_named: str) -> dict:
         """
         Collect metadata from a safetensors file header\n
@@ -231,7 +230,7 @@ class ReadModelTags:
 
             return assembled_data
 
-    @debug_monitor
+    # @debug_monitor
     def metadata_from_safe_open(self, file_path_named: str) -> dict:
         """
         Collect metadata from a safetensors file header.\n

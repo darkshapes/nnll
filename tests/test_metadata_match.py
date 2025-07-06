@@ -3,6 +3,8 @@
 
 
 import os
+import asyncio
+import pytest_asyncio
 from unittest import TestCase, mock
 import pytest
 import hashlib
@@ -18,24 +20,28 @@ class TestExtractAndMatchMetadata(TestCase):
         with open(cls.test_file_name, "wb") as f:
             f.write(b"Hello, World!")
 
+    @pytest.mark.asyncio(loop_scope="module")
     def test_valid_file(self):
         expected_hash = hashlib.sha256(b"Hello, World!").hexdigest()
-        assert compute_hash_for(self.test_file_name) == expected_hash
+        assert asyncio.run(compute_hash_for(self.test_file_name)) == expected_hash
 
+    @pytest.mark.asyncio(loop_scope="module")
     def test_nonexistent_file(self):
         with pytest.raises(FileNotFoundError):
-            compute_hash_for("nonexistent_file.txt")
+            asyncio.run(compute_hash_for("nonexistent_file.txt"))
 
+    @pytest.mark.asyncio(loop_scope="module")
     @mock.patch("builtins.open", side_effect=PermissionError)
     def test_permission_error(self, mock_open):
         with pytest.raises(PermissionError) as exc_info:
-            compute_hash_for(self.test_file_name)
+            asyncio.run(compute_hash_for(self.test_file_name))
         self.assertEqual(type(exc_info.value), PermissionError)
 
+    @pytest.mark.asyncio(loop_scope="module")
     @mock.patch("builtins.open", side_effect=IOError)
     def test_io_error(self, mock_open):
         with pytest.raises(OSError) as exc_info:
-            compute_hash_for("test.txt")
+            asyncio.run(compute_hash_for("test.txt"))
 
     @classmethod
     def tearDownClass(cls) -> None:
