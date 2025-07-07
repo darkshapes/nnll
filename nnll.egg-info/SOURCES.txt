@@ -17,6 +17,7 @@ nnll/configure/__init__.py
 nnll/configure/chip_stats.py
 nnll/configure/color_map.py
 nnll/configure/init_gpu.py
+nnll/dissect/__init__.py
 nnll/download/__init__.py
 nnll/download/async_download.py
 nnll/download/hub_cache.py
@@ -45,6 +46,9 @@ nnll/mir/maid.py
 nnll/mir/mappers.py
 nnll/mir/mir.py
 nnll/mir/config/__init__.py
+nnll/mir/config/mir.json
+nnll/mir/config/template.json
+nnll/mir/config/versions.json
 nnll/model_detect/__init__.py
 nnll/model_detect/filter.json
 nnll/model_detect/gather_metadata.py
