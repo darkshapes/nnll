@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 
 from nnll.dissect import Dissector
+from nnll.dissect.visualize import to_mermaid
 
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -30,5 +31,6 @@ class ResidualBlock(nn.Module):
 if __name__ == '__main__':
     model = ResidualBlock(64, 128)
     parser = Dissector(model, input_shape=(1,64,56,56))
-    ast = parser.parse()
-    print(ast)  # uses __repr__ for pretty form
+    tree = parser.parse()
+    # print(tree)  # uses __repr__ for pretty form
+    print(to_mermaid(tree))
