@@ -15,6 +15,7 @@ class TestReadStateDictHeaders(unittest.TestCase):
         gguf_folder__path_named, gguf_file = download_hub_file(repo_id="exdysa/ratchet-test", filename="dummy.gguf", local_dir="./test_folder")
 
         # Call the function under test
+
         read_state_dict_headers("test_folder", "test_folder")
 
         self.assertIsNone(read_state_dict_headers(folder_path_named="test_folder", save_location="./test_folder"))

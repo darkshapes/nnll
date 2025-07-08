@@ -9,66 +9,66 @@ from typing import Dict
 from nnll.configure.constants import ExtensionType
 from nnll.metadata.json_io import write_json_file
 from nnll.monitor.console import nfo
-from nnll.monitor.file import dbug, debug_monitor
+from nnll.monitor.file import dbug
 
 
 class ReadModelTags:
     """Output state dict from a model file at [path] to the ui"""
 
-    def __init__(self):
-        self.read_method = None
-        self.import_map = {
-            tuple(ExtensionType.SAFE): self.attempt_file_open,
-            tuple(ExtensionType.GGUF): self.attempt_file_open,
-            tuple(ExtensionType.PICK): self.metadata_from_pickletensor,
-        }
+    GGUF_MAGIC_NUMBER = b"GGUF"
 
-    # @debug_monitor
-    def read_metadata_from(self, file_path_named: str) -> Dict[str, str]:
-        """
-        Detect file type and skim metadata from a model file using the appropriate tools\n
+    def __init__(self):
+        pass
+
+    def read_metadata_from(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
+        """Detect file type and skim metadata from a model file using the appropriate tools\n
         This is the input method for this class.\n
         :param file_path_named: `str` The full path to the file being analyzed
         :return: `dict` a dictionary including the metadata header and external file attributes\n
-        (model_header, disk_size, file_name, file_extension)
-        """
+        (model_header, disk_size, file_name, file_extension)"""
 
-        metadata = None
         extension = Path(file_path_named).suffix.lower()
 
         if not any(extension in ext_type for ext_type in ExtensionType.MODEL if extension):
             dbug("Unsupported file extension: %s", f"{extension}. Silently ignoring")
         else:
-            self.read_method = self.import_map.get(next(iter(imports for imports in self.import_map if extension in imports)))
-            metadata = self.read_method(file_path_named)
-        if metadata is None:
-            nfo(f"Couldn't load model metadata for {file_path_named}")
-            return None
-        return metadata
+            metadata = self.attempt_file_open(file_path_named, separate_desc=separate_desc) or None
+            if metadata is None:
+                nfo(f"Couldn't load model metadata for {file_path_named}")
+                return None
+            return metadata
 
     # @debug_monitor
     def metadata_from_pickletensor(self, file_path_named: str) -> dict:
-        """
-        Collect metadata from a pickletensor file header\n
+        """Collect metadata from a pickletensor file header\n
         :param file_path: `str` the full path to the file being opened
-        :return: `dict` the key value pair structure found in the file
-        """
+        :return: `dict` the key value pair structure found in the file"""
         import pickle
         from mmap import mmap
 
+        # separate_desc not implemented here yet
         with open(file_path_named, "r+b") as file_contents_to:
             mem_map_data = mmap(file_contents_to.fileno(), 0)
-            return pickle.loads(memoryview(mem_map_data))
+            view = memoryview(mem_map_data)
+            return pickle.loads(view)
 
-    GGUF_MAGIC_NUMBER = b"GGUF"
+    def meta_load_pickletensor(self, file_path_named: str) -> dict:
+        """Load metadata from a pickled tensor file.\n
+        **USE ONLY FOR TRUSTED FILES**
+        :param file_path_named: Path to the pickled tensor file containing metadata.
+        :type file_path_named: str
+        :return: A dictionary containing the loaded metadata from the file.
+        :rtype: dict"""
 
-    # @debug_monitor
+        import torch
+
+        metadata = torch.load(file_path_named, map_location="meta")
+        return metadata
+
     def gguf_check(self, file_path_named: str) -> tuple:
-        """
-        A magic word check to ensure a file is GGUF format\n
+        """A magic word check to ensure a file is GGUF format\n
         :param file_path_named: `str` the full path to the file being opened
-        :return: `tuple' the number
-        """
+        :return: `tuple' the number"""
 
         import struct
 
@@ -91,17 +91,14 @@ class ReadModelTags:
                 result = False
         return result
 
-    # @debug_monitor
     def create_gguf_reader(self, file_path_named: str) -> dict:
-        """
-        Attempt to open gguf file with method from gguf library\n
+        """Attempt to open gguf file with method from gguf library\n
         :param file_path_named: Absolute path to the file being opened
         :type file_path_named: `str`
-        :return: `dict` of relevant data from the file
-        """
+        :return: `dict` of relevant data from the file"""
         try:
             from gguf import GGUFReader
-        except (ImportError, ModuleNotFoundError) as error_log:
+        except (ImportError, ModuleNotFoundError):  # as error_log:
             dbug("'gguf' llibrary not available")
 
         try:  # method using gguf library, better for LDM conversions
@@ -142,13 +139,10 @@ class ReadModelTags:
             file_metadata = reader_data, tensor_data
             return file_metadata
 
-    # @debug_monitor
     def create_llama_parser(self, file_path_named: str) -> dict:
-        """
-        Llama handler for gguf file header\n
+        """Llama handler for gguf file header\n
         :param file_path_named: `str` the full path to the file being opened
-        :return: `dict` The entire header with Llama parser formatting
-        """
+        :return: `dict` The entire header with Llama parser formatting"""
         from llama_cpp import Llama
 
         parser = Llama(model_path=file_path_named, vocab_only=True, verbose=False)
@@ -180,27 +174,47 @@ class ReadModelTags:
         return llama_data
 
     # @debug_monitor
-    def attempt_file_open(self, file_path_named: str) -> dict:
-        """
-        Try two methods of extracting the metadata from the file\n
+    def attempt_file_open(self, file_path_named: str, separate_desc: bool) -> dict:
+        """Try two methods of extracting the metadata from the model\n
         :param file_path_named: The full path to the file being opened
         :type file_path_named: str
+        :param separate_desc: Include `__metadata__` tag, or exclude and return only tensor layer names and shapes
+        :type separate_desc str
         :return: A `dict` with the header data prepared to read
         """
+
+        def attempt_metadata(extraction_func, fallback_func=None):
+            """Attempt to extract metadata using extraction_func.
+            If it fails or results in minimal metadata, use fallback_func if provided."""
+            nonlocal metadata
+            metadata = extraction_func()
+            if not metadata or len(metadata) == 1 and fallback_func:
+                metadata = fallback_func()
+
         metadata = None
-        if Path(file_path_named).suffix in ExtensionType.SAFE:
-            metadata = self.metadata_from_safetensors(file_path_named)
-            if not metadata or len(metadata) == 1:
-                metadata = self.metadata_from_safe_open(file_path_named)
-        else:
+        file_extension = Path(file_path_named).suffix
+
+        if file_extension in ExtensionType.SAFE:
+            attempt_metadata(
+                lambda: self.metadata_from_safetensors(file_path_named, separate_desc),
+                lambda: self.metadata_from_safe_open(file_path_named, separate_desc),
+            )
+        elif file_extension in ExtensionType.GGUF:
             if self.gguf_check(file_path_named):
-                metadata = self.create_gguf_reader(file_path_named)
-            if not metadata or len(metadata) == 1:
-                metadata = self.create_llama_parser(file_path_named)
+                attempt_metadata(
+                    lambda: self.create_gguf_reader(file_path_named),
+                    lambda: self.create_llama_parser(file_path_named),
+                )
+        elif file_extension in ExtensionType.PICK:
+            attempt_metadata(
+                lambda: self.meta_load_pickletensor(file_path_named),
+                lambda: self.metadata_from_pickletensor(file_path_named),
+            )
+
         return metadata
 
     # @debug_monitor
-    def metadata_from_safetensors(self, file_path_named: str) -> dict:
+    def metadata_from_safetensors(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """
         Collect metadata from a safetensors file header\n
         :param file_path_named: `str` the full path to the file being opened
@@ -217,21 +231,18 @@ class ReadModelTags:
                 header_data = json.loads(header_data.decode("utf-8", errors="strict"))
             except (json.JSONDecodeError, MemoryError) as error_log:
                 dbug("Failed to read json from file : %s", file_path_named, error_log, tb=error_log.__traceback__)
-
             else:
-                assembled_data = header_data.copy()
-                if assembled_data.get("__metadata__"):
+                if separate_desc:
                     try:
-                        assembled_data.pop("__metadata__")
+                        assembled_data = header_data.copy()
+                        assembled_data.pop("__metadata__", assembled_data)
+                        header_data = assembled_data
                     except KeyError as error_log:
                         dbug("Couldnt remove '__metadata__' from header data. %s", header_data, error_log, tb=error_log.__traceback__)
-                # metadata_field = dict(header_data).get("__metadata__", False)
-                # metadata_field = json.loads(str(metadata_field).replace("'", '"'))
-
-            return assembled_data
+            return header_data
 
     # @debug_monitor
-    def metadata_from_safe_open(self, file_path_named: str) -> dict:
+    def metadata_from_safe_open(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """
         Collect metadata from a safetensors file header.\n
         This method is less performant than `struct`\n
@@ -242,9 +253,12 @@ class ReadModelTags:
 
         try:
             with safe_open(file_path_named, framework="pt", device="cpu") as layer_content:
-                metadata = {key: layer_content.get_tensor(key).shape for key in layer_content}
-                # metadata = layer_content.metadata()
+                file_data = {key: layer_content.get_tensor(key).shape for key in layer_content}
+                metadata = file_data | layer_content.metadata() if not separate_desc else file_data
+                # if not separate_desc:
+                #     metadata.update(layer_content.metadata())
             return metadata
+
         except (SafetensorError, TypeError):
             pass
 
@@ -258,12 +272,13 @@ def main():
     # Set up argument parser
     parser = argparse.ArgumentParser(description="Output state dict from a model file at [path] to the console, then write to a json file at [save].", epilog="Example: nnll-parse ~/Downloads/models/images ~Downloads/models/metadata")
     parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=".")
-    parser.add_argument("-s", "--save", required=False, help="Path where output should be stored. (default: current directory)", default=".")
+    parser.add_argument("-d", "--directory", required=False, help="Path where output should be stored. (default: current directory)", default=".")
+    parser.add_argument("-s", "--separate_desc", required=False, action="store_true", help="Ignore the metadata from the header. (default: False)", default=False)
     args = parser.parse_args()
     model_tool = ReadModelTags()
-    meta_data = model_tool.read_metadata_from(args.path)
+    meta_data = model_tool.read_metadata_from(args.path, separate_desc=args.separate_desc)
     file_name = f"{os.path.basename(args.path)}.json"
-    folder_path_named = ensure_path(args.save)
+    folder_path_named = ensure_path(args.directory)
     write_json_file(folder_path_named=folder_path_named, file_name=file_name, data=meta_data)
 
 
