@@ -18,7 +18,7 @@ def make_mir_tag(repo_title: str, decoder=False) -> List[str]:
 
     root = "decoder" if decoder else "*"
 
-    parameters = r"[.-]?\d{1,4}[BbMmKk]|-tiny|-large|-medium|-base"
+    parameters = r"[.-]?\d{1,4}[BbMmKk]|-tiny|-large|-medium|-base|-mini"
     parts = [segment for segment in re.split(parameters, repo_title) if segment]
     parts = "".join(parts[:1])
     version_pattern = r"([vV]?\d{1,2})(?:[-.]\d+)*"

@@ -126,7 +126,11 @@ class MIRDatabase:
         :return: A list or string of the found tag
         :raises KeyError: Target string not found
         """
+        import re
+
+        parameters = r"-gguf|-exl2|-exl3|-onnx|-awq|-mlx|-ov"  # [.-]?\d{1,4}[BbMmKk]|
         target = target.lower()
+        target = re.sub(parameters, "", target)
         # print(norm_target)
         self.matches = None
         self.matches = []
