@@ -128,7 +128,7 @@ class MIRDatabase:
         """
         import re
 
-        parameters = r"[.-]?[v]?\d{1,4}[BbMmKk]|-gguf|-exl2|-exl3|-onnx|-awq|-mlx|-ov"  #
+        parameters = r"-gguf|-exl2|-exl3|-onnx|-awq|-mlx|-ov"  #
         target = target.lower()
         target = re.sub(parameters, "", target)
         # print(norm_target)
