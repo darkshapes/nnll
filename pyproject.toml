@@ -1,8 +1,9 @@
-#
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
+
 [build-system]
 requires      = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
-
 
 [project]
 authors = [
@@ -22,7 +23,6 @@ keywords = [
     "identification",
     "URI",
 ]
-
 classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -59,46 +59,32 @@ dependencies = [
     "transformers  @ git+https://github.com/huggingface/transformers",
 ]
 
-[dependency-groups]
-dev = [
-    "nnll[full]",
-    "aioresponses>=0.7.8",
-    "pytest>=8.4.1",
-    "pytest-asyncio>=1.0.0",
-    "pytest-mock>=3.14.1",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
-    "ruff>=0.12.0",
-]
-
 [project.optional-dependencies]
-cpu = ["torch", "torchvision", "torchaudio"]
-
-mps = [
-    "torch",
-    "torchvision",
-    "torchaudio",
+# -- frameworks --
+torch = ["torch", "torchvision", "torchaudio"]
+onnx = ["onnx"]
+jax = ["jax", "flax"]
+mlx = [
     "mlx-vlm<=0.1.26",
     "mlx-lm<=0.24.1",
-    "numpy<=2.2",
-    "mflux>=0.2.1",
-    "nnll[openai]",
-    "pip>=25.0.1",
     "mlx-audio;  sys_platform == 'darwin'",
     "misaki>=0.8.2 ; python_version < '3.13' and sys_platform == 'darwin'",
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version > '3.12' and sys_platform == 'darwin'",
 ]
-
-cu126 = ["torch", "torchvision", "torchaudio", "nnll[triton]"]
-cu128 = ["torch", "torchvision", "torchaudio", "nnll[triton,attention]"]
-
-rocm = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "pytorch-triton-rocm",
-    "nnll[attention]",
+# -- platforms --
+cpu = ["nnll[torch, mlx, openai]"]
+mps = [
+    "numpy<=2.2",
+    "nnll[torch, mlx, openai]",
+    "pip>=25.0.1",
 ]
+cu126 = ["nnll[torch, triton]"]
+cu128 = ["nnll[torch, triton, attention]"]
+rocm = [
+    "nnll[torch, triton, attention]",
+    "pytorch-triton-rocm",
+]
+# -- techniques --
 attention = [
     "sageattention; sys_platform != 'darwin'",
     "flash_attn ; sys_platform == 'Linux'",
@@ -107,7 +93,8 @@ triton = [
     "triton ; sys_platform == 'Linux'",
     "triton-windows ; sys_platform == 'win32'",
 ]
-
+hidiffusion = ["hidiffusion>=0.1.10"]
+# -- providers --
 lmstudio = ["lmstudio>=1.3.1"]
 ollama = ["ollama>=0.5.1"]
 openai = [
@@ -119,12 +106,8 @@ openai = [
     "numba>=0.61.2 ; python_version > '3.12'",
     "numba>=0.47.0 ; python_version <= '3.12'",
 ]
-
-outetts     = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
-hidiffusion = ["hidiffusion>=0.1.10"]
-
-full = ["nnll[lmstudio,ollama,outetts,hidiffusion,cu126,cu128,mps]"]
-
+outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
+full = ["nnll[cpu, mps, cu126, cu128, rocm, attention, hidiffusion, lmstudio, ollama, outetts]"]
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
@@ -164,17 +147,25 @@ preview = true
 prerelease = "allow"
 conflicts = [
     [
+        { extra = "torch" },
+        { extra = "onnx" },
+        { extra = "jax" },
+        { extra = "mlx" },
         { extra = "cpu" },
         { extra = "mps" },
         { extra = "cu126" },
         { extra = "cu128" },
         { extra = "rocm" },
         { extra = "attention" },
-
+        { extra = "triton" },
+        { extra = "hidiffusion" },
+        { extra = "lmstudio" },
+        { extra = "ollama" },
+        { extra = "outetts" },
     ],
 ]
 
-[tool.uv.pip] #ignore: even-better-toml
+[tool.uv.pip]  # ignore: even-better-toml
 torch-backend = "auto"
 
 [[tool.uv.index]]
@@ -186,7 +177,6 @@ explicit = true
 name     = "pytorch-nightly"
 url      = "https://download.pytorch.org/whl/nightly/cpu"
 explicit = true
-
 
 [[tool.uv.index]]
 name     = "pytorch-cu126"

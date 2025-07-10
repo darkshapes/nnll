@@ -1,8 +1,0 @@
-[console_scripts]
-mir-add = nnll.mir.mir:main
-mir-maid = nnll.mir.maid:main
-nnll-autocard = nnll.metadata.autocard:main
-nnll-find = nnll.model_detect.layer_compare:main
-nnll-hash = nnll.integrity.hash_256:main
-nnll-inspect = nnll.metadata.model_tags:main
-nnll-parse = nnll.model_detect.state_dict_json:main
