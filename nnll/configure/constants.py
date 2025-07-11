@@ -86,12 +86,13 @@ class ExtensionType:
     GGUF: Set[str] = {".gguf"}
     SAFE: Set[str] = {".safetensors", ".sft"}
     PICK: Set[str] = {".pt", ".pth", ".ckpt", ".pickletensor"}
+    ONNX: Set[str] = {".onnx"}
 
     IMAGE: List[Set[str]] = [JPEG, WEBP, PNG_]
     EXIF: List[Set[str]] = [JPEG, WEBP]
     SCHEMA: List[Set[str]] = [JSON, TOML]
     PLAIN: List[Set[str]] = [TEXT, XML_, HTML]
-    MODEL: List[Set[str]] = [SAFE, GGUF, PICK]
+    MODEL: List[Set[str]] = [SAFE, GGUF, PICK, ONNX]
 
     IGNORE: List[Constant] = [
         "Thumbs.db",

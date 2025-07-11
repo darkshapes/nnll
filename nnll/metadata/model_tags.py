@@ -173,8 +173,39 @@ class ReadModelTags:
 
         return llama_data
 
+    def metadata_from_onnx_rt(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
+        """Extract metadata from an ONNX model using ONNX Runtime.\n
+        :param file_path_named: The path to the ONNX model file
+        :param separate_desc: Exclude or include metadata description, default True
+        :return: A mapping of metadata about the model
+        """
+        from onnxruntime import InferenceSession, get_available_providers
+
+        onnx_sess = InferenceSession(file_path_named, providers=get_available_providers())
+        meta = onnx_sess.get_modelmeta()
+        if separate_desc:
+            return {"custom_metadata_map": meta.custom_metadata_map}
+        else:
+            {tag: getattr(meta, tag, {}) for tag in dir(meta) if not tag.startswith("_")}
+
+    def metadata_from_onnx(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
+        """Extract metadata from an ONNX model using the ONNX library.\n
+        :param file_path_named: The path to the ONNX model file
+        :param separate_desc: Exclude or include metadata description, default True
+        :return: A mapping of metadata about the model
+        """
+        from onnxruntime import get_example
+        from onnx import load as onnx_load
+
+        example = get_example(file_path_named)
+        model = onnx_load(example)
+        if separate_desc:
+            return {"metadata_props": model.metadata_props}
+        else:
+            return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
+
     # @debug_monitor
-    def attempt_file_open(self, file_path_named: str, separate_desc: bool) -> dict:
+    def attempt_file_open(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """Try two methods of extracting the metadata from the model\n
         :param file_path_named: The full path to the file being opened
         :type file_path_named: str
@@ -209,6 +240,11 @@ class ReadModelTags:
             attempt_metadata(
                 lambda: self.meta_load_pickletensor(file_path_named),
                 lambda: self.metadata_from_pickletensor(file_path_named),
+            )
+        elif file_extension in ExtensionType.ONNX:
+            attempt_metadata(
+                lambda: self.metadata_from_onnx_rt(file_path_named, separate_desc),
+                lambda: self.metadata_from_onnx(file_path_named, separate_desc),
             )
 
         return metadata

@@ -62,7 +62,7 @@ dependencies = [
 [project.optional-dependencies]
 # -- frameworks --
 torch = ["torch", "torchvision", "torchaudio"]
-onnx = ["onnx"]
+onnx = ["onnx>=1.18.0"]
 jax = ["jax", "flax"]
 mlx = [
     "mlx-vlm<=0.1.26",
@@ -72,18 +72,11 @@ mlx = [
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version > '3.12' and sys_platform == 'darwin'",
 ]
 # -- platforms --
-cpu = ["nnll[torch, mlx, openai]"]
-mps = [
-    "numpy<=2.2",
-    "nnll[torch, mlx, openai]",
-    "pip>=25.0.1",
-]
+cpu   = ["nnll[torch, mlx, openai]"]
+mps   = ["numpy<=2.2", "nnll[torch, mlx, openai]", "pip>=25.0.1"]
 cu126 = ["nnll[torch, triton]"]
 cu128 = ["nnll[torch, triton, attention]"]
-rocm = [
-    "nnll[torch, triton, attention]",
-    "pytorch-triton-rocm",
-]
+rocm  = ["nnll[torch, triton, attention]", "pytorch-triton-rocm"]
 # -- techniques --
 attention = [
     "sageattention; sys_platform != 'darwin'",
@@ -107,7 +100,9 @@ openai = [
     "numba>=0.47.0 ; python_version <= '3.12'",
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
-full = ["nnll[cpu, mps, cu126, cu128, rocm, attention, hidiffusion, lmstudio, ollama, outetts]"]
+full = [
+    "nnll[cpu, mps, cu126, cu128, rocm, attention, hidiffusion, lmstudio, ollama, outetts, onnx]",
+]
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
@@ -165,7 +160,7 @@ conflicts = [
     ],
 ]
 
-[tool.uv.pip]  # ignore: even-better-toml
+[tool.uv.pip] # ignore: even-better-toml
 torch-backend = "auto"
 
 [[tool.uv.index]]
