@@ -93,7 +93,7 @@ class MIRDatabase:
             option, series, compatibility, _ = match
             option = option.strip("_").strip("-").strip(".").lower()
             target = target.strip("_").strip("-").strip(".").lower()
-            print(option, target)
+            # print(option, target)
             if target in option or option in target:
                 max_len = len(os.path.commonprefix([option, target]))
                 gap = Decimal(str(abs(len(option) - len(target)) + (len(option) - max_len))) * Decimal("0.1")
