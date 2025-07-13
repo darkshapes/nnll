@@ -6,6 +6,9 @@ import networkx as nx
 from collections.abc import Collection
 from torch.export import ExportedProgram, ExportGraphSignature   # just for type hints
 
+def _process_name(name: str) -> str:
+    return name.split("_")[0]
+
 def fx_to_nx(
     fxg: fx.Graph,
     *,
@@ -30,6 +33,8 @@ def fx_to_nx(
             tmeta = n.meta.get("tensor_meta", None)
             if tmeta is not None and len(tmeta.shape) == 0:   # scalar
                 continue
+
+        n.name = _process_name(n.name)
 
         # 2) add node
         nxg.add_node(

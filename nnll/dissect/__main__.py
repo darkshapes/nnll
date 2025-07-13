@@ -38,11 +38,11 @@ if __name__ == "__main__":
     # print(ast_to_string(t))
     print(t)
 
-    # import networkx as nx
-    # import matplotlib.pyplot as plt
+    import networkx as nx
+    import matplotlib.pyplot as plt
 
     # print(g.nodes.data())
     # print(g.edges.data())
 
-    # nx.draw(g, with_labels=True)
-    # plt.show()
+    nx.draw(g, with_labels=True)
+    plt.show()
