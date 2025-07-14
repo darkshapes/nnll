@@ -19,7 +19,10 @@ def convert_repo(conditions: tuple) -> str:
         folder_path_named = snapshot_download(repo_id=conditions["repo"], local_dir=conditions["folder_path_named"])
         command = ["convert_hf_to_gguf.py", folder_path_named]
         if conditions["quantization"]:
-            command.extend([" --outtype", f"{conditions['quantization']}"])
+            if conditions["quantization"] <= 8:
+                command.extend([" --outtype", f"q8{conditions['quantization']}_0"])
+            else:
+                command.extend([" --outtype", f"f{conditions['quantization']}"])
 
     else:
         if conditions["library"] == "mlx":
@@ -33,8 +36,9 @@ def convert_repo(conditions: tuple) -> str:
 
     try:
         output = subprocess.run(command, check=True)
+        # nfo(f"status: {output}")
+        # print(output)
     except (TypeError, subprocess.CalledProcessError):
         nfo(f"command was {command}")
-    nfo(f"status: {output}")
-    print(output)
+
     return conditions["folder_path_named"]
