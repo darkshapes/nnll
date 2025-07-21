@@ -15,20 +15,41 @@ nfo = sys.stderr.write
 def stock_llm_data() -> Dict[str, List[str]]:
     """Eat the 🤗Transformers classes as a treat, leaving any tasty subclass class morsels neatly arranged as a dictionary.\n
     Nom.
-    :return: _description_"""
+    :return: Tasty mapping of subclasses to their class references"""
 
     transformer_data = {}
-    exclude_list = ["DistilBertModel", "SeamlessM4TModel", "SeamlessM4Tv2Model"]
+    exclude_list = [
+        "DecisionTransformerModel",
+        "DistilBertModel",
+        "GraphormerModel",
+        "GPTBigCodeModel",
+        "TimmBackbone",
+        "SeamlessM4Tv2Model",
+        "SeamlessM4TModel",
+        "VisionTextDualEncoderModel",
+    ]
+    second_exclude_list = [
+        "vision-text-dual-encoder",
+        "vision_text_dual_encoder",
+        "gpt_bigcode",
+        "data2vec",
+        "bert_japanese",
+        "cpm",
+        "dab_detr",
+        "decision_transformer",
+        "timm_backbone",
+    ]  # there just isnt a repo in this one
     import os
 
     import transformers
-    from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
+    from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES, CONFIG_MAPPING_NAMES
 
+    model_data = None
+    task_pipe = None
     model_names = list(dict(MODEL_MAPPING_NAMES).keys())
     folder_data = {*model_names}
     models_folder = os.path.join(os.path.dirname(transformers.__file__), "models")
     folder_data = folder_data.union(os.listdir(models_folder))
-
     for code_name in folder_data:
         if code_name and "__" not in code_name:
             tasks = show_tasks_for(code_name=code_name)
@@ -37,10 +58,28 @@ def stock_llm_data() -> Dict[str, List[str]]:
                 if isinstance(task_pipe, tuple):
                     task_pipe = task_pipe[0]
                 if task_pipe not in exclude_list:
-                    model_class = getattr(__import__("transformers"), task_pipe)
+                    model_class = getattr(__import__("transformers"), task_pipe)  # this is done to get the path to the config
                     model_data = root_class(model_class)
-                    if model_data and "inspect" not in model_data["config"] and "deprecated" not in model_data["config"]:
+                    if model_data and ("inspect" not in model_data["config"]) and ("deprecated" not in list(model_data["config"])):
                         transformer_data.setdefault(model_class, model_data)
+                    else:
+                        model_data = None
+            if not model_data and code_name not in second_exclude_list:  # second attempt
+                if code_name == "donut":
+                    code_name = "donut-swin"
+                if not task_pipe:
+                    model_class = getattr(__import__("transformers"), MODEL_MAPPING_NAMES.get(code_name.replace("_", "-")), 0)
+                else:
+                    model_class = getattr(__import__("transformers"), task_pipe)
+                config_class = CONFIG_MAPPING_NAMES.get(code_name.replace("_", "-"))
+                if not config_class:
+                    config_class = CONFIG_MAPPING_NAMES.get(code_name.replace("-", "_"))
+                if config_class:
+                    config_class_obj = getattr(__import__("transformers"), config_class)
+                    model_data = {"config": str(config_class_obj.__module__ + "." + config_class_obj.__name__).split(".")}
+                    if model_data and ("inspect" not in model_data) and ("deprecated" not in model_data):
+                        transformer_data.setdefault(model_class, model_data)
+                        # print(model_class, model_data)
     return transformer_data
 
 
@@ -97,6 +136,7 @@ def process_with_file_name(pkg_name: str, file_specific: bool) -> Iterator[Tuple
             yield (pkg_name, file_name, pipe_file.EXAMPLE_DOC_STRING)
         else:
             pipe_file = import_module(pkg_path)
+
     except AttributeError:
         nfo(f"Doc String Not Found for {pipe_file} {pkg_name}")
 

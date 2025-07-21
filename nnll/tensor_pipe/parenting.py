@@ -8,7 +8,7 @@ def find_config_classes(parameter_filter: Optional[str] = None) -> List[str]:
     """Show all config classes transformers package\n
     :param from_match: Narrow the classes to only those with an exact key inside
     :return: A list of all Classes"""
-    from nnll.mir.indexers import stock_llm_data
+    from nnll.mir.mappers import stock_llm_data
     from nnll.tensor_pipe.deconstructors import root_class
 
     transformers_data = stock_llm_data()

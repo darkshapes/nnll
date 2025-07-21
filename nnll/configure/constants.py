@@ -253,3 +253,8 @@ class ListOfDelineatedStr(BaseModel):
         """Remove tuple elements from validation"""
         regex_match = list(next(iter(regex_match), None))
         return regex_match
+
+
+PARAMETERS_SUFFIX = r"[.-]?\d{1,4}[BbMmKk]|-tiny|-large|-medium|-base|-mini|-multimodal|-instruct|-full|-preview|-small"
+VERSIONS_SUFFIX = r"([vV]?\d{1,2})(?:[-.]\d+)*"
+BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*(\d{3,4}px{1})"

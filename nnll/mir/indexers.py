@@ -50,7 +50,7 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
     """
     special_cases = {
         "black-forest-labs/FLUX.1-schnell": "black-forest-labs/FLUX.1-dev",
-        "stabilityai/stable-diffusion-3.5-medium": "stabilityai/stable-diffusion-3.5-large",
+        "stabilityai/stable-diffusion-3-medium": "stabilityai/stable-diffusion-3.5-medium",
     }
     special_classes = {
         "StableDiffusion3Pipeline": "stabilityai/stable-diffusion-3.5-medium",  # NOT sd3
@@ -145,7 +145,11 @@ def transformers_index():
 
     from nnll.mir.mappers import stock_llm_data
 
-    corrections = {
+    corrections: dict[dict[str, str | dict[str, list[str]]]] = {
+        "BarkModel": {
+            "repo_path": "suno/bark",
+            "sub_segments": {"n_head": [""]},
+        },
         "GraniteSpeechForConditionalGeneration": {
             "repo_path": "ibm-granite/granite-speech-3.3-8b",
             "sub_segments": {"encoder_layers": [""], "decoder_layers": [""]},
@@ -185,17 +189,17 @@ def transformers_index():
     }
 
     mir_data = {}
-    transformers_data = stock_llm_data()
+    # transformers_data = stock_llm_data()
     transformers_data: Dict[Callable, List[str]] = stock_llm_data()
     for model_class_obj, model_data in transformers_data.items():
         class_name = model_class_obj.__name__
-        if class_name in list(corrections):  # conditional correction: `root_class` doesn't return anything in these cases
+        if class_name in list(corrections):  # conditional correction from mappings above: `root_class` doesn't return anything in these cases
             repo_path = corrections[class_name]["repo_path"]
             sub_segments = corrections[class_name].get("sub_segments", root_class(model_data["config"][-1], "transformers"))
-
         else:
             repo_path = ""
-            doc_attempt = [getattr(transformers, model_data["config"][-1]), model_class_obj.forward]
+            if model_data.get("config"):
+                doc_attempt = [getattr(transformers, model_data["config"][-1]), model_class_obj.forward]
             for pattern in doc_attempt:
                 doc_string = pattern.__doc__
                 matches = re.findall(r"\[([^\]]+)\]", doc_string)

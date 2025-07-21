@@ -17,13 +17,14 @@
         "-\\d{4,}[px].*"
     ],
     "ignore": [
-        "-[tT]iny$",
-        "-[mM]ini",
-        "-[iI]nstruct",
-        "-[Ff]ull$",
         "-xt$",
-        "-[Bb]ox$",
-        "-[Pp]review$",
-        "-[bB]ase.*"
+        "-box$",
+        "-preview$",
+        "-base.*",
+        "-Tiny$",
+        "-full$",
+        "-mini.*",
+        "-multimodal.*",
+        "-instruct.*"
     ]
 }

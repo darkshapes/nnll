@@ -1,18 +1,17 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
-from types import MethodType, FunctionType
+from types import FunctionType
 from typing import Dict, List, Union
 from array import array
 
 
-async def sum_layers_of(file_path_named: str, tag_reader: MethodType, hash_function: FunctionType) -> str:
-    """Compute BLAKE3 hashes for a list of model layers.\n
-    :param file_path_named: The path to the file containing the model layers.
-    :param tag_reader: An existing instance of ReadModelTags.
-    :return: A string representing the BLAKE3 hashes of the concatenated layers names."""
+async def sum_layers_of(model_metadata: str, hash_function: FunctionType) -> str:
+    """Compute hashes for a list of model layers.\n
+    :param model_metadata: Metadata from the model layers.
+    :param hash_function: An existing instance of ReadModelTags.
+    :return: A string representing the hashes of the concatenated layers names."""
 
-    model_metadata: Union[List[str], Dict[str, Dict[str, array]]] = tag_reader.read_metadata_from(file_path_named)
     if model_metadata and isinstance(model_metadata, tuple):
         model_metadata = next(iter(metadata for metadata in model_metadata if metadata.get("types", False)), model_metadata)
     model_metadata = list(model_metadata)
@@ -48,7 +47,8 @@ async def sum_models_in(folder_path_named: str, layers: bool = True, b3_sum: boo
             file_path_named = os.path.join(folder_path_named, file_name)
             if os.path.isfile(file_path_named):
                 if layers:
-                    layer_hash = await sum_layers_of(file_path_named, tag_reader=tag_reader, hash_function=hash_function)
+                    model_metadata: Union[List[str], Dict[str, Dict[str, array]]] = tag_reader.read_metadata_from(file_path_named)
+                    layer_hash = await sum_layers_of(model_metadata, tag_reader=tag_reader, hash_function=hash_function)
                     model_hashes[file_name] = layer_hash
                 else:
                     file_hash = await hash_function(file_path_named=file_path_named)
