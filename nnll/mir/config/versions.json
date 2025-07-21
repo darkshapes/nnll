@@ -10,17 +10,20 @@
     ],
     "suffixes": [
         "-\\d{1,2}[bBmMkK]",
+        "-\\d[1-9][bBmMkK]",
         "-v\\d{1,2}",
         "-\\d{3,}$",
         "-\\d{4,}.*",
         "-\\d{4,}[px].*"
     ],
     "ignore": [
-        "-tiny$",
-        "-full$",
+        "-[tT]iny$",
+        "-[mM]ini",
+        "-[iI]nstruct",
+        "-[Ff]ull$",
         "-xt$",
-        "-box$",
-        "-preview$",
-        "-base.*"
+        "-[Bb]ox$",
+        "-[Pp]review$",
+        "-[bB]ase.*"
     ]
 }

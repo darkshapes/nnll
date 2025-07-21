@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
 
 """Load model metadata"""
 
@@ -20,6 +22,85 @@ class ReadModelTags:
     def __init__(self):
         pass
 
+    def attempt_all_open(self, file_path_named: str, separate_desc: bool = True) -> dict | None:
+        """Try all methods of extracting the metadata from the model until one succeeds\n
+        *Be certain this function is only provided trusted model files to open*
+        :param file_path_named: The full path to the file being opened
+        :param separate_desc: Include `__metadata__` tag, or exclude and return only tensor layer names and shapes
+        :return: A `dict` with the header data prepared to read, or `None`"""
+        gguf_type = (
+            self.create_gguf_reader,
+            self.create_llama_parser,
+        )
+        meta_precise = (
+            self.metadata_from_safetensors,
+            self.metadata_from_safe_open,
+            self.metadata_from_onnx_rt,
+            self.metadata_from_onnx,
+        )
+        meta_combined = (
+            self.meta_load_pickletensor,
+            self.metadata_from_pickletensor,
+        )
+        if self.gguf_check(file_path_named):
+            for read_method in gguf_type:
+                metadata = read_method(file_path_named)
+            if metadata and len(metadata) > 1:
+                return metadata
+        for read_method in meta_precise:
+            metadata = read_method(file_path_named, separate_desc)
+            if metadata and len(metadata) > 1:
+                return metadata
+        for read_method in meta_combined:
+            metadata = read_method(file_path_named)
+            if metadata and len(metadata) > 1:
+                return metadata
+        return None
+
+    def attempt_file_open(self, file_path_named: str, separate_desc: bool) -> dict:
+        """Try two methods of extracting the metadata from the model\n
+        :param file_path_named: The full path to the file being opened
+        :type file_path_named: str
+        :param separate_desc: Include `__metadata__` tag, or exclude and return only tensor layer names and shapes
+        :type separate_desc str
+        :return: A `dict` with the header data prepared to read
+        """
+
+        def attempt_metadata(extraction_func, fallback_func=None):
+            """Attempt to extract metadata using extraction_func.
+            If it fails or results in minimal metadata, use fallback_func if provided."""
+            nonlocal metadata
+            metadata = extraction_func()
+            if not metadata or len(metadata) == 1 and fallback_func:
+                metadata = fallback_func()
+
+        metadata = None
+        file_extension = Path(file_path_named).suffix
+
+        if file_extension in ExtensionType.SAFE:
+            attempt_metadata(
+                lambda: self.metadata_from_safetensors(file_path_named, separate_desc),
+                lambda: self.metadata_from_safe_open(file_path_named, separate_desc),
+            )
+        elif file_extension in ExtensionType.GGUF:
+            if self.gguf_check(file_path_named):
+                attempt_metadata(
+                    lambda: self.create_gguf_reader(file_path_named),
+                    lambda: self.create_llama_parser(file_path_named),
+                )
+        elif file_extension in ExtensionType.PICK:
+            attempt_metadata(
+                lambda: self.meta_load_pickletensor(file_path_named),
+                lambda: self.metadata_from_pickletensor(file_path_named),
+            )
+        elif file_extension in ExtensionType.ONNX:
+            attempt_metadata(
+                lambda: self.metadata_from_onnx(file_path_named, separate_desc),
+                lambda: self.metadata_from_onnx_rt(file_path_named, separate_desc),
+            )
+
+        return metadata
+
     def read_metadata_from(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
         """Detect file type and skim metadata from a model file using the appropriate tools\n
         This is the input method for this class.\n
@@ -37,33 +118,6 @@ class ReadModelTags:
                 nfo(f"Couldn't load model metadata for {file_path_named}")
                 return None
             return metadata
-
-    # @debug_monitor
-    def metadata_from_pickletensor(self, file_path_named: str) -> dict:
-        """Collect metadata from a pickletensor file header\n
-        :param file_path: `str` the full path to the file being opened
-        :return: `dict` the key value pair structure found in the file"""
-        import pickle
-        from mmap import mmap
-
-        # separate_desc not implemented here yet
-        with open(file_path_named, "r+b") as file_contents_to:
-            mem_map_data = mmap(file_contents_to.fileno(), 0)
-            view = memoryview(mem_map_data)
-            return pickle.loads(view)
-
-    def meta_load_pickletensor(self, file_path_named: str) -> dict:
-        """Load metadata from a pickled tensor file.\n
-        **USE ONLY FOR TRUSTED FILES**
-        :param file_path_named: Path to the pickled tensor file containing metadata.
-        :type file_path_named: str
-        :return: A dictionary containing the loaded metadata from the file.
-        :rtype: dict"""
-
-        import torch
-
-        metadata = torch.load(file_path_named, map_location="meta")
-        return metadata
 
     def gguf_check(self, file_path_named: str) -> tuple:
         """A magic word check to ensure a file is GGUF format\n
@@ -145,111 +199,64 @@ class ReadModelTags:
         :return: `dict` The entire header with Llama parser formatting"""
         from llama_cpp import Llama
 
-        parser = Llama(model_path=file_path_named, vocab_only=True, verbose=False)
-        if parser:
-            llama_data = {}
-
-            # Extract the name from metadata using predefined keys
-            name_keys = [
-                "general.basename",
-                "general.base_model.0",
-                "general.name",
-                "general.architecture",
-            ]
-            try:
-                for key in name_keys:
-                    value = parser.metadata.get(key)
-                    if value is not None:
-                        llama_data.setdefault("name", value)
-                        break
-
-                # Determine the dtype from parser.scores.dtype, if available
-                scores_dtype = getattr(parser.scores, "dtype", None)
-                if scores_dtype is not None:
-                    llama_data.setdefault("dtype", scores_dtype.name)  # e.g., 'float32'
-                # file_metadata = {UpField.METADATA: llama_data, DownField.LAYER_DATA: EmptyField.PLACEHOLDER}
-            except ValueError as error_log:
-                dbug("Parsing file failed for %s", file_path_named, error_log, tb=error_log.__traceback__)
-
-        return llama_data
-
-    def metadata_from_onnx_rt(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
-        """Extract metadata from an ONNX model using ONNX Runtime.\n
-        :param file_path_named: The path to the ONNX model file
-        :param separate_desc: Exclude or include metadata description, default True
-        :return: A mapping of metadata about the model
-        """
-        from onnxruntime import InferenceSession, get_available_providers
-
-        onnx_sess = InferenceSession(file_path_named, providers=get_available_providers())
-        meta = onnx_sess.get_modelmeta()
-        if separate_desc:
-            return {"custom_metadata_map": meta.custom_metadata_map}
+        try:
+            parser = Llama(model_path=file_path_named, vocab_only=True, verbose=False)
+        except (UnboundLocalError, ValueError, AttributeError) as error_log:
+            dbug("Value error assembling GGUFReader >:V %s", error_log, tb=error_log.__traceback__)
         else:
-            {tag: getattr(meta, tag, {}) for tag in dir(meta) if not tag.startswith("_")}
+            if parser:
+                llama_data = {}
 
-    def metadata_from_onnx(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
-        """Extract metadata from an ONNX model using the ONNX library.\n
-        :param file_path_named: The path to the ONNX model file
-        :param separate_desc: Exclude or include metadata description, default True
-        :return: A mapping of metadata about the model
-        """
-        from onnxruntime import get_example
-        from onnx import load as onnx_load
+                # Extract the name from metadata using predefined keys
+                name_keys = [
+                    "general.basename",
+                    "general.base_model.0",
+                    "general.name",
+                    "general.architecture",
+                ]
+                try:
+                    for key in name_keys:
+                        value = parser.metadata.get(key)
+                        if value is not None:
+                            llama_data.setdefault("name", value)
+                            break
 
-        example = get_example(file_path_named)
-        model = onnx_load(example)
-        if separate_desc:
-            return {"metadata_props": model.metadata_props}
-        else:
-            return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
+                    # Determine the dtype from parser.scores.dtype, if available
+                    scores_dtype = getattr(parser.scores, "dtype", None)
+                    if scores_dtype is not None:
+                        llama_data.setdefault("dtype", scores_dtype.name)  # e.g., 'float32'
+                    # file_metadata = {UpField.METADATA: llama_data, DownField.LAYER_DATA: EmptyField.PLACEHOLDER}
+                except ValueError as error_log:
+                    dbug("Parsing file failed for %s", file_path_named, error_log, tb=error_log.__traceback__)
 
-    # @debug_monitor
-    def attempt_file_open(self, file_path_named: str, separate_desc: bool = True) -> dict:
-        """Try two methods of extracting the metadata from the model\n
-        :param file_path_named: The full path to the file being opened
+            return llama_data
+
+    def metadata_from_pickletensor(self, file_path_named: str) -> dict:
+        """Collect metadata from a pickletensor file header\n
+        :param file_path: `str` the full path to the file being opened
+        :return: `dict` the key value pair structure found in the file"""
+        import pickle
+        from mmap import mmap
+
+        # separate_desc not implemented here yet
+        with open(file_path_named, "r+b") as file_contents_to:
+            mem_map_data = mmap(file_contents_to.fileno(), 0)
+            view = memoryview(mem_map_data)
+            return pickle.loads(view)
+
+    def meta_load_pickletensor(self, file_path_named: str) -> dict:
+        """Load metadata from a pickled tensor file.\n
+        **USE ONLY FOR TRUSTED FILES**
+        :param file_path_named: Path to the pickled tensor file containing metadata.
         :type file_path_named: str
-        :param separate_desc: Include `__metadata__` tag, or exclude and return only tensor layer names and shapes
-        :type separate_desc str
-        :return: A `dict` with the header data prepared to read
-        """
+        :return: A dictionary containing the loaded metadata from the file.
+        :rtype: dict"""
 
-        def attempt_metadata(extraction_func, fallback_func=None):
-            """Attempt to extract metadata using extraction_func.
-            If it fails or results in minimal metadata, use fallback_func if provided."""
-            nonlocal metadata
-            metadata = extraction_func()
-            if not metadata or len(metadata) == 1 and fallback_func:
-                metadata = fallback_func()
+        import torch
 
-        metadata = None
-        file_extension = Path(file_path_named).suffix
-
-        if file_extension in ExtensionType.SAFE:
-            attempt_metadata(
-                lambda: self.metadata_from_safetensors(file_path_named, separate_desc),
-                lambda: self.metadata_from_safe_open(file_path_named, separate_desc),
-            )
-        elif file_extension in ExtensionType.GGUF:
-            if self.gguf_check(file_path_named):
-                attempt_metadata(
-                    lambda: self.create_gguf_reader(file_path_named),
-                    lambda: self.create_llama_parser(file_path_named),
-                )
-        elif file_extension in ExtensionType.PICK:
-            attempt_metadata(
-                lambda: self.meta_load_pickletensor(file_path_named),
-                lambda: self.metadata_from_pickletensor(file_path_named),
-            )
-        elif file_extension in ExtensionType.ONNX:
-            attempt_metadata(
-                lambda: self.metadata_from_onnx_rt(file_path_named, separate_desc),
-                lambda: self.metadata_from_onnx(file_path_named, separate_desc),
-            )
-
+        metadata = torch.load(file_path_named, map_location="meta")
         return metadata
 
-    # @debug_monitor
     def metadata_from_safetensors(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """
         Collect metadata from a safetensors file header\n
@@ -275,9 +282,8 @@ class ReadModelTags:
                         header_data = assembled_data
                     except KeyError as error_log:
                         dbug("Couldnt remove '__metadata__' from header data. %s", header_data, error_log, tb=error_log.__traceback__)
-            return header_data
+                return header_data
 
-    # @debug_monitor
     def metadata_from_safe_open(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """
         Collect metadata from a safetensors file header.\n
@@ -298,6 +304,37 @@ class ReadModelTags:
         except (SafetensorError, TypeError):
             pass
 
+    def metadata_from_onnx_rt(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
+        """Extract metadata from an ONNX model using ONNX Runtime.\n
+        :param file_path_named: The path to the ONNX model file
+        :param separate_desc: Exclude or include metadata description, default True
+        :return: A mapping of metadata about the model
+        """
+        from onnxruntime import InferenceSession, get_available_providers
+
+        onnx_sess = InferenceSession(file_path_named, providers=get_available_providers())
+        meta = onnx_sess.get_modelmeta()
+        if separate_desc:
+            return {"custom_metadata_map": meta.custom_metadata_map}
+        else:
+            {tag: getattr(meta, tag, {}) for tag in dir(meta) if not tag.startswith("_")}
+
+    def metadata_from_onnx(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
+        """Extract metadata from an ONNX model using the ONNX library.\n
+        :param file_path_named: The path to the ONNX model file
+        :param separate_desc: Exclude or include metadata description, default True
+        :return: A mapping of metadata about the model
+        """
+        from onnxruntime.datasets import get_example
+        from onnx import load as onnx_load
+
+        example = get_example(file_path_named)
+        model = onnx_load(example)
+        if separate_desc:
+            return {"metadata_props": model.metadata_props}
+        else:
+            return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
+
 
 def main():
     import argparse
@@ -316,7 +353,3 @@ def main():
     file_name = f"{os.path.basename(args.path)}.json"
     folder_path_named = ensure_path(args.directory)
     write_json_file(folder_path_named=folder_path_named, file_name=file_name, data=meta_data)
-
-
-if __name__ == "__main__":
-    main()
