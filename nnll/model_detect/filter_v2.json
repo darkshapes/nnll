@@ -1,0 +1,150 @@
+{
+    "dit": {
+        "identifiers": [
+            "context_embedder.weight",
+            ".img",
+            "adaln_single",
+            "extra_embedder",
+            "layers.21.norm1",
+            "blocks.26.attn1.to_v.weight"
+        ],
+        "models": {
+            "model.dit.auraflow": [
+                "mlpX.c_fc2.weight",
+                "joint_transformer_blocks.2.ff_context.linear_2.weight",
+                [
+                    8192,
+                    3072
+                ]
+            ],
+            "model.dit.hunyuan": [
+                "extra_embedder",
+                "model.blocks",
+                "skip_norm.weight"
+            ],
+            "model.dit.lumina-next": [
+                "time_caption",
+                "feed_forward"
+            ],
+            "model.dit.pixart-sigma": [
+                "adaln_single",
+                "scale_shift_table"
+            ],
+            "model.dit.pixart-alpha": [
+                "aspect_ratio",
+                "y_embedding",
+                "emb.resolution",
+                "caption_projection"
+            ],
+            "model.dit.lumina-mgpt": [
+                "model.embed_tokens.weight"
+            ],
+            "model.dit.flux-1": [
+                "double_blocks.12.txt_mod.lin.weight",
+                "add_q_proj.weight",
+                "single_transformer_blocks.9.norm.linear.weight"
+            ],
+            "model.dit.stable-diffusion-3": [
+                "model.diffusion_model.joint_blocks.",
+                "transformer_blocks.21.norm1_context.linear.weight",
+                "transformer_blocks.31.norm1_context.linear.weight",
+                "blocks.11.ff.net.2.weight"
+            ]
+        }
+    },
+    "unet": {
+        "identifiers": [
+            "diffusion_model",
+            "model.diffusion_model",
+            "clf.1.weight",
+            "img_",
+            "time_embedding.",
+            "ffnet"
+        ],
+        "models": {
+            "model.unet.stable-diffusion-v1:common-canvas-s": [
+                "up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"
+            ],
+            "model.unet.stable_cascade:stage-c": [
+                "down_blocks.0.2.kv_mapper",
+                "previewer",
+                "backbone"
+            ],
+            "model.unet.stable_cascade:stage-b": [
+                "0.2.channelwise",
+                "clip_mapper.bias",
+                ".12.self_attn.k_proj.weight"
+            ],
+            "model.unet.stable_diffusion-v1": [
+                "model.diffusion_model.output_blocks.9"
+            ],
+            "model.unet.stable-diffusion-xl:refiner": [
+                "r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'"
+            ],
+            "model.unet.kolors": [
+                ".DenseReluDense.wi.weight",
+                "encoder_hid_proj.weight"
+            ],
+            "model.unet.stable-diffusion-xl:playground-25": [
+                "edm_mean",
+                [
+                    1,
+                    4,
+                    1,
+                    1
+                ],
+                2516
+            ],
+            "model.unet.stable-diffusion-xl:base": [
+                "logit_scale",
+                "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight",
+                "add_embedding.linear_2.bias"
+            ]
+        }
+    },
+    "language": {
+        "identifiers": [
+            "SelfAttention",
+            "self_attention",
+            "self_attn"
+        ],
+        "models": {
+            "model.transformer.bert": [
+                "pooler.dense.bias"
+            ],
+            "model.transformer.chatglm": [
+                ".glm"
+            ],
+            "model.transformer.t5:base": [
+                "encoder.block.0.layer.1.DenseReluDense.wi.weight"
+            ],
+            "model.transformer.umt-5": [
+                "encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"
+            ],
+            "model.transformer.t5:xxl": [
+                "encoder.embed_tokens.weight",
+                "text_encoders.t5xxl.transformer.shared.weight",
+                "t5xxl",
+                [
+                    4096
+                ]
+            ],
+            "model.transformer.mt5:xl": [
+                "text_encoders.mt5xl.transformer.shared.weight",
+                [
+                    250112,
+                    2048
+                ]
+            ],
+            "model.transformer.clip-g": [
+                "31.self_attn.k_proj.weight",
+                "text_model.encoder.layers.22.mlp.fc1.weight",
+                "clip-g"
+            ],
+            "model.transformer.clip-l": [
+                "text_model.encoder.layers.0.mlp.fc1.weight",
+                "clip-l"
+            ]
+        }
+    }
+}

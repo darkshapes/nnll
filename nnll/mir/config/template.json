@@ -27,16 +27,19 @@
                 "bbox_cost"
             ],
             "rnn": [
-                "lru_width"
+                "lru_width",
+                "rescale_every"
             ],
             "gan": [
                 "codebook_dim",
                 "kernel_size",
                 "kernel_predictor_conv_size"
             ],
-            "mamba": [
+            "ssm": [
                 "mamba_expand",
-                "parallel_attn"
+                "parallel_attn",
+                "state_size",
+                "expand"
             ],
             "vit": [
                 "use_swiglu_ffn",
@@ -48,16 +51,26 @@
                 "image_size",
                 "vision_config",
                 "hidden_sizes",
-                "image_token_id"
+                "image_token_id",
+                "patch_size",
+                "embed_dim",
+                "frequency_stride",
+                "auxiliary_channels",
+                "out_features",
+                "vision_feature_select_strategy"
             ],
-            "aetm": [
+            "dpt": [
+                "fusion_hidden_size"
+            ],
+            "aet": [
                 "classifier_proj_size",
                 "position_embedding_type",
                 "separate_cls",
                 "keypoint_detector_config",
-                "local_attention"
+                "local_attention",
+                "act_dropout"
             ],
-            "ststm": [
+            "stst": [
                 "encoder_attention_heads",
                 "encoder_layers",
                 "decoder_layers",
@@ -65,18 +78,30 @@
                 "encoder_hidden_size",
                 "is_encoder_decoder",
                 "encoder_config",
-                "audio_token_index"
+                "audio_token_index",
+                "codebook_dim",
+                "router_ignore_padding_tokens"
             ],
-            "artm": [
+            "art": [
                 "ffn_dim",
                 "num_codebooks",
                 "vq_config",
                 "attn_config",
                 "n_head",
+                "n_heads",
+                "n_layer",
                 "rms_norm_eps",
                 "rope_theta",
                 "head_dim",
-                "hidden_dropout_prob"
+                "hidden_dropout_prob",
+                "rotary_pct",
+                "embed_dropout",
+                "nb_priors",
+                "embd_pdrop",
+                "n_positions",
+                "aux_loss_coef",
+                "residual_dropout",
+                "no_rope_layers"
             ]
         },
         "diffuser": {

@@ -260,7 +260,52 @@ def auto_detail(mir_db: MIRDatabase):
                         1: {"diffusers": "DiffusionPipeline"},
                     },
                     "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
+                    "identifiers": ["logit_scale", "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight", "add_embedding.linear_2.bias"],
                 },
+            },
+        ),
+        (
+            "info.dit",
+            "auraflow",
+            {"*": {"identifiers": ["mlpX.c_fc2.weight", "joint_transformer_blocks.2.ff_context.linear_2.weight", [8192, 3072]]}},
+        ),
+        (
+            "info.dit",
+            "hunyuandit-v1-diffusers",
+            {"*": {"identifiers": ["extra_embedder", "model.blocks", "skip_norm.weight"]}},
+        ),
+        (
+            "info.dit",
+            "lumina-next-sft-diffusers",
+            {"*": {"identifiers": ["time_caption", "feed_forward"]}},
+        ),
+        (
+            "info.dit",
+            "pixart-sigma-xl-2-ms",
+            {"*": {"identifiers": ["adaln_single", "scale_shift_table"]}},
+        ),
+        (
+            "info.dit",
+            "pixart-xl-2-ms",
+            {"*": {"identifiers": ["aspect_ratio", "y_embedding", "emb.resolution", "caption_projection"]}},
+        ),
+        (
+            "info.art",
+            "lumina-mgpt",
+            {"*": {"identifiers": ["model.embed_tokens.weight"]}},
+        ),
+        (
+            "info.dit",
+            "stable-diffusion-3",
+            {"*": {"identifiers": ["model.diffusion_model.joint_blocks.", "transformer_blocks.21.norm1_context.linear.weight", "transformer_blocks.31.norm1_context.linear.weight", "blocks.11.ff.net.2.weight"]}},
+        ),
+        (
+            "info.unet",
+            "stable-diffusion-v1",
+            {
+                "*": {
+                    "identifiers": ["up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"],
+                }
             },
         ),
         (
@@ -282,6 +327,7 @@ def auto_detail(mir_db: MIRDatabase):
                         1: {"diffusers": "DiffusionPipeline"},
                     },
                     "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
+                    "identifiers": [".DenseReluDense.wi.weight", "encoder_hid_proj.weight"],
                 }
             },
         ),
@@ -310,7 +356,8 @@ def auto_detail(mir_db: MIRDatabase):
                         "1b035ba92da6bec0a9542219d12376c0164f214f222955024c884e1ab08ec611",
                         "22a49dc9d213d5caf712fbf755f30328bc2f4cbdc322bcef26dfcee82f02f147",
                     ],
-                }
+                    "identifiers": ["down_blocks.0.2.kv_mapper", "previewer", "backbone"],
+                },
             },
         ),
         (
@@ -343,6 +390,11 @@ def auto_detail(mir_db: MIRDatabase):
                         "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",
                         "20d47474da0714979e543b6f21bd12be5b5f721119c4277f364a29e329e931b9",
                     ],
+                    "identifiers": [
+                        "double_blocks.12.txt_mod.lin.weight",
+                        "add_q_proj.weight",
+                        "single_transformer_blocks.9.norm.linear.weight",
+                    ],
                 }
             },
         ),
@@ -370,7 +422,12 @@ def auto_detail(mir_db: MIRDatabase):
                                 "steps": 4,
                             },
                         },
-                    }
+                    },
+                    "identifiers": [
+                        "double_blocks.12.txt_mod.lin.weight",
+                        "add_q_proj.weight",
+                        "single_transformer_blocks.9.norm.linear.weight",
+                    ],
                 }
             },
         ),
@@ -396,11 +453,12 @@ def auto_detail(mir_db: MIRDatabase):
                             "f1300b9ffe051640555bfeee245813e440076ef90b669332a7f9fb35fffb93e8",
                             "047fa405c9cd5ad054d8f8c8baa2294fbc663e4121828b22cb190f7057842a64",
                         ],
+                        "identifiers": ["0.2.channelwise", "clip_mapper.bias", ".12.self_attn.k_proj.weight"],
                     }
                 }
             },
         ),
-        ("info.aetm", "wavlm", {"kokoro": {"repo": "hexgrad/Kokoro-82M"}}),
+        ("info.aet", "wavlm", {"kokoro": {"repo": "hexgrad/Kokoro-82M"}}),
     ]
     assimilate(mir_db, data_tuple)
 
@@ -415,6 +473,7 @@ def auto_supplement(mir_db: MIRDatabase):
             comp="refiner",
             repo="stabilityai/stable-diffusion-xl-refiner-1.0",
             layer_256=["8c2d0d32cff5a74786480bbaa932ee504bb140f97efdd1a3815f14a610cf6e4a"],
+            identifiers=["r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'"],
             pkg={
                 0: {
                     "diffusers": "DiffusionPipeline",
@@ -467,6 +526,7 @@ def auto_supplement(mir_db: MIRDatabase):
             series="stable-diffusion-xl",
             comp="playground-2-5-base",
             layer_256=["a6f31493ceeb51c88c5239188b9078dc64ba66d3fc5958ad48c119115b06120c"],
+            identifiers=["edm_mean", [1, 4, 1, 1], 2516],
         )
     )
     mir_db.add(
@@ -486,6 +546,7 @@ def auto_supplement(mir_db: MIRDatabase):
                     "generation": {"num_inference_steps": 50, "guidance_scale": 3},
                 }
             },
+            identifiers=["edm_mean", [1, 4, 1, 1], 2516],
         )
     )
     mir_db.add(
@@ -598,7 +659,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="audiogen",
             comp="medium-1-5b",
             repo="facebook/audiogen-medium",
@@ -613,7 +674,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="parler-tts",
             comp="tiny-v1",
             repo="parler-tts/parler-tts-tiny-v1",
@@ -629,7 +690,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="parler-tts",
             comp="large-v1",
             repo="parler-tts/parler-tts-large-v1",
@@ -668,7 +729,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="lumina-mgpt",
             comp="7B-768",
             repo="Alpha-VLLM/Lumina-mGPT-7B-768",
@@ -683,7 +744,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="orpheus",
             comp="3b-0-1-ft",
             repo="canopylabs/orpheus-3b-0.1-ft",
@@ -695,7 +756,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="orpheus",
             comp="3b-0-1-ft-4b",
             repo="mlx-community/orpheus-3b-0.1-ft-4bit",
@@ -708,7 +769,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="outetts-0-3",
             comp="1b",
             repo="OuteAI/OuteTTS-0.3-1B",
@@ -720,7 +781,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="artm",
+            arch="art",
             series="OuteTTS-1.0-0",
             comp="6B-4bit",
             repo="mlx-community/OuteTTS-1.0-0.6B-4bit",
@@ -765,7 +826,7 @@ def auto_supplement(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="aetm",
+            arch="aet",
             series="bagel",
             comp="7B-MoT",
             repo="ByteDance-Seed/BAGEL-7B-MoT",
