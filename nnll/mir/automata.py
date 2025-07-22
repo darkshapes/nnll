@@ -267,7 +267,7 @@ def auto_detail(mir_db: MIRDatabase):
         (
             "info.dit",
             "auraflow",
-            {"*": {"identifiers": ["mlpX.c_fc2.weight", "joint_transformer_blocks.2.ff_context.linear_2.weight", [8192, 3072]]}},
+            {"*": {"identifiers": [[8192, 3072], "mlpX.c_fc2.weight", "joint_transformer_blocks.2.ff_context.linear_2.weight"]}},
         ),
         (
             "info.dit",
@@ -302,11 +302,22 @@ def auto_detail(mir_db: MIRDatabase):
         (
             "info.unet",
             "stable-diffusion-v1",
-            {
-                "*": {
-                    "identifiers": ["up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"],
-                }
-            },
+            {"*": {"identifiers": ["up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"]}},
+        ),
+        (
+            "info.stst",
+            "t5",
+            {"*": {"identifiers": ["encoder.block.0.layer.1.DenseReluDense.wi.weight"]}},
+        ),
+        (
+            "info.stst",
+            "umt5",
+            {"*": {"identifiers": ["encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"]}},
+        ),
+        (
+            "info.stst",
+            "mt5",
+            {"*": {"identifiers": [[250112, 2048], "text_encoders.mt5xl.transformer.shared.weight"]}},
         ),
         (
             "info.unet",
@@ -546,7 +557,11 @@ def auto_supplement(mir_db: MIRDatabase):
                     "generation": {"num_inference_steps": 50, "guidance_scale": 3},
                 }
             },
-            identifiers=["edm_mean", [1, 4, 1, 1], 2516],
+            identifiers=[
+                [1, 4, 1, 1],
+                2516,
+                "edm_mean",
+            ],
         )
     )
     mir_db.add(
@@ -792,6 +807,51 @@ def auto_supplement(mir_db: MIRDatabase):
     )
     mir_db.add(
         mir_entry(
+            domain="info",
+            arch="stst",
+            series="t5",
+            comp="xxl",
+            repo="google/t5-v1_1-xxl",
+            pkg={0: {"diffusers": "T5ForConditionalGeneration"}},
+            identifiers=[[4096], "encoder.embed_tokens.weight", "text_encoders.t5xxl.transformer.shared.weight", "t5xxl"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vit",
+            series="openclip",
+            comp="vit-l-14",
+            repo="openai/clip-vit-large-patch14",
+            pkg={0: {"diffusers": "CLIPModel"}},
+            identifiers=["text_model.encoder.layers.0.mlp.fc1.weight", "clip-l"],
+        )
+    )
+
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vit",
+            series="openclip",
+            comp="vit-g-14",
+            repo="laion/CLIP-ViT-g-14-laion2B-s12B-b42K",
+            pkg={0: {"diffusers": "CLIPModelwithProjection"}},
+            identifiers=["31.self_attn.k_proj.weight", "text_model.encoder.layers.22.mlp.fc1.weight", "clip-g"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="aet",
+            series="bagel",
+            comp="7B-MoT",
+            repo="ByteDance-Seed/BAGEL-7B-MoT",
+            pkg={0: {"Bagel": "app"}},
+        )
+    )
+
+    mir_db.add(
+        mir_entry(
             domain="ops",
             arch="patch",
             series="hidiffusion",
@@ -822,17 +882,6 @@ def auto_supplement(mir_db: MIRDatabase):
     )
     # possible mixed-type architecture?
     # fusion / united / universal
-
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="aet",
-            series="bagel",
-            comp="7B-MoT",
-            repo="ByteDance-Seed/BAGEL-7B-MoT",
-            pkg={0: {"Bagel": "app"}},
-        )
-    )
 
 
 def auto_lora(mir_db: MIRDatabase):
