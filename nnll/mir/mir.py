@@ -48,7 +48,7 @@ class Info(BaseModel):
     pkg: Optional[PkgType] = None
     file_256: Optional[HashType] = None
     layer_256: Optional[HashType] = None
-    pkg_alt: Optional[PkgType] = None
+    identifier: Optional[Union[List[int], int, str]] = None  # numbers preceding str
 
 
 class Ops(BaseModel):
