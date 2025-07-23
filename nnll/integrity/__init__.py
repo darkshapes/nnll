@@ -8,8 +8,8 @@ import os
 
 def ensure_path(folder_path_named: Path, file_name: Optional[str] = None) -> Optional[Path]:
     """Provide absolute certainty a file location exists\n
-    :param folder_path_named: Location to test, defaults to os.path.dirname(HOME_FOLDER_PATH)
-    :param file_name:Optional file name to test, defaults to None
+    :param folder_path_named: Location to test
+    :param file_name: Optional file name to test, defaults to None
     :return: The original folder path, or none if failure
     """
     folder_path_named = Path(folder_path_named)

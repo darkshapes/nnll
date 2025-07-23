@@ -37,7 +37,7 @@ class MIRDatabase:
     @mir_file.decorator
     def write_to_disk(self, data: Optional[dict] = None) -> None:  # pylint:disable=unused-argument
         """Save data to JSON file\n"""
-        # from nnll.integrity import ensure_path
+
         try:
             os.remove(MIR_PATH_NAMED)
         except (FileNotFoundError, OSError) as error_log:
@@ -54,7 +54,6 @@ class MIRDatabase:
         self.database = data
         return self.database
 
-    # @debug_monitor
     def _stage_maybes(self, maybe_match: str, target: str, series: str, compatibility: str) -> List[str]:
         """Process a single value for matching against the target\n
         :param value: An unknown string value
@@ -62,17 +61,23 @@ class MIRDatabase:
         :param series: MIR URI domain.arch.series identifier
         :param compatibility: MIR URI compatibility identifier\n
         (found value, path, sub-path,boolean for exact match)
-        :return: _description_
-        """
+        :return: A list of likely options and their MIR paths"""
+
         results = []
         if isinstance(maybe_match, str):
+            if self.base_name:
+                maybe_match = [os.path.basename(maybe_match)]
             maybe_match = [maybe_match]
         for option in maybe_match:
-            option_lower = option.lower()
+            if self.base_name:
+                opt_value = os.path.basename(option)
+            else:
+                opt_value = option
+            option_lower = opt_value.lower()
             if option_lower == target:
-                return [option, series, compatibility, True]
+                return [opt_value, series, compatibility, True]
             elif target in option_lower:
-                results.append([option, series, compatibility, False])
+                results.append([opt_value, series, compatibility, False])
         return results
 
     @staticmethod
@@ -93,7 +98,6 @@ class MIRDatabase:
             option, series, compatibility, _ = match
             option = option.strip("_").strip("-").strip(".").lower()
             target = target.strip("_").strip("-").strip(".").lower()
-            # print(option, target)
             if target in option or option in target:
                 max_len = len(os.path.commonprefix([option, target]))
                 gap = Decimal(str(abs(len(option) - len(target)) + (len(option) - max_len))) * Decimal("0.1")
@@ -104,7 +108,7 @@ class MIRDatabase:
         return best_match
 
     def ready_stage(self, maybe_match: str, target: str, series: str, compatibility: str) -> Optional[List[str]]:
-        """Orchestrate match checking, return for exact matches, and create a queue of potential match
+        """Orchestrate match checking, return for exact matches, and create a queue of potential match\n
         :param maybe_match: The value of the requested search field
         :param target: The requested information
         :param series: Current MIR domain/arch/series tag
@@ -118,8 +122,7 @@ class MIRDatabase:
             self.matches.extend(match_results)
         return None
 
-    # @debug_monitor
-    def find_path(self, field: str, target: str, sub_field: Optional[str] = None) -> list[str]:
+    def find_path(self, field: str, target: str, sub_field: Optional[str] = None, base_name: bool = False) -> list[str]:
         """Retrieve MIR path based on nested value search\n
         :param field: Known field to look within
         :param target: Search pattern for field
@@ -131,9 +134,9 @@ class MIRDatabase:
         parameters = r"-gguf|-exl2|-exl3|-onnx|-awq|-mlx|-ov"  #
         target = target.lower()
         target = re.sub(parameters, "", target)
-        # print(norm_target)
         self.matches = None
         self.matches = []
+        self.base_name = base_name
 
         for series, comp in self.database.items():
             for compatibility, fields in comp.items():
