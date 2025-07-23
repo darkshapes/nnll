@@ -6,33 +6,47 @@
 from typing import List, Dict, Iterable
 
 
-def retrieve_remote_hash(repo_or_model_id: str, file_path_absolute: str, hf: bool = True):
-    """Return the hash value of a file from HF"""
+def fetch_hash(model_id: str, file_path_absolute: str | None = None, b3: bool = False) -> list | str:
+    """Return the hash value of a file from HF or CivitAI
+    :param model_id: Repo or id number
+    :param file_path_absolute: Remote file name, (required for HF), defaults to None
+    :param b3: Whether to return blake3 result, (CA only), defaults to False
+    :return: A hash or hashes from the respective remote
+    """
 
-    if hf:
+    def _get_hf_hash(model_id: str, file_path_absolute: str) -> str:
         from huggingface_hub import get_hf_file_metadata, hf_hub_url
 
-        from_remote_location = hf_hub_url(repo_id=repo_or_model_id, filename=file_path_absolute)
+        from_remote_location = hf_hub_url(repo_id=model_id, filename=file_path_absolute)
         metadata = get_hf_file_metadata(from_remote_location)
         return metadata.etag
-    else:
-        hash_values = []
+
+    def _get_civitai_hash(model_id: str, b3: bool) -> list:
         import requests
         from json import JSONDecodeError
 
-        request: requests.Response = requests.get("https://civitai.com/api/v1/models/" + repo_or_model_id, timeout=(10, 10))
+        request = requests.get(f"https://civitai.com/api/v1/models/{model_id}", timeout=(10, 10))
+        hash_values = []
         if request.ok and request.status_code == 200:
             try:
                 request_data = request.json()
             except JSONDecodeError:
-                return
+                return hash_values
             model_versions: List[Dict[str, str]] = request_data.get("modelVersions")
             for version in model_versions:
                 files_data = version.get("files")
                 if files_data:
                     for file_data in files_data:
-                        hash_values.append(files_data["hashes"].get("SHA256"))
+                        if b3:
+                            hash_values.append(file_data.get("hashes").get("BLAKE3"))
+                        else:
+                            hash_values.append(file_data.get("hashes").get("SHA256"))
         return hash_values
+
+    if file_path_absolute:
+        return _get_hf_hash(model_id, file_path_absolute)
+    else:
+        return _get_civitai_hash(model_id, b3)
 
 
 async def compute_hash_for(file_path_named: str = None, text_stream: str = None) -> str:

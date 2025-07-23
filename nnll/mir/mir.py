@@ -48,6 +48,8 @@ class Info(BaseModel):
     pkg: Optional[PkgType] = None
     file_256: Optional[HashType] = None
     layer_256: Optional[HashType] = None
+    file_b3: Optional[HashType] = None
+    layer_b3: Optional[HashType] = None
     identifier: Optional[Union[List[int], int, str]] = None  # numbers preceding str
 
 

@@ -5,7 +5,7 @@ from typing import List, Optional
 
 
 def find_config_classes(parameter_filter: Optional[str] = None) -> List[str]:
-    """Show all config classes transformers package\n
+    """Show all config classes in the transformers package with the specified init annotation\n
     :param from_match: Narrow the classes to only those with an exact key inside
     :return: A list of all Classes"""
     from nnll.mir.mappers import stock_llm_data

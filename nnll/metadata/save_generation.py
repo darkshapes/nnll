@@ -20,11 +20,10 @@ from nnll.monitor.file import debug_monitor
 
 @debug_monitor
 def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Path:
-    """
-    Construct the file name of a save file\n
+    """Construct the file name of a save file\n
     :param extension: The extension of the file
-    :return: `str` A file path with a name
-    """
+    :return: `str` A file path with a name"""
+
     file_reader = MetadataFileReader()
     user_settings = file_reader.read_header(USER_PATH_NAMED)
     save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable-object
@@ -42,24 +41,23 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
 
 
 # do not log here
-def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str], kwargs: dict) -> Dict:  #  negative_prompt=None
-    """
-    Create metadata from active hf inference pipes\n
+def add_to_metadata(**kwargs: dict) -> Dict:  #  negative_prompt=None
+    """Create metadata from active hf inference pipes\n
     :param pipe: Active HuggingFace pipe from diffusers/transformers
     :param model: Generative model filename/path
     :param prompt: Input for genereation
     :param kwargs: Arguments passed to constructors
-    :return: Dictionary of attributes
-    """
+    :return: Dictionary of attributes"""
+
     model_data = {}
-    model_data.setdefault(model, collect_hashes(model))  # adapt for cache repo locations
+    model_data.setdefault(kwargs["model"], collect_hashes(kwargs["model"]))  # adapt for cache repo locations
 
     gen_data = {
         "parameters": {
-            "Prompt": prompt,
+            "Prompt": kwargs["prompt"],
             # "\nNegative prompt": negative_prompt if negative_prompt else "\n",
             "\nData": kwargs,
-            "\nPipe": pipe,
+            "\nPipe": kwargs["pipe"],
             "\nModels": model_data,
         }
     }
@@ -67,12 +65,23 @@ def add_to_metadata(pipe: Dict, model: str, prompt: str | list[str] | dict[str],
 
 
 # do not log here
-def write_to_disk(content: Any, metadata: dict[str], extension: str = None, library: Optional[str] = None) -> None:
+def write_to_disk(content: Any, pipe_data: dict[str], extension: str = None, library: Optional[str] = None) -> None:
     """Save Image to File\n
-    :param image: Image file data in memory
-    :param metadata: Pipe metadata to write into the file
-    :param extension: Type of Image file to write, defaults to
-    """
+    :param content: File data in memory
+    :param pipe_data: Pipe metadata to write into the file
+    ```
+        name    [ header:  type   : medium: type ]
+
+                ,-pipe      dict
+            #   \-model     str    ,-text   string
+            #   \-prompt    dict___\-audio  array
+            #   `-kwargs    dict   \-image  array
+            #                      `-video  array
+    ```
+    :param extension: Type of Image file to write, defaults to None
+    :param library: Originating library, defaults to None\n\n"""
+
+    metadata = add_to_metadata(pipe_data)
     if isinstance(content, PIL.Image.Image):
         from PIL import PngImagePlugin
 

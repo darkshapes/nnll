@@ -620,6 +620,9 @@ def auto_supplement(mir_db: MIRDatabase):
         )
     )
     mir_db.add(
+        mir_entry(domain="info", arch="stst", series="silero-vad", comp="*", repo="onnx-community/silero-vad", pkg={0: {"onnx": "onnx"}}),
+    )
+    mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
