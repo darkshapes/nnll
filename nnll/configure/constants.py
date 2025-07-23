@@ -255,6 +255,5 @@ class ListOfDelineatedStr(BaseModel):
         return regex_match
 
 
-PARAMETERS_SUFFIX = r"[.-]?\d{1,4}[BbMmKk]|-tiny|-large|-medium|-base|-mini|-multimodal|-instruct|-full|-preview|-small"
-VERSIONS_SUFFIX = r"([vV]?\d{1,2})(?:[-.]\d+)*"
-BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*(\d{3,4}px{1})"
+BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*[_-](\d{3,4}px)"
+PARAMETERS_SUFFIX = r"^(\d+[._-]?\d?[BbMmKk](it)?|[Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|tiny|large|mlx|onnx|gguf|medium|base|mini|multimodal|instruct|full|:latest|preview|small|it|pro|beta|hybrid|rl|plus|dpo|community)"

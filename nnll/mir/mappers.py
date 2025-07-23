@@ -64,10 +64,11 @@ def stock_llm_data() -> Dict[str, List[str]]:
                         transformer_data.setdefault(model_class, model_data)
                     else:
                         model_data = None
+
             if not model_data and code_name not in second_exclude_list:  # second attempt
                 if code_name == "donut":
                     code_name = "donut-swin"
-                if not task_pipe:
+                if not task_pipe and code_name:
                     model_class = getattr(__import__("transformers"), MODEL_MAPPING_NAMES.get(code_name.replace("_", "-")), 0)
                 else:
                     model_class = getattr(__import__("transformers"), task_pipe)
