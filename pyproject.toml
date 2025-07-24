@@ -122,10 +122,11 @@ triton = [
     "triton-windows ; sys_platform == 'win32'",
 ]
 hidiffusion = ["hidiffusion>=0.1.10"]
-chroma = ["mlx-chroma @ git+https://github.com/exdysa/jack813-mlx-chroma.git"]
 
 # audiocraft = ["audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev"]
 # bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
+# chroma = ["mlx-chroma @ git+https://github.com/exdysa/jack813-mlx-chroma.git"]
+
 # orpheus_tts = ["orpheus_tts @ git+https://github.com/canopyai/Orpheus-TTS.git"]
 # parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
 # xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
