@@ -29,11 +29,11 @@ def test_create_unet():
     assert len(result) == 2
     mir_series, prefixed_data = result
 
-    assert mir_series == "info.unet.standard-repo-prior"
-    assert "repo" in prefixed_data.get("*")
-    assert prefixed_data["*"]["repo"] == repo_path
-    assert "pkg" in prefixed_data.get("*")
-    assert prefixed_data["*"]["pkg"][0]["diffusers"] == class_name
+    assert mir_series == "info.unet.standard-repo"
+    assert "repo" in prefixed_data.get("prior")
+    assert prefixed_data["prior"]["repo"] == repo_path
+    assert "pkg" in prefixed_data.get("prior")
+    assert prefixed_data["prior"]["pkg"][0]["diffusers"] == class_name
 
 
 def test_create_transformer():
@@ -114,9 +114,9 @@ def test_create_prior():
 
     mir_series, prefixed_data = result
 
-    assert mir_series == "info.unet.finish-him--kascade-prior"
-    assert prefixed_data["*"]["repo"] == repo_path
-    assert prefixed_data["*"]["pkg"][0]["diffusers"] == class_name
+    assert mir_series == "info.unet.finish-him--kascade"
+    assert prefixed_data["prior"]["repo"] == repo_path
+    assert prefixed_data["prior"]["pkg"][0]["diffusers"] == class_name
 
 
 def test_create_decoder():

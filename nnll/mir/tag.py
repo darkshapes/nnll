@@ -4,7 +4,7 @@
 import os
 from typing import List, Dict, Optional
 from nnll.mir.json_cache import JSONCache, TEMPLATE_PATH_NAMED
-from nnll.configure.constants import PARAMETERS_SUFFIX, VERSIONS_SUFFIX, BREAKING_SUFFIX
+from nnll.configure.constants import PARAMETERS_SUFFIX, BREAKING_SUFFIX
 
 TEMPLATE_CONFIG = JSONCache(TEMPLATE_PATH_NAMED)
 
@@ -17,15 +17,28 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     import re
 
     root = "decoder" if decoder else "*"
-    parts = [segment for segment in re.split(PARAMETERS_SUFFIX, repo_title) if segment]
-    parts = "".join(parts[:1])
-    parts = [segment for segment in re.split(VERSIONS_SUFFIX, parts) if segment]
-    parts = "".join(parts)
-    suffix = [tail for tail in re.split(BREAKING_SUFFIX, parts) if tail]
-    parts = os.path.basename(parts).lower().replace("_", "-").replace(".", "-").replace("*", "")
-    if len(suffix) > 1:
-        return [parts, suffix]
-    return [parts, root]
+    repo_title = repo_title.split(":latest")[0]
+    repo_title = repo_title.split(r"/")[-1].lower()
+    pattern = r"^.*[v]?(\d{1}+\.\d).*"
+    match = re.findall(pattern, repo_title)
+    if match:
+        if next(iter(match)):
+            repo_title = repo_title.replace(next(iter(match))[-1], "")
+    parts = repo_title.replace(".", "").split("-")
+    if len(parts) == 1:
+        parts = repo_title.split("_")
+
+    clean_parts = [re.sub(PARAMETERS_SUFFIX, "", segment.lower()) for segment in parts]
+    cleaned_string = "-".join([x for x in clean_parts if x])
+    suffix_match = re.findall(BREAKING_SUFFIX, cleaned_string)  # Check for breaking suffixes first
+    if suffix_match:
+        suffix = next(iter(suffix for suffix in suffix_match[0] if suffix))
+        cleaned_string = re.sub(suffix.lower(), "-", cleaned_string).rstrip("-,")
+    else:
+        suffix = root
+    cleaned_string = re.sub(r"[._]+", "-", cleaned_string.lower()).strip("-_")
+
+    return [cleaned_string, suffix]
 
 
 def class_to_mir_tag(mir_db: Dict[str, str], id_tag: str) -> Optional[str]:
