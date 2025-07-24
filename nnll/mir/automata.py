@@ -271,7 +271,7 @@ def auto_detail(mir_db: MIRDatabase):
                 "*": {
                     "pkg": {
                         1: {
-                            "generation": {"neg_text": "", "num_steps": "28", "latent_size": (64, 64)},
+                            "generation": {"neg_text": "", "num_steps": "28", "latent_size": [64, 64]},
                         }
                     }
                 },
