@@ -130,7 +130,10 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
         "pkg": {0: {"diffusers": class_name}},
     }
     if class_name == "FluxPipeline":
-        class_name = {1: {"mflux": "Flux1"}}
+        class_name = {1: {"mflux.flux.flux": "Flux1"}}
+        prefixed_data["pkg"].update(class_name)
+    elif class_name == "ChromaPipeline":
+        class_name = {1: {"chroma": "ChromaPipeline"}}
         prefixed_data["pkg"].update(class_name)
     return mir_series, {mir_comp: prefixed_data}
 

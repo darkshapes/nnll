@@ -152,7 +152,7 @@ class MIRDatabase:
         if best_match:
             return best_match
         else:
-            nfo(f"Query '{target}' not found when searched {len(self.database)}'{field}' options\n")
+            # nfo(f"Query '{target}' not found when {len(self.database)}'{field}' options searched\n")
             return None
 
 

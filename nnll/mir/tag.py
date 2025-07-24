@@ -18,6 +18,7 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
 
     root = "decoder" if decoder else "*"
     repo_title = repo_title.split(":latest")[0]
+    repo_title = repo_title.split(":Q")[0]
     repo_title = repo_title.split(r"/")[-1].lower()
     pattern = r"^.*[v]?(\d{1}+\.\d).*"
     match = re.findall(pattern, repo_title)
