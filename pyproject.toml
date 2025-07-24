@@ -75,7 +75,7 @@ dev = [
 [project.optional-dependencies]
 # -- platforms --
 mps = [
-    "nnll[openai]",
+    "nnll[openai,chroma]",
     # most of these version specifics a direct result of mlx-audio reqs
     "mlx-vlm<=0.1.26",
     "mlx-lm<=0.24.1",
@@ -84,13 +84,13 @@ mps = [
     "misaki>=0.8.2 ; python_version < '3.13' and sys_platform == 'darwin'",
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version > '3.12' and sys_platform == 'darwin'",
     "pip>=25.0.1",
-    #the exception
+    #the exceptions
     "mflux>=0.2.1",
 ]
-
 cu126 = ["nnll[triton]"]
 cu128 = ["nnll[triton,attention]"]
-rocm  = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform != 'darwin'"]
+rocm = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform != 'darwin'"]
+
 # -- frameworks --
 torch = ["torch", "torchvision", "torchaudio"]
 onnx  = ["onnx>=1.18.0"]
@@ -106,6 +106,14 @@ triton = [
     "triton-windows ; sys_platform == 'win32'",
 ]
 hidiffusion = ["hidiffusion>=0.1.10"]
+chroma = ["mlx-chroma @ git+https://github.com/exdysa/jack813-mlx-chroma.git"]
+
+# audiocraft = ["audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev"]
+# bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
+# orpheus_tts = ["orpheus_tts @ git+https://github.com/canopyai/Orpheus-TTS.git"]
+# parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
+# xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
+# tts = [ "nnll[audiocraft, bagel, parler_tts]", "nnll[audiocraft, bagel, parler_tts,vllm] ; platform_system != 'darwin'",]
 
 # -- providers --
 ollama   = ["ollama>=0.5.1"]
@@ -135,13 +143,6 @@ dev = [
     "pytest-trio>=0.8.0",
     "ruff>=0.12.0",
 ]
-
-# audiocraft = ["audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev"]
-# bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
-# orpheus_tts = ["orpheus_tts @ git+https://github.com/canopyai/Orpheus-TTS.git"]
-# parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
-# xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
-# tts = [ "nnll[audiocraft, bagel, parler_tts]", "nnll[audiocraft, bagel, parler_tts,vllm] ; platform_system != 'darwin'",]
 
 
 [project.urls]
