@@ -6,7 +6,7 @@ from types import ModuleType
 from typing import List, Tuple, Type
 
 
-def find_classes_in_package(pkg: ModuleType, base_class: Type) -> List[Tuple[str, Type]]:
+async def find_classes_in_package(pkg: ModuleType, base_class: Type) -> List[Tuple[str, Type]]:
     visited = set()
     found = []
     exclude_list = [
@@ -28,9 +28,25 @@ def find_classes_in_package(pkg: ModuleType, base_class: Type) -> List[Tuple[str
         "transformers.tf_utils",
         "transformers.generation.tf_logits_process",
         "transformers.generation.tf_utils",
+        "diffusers.utils.import_utils",
+        "diffusers.pipelines.consisid.consisid_utils",
+        "diffusers.pipelines.stable_diffusion_safe",
+        "diffusers.pipelines.skyreels_v2",  # demands ftfy dep
+        "diffusers.pipelines.stable_diffusion.pipeline_onnx_stable_diffusion_inpaint_legacy",
+        "diffusers.pipelines.stable_diffusion_k_diffusion",  # demands kdiffusion
+        "diffusers.pipelines.deprecated",
+        "diffusers.schedulers.scheduling_cosine_dpmsolver_multistep",  # needs torchsde
+        "diffusers.schedulers.scheduling_dpmsolver_sde",
+        "mlx_lm.models.olmo",  # demands al-olmo"
+        "mlx_lm.test",
+        "mlx_lm.evaluate",
+        "torch.backends",  # demands coreml, onnx_script, etc
+        "torch.utils.tensorboard",  # demands tensorboard
+        "torch.testing",
     ]
+    class_exclusions = ["pipeline_stable_diffusion_k_diffusion", "pipeline_onnx_stable_diffusion_inpaint", "CogView4PlusPipelineOutput", "OnnxStableDiffusionInpaintPipelineLegacy", "CogView3PlusPipelineOutput"]
 
-    def recurse(module_name: str):
+    async def recurse(module_name: str):
         if module_name in visited:
             return
         visited.add(module_name)
@@ -38,13 +54,15 @@ def find_classes_in_package(pkg: ModuleType, base_class: Type) -> List[Tuple[str
         spec = find_spec(module_name)
         if not spec or not spec.origin:
             return
-        if module_name not in exclude_list and "_tf" not in module_name and "__" not in module_name:
+        if module_name not in exclude_list and "_tf" not in module_name and not any([segment.startswith("_") for segment in module_name.split(".")]):
             print(module_name)
             module = importlib.import_module(module_name)
             for name in dir(module):
-                obj = getattr(module, name)
-                if isclass(obj) and issubclass(obj, base_class):
-                    found.append((name, obj))
+                # print(module, name)
+                if name not in class_exclusions and "SkyReelsV2" not in name and not list([exclusion for exclusion in class_exclusions if exclusion in name]):
+                    obj = getattr(module, name)
+                    if isclass(obj) and issubclass(obj, base_class):
+                        found.append((str(obj).replace("class ", ""), name))
             if spec.submodule_search_locations:
                 path = spec.submodule_search_locations[0]
                 for entry in os.listdir(path):
@@ -52,31 +70,86 @@ def find_classes_in_package(pkg: ModuleType, base_class: Type) -> List[Tuple[str
                         continue
                     full_path = os.path.join(path, entry)
                     if os.path.isdir(full_path):
-                        recurse(f"{module_name}.{entry}")
+                        await recurse(f"{module_name}.{entry}")
                     elif entry.endswith(".py"):
                         mod_name = entry[:-3]
-                        if mod_name != "watermarking":
-                            recurse(f"{module_name}.{mod_name}")
+                        if mod_name != "watermarking" and mod_name != "_VF":
+                            await recurse(f"{module_name}.{mod_name}")
 
-    recurse(pkg.__name__)
+    await recurse(pkg.__name__)
     return found
 
 
-def find_nn():
-    import mlx_audio
-    import mlx.nn as nn
+async def find_modules():
+    from importlib import import_module
     from nnll.metadata.json_io import write_json_file
 
-    results = find_classes_in_package(mlx_audio, nn.Module)
+    module_args = {
+        "torch": "torch.nn",
+    }
+    results = []
 
-    import transformers
-    import torch.nn as nn
+    for dep, module in module_args.items():
+        dep_obj = import_module(dep)
+        module_obj = import_module(module).Module
+        results.extend(await find_classes_in_package(dep_obj, module_obj))
+    data = {name: cls for cls, name in results}
+    write_json_file(".", "nn_sources.json", data)
+    print(f"Wrote {len(results)} lines.")
 
-    results = find_classes_in_package(transformers, nn.Module)
-    data = {name: str(cls) for name, cls in results}
+
+async def find_nn():
+    from importlib import import_module
+    from nnll.metadata.json_io import write_json_file
+
+    package_args = {
+        "mlx_audio": "mlx.nn",
+        "mlx_lm": "mlx.nn",
+        "mflux": "mlx.nn",
+        "transformers": "torch.nn",
+        "diffusers": "torch.nn",
+    }
+    results = []
+    for pkg, module in package_args.items():
+        pkg_obj = import_module(pkg)
+        module_obj = import_module(module).Module
+        results.extend(await find_classes_in_package(pkg_obj, module_obj))
+    data = {cls: name for cls, name in results}
     write_json_file(".", "nn_modules.json", data)
     print(f"Wrote {len(results)} lines.")
 
 
+async def order_nn_modules():
+    from nnll.metadata.json_io import read_json_file
+    from nnll.metadata.json_io import write_json_file
+    from collections import defaultdict
+    import re
+
+    key_sort = defaultdict(set)
+    nn_sources: dict[str, str] = read_json_file("nn_sources.json")
+    pkg_modules: dict[str, str] = read_json_file("nn_modules.json")
+    for module, name in pkg_modules.items():
+        model_name = None
+        pattern = r"(\b(models.|mflux\.community.|pipelines.|generation.candidate_generator.|time_series_utils.|distributed.fsdp.|activations.|quantizers.base|transformers.loss.|transformers.integrations.|mlx_lm.dwq|nn.modules.loss)\b)"
+        match = re.search(pattern, module)
+        if match:
+            match_segment = match.group()
+            model_name = module.split(match_segment)[1].partition(".")[0]
+            for nn_type in nn_sources.keys():
+                if nn_type.lower() in name.lower():
+                    key_sort[model_name].add(nn_type.lower())
+        else:
+            print(module)
+    key_set = key_sort.copy()
+    for i in key_set:
+        key_sort[i] = list(key_set[i])
+    write_json_file(".", "nn_order.json", key_sort)
+    print(f"Wrote {len(key_sort)} lines.")
+
+
 if __name__ == "__main__":
-    find_nn()
+    import asyncio
+
+    # asyncio.run(find_modules())
+    # asyncio.run(find_nn())
+    asyncio.run(order_nn_modules())
