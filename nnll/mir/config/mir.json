@@ -1065,20 +1065,22 @@
             "pkg": {
                 "0": {
                     "transformers": "GitModel"
+
                 }
             }
         }
     },
-    "info.ssm.zamba-v1": {
+    "info.vit.dfine-x-coco": {
         "*": {
-            "repo": "Zyphra/Zamba-7B-v1",
+            "repo": "ustc-community/dfine_x_coco",
             "pkg": {
                 "0": {
-                    "transformers": "ZambaModel"
+                    "transformers": "HGNetV2Backbone"
                 }
             }
         }
     },
+
     "info.stst.t5": {
         "*": {
             "repo": "google-t5/t5-small",
@@ -1345,6 +1347,9 @@
                     "transformers": "FastSpeech2ConformerModel"
                 }
             }
+        },
+        "kokoro": {
+            "repo": "hexgrad/Kokoro-82M"
         }
     },
     "info.vit.clap-htsat-fused": {
@@ -1706,16 +1711,17 @@
             "pkg": {
                 "0": {
                     "transformers": "PegasusModel"
+
                 }
             }
         }
     },
-    "info.vit.vit-msn": {
+    "info.vit.glm-4v-thinking": {
         "*": {
-            "repo": "facebook/vit_msn_base",
+            "repo": "THUDM/GLM-4.1V-9B-Thinking",
             "pkg": {
                 "0": {
-                    "transformers": "ViTMSNModel"
+                    "transformers": "Glm4vTextModel"
                 }
             }
         }
@@ -1917,7 +1923,14 @@
                 "0": {
                     "transformers": "HieraModel"
                 }
-            }
+            },
+            "identifiers": [
+                [
+                    250112,
+                    2048
+                ],
+                "text_encoders.mt5xl.transformer.shared.weight"
+            ]
         }
     },
     "info.vit.bridgetower": {
@@ -1990,12 +2003,12 @@
             }
         }
     },
-    "info.aet.megatron-bert-uncased": {
+    "info.vit.udop": {
         "*": {
-            "repo": "nvidia/megatron-bert-uncased-345m",
+            "repo": "microsoft/udop-large",
             "pkg": {
                 "0": {
-                    "transformers": "MegatronBertModel"
+                    "transformers": "UdopModel"
                 }
             }
         }
@@ -2060,12 +2073,12 @@
             }
         }
     },
-    "info.detr.detr-resnet-50": {
+    "info.vit.dinov2-patch16-224": {
         "*": {
-            "repo": "facebook/detr-resnet-50",
+            "repo": "google/dinov2-base-patch16-224",
             "pkg": {
                 "0": {
-                    "transformers": "DetrModel"
+                    "transformers": "Dinov2Model"
                 }
             }
         }
@@ -2350,16 +2363,17 @@
             }
         }
     },
-    "info.vit.tvlt": {
+    "info.vit.clip-vit-patch32": {
         "*": {
-            "repo": "ZinengTang/tvlt-base",
+            "repo": "openai/clip-vit-base-patch32",
             "pkg": {
                 "0": {
-                    "transformers": "TvltModel"
+                    "transformers": "CLIPTextModel"
                 }
             }
         }
     },
+
     "info.stst.autoformer-tourism-monthly": {
         "*": {
             "repo": "huggingface/autoformer-tourism-monthly",
@@ -2747,9 +2761,13 @@
                 "0": {
                     "transformers": "OpenAIGPTModel"
                 }
-            }
+            },
+            "identifiers": [
+                "encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"
+            ]
         }
     },
+
     "info.vit.chinese-clip-vit-patch16": {
         "*": {
             "repo": "OFA-Sys/chinese-clip-vit-base-patch16",
@@ -2926,20 +2944,22 @@
             "pkg": {
                 "0": {
                     "transformers": "TimesformerModel"
+
                 }
             }
         }
     },
-    "info.art.open-llama-v1": {
+    "info.stst.mbart-cc25": {
         "*": {
-            "repo": "s-JoL/Open-Llama-V1",
+            "repo": "facebook/mbart-large-cc25",
             "pkg": {
                 "0": {
-                    "transformers": "OpenLlamaModel"
+                    "transformers": "MBartModel"
                 }
             }
         }
     },
+
     "info.vit.vit-patch16-224": {
         "*": {
             "repo": "google/vit-base-patch16-224",
@@ -3060,12 +3080,12 @@
             }
         }
     },
-    "info.vit.regnet-y-040": {
+    "info.vit.fuyu": {
         "*": {
-            "repo": "facebook/regnet-y-040",
+            "repo": "adept/fuyu-8b",
             "pkg": {
                 "0": {
-                    "transformers": "RegNetModel"
+                    "transformers": "FuyuModel"
                 }
             }
         }
@@ -3610,12 +3630,12 @@
             }
         }
     },
-    "info.stst.speecht5-asr": {
+    "info.art.roformer-chinese": {
         "*": {
-            "repo": "microsoft/speecht5_asr",
+            "repo": "junnyu/roformer_chinese_base",
             "pkg": {
                 "0": {
-                    "transformers": "SpeechT5Model"
+                    "transformers": "RoFormerModel"
                 }
             }
         }
@@ -3793,6 +3813,7 @@
             ]
         }
     },
+
     "info.art.mpnet": {
         "*": {
             "repo": "microsoft/mpnet-base",
