@@ -43,17 +43,17 @@ def test_grade_cascade_match(mock_test_database):
 
 def test_grade_field_change(mock_test_database):
     result = mock_test_database.find_path(field="pkg", sub_field=0, target="parler_tts")
-    assert result == ["info.art.parler-tts", "tiny-v1"]
+    assert result == ["info.art.parler-tts-v1", "*"]
 
 
 def test_grade_letter_case_change(mock_test_database):
     result = mock_test_database.find_path(field="pkg", target="AuDiOCrAfT.MoDeLs")
-    assert result == ["info.art.audiogen", "medium-1-5b"]
+    assert result == ["info.art.audiogen", "*"]
 
 
 def test_repo_case_change(mock_test_database):
     result = mock_test_database.find_path(field="repo", target="outeAI/OuteTTS-0.3-1b")
-    assert result == ["info.art.outetts-0-3", "1b"]
+    assert result == ["info.art.outetts-0", "*"]
 
 
 def test_sub_module_detection(mock_test_database):

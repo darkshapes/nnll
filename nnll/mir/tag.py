@@ -39,7 +39,7 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
         suffix = root
     cleaned_string = re.sub(r"[._]+", "-", cleaned_string.lower()).strip("-_")
 
-    return [cleaned_string, suffix]
+    return (cleaned_string, suffix)
 
 
 def class_to_mir_tag(mir_db: Dict[str, str], id_tag: str) -> Optional[str]:

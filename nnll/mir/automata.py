@@ -8,6 +8,7 @@ from typing import Dict, List, Tuple
 
 from nnll.mir.maid import MIRDatabase
 from nnll.mir.mir import mir_entry
+from nnll.mir.tag import make_mir_tag
 
 nfo_obj = Logger(INFO)
 nfo = nfo_obj.info
@@ -245,9 +246,9 @@ def auto_detail(mir_db: MIRDatabase):
     data_tuple = [
         (
             "info.unet",
-            "stable-diffusion-xl-1",
+            make_mir_tag("stabilityai/stable-diffusion-xl-base-1.0")[0],
             {
-                "base": {
+                make_mir_tag("stabilityai/stable-diffusion-xl-base-1.0")[1]: {
                     "pkg": {
                         0: {
                             "generation": {
@@ -268,9 +269,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "chroma",
+            make_mir_tag("lodestones/Chroma")[0],
             {
-                "*": {
+                make_mir_tag("lodestones/Chroma")[1]: {
                     "pkg": {
                         1: {
                             "generation": {"neg_text": "", "num_steps": "28", "latent_size": [64, 64]},
@@ -284,9 +285,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "auraflow",
+            make_mir_tag("fal/AuraFlow")[0],
             {
-                "*": {
+                make_mir_tag("fal/AuraFlow")[1]: {
                     "identifiers": [[8192, 3072], "mlpX.c_fc2.weight", "joint_transformer_blocks.2.ff_context.linear_2.weight"],
                     "file_256": ["ce3e475246258b94ee9dcb8b83292cb34edfffc2bbde46c74604d9c6cd7c585c"],
                     "layer_b3": ["cc6d383576c35a9709798d2e2b9e3eb31ba8c608040cf3712bc37871cfd14e21"],
@@ -296,9 +297,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "hunyuandit-v1",
+            make_mir_tag("Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers")[0],
             {
-                "diffusers": {
+                make_mir_tag("Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers")[1]: {
                     "identifiers": ["extra_embedder", "model.blocks", "skip_norm.weight"],
                     "file_256": ["4fb84f84079cda457d171b3c6b15d1be95b5a3e5d9825703951a99ddf92d1787", "e01db5e129e8ca1117e9cf473fc5a2b096949f03ab90048aeabbc328de7ec800"],
                     "layer_b3": ["aead6b61b17ebc77c4c186a4b82c193f11ec267b20d909726422ee9852e2e0b2", "885a056b94f6f9844c0660be489844d63bb74cc13316f441d10968fff3dd3120"],
@@ -308,9 +309,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "lumina-next-sft",
+            make_mir_tag("Alpha-VLLM/Lumina-Next-SFT-diffusers")[0],
             {
-                "diffusers": {
+                make_mir_tag("Alpha-VLLM/Lumina-Next-SFT-diffusers")[1]: {
                     "identifiers": ["time_caption", "feed_forward"],
                     "file_256": ["371153b7c7b7a64899d4016970c7cc472039f9c9b21ebe073adf0b8525cdf1bd"],
                     "layer_b3": ["fa134efd6e9672e7de2965e4895fc58879bd0a6c4fdf9165c278f2748254675f"],
@@ -320,9 +321,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "pixart-sigma-xl-2-1024-ms",
+            make_mir_tag("PixArt-alpha/PixArt-Sigma-XL-2-1024-MS")[0],
             {
-                "*": {
+                make_mir_tag("PixArt-alpha/PixArt-Sigma-XL-2-1024-MS")[1]: {
                     "identifiers": ["adaln_single", "scale_shift_table"],
                     "file_256": ["c34b520ef473329b945c2a21083cdf1337c5a468d23b3215b65576789bfd0305"],
                     "layer_b3": ["a199930ff537994872da77391955f0dd52eddd22ab9105388f0c5852f1b8021f"],
@@ -332,13 +333,10 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "pixart-xl-2-1024-ms",
-            {"*": {"identifiers": ["aspect_ratio", "y_embedding", "emb.resolution", "caption_projection"]}},
-        ),
-        (
-            "info.art",
-            "lumina-mgpt",
-            {"*": {"identifiers": ["model.embed_tokens.weight"]}},
+            make_mir_tag("PixArt-alpha/PixArt-XL-2-1024-MS")[0],
+            {
+                make_mir_tag("PixArt-alpha/PixArt-XL-2-1024-MS")[1]: {"identifiers": ["aspect_ratio", "y_embedding", "emb.resolution", "caption_projection"]},
+            },
         ),
         (
             "info.dit",
@@ -354,9 +352,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.unet",
-            "stable-diffusion-v1-5",
+            make_mir_tag("stable-diffusion-v1-5/stable-diffusion-v1-5")[0],
             {
-                "*": {
+                make_mir_tag("stable-diffusion-v1-5/stable-diffusion-v1-5")[1]: {
                     "identifiers": ["up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"],
                     "file_256": ["6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"],
                     "layer_b3": ["909c6ff3192ab2767e789a6125865bc23163db467ab78b1c633bad46a4293fad"],
@@ -399,9 +397,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.unet",
-            "kolors",
+            make_mir_tag("Kwai-Kolors/Kolors-diffusers")[0],
             {
-                "diffusers": {
+                make_mir_tag("Kwai-Kolors/Kolors-diffusers")[1]: {
                     "pkg": {
                         0: {
                             "precision": "ops.precision.float.f16",
@@ -422,9 +420,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.unet",
-            "stable-cascade",
+            make_mir_tag("stabilityai/stable-cascade-prior")[0],
             {
-                "prior": {
+                make_mir_tag("stabilityai/stable-cascade-prior")[1]: {
                     "pkg": {
                         0: {
                             "precision": "ops.precision.bfloat.b16",
@@ -468,9 +466,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "flux-1-dev",
+            make_mir_tag("black-forest-labs/FLUX.1-dev")[0],
             {
-                "base": {
+                make_mir_tag("black-forest-labs/FLUX.1-dev")[1]: {
                     "pkg": {
                         0: {
                             "precision": "ops.precision.bfloat.b16",
@@ -505,9 +503,9 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.dit",
-            "flux-1-schnell",
+            make_mir_tag("black-forest-labs/FLUX.1-schnell")[0],
             {
-                "base": {
+                make_mir_tag("black-forest-labs/FLUX.1-schnell")[1]: {
                     "pkg": {
                         0: {
                             "precision": "ops.precision.bfloat.b16",
@@ -541,7 +539,7 @@ def auto_detail(mir_db: MIRDatabase):
         ),
         (
             "info.unet",
-            "stable-cascade",
+            make_mir_tag("stabilityai/stable-cascade")[0],
             {
                 "decoder": {
                     "pkg": {  # prior=prior_unet
@@ -580,7 +578,6 @@ def auto_detail(mir_db: MIRDatabase):
                 }
             },
         ),
-        ("info.aet", "wavlm", {"kokoro": {"repo": "hexgrad/Kokoro-82M"}}),
     ]
     try:
         assimilate(mir_db, data_tuple)
@@ -591,12 +588,13 @@ def auto_detail(mir_db: MIRDatabase):
 
 def auto_supplement(mir_db: MIRDatabase):
     """Create MIR entries missing from the database"""
+    tag = make_mir_tag("stabilityai/stable-diffusion-xl-refiner-1.0")
     mir_db.add(
         mir_entry(
             domain="info",
             arch="unet",
-            series="stable-diffusion-xl",
-            comp="refiner-1",
+            series=tag[0],
+            comp=tag[1],
             repo="stabilityai/stable-diffusion-xl-refiner-1.0",
             file_256=[
                 "54f9cd2f2daf3aeec0b2708fa3dbc0e84e4f8ddd1ddead42e5bc60c6572c989f",
@@ -622,66 +620,135 @@ def auto_supplement(mir_db: MIRDatabase):
             },
         )
     )
+    sdxl_base = make_mir_tag("stabilityai/stable-diffusion-xl-base-1.0")[0]
     mir_db.add(
         mir_entry(
             domain="info",
             arch="unet",
-            series="stable-diffusion-xl-1",
+            series=sdxl_base,
             comp="pony-diffusion",
-            file_256=["499513276a79a4e8c6d601248eb67178d5f3322c92ac8cec1f9b40f6927d2242"],
-            layer_b3=["572ae32fb0ae0d14d259f1de7250dee16fb17434208780ca0560de41596720a4"],
-            layer_256=["d4fc7682a4ea9f2dfa0133fafb068f03fdb479158a58260dcaa24dcf33608c16"],
+            file_256=["67ab2fd8ec439a89b3fedb15cc65f54336af163c7eb5e4f2acc98f090a29b0b3"],
+            layer_b3=["bf4c2154daa4ece7292277b210d081f98759e9ed4d5c889564632e3ccc4a1071"],
+            layer_256=["465425d4420dcf5aa4b4d5b456db11a1fcc7c8f61b2e4a87e2470297c98bb96e"],
         )
     )
     mir_db.add(
         mir_entry(
             domain="info",
             arch="unet",
-            series="stable-diffusion-xl-1",
-            comp="animagine",
+            series=sdxl_base,
+            comp="pony-diffusion-turbo",
+            file_256=[
+                "7555ac941f3a767833830ba5cc9a4508a9777cbf97b487b6baf0400ab7000587",
+                "9322f9d91b28abf09e4137bc02ec806af23510221a164e71b81778e61cc3b4b2",
+            ],
+            layer_b3=[
+                "1e8f23fcd4be0f00eb52368b91c709fffa8a3b8e21772b92b2e0671eed9117d0",
+                "5c8b3f34f9d0a58135cf72fbfe9b5d75b5545a10e3d726478543fa7cc510a8bc",
+            ],
+            layer_256=[
+                "7edf51ef09b39c46937a4e4141707c040cd12af0d95299a4d3cd2b7d3fabe035",
+                "74e4dbc89d57d61ff7e8af8b0fddcf7466ba233d53ca4ffb7777138991bc3d52",
+            ],
+        )
+    )
+    repo = "cagliostrolab/animagine-xl-4.0"
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="unet",
+            series=sdxl_base,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             file_256=[
                 "8ece83aa1bed1fb39a2b81f1660f0ce6889218e493c1f2ed55e9f15f59a7e03f",
                 "6327eca98bfb6538dd7a4edce22484a1bbc57a8cff6b11d075d40da1afb847ac",
+                "1449e5b0b9de87b0f414c5f29cb11ce3b3dc61fa2b320e784c9441720bf7b766",
+                "e3c47aedb06418c6c331443cd89f2b3b3b34b7ed2102a3d4c4408a8d35aad6b0",
             ],
             layer_b3=[
                 "268ffbb120670b9c4b25158bd474c787740884b7738b48203aa03c4c3f00028f",
                 "18fda1a55cad137d62c81d4328f5ece85d88b126261e06b9e14ab68055d5d484",
+                "bae9bc8a5c43145bcf92ee3391618d9eaddd689f626991bae202de9cf5f1e70e",
+                "d6bc5ccafa2b97c867b13a1e7a8c2c7ad9c4877055a66c71bb773557bc306447",
             ],
             layer_256=[
                 "c21d1c38813e078817122e12866ab39f5aa7f56945dd4a8beee3cae1e0f139e7",
                 "b916c162c981155aaf74e93d5314038af6767bb5a129c51ee05a1fb6a206c6ac",
+                "ecc6bfc73824a2d7c3b0ca184854a235859f329c83768f017b07a19a535d17b4",
+                "97f6ca05de7fbdae7aacb2427a552f924492176c474a23dd252c192e1c0e9d65",
             ],
         )
     )
+    repo = "OnomaAIResearch/Illustrious-XL-v2.0"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="unet",
-            series="stable-diffusion-xl-1",
-            comp="illustrious",
-            layer_256=["c4a8d365e7fe07c6dbdd52be922aa6dc23215142342e3e7f8f967f1a123a6982"],
+            series=sdxl_base,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            file_256=[
+                "c2a1a3eaa13d4c107dc7e00c3fe830cab427aa026362740ea094745b3422a331",
+                "536863e9f0c13b0ce834e2f8a19ada425ee4f722c0ad3d0051ec7e6adaa8156c",
+                "3e15ba00387db678ab4a099f75771c4f5ac67fda9e7100a01d263eaf30145aa9",
+                "e3d12d0f76d61aa31d2668a2217e5b642592193f2946842c44d7056ea5469cce",
+                "735cf3fefcbdc4f7817f53247e38b836ffd27c7641af6d8daa21d245242cb4bd",
+            ],
+            layer_b3=[
+                "93b061baf21d743d592327a61f027d099d8e18da9808a76c7704ad123eba4a29",
+                "dc05fed2acbc73cef4c377cfa2a681c5cf6d065b88d8bf70d371bbcce6a223a8",
+                "8eb1c30327e5b71b35b9a4513dc5f2cac9f244667393c0eedb10a26aa9991cd8",
+                "3dafbe31f6ebaffa3d054e1b37049e1147faa2474ceb6dab7bc3c4cded0c845e",
+                "892533778ee14454938f7b50830093f58e12f1e14560a148f71927e4ccff5f5c",
+            ],
+            layer_256=[
+                "397791b3d77affb7bd35c5ded7377493c6bf456920a41388ba95bd0157109803",
+                "b23c02b8519c6777a1f271662f4251a59468c4b3e11184a2d722fa8929b4ea48",
+                "a373981494f5508c124a1960bdd096bbc96935fbb54b1218f563206d3892c176",
+                "b709df257c40d9d981f686f2880bbe64f43b78805b7213768d659a142a593efd",
+                "f1e6b4cab0fce608dca6fa851384e8728202449f16270fbd1f0c4c5ec4946c10",
+            ],
         )
     )
-
+    repo = "OnomaAIResearch/Illustrious-Lumina-v0.03"
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="unet",
-            series="stable-diffusion-xl-1",
-            comp="playground-2-5-base",
-            layer_256=["a6f31493ceeb51c88c5239188b9078dc64ba66d3fc5958ad48c119115b06120c"],
-            identifiers=["edm_mean", [1, 4, 1, 1], 2516],
+            arch="dit",
+            series=make_mir_tag("Alpha-VLLM/Lumina-Image-2.0")[0],
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            file_256=[
+                "dc6cffcfb0ccfca6332ddb5d2fe25bcb5f496f44b481627f48c42626156fa6a8",
+                "2ac549741fa1c6de2d6cd8be06abcdce52d472eeae2439f948e285258b66a214",
+            ],
+            layer_b3=[
+                "a97b4a63e1e7678e8e7154fae55252267bd1f0ba76b03dba622d801644e657ac",
+                "aa6c1b2d1971cea3c4ed0963c8d68d4c50db683f8eab9f77f60ea2d04ed6ce5c",
+            ],
+            layer_256=[
+                "39086c199b9ac296dcba53461ba1e113906d91fbc1b12556d92f5cc77ca11f9f",
+                "e51ba2ded40f1af5ca6f78c46eed8305fbd87cd6401e9d439837e10d35cc5828",
+            ],
         )
     )
+    repo = "playgroundai/playground-v2.5-1024px-aesthetic"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="unet",
-            series="stable-diffusion-xl-1",
-            comp="playground-2-5-aesthetic",
-            repo="playgroundai/playground-v2.5-1024px-aesthetic",
-            file_256=["bcaa7dd6780974f000b17b5a6c63e6f867a75c51ffa85c67d6b196882c69b992", "956dca99114aaa5c3eb526381309d37ee96737e78ed64c8ae613409f47c3f65a"],
-            layer_b3=["7e9be9bd9a3aed1ad7207e2f77c98c24c3a75f6adcc9b53514033c6c3365d289", "5c6dfcc8d01dfb64723f8f5785caa080e2987859c0a050470bfdbe5312be9efc"],
+            series=sdxl_base,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            file_256=[
+                "bcaa7dd6780974f000b17b5a6c63e6f867a75c51ffa85c67d6b196882c69b992",
+                "956dca99114aaa5c3eb526381309d37ee96737e78ed64c8ae613409f47c3f65a",
+            ],
+            layer_b3=[
+                "7e9be9bd9a3aed1ad7207e2f77c98c24c3a75f6adcc9b53514033c6c3365d289",
+                "5c6dfcc8d01dfb64723f8f5785caa080e2987859c0a050470bfdbe5312be9efc",
+            ],
             layer_256=[
                 "fe2e9edf7e3923a80e64c2552139d8bae926cc3b028ca4773573a6ba60e67c20",
                 "d4813e9f984aa76cb4ac9bf0972d55442923292d276e97e95cb2f49a57227843",
@@ -693,19 +760,22 @@ def auto_supplement(mir_db: MIRDatabase):
                 }
             },
             identifiers=[
+                "edm_mean",
                 [1, 4, 1, 1],
                 2516,
-                "edm_mean",
             ],
         )
     )
+    schnell = make_mir_tag("black-forest-labs/FLUX.1-schnell")[0]
+    dev = make_mir_tag("black-forest-labs/FLUX.1-dev")[0]
+    repo = "shuttleai/shuttle-3.1-aesthetic"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-schnell",
-            comp="shuttle-3.1-aesthetic",
-            repo="shuttleai/shuttle-3.1-aesthetic",
+            series=schnell,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             pkg={
                 0: {
                     "diffusers": "DiffusionPipeline",
@@ -714,13 +784,14 @@ def auto_supplement(mir_db: MIRDatabase):
             },
         )
     )
+    repo = "shuttleai/shuttle-3-diffusion"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-schnell",
-            comp="shuttle-3-diffusion",
-            repo="shuttleai/shuttle-3-diffusion",
+            series=schnell,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             pkg={
                 0: {
                     "diffusers": "DiffusionPipeline",
@@ -741,13 +812,14 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
+    repo = "shuttleai/shuttle-jaguar"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-schnell",
-            comp="shuttle-jaguar",
-            repo="shuttleai/shuttle-jaguar",
+            series=schnell,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             pkg={
                 0: {
                     "diffusers": "DiffusionPipeline",
@@ -756,213 +828,91 @@ def auto_supplement(mir_db: MIRDatabase):
             },
         )
     )
+    repo = "freepik/flux.1-lite-8b"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-dev",
-            comp="f-lite-8b",
-            repo="freepik/flux.1-lite-8b",
+            series=dev,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             pkg={0: {"generation": {"num_inference_steps": 28}}},
         )
     )
-    mir_db.add(
-        mir_entry(domain="info", arch="stst", series="silero-vad", comp="*", repo="onnx-community/silero-vad", pkg={0: {"onnx": "onnx"}}),
-    )
+    repo = "freepik/f-lite-7b"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-dev",
-            comp="f-lite-7b",
-            repo="freepik/f-lite-7b",
+            series=dev,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             pkg={0: {"f_lite": "FLitePipeline", "generation": {"num_inference_steps": 28}}},
         )
     )
+    repo = "freepik/f-lite-texture"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-dev",
-            comp="f-lite-texture",
-            repo="freepik/f-lite-texture",
+            series=dev,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             pkg={0: {"f_lite": "FLitePipeline", "generation": {"num_inference_steps": 28}}},
         )
     )
+    repo = "freepik/f-lite"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-dev",
-            comp="f-lite",
-            repo="freepik/f-lite",
+            series=dev,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             pkg={0: {"f_lite": "FLitePipeline", "generation": {"num_inference_steps": 28}}},
         )
     )
+    repo = "TencentARC/flux-mini"
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
-            series="flux-1-dev",
-            comp="hybrid",
-            layer_256=[
-                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443",
-            ],
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="dit",
-            series="flux-1-dev",
-            comp="mini",
-            repo="TencentARC/flux-mini",
+            series=dev,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
             file_256=["4236455adeaeb4ed444d63b253ec99805022d17e962ed7261ada9c72ce11cfee"],
             layer_b3=["c1a6f83585398fe452d20596a79a522e2986f4c2c01a40e7bfd787af113735d3"],
             layer_256=["e4a0d8cf2034da094518ab058da1d4aea14e00d132c6152a266ec196ffef02d0"],
         ),
     )
+    repo = "Alpha-VLLM/Lumina-mGPT-7B-768"
+    series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
             domain="info",
             arch="art",
-            series="audiogen",
-            comp="medium-1-5b",
-            repo="facebook/audiogen-medium",
-            pkg={
-                0: {
-                    "audiocraft.models": {"AudioGen": {"duration": 5}},
-                    "audiocraft.data.audio": {"audio_write": {"strategy": "loudness", "loudness_compressor": True}},
-                }
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="art",
-            series="parler-tts",
-            comp="tiny-v1",
-            repo="parler-tts/parler-tts-tiny-v1",
-            pkg={
-                0: {
-                    "parler_tts": "ParlerTTSForConditionalGeneration",
-                    "transformers": {"AutoTokenizer": {"return_tensors": "pt"}},
-                },
-                # 1: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="art",
-            series="parler-tts",
-            comp="large-v1",
-            repo="parler-tts/parler-tts-large-v1",
-            pkg={
-                0: {
-                    "parler_tts": "ParlerTTSForConditionalGeneration",
-                    "transformers": {"AutoTokenizer": {"return_tensors": "pt"}},
-                }
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="gan",
-            series="kokoro",
-            comp="82m",
-            repo="hexgrad/Kokoro-82M",
-            pkg={
-                0: {"kokoro": "KPipeline"},
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="gan",
-            series="kokoro",
-            comp="82m",
-            repo="hexgrad/Kokoro-82M",
-            pkg={
-                0: {"mlx_audio ": "tts.generate.generate_audio"},
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="art",
-            series="lumina-mgpt",
-            comp="7B-768",
-            repo="Alpha-VLLM/Lumina-mGPT-7B-768",
+            series=series,
+            comp=comp,
+            repo=repo,
             pkg={
                 0: {
                     "inference_solver": {"FlexARInferenceSolver": {"precision": "bf16", "target_size": 768}},
                     "generation": {"images": [], "qas": [["q1", None]], "max_gen_len": 8192, "temperature": 1.0},
                 }
             },
+            identifiers=["model.embed_tokens.weight"],
         )
     )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="art",
-            series="orpheus",
-            comp="3b-0-1-ft",
-            repo="canopylabs/orpheus-3b-0.1-ft",
-            pkg={
-                0: {"orpheus_tts": {"OrpheusModel": {"max_model_len": 2048}}},
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="art",
-            series="orpheus",
-            comp="3b-0-1-ft-4b",
-            repo="mlx-community/orpheus-3b-0.1-ft-4bit",
-            pkg={
-                0: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
-            },
-        )
-    )
+    repo = "google/t5-v1_1-xxl"
+    series, comp = make_mir_tag(repo)
 
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="art",
-            series="outetts-0-3",
-            comp="1b",
-            repo="OuteAI/OuteTTS-0.3-1B",
-            pkg={
-                0: {"outetts": "InterfaceHF"},
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="art",
-            series="OuteTTS-1.0-0",
-            comp="6B-4bit",
-            repo="mlx-community/OuteTTS-1.0-0.6B-4bit",
-            pkg={
-                0: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
-            },
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
             arch="stst",
-            series="t5",
-            comp="xxl",
-            repo="google/t5-v1_1-xxl",
+            series=series,
+            comp=comp,
+            repo=repo,
             pkg={0: {"diffusers": "T5ForConditionalGeneration"}},
             identifiers=[[4096], "encoder.embed_tokens.weight", "text_encoders.t5xxl.transformer.shared.weight", "t5xxl"],
             file_256=[
@@ -1009,13 +959,15 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
+    repo = "openai/clip-vit-large-patch14"
+    series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
             domain="info",
             arch="vit",
-            series="openclip",
-            comp="vit-l-14",
-            repo="openai/clip-vit-large-patch14",
+            series=series,
+            comp=comp,
+            repo=repo,
             pkg={0: {"diffusers": "CLIPModel"}},
             identifiers=["text_model.encoder.layers.0.mlp.fc1.weight", "clip-l"],
             file_256=[
@@ -1046,14 +998,15 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
-
+    repo = "laion/CLIP-ViT-g-14-laion2B-s12B-b42K"
+    series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
             domain="info",
             arch="vit",
-            series="openclip",
-            comp="vit-g-14",
-            repo="laion/CLIP-ViT-g-14-laion2B-s12B-b42K",
+            series=series,
+            comp=comp,
+            repo=repo,
             pkg={0: {"diffusers": "CLIPModelwithProjection"}},
             identifiers=["31.self_attn.k_proj.weight", "text_model.encoder.layers.22.mlp.fc1.weight", "clip-g"],
             file_256=[
@@ -1071,23 +1024,24 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
+    repo = "ByteDance-Seed/BAGEL-7B-MoT"
+    series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
             domain="info",
             arch="aet",
-            series="bagel",
-            comp="7B-MoT",
-            repo="ByteDance-Seed/BAGEL-7B-MoT",
+            series=series,
+            comp=comp,
+            repo=repo,
             pkg={0: {"Bagel": "app"}},
         )
     )
-
     mir_db.add(
         mir_entry(
             domain="ops",
             arch="patch",
             series="hidiffusion",
-            comp="stable-diffusion-xl-1",
+            comp=sdxl_base,
             pkg={
                 0: {
                     "hidiffusion": {"apply_hidiffusion": {"timesteps": "StableDiffusionXLTimesteps"}},
@@ -1096,13 +1050,12 @@ def auto_supplement(mir_db: MIRDatabase):
             },
         )
     )
-
     mir_db.add(
         mir_entry(
             domain="ops",
             arch="scheduler",
             series="align-your-steps",
-            comp="stable-diffusion-xl-1",
+            comp=sdxl_base,
             pkg={
                 0: {
                     "diffusers.schedulers.scheduling_utils": {
@@ -1114,6 +1067,144 @@ def auto_supplement(mir_db: MIRDatabase):
     )
     # possible mixed-type architecture?
     # fusion / united / universal
+
+
+def auto_audio(mir_db: MIRDatabase):
+    """Create MIR audio modality entries"""
+    repo = "facebook/audiogen-medium"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {
+                    "audiocraft.models": {"AudioGen": {"duration": 5}},
+                    "audiocraft.data.audio": {"audio_write": {"strategy": "loudness", "loudness_compressor": True}},
+                }
+            },
+        )
+    )
+    repo = "parler-tts/parler-tts-tiny-v1"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {
+                    "parler_tts": "ParlerTTSForConditionalGeneration",
+                    "transformers": {"AutoTokenizer": {"return_tensors": "pt"}},
+                },
+                # 1: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
+            },
+        )
+    )
+    repo = "parler-tts/parler-tts-large-v1"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {
+                    "parler_tts": "ParlerTTSForConditionalGeneration",
+                    "transformers": {"AutoTokenizer": {"return_tensors": "pt"}},
+                }
+            },
+        )
+    )
+    repo = "hexgrad/Kokoro-82M"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="gan",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {"kokoro": "KPipeline"},
+                1: {"mlx_audio ": "tts.generate.generate_audio"},
+            },
+            layer_b3=["3e9b5017cfe67a7804ac717b18b6add42ffc0bd3353490df2bcc520eaaef79b6"],
+        )
+    )
+    repo = "onnx-community/silero-vad"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="stst",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {
+                    "onnx": "onnx",
+                },
+            },
+            layer_b3=["41ca5931452b3ffee588c6c7e5bd327c4e914141604eaf3fd05f4a790ac83bb2"],
+        ),
+    )
+    repo = "facebook/wav2vec2-conformer-rope-large-960h-ft"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="stst",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {
+                    "diffusers": "Wav2Vec2ConformerForCTC",
+                },
+            },
+            file_256=["97bb9761fb71ec1225100bc81ccf7d002e0d0ba3d0604c1fd2dbda7d7d491f1d"],
+            layer_b3=["6c9c5642aa8dce62bcb3eb577bc519619a2d868005c767c5e65371c583a8a8eb"],
+            layer_256=["1afcfda68307a75caa1a1c4456cf97e20c7914e8aba828006e9fe17e8675a79d"],
+        ),
+    )
+    repo = "canopylabs/orpheus-3b-0.1-ft"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {"orpheus_tts": {"OrpheusModel": {"max_model_len": 2048}}},
+                1: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
+            },
+        )
+    )
+    repo = "OuteAI/OuteTTS-0.3-1B"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="art",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {"outetts": "InterfaceHF"},
+                1: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
+            },
+        )
+    )
 
 
 def auto_lora(mir_db: MIRDatabase):

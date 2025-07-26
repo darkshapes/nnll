@@ -9,18 +9,20 @@ from nnll.metadata.json_io import read_json_file
 from nnll.monitor.console import nfo
 
 
-async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = True, header: bool = False) -> dict[str, str]:
+async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = True, header: bool = False, unsafe: bool = False) -> dict[str, str]:
     """Hashes layers or files in a folder using BLAKE3 or SHA256, with optional metadata inclusion.\n
     :param folder_path: Path to the folder containing model files.
     :param layer: If True, processes plaintext state dict layer names; if False, processes binary files.
     :param b3: If True, uses BLAKE3 algorithm; if False, uses SHA256.
     :param header: If True, includes metadata in layer processing.
+    :param unsafe: Attempt to read metadata even from non-normal files, defaults False
     :return: Dictionary mapping hash values to file names."""
     import os
     from pathlib import Path
     from tqdm.asyncio import tqdm
     from nnll.integrity.hashing import compute_hash_for
     from nnll.integrity.hashing import compute_b3_for
+    from nnll.configure.constants import ExtensionType
 
     from nnll.metadata.model_tags import ReadModelTags
 
@@ -37,7 +39,7 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
     hash_values.setdefault(folder_path, data)
     folder_contents = os.listdir(os.path.normpath(Path(folder_path)))
     async for file_name in tqdm(folder_contents, total=len(folder_contents), position=-2, leave=True):
-        if Path(file_name).suffix.lower() in [".safetensors", ".sft", ".gguf"]:
+        if any(Path(file_name).suffix.lower() in extensions for extensions in ExtensionType.MODEL) or unsafe:
             file_path_named = os.path.join(folder_path, file_name)
             # file_size = os.path.getsize(file_path_named)  # 1GB  or file_size < 1e9
             if layer is False:
@@ -45,7 +47,14 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
                 hash_values.setdefault(os.path.basename(file_path_named), hex_value)
                 nfo(f"'{file_name}' : '{os.path.basename(hex_value)}'")
             else:
-                state_dict = model_tool.read_metadata_from(file_path_named, separate_desc=header)
+                if unsafe:
+                    try:
+                        state_dict = model_tool.attempt_all_open(file_path_named, separate_desc=header)
+                    except Exception as error_log:
+                        print(error_log)
+                        continue
+                else:
+                    state_dict = model_tool.read_metadata_from(file_path_named, separate_desc=header)
                 hex_value = await calculate_hash(text_stream=str(state_dict))
                 hash_values.setdefault(os.path.basename(file_path_named), hex_value)
                 nfo(f"'{hex_value}' : '{os.path.basename(file_name)}'")  # reversed to highlight difference
@@ -107,7 +116,8 @@ def main():
     )
     parser.add_argument("-f", "--file", action="store_true", help="Change mode to calculate hash for the whole file instead of state dict layers")
     parser.add_argument("-s", "--sha", action="store_true", help="Change algorithm from b3 to sha")
-    parser.add_argument("-i", "--include", "--include-header", action="store_true", help="Include the metadata header, only applies to hashing state dict layers, ")
+    parser.add_argument("-i", "--include", "--include-header", action="store_true", help="Include the metadata header, only applies to hashing state dict layers")
+    parser.add_argument("-u", "--unsafe", action="store_true", help="Try to hash non-standard type model files layers")
     parser.add_argument("path", default=".", help="Path to directory where files should be analyzed. (default .)")
 
     args = parser.parse_args()
@@ -117,7 +127,7 @@ def main():
 
     program = str(parser.prog)
     location = argv[1].split(os.sep)[-2]
-    hash_values = asyncio.run(hash_layers_or_files(folder_path=args.path, layer=not args.file, b3=not args.sha, header=args.include))
+    hash_values = asyncio.run(hash_layers_or_files(folder_path=args.path, layer=not args.file, b3=not args.sha, header=args.include, unsafe=args.unsafe))
     date_stamp = f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
     hash_values[args.path][program] = str(date_stamp)
     write_json_file(".", f"{program}_{location}_{date_stamp}.json", hash_values)
