@@ -1197,6 +1197,7 @@
             }
         }
     },
+
     "info.art.imagegpt": {
         "*": {
             "repo": "openai/imagegpt-small",
@@ -1266,6 +1267,7 @@
             ]
         }
     },
+
     "info.vit.got-ocr-2-hf": {
         "*": {
             "repo": "stepfun-ai/GOT-OCR-2.0-hf",
@@ -1273,7 +1275,14 @@
                 "0": {
                     "transformers": "GotOcr2Model"
                 }
-            }
+            },
+            "identifiers": [
+                [
+                    250112,
+                    2048
+                ],
+                "text_encoders.mt5xl.transformer.shared.weight"
+            ]
         }
     },
     "info.art.persimmon": {
@@ -1754,6 +1763,9 @@
                     "transformers": "EsmModel"
                 }
             }
+        },
+        "kokoro": {
+            "repo": "hexgrad/Kokoro-82M"
         }
     },
     "info.stst.pegasus-x": {
@@ -3974,7 +3986,10 @@
                 "0": {
                     "transformers": "UdopModel"
                 }
-            }
+            },
+            "identifiers": [
+                "encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"
+            ]
         }
     },
     "info.aet.electra-discriminator": {
