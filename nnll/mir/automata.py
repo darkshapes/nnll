@@ -807,7 +807,6 @@ def auto_supplement(mir_db: MIRDatabase):
             comp="hybrid",
             layer_256=[
                 "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443",
-                "14d0e1b573023deb5a4feaddf85ebca10ab2abf3452c433e2e3ae93acb216443",
             ],
         )
     )

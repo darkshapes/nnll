@@ -24,6 +24,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
         "GraphormerModel",
         "GPTBigCodeModel",
         "TimmBackbone",
+        "PerceptionEncoder",
         "SeamlessM4Tv2Model",
         "SeamlessM4TModel",
         "VisionTextDualEncoderModel",
