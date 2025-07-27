@@ -69,8 +69,8 @@ def stock_llm_data() -> Dict[str, List[str]]:
             if not model_data and code_name not in second_exclude_list:  # second attempt
                 if code_name == "donut":
                     code_name = "donut-swin"
-                if not task_pipe and code_name:
-                    model_class = getattr(__import__("transformers"), MODEL_MAPPING_NAMES.get(code_name.replace("_", "-")), 0)
+                if not task_pipe and code_name and MODEL_MAPPING_NAMES.get(code_name.replace("_", "-")):
+                    model_class = getattr(__import__("transformers"), MODEL_MAPPING_NAMES[code_name.replace("_", "-")], None)
                 else:
                     model_class = getattr(__import__("transformers"), task_pipe)
                 config_class = CONFIG_MAPPING_NAMES.get(code_name.replace("_", "-"))
@@ -79,7 +79,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
                 if config_class:
                     config_class_obj = getattr(__import__("transformers"), config_class)
                     model_data = {"config": str(config_class_obj.__module__ + "." + config_class_obj.__name__).split(".")}
-                    if model_data and ("inspect" not in model_data) and ("deprecated" not in model_data):
+                    if model_data and ("inspect" not in model_data) and ("deprecated" not in model_data) and model_class:
                         transformer_data.setdefault(model_class, model_data)
                         # print(model_class, model_data)
     return transformer_data

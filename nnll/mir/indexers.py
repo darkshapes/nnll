@@ -21,22 +21,17 @@ nfo = sys.stderr.write
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
 
 
-def flag_config(transformers: bool = False, **kwargs):
+@TEMPLATE_FILE.decorator
+def flag_config(transformers: bool = False, data: dict = None, **kwargs):
     """Set type of MIR prefix depending on model type\n
     :param transformers: Use transformers data instead of diffusers data, defaults to False
     :raises ValueError: Model type not detected
     :return: _description_"""
 
-    @TEMPLATE_FILE.decorator
-    def _read_data(data: Optional[Dict[str, str]] = None):
-        return data
-
-    template_data = _read_data()
-
     if transformers:
-        flags = template_data["arch"]["transformer"]  # pylint:disable=unsubscriptable-object
+        flags = data["arch"]["transformer"]  # pylint:disable=unsubscriptable-object
     else:
-        flags = template_data["arch"]["diffuser"]  # pylint:disable=unsubscriptable-object
+        flags = data["arch"]["diffuser"]  # pylint:disable=unsubscriptable-object
     for mir_prefix, key_match in flags.items():
         if any(kwargs.get(param) for param in key_match):
             return mir_prefix

@@ -130,10 +130,10 @@ class ReadModelTags:
                 return None
             return metadata
 
-    def gguf_check(self, file_path_named: str) -> tuple:
+    def gguf_check(self, file_path_named: str) -> bool:
         """A magic word check to ensure a file is GGUF format\n
         :param file_path_named: `str` the full path to the file being opened
-        :return: `tuple' the number"""
+        :return: `bool' Success or failure condition of the check"""
 
         import struct
 
@@ -322,13 +322,19 @@ class ReadModelTags:
         :return: A mapping of metadata about the model
         """
         from onnxruntime import InferenceSession, get_available_providers
+        from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf
 
-        onnx_sess = InferenceSession(file_path_named, providers=get_available_providers())
-        meta = onnx_sess.get_modelmeta()
-        if separate_desc:
-            return {"custom_metadata_map": meta.custom_metadata_map}
+        try:
+            onnx_sess = InferenceSession(file_path_named)
+            meta = onnx_sess.get_modelmeta()
+        except InvalidProtobuf as error_log:
+            dbug(error_log)
+            pass
         else:
-            {tag: getattr(meta, tag, {}) for tag in dir(meta) if not tag.startswith("_")}
+            if separate_desc:
+                return {"custom_metadata_map": meta.custom_metadata_map}
+            else:
+                {tag: getattr(meta, tag, {}) for tag in dir(meta) if not tag.startswith("_")}
 
     def metadata_from_onnx(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
         """Extract metadata from an ONNX model using the ONNX library.\n
@@ -338,13 +344,19 @@ class ReadModelTags:
         """
         from onnxruntime.datasets import get_example
         from onnx import load as onnx_load
+        from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf
 
-        example = get_example(file_path_named)
-        model = onnx_load(example)
-        if separate_desc:
-            return {"metadata_props": model.metadata_props}
+        try:
+            example = get_example(file_path_named)
+            model = onnx_load(example)
+        except InvalidProtobuf as error_log:
+            dbug(error_log)
+            pass
         else:
-            return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
+            if separate_desc:
+                return {"metadata_props": model.metadata_props}
+            else:
+                return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
 
 
 def main():
