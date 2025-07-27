@@ -123,7 +123,7 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
             nfo(f"Failed to detect type for {class_name} {list(sub_segments)}")
         else:
             mir_prefix = "info." + mir_prefix
-    mir_series, mir_comp = make_mir_tag(repo_path, decoder)
+    mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
     mir_series = mir_prefix + "." + mir_series
     prefixed_data = {
         "repo": repo_path,
@@ -219,7 +219,7 @@ def transformers_index():
                 continue
             else:
                 mir_prefix = "info." + mir_prefix
-            mir_series, mir_comp = make_mir_tag(repo_path)
+            mir_series, mir_comp = list(make_mir_tag(repo_path))
             mir_series = mir_prefix + "." + mir_series
             mir_data.setdefault(
                 mir_series,

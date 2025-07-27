@@ -120,6 +120,7 @@ class MIRDatabase:
         """Retrieve MIR path based on nested value search\n
         :param field: Known field to look within
         :param target: Search pattern for field
+        :param sub_field: A Second field level to investigate into (ex, field pkg, sub_field diffusers)
         :return: A list or string of the found tag
         :raises KeyError: Target string not found
         """
@@ -158,12 +159,13 @@ class MIRDatabase:
 
 def main(mir_db: Callable = MIRDatabase()) -> None:
     """Build the database"""
-    from nnll.mir.automata import auto_detail, auto_hub, auto_dtype, auto_lora, auto_schedulers, auto_supplement
+    from nnll.mir.automata import auto_detail, auto_hub, auto_dtype, auto_lora, auto_schedulers, auto_supplement, auto_audio
 
     auto_hub(mir_db)
     auto_dtype(mir_db)
     auto_schedulers(mir_db)
     auto_lora(mir_db)
+    auto_audio(mir_db)
     auto_supplement(mir_db)
     auto_detail(mir_db)
     mir_db.write_to_disk()

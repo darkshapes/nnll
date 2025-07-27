@@ -22,5 +22,5 @@ def test_constants():
     }
     # regex = PARAMETERS_SUFFIX
     for test, expected in data_tests.items():
-        mir_tag = make_mir_tag(test)
+        mir_tag = list(make_mir_tag(test))
         assert mir_tag == expected
