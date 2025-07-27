@@ -122,8 +122,8 @@ def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> 
         mir_data = mir_db.database[f"{arch}.{series}"]
 
         for comp, field_data in new_data.items():
-            print(field_data)
             if not isinstance(field_data, dict):
+                # print(field_data)
                 raise TypeError(f"{field_data} <-- Cannot combine with database: Not `dict()`")
 
             # dbuq(f"{arch}.{series} : {comp}")
@@ -242,343 +242,333 @@ def auto_schedulers(mir_db: MIRDatabase):
 
 def auto_detail(mir_db: MIRDatabase):
     """Create mir unet info database"""
+    from nnll.mir.indexers import create_pipe_entry, flag_config
+    from nnll.mir.tag import make_mir_tag
+    from nnll.tensor_pipe.deconstructors import root_class
 
-    data_tuple = [
+    def re_create_pipe_tag(repo_path: str, class_name: str, addendum: dict) -> tuple:
+        if "google" in repo_path:
+            annotations = root_class(class_name.replace("Model", "Config"), "transformers")
+            mir_prefix = flag_config(transformers=True, **annotations)
+            mir_series, mir_comp = make_mir_tag(repo_path)
+            mir_prefix = f"info.{mir_prefix}"
+        else:
+            mir_series, data = create_pipe_entry(repo_path=repo_path, class_name=class_name)
+            mir_prefix, mir_series = mir_series.rsplit(".", 1)
+            mir_comp = list(data)[0]
+        # print(mir_prefix, mir_series, {mir_comp: ""})
+        return mir_prefix, mir_series, {mir_comp: addendum}
+
+    details = [
         (
-            "info.unet",
-            make_mir_tag("stabilityai/stable-diffusion-xl-base-1.0")[0],
+            "stabilityai/stable-diffusion-xl-base-1.0",
+            "StableDiffusionXLPipeline",
             {
-                make_mir_tag("stabilityai/stable-diffusion-xl-base-1.0")[1]: {
-                    "pkg": {
-                        0: {
-                            "generation": {
-                                "denoising_end": 0.8,
-                                "output_type": "latent",
-                                "safety_checker": False,
-                                "width": 1024,
-                                "height": 1024,
-                            },
-                        },
-                        1: {"diffusers": "DiffusionPipeline"},
-                    },
-                    "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
-                    "layer_b3": ["8be44fa13c1efa60f8bcadaa57f1d718473f9660f03c4f0e65dc037960d8cba1"],
-                    "identifiers": ["logit_scale", "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight", "add_embedding.linear_2.bias"],
-                },
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("lodestones/Chroma")[0],
-            {
-                make_mir_tag("lodestones/Chroma")[1]: {
-                    "pkg": {
-                        1: {
-                            "generation": {"neg_text": "", "num_steps": "28", "latent_size": [64, 64]},
-                        }
-                    },
-                    "file_256": ["2c41e8a9831f3be1eaff2c2ed590abb62e4534e814f7ec58a5fd74ff71dc2036"],
-                    "layer_b3": ["15e227ced8a89c41abaa9cc44f84dfffdf5ead0c626035e5a2dde2bbb0935479"],
-                    "layer_256": ["a4daa6ff6f45ca70c738adb8c19bc3b6f228df931e6bf2a3394463e4dd7ec882"],
-                },
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("fal/AuraFlow")[0],
-            {
-                make_mir_tag("fal/AuraFlow")[1]: {
-                    "identifiers": [[8192, 3072], "mlpX.c_fc2.weight", "joint_transformer_blocks.2.ff_context.linear_2.weight"],
-                    "file_256": ["ce3e475246258b94ee9dcb8b83292cb34edfffc2bbde46c74604d9c6cd7c585c"],
-                    "layer_b3": ["cc6d383576c35a9709798d2e2b9e3eb31ba8c608040cf3712bc37871cfd14e21"],
-                    "layer_256": ["3c13e6a965d03a49227d8b1606ba6a343a23772d8768407cc78d4ddb9102bc80"],
-                },
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers")[0],
-            {
-                make_mir_tag("Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers")[1]: {
-                    "identifiers": ["extra_embedder", "model.blocks", "skip_norm.weight"],
-                    "file_256": ["4fb84f84079cda457d171b3c6b15d1be95b5a3e5d9825703951a99ddf92d1787", "e01db5e129e8ca1117e9cf473fc5a2b096949f03ab90048aeabbc328de7ec800"],
-                    "layer_b3": ["aead6b61b17ebc77c4c186a4b82c193f11ec267b20d909726422ee9852e2e0b2", "885a056b94f6f9844c0660be489844d63bb74cc13316f441d10968fff3dd3120"],
-                    "layer_256": ["d4842ce2b7f927203326b25ff4d6738ec9a8b95327f06791c387e4a351ed6ed0", "5af943f96f5dc9fecb1e92fe2b1fa17c94dd6947690201f4a5ee1a4a2721a68e"],
-                },
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("Alpha-VLLM/Lumina-Next-SFT-diffusers")[0],
-            {
-                make_mir_tag("Alpha-VLLM/Lumina-Next-SFT-diffusers")[1]: {
-                    "identifiers": ["time_caption", "feed_forward"],
-                    "file_256": ["371153b7c7b7a64899d4016970c7cc472039f9c9b21ebe073adf0b8525cdf1bd"],
-                    "layer_b3": ["fa134efd6e9672e7de2965e4895fc58879bd0a6c4fdf9165c278f2748254675f"],
-                    "layer_256": ["3938a85568d9df186923edf04391d79e89e6199123bc175afb520e0948d1ae05"],
-                },
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("PixArt-alpha/PixArt-Sigma-XL-2-1024-MS")[0],
-            {
-                make_mir_tag("PixArt-alpha/PixArt-Sigma-XL-2-1024-MS")[1]: {
-                    "identifiers": ["adaln_single", "scale_shift_table"],
-                    "file_256": ["c34b520ef473329b945c2a21083cdf1337c5a468d23b3215b65576789bfd0305"],
-                    "layer_b3": ["a199930ff537994872da77391955f0dd52eddd22ab9105388f0c5852f1b8021f"],
-                    "layer_256": ["e0afd203aff5a1d192e325d0f59361373273d85d138b51768c3f10a75c154dc0"],
-                },
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("PixArt-alpha/PixArt-XL-2-1024-MS")[0],
-            {
-                make_mir_tag("PixArt-alpha/PixArt-XL-2-1024-MS")[1]: {"identifiers": ["aspect_ratio", "y_embedding", "emb.resolution", "caption_projection"]},
-            },
-        ),
-        (
-            "info.dit",
-            "stable-diffusion-3",
-            {
-                "*": {
-                    "identifiers": ["model.diffusion_model.joint_blocks.", "transformer_blocks.21.norm1_context.linear.weight", "transformer_blocks.31.norm1_context.linear.weight", "blocks.11.ff.net.2.weight"],
-                    "file_256": ["ffef7a279d9134626e6ce0d494fba84fc1c7e720b3c7df2d19a09dc3796d8f93", "11fe06e22364b823dfeedc275912336b932b32a293a0b2f35ffac071990cc4de"],
-                    "layer_b3": ["e411016545785046810b29cc3999f40bc6392be134a1318386c6f1c48f98726a", "a81e07ee67bc627e8b3c5e292ec1ca239009517a2106e8249d670ced0a88f746"],
-                    "layer_256": ["13c982a6dc82d21c9f459e837d8c6f6d4696fd6e7e7b5783bdd2250b1f4fec61", "6ee79050373337bf63ac20916596df778bb22022bb38af986128a7459eda1463"],
-                },
-            },
-        ),
-        (
-            "info.unet",
-            make_mir_tag("stable-diffusion-v1-5/stable-diffusion-v1-5")[0],
-            {
-                make_mir_tag("stable-diffusion-v1-5/stable-diffusion-v1-5")[1]: {
-                    "identifiers": ["up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"],
-                    "file_256": ["6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"],
-                    "layer_b3": ["909c6ff3192ab2767e789a6125865bc23163db467ab78b1c633bad46a4293fad"],
-                    "layer_256": ["ece771354ad470a82d56eda413ae3dd6c00d2de28ab3c56a88201d08d4424b4b"],
-                },
-            },
-        ),
-        (
-            "info.stst",
-            "t5",
-            {
-                "*": {
-                    "identifiers": ["encoder.block.0.layer.1.DenseReluDense.wi.weight"],
-                },
-            },
-        ),
-        (
-            "info.stst",
-            "umt5",
-            {
-                "*": {
-                    "identifiers": ["encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"],
-                    "file_256": ["decf9b70814ed5e9965bfca9fbd0483462e2bf743790663025b7742f8c014c72", "0a07449cf1141c0ec86e653c00465f6f0d79c6e58a2c60c8bcf4203d0e4ec4f6"],
-                    "layer_b3": ["1c943dbcb8b328a7c6c852921ddaefbd84c9df8c83bc51fe303c1f06cb734102", "1639a6467af0db1e15828d33b878e568cba1335947eeadd481170bcdc9ba8e33"],
-                    "layer_256": ["58deeef888d4ded4ffababfbf8da27227a4a6ff8adfa42016e12c0180f713816", "178ebd3fa3418d33a2e45a80d8b9d3662ff4a8e75f3de3f0332f82c505d8152a"],
-                },
-            },
-        ),
-        (
-            "info.stst",
-            "mt5",
-            {
-                "*": {
-                    "identifiers": [[250112, 2048], "text_encoders.mt5xl.transformer.shared.weight"],
-                    "file_256": ["0524484ec81425ba9deef6fac1393a78ba9b1c9bfed704a4be5f9c7255975cc1", "32f70f1d187e131a5fc3e4f0edc97ce89360d8e2f1d90177a443a05296097acc"],
-                    "layer_b3": ["a1d616c37711ec7b9073d04734af2f5fd02f9035a322eb46efeace922e104c51", "bc71d4259f4feaa0fb27c1f288765004840f39247cddc98b3ac37329ff1354d0"],
-                    "layer_256": ["bd337daf0c1aa36896013109b406a0580aa3bb8ab9291d89df3015d737358e95", "2e40c48c96fc7df636aad96d3e78ed0ba9f68c3059e21b7fcf917f284c569a61"],
-                },
-            },
-        ),
-        (
-            "info.unet",
-            make_mir_tag("Kwai-Kolors/Kolors-diffusers")[0],
-            {
-                make_mir_tag("Kwai-Kolors/Kolors-diffusers")[1]: {
-                    "pkg": {
-                        0: {
-                            "precision": "ops.precision.float.f16",
-                            "generation": {
-                                "negative_prompt": "",
-                                "guidance_scale": 5.0,
-                                "num_inference_steps": 50,
-                                "width": 1024,
-                                "height": 1024,
-                            },
-                        },
-                        1: {"diffusers": "DiffusionPipeline"},
-                    },
-                    "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
-                    "identifiers": [".DenseReluDense.wi.weight", "encoder_hid_proj.weight"],
-                }
-            },
-        ),
-        (
-            "info.unet",
-            make_mir_tag("stabilityai/stable-cascade-prior")[0],
-            {
-                make_mir_tag("stabilityai/stable-cascade-prior")[1]: {
-                    "pkg": {
-                        0: {
-                            "precision": "ops.precision.bfloat.b16",
-                            "generation": {
-                                "negative_prompt": "",
-                                "num_images_per_prompt": 1,
-                                "num_inference_steps": 20,
-                                "guidance_scale": 4.0,
-                                "width": 1024,
-                                "height": 1024,
-                            },
-                        }
-                    },
-                    "file_256": [
-                        "673b3173b037fb5f65b14fde37267390641a36726683de75dcf9df76fce2b866",
-                        "45c1eb5ce9b69efac891ad459b15c215cd90a986adbbfaf3effd3a89578cbcaf",
-                        "088ddf1e444abf399007b2da2bac87791df165c69f477994f6b3c745a20904b0",
-                        "39cec96c7212607f9e526db719bf1df507166d09f4748676c13b0d31cd4adb07",
-                        "31ffe2f1a3e2351d658fc7d3002a4eca22466a680f7fb3715b1e3768476f9633",
-                        "dfe24009fc881011f350d08d9d13be13a1a3b3cbfed667435efe0fd419aca099",
-                    ],
-                    "layer_b3": [
-                        "c55c83fa435ed128457f605bf1312e54727996d1c94413fc5ab5b49e9933857c",
-                        "6fb07ed9fc6ee636e50783802754b3a37bbecfc67037813b616223aeaf6fe877",
-                        "2ea194240e105c8962923e2baca88cb6a0c826794afc2ef82474301694711d68",
-                        "3412c8a184805621e4595d57268ced0b5c3c1974cd221bf67b2c908eec4fd61c",
-                        "53abfb013cfb0e41d0bc7b96bb83e42a4d4c67cb7325f9acf645b02d90efd8fe",
-                        "34556558f680c183adc2accd493cb9888a98ba853226bbecb07d95eb2055ff4f",
-                    ],
-                    "layer_256": [
-                        "4f5e0a738b963d3d4f8413387a0966ac1ce51f0f985bcbcc124fa221a2fff467",
-                        "8aa77e732a398b7d0dcd9a35d5682c2b5ab090ae90e915c7c91878abff0284d8",
-                        "4bbd46ded0916de3108f0da7145a80f5c7acea26ed35b0aaa29af12008352453",
-                        "415d1f3ecd06416708c1b83ab21e50b39c9d88d19dc33e60b977b7b7061880b9",
-                        "f678c32815c238e14091f690c8a83c3375c8f7738dc7abff79ff086ed9b59204",
-                        "17c8da803df7b9bbc8b1d7cc0c44916fea5b5ac0891330c4fdf0326fcd4496cb",
-                    ],
-                    "identifiers": ["down_blocks.0.2.kv_mapper", "previewer", "backbone"],
-                },
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("black-forest-labs/FLUX.1-dev")[0],
-            {
-                make_mir_tag("black-forest-labs/FLUX.1-dev")[1]: {
-                    "pkg": {
-                        0: {
-                            "precision": "ops.precision.bfloat.b16",
-                            "generation": {
-                                "height": 1024,
-                                "width": 1024,
-                                "guidance_scale": 3.5,
-                                "num_inference_steps": 50,
-                                "max_sequence_length": 512,
-                            },
-                        },
-                        1: {
-                            "mflux": {"Flux1": {"model_name": "dev"}},
-                            "generation": {
-                                "height": 1024,
-                                "width": 1024,
-                                "gudance": 3.5,
-                                "steps": 25,
-                            },
+                "pkg": {
+                    0: {
+                        "generation": {
+                            "denoising_end": 0.8,
+                            "output_type": "latent",
+                            "safety_checker": False,
+                            "width": 1024,
+                            "height": 1024,
                         },
                     },
-                    "file_256": ["4610115bb0c89560703c892c59ac2742fa821e60ef5871b33493ba544683abd7", ""],
-                    "layer_b3": ["261559c8eaccae558f72621804a9ee188d338e45e2c622a58db709ac190198ba"],
-                    "layer_256": ["3db58cf834d2f81abb1e035131956da4c90451074c681d0db10810e55e60c2c4"],
-                    "identifiers": [
-                        "double_blocks.12.txt_mod.lin.weight",
-                        "add_q_proj.weight",
-                        "single_transformer_blocks.9.norm.linear.weight",
-                    ],
-                }
-            },
-        ),
-        (
-            "info.dit",
-            make_mir_tag("black-forest-labs/FLUX.1-schnell")[0],
-            {
-                make_mir_tag("black-forest-labs/FLUX.1-schnell")[1]: {
-                    "pkg": {
-                        0: {
-                            "precision": "ops.precision.bfloat.b16",
-                            "generation": {
-                                "height": 1024,
-                                "width": 1024,
-                                "guidance_scale": 0.0,
-                                "num_inference_steps": 4,
-                                "max_sequence_length": 256,
-                            },
-                        },
-                        1: {
-                            "mflux": {"Flux1": {"model_name": "schnell"}},
-                            "generation": {
-                                "height": 1024,
-                                "width": 1024,
-                                "steps": 4,
-                            },
-                        },
-                    },
-                    "identifiers": [
-                        "double_blocks.12.txt_mod.lin.weight",
-                        "add_q_proj.weight",
-                        "single_transformer_blocks.9.norm.linear.weight",
-                    ],
-                    "file_256": ["9403429e0052277ac2a87ad800adece5481eecefd9ed334e1f348723621d2a0a"],
-                    "layer_b3": ["c65ba812ce3ce056eb1585673f62fb896afe6ec049faaf00a97bc35c9a398c44"],
-                    "layer_256": ["79c07e339865fe9e22c80f723d728c778130acd07a330339c68218b92bb7b3b8"],
+                    1: {"diffusers": "DiffusionPipeline"},
                 },
+                "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
+                "layer_b3": ["8be44fa13c1efa60f8bcadaa57f1d718473f9660f03c4f0e65dc037960d8cba1"],
+                "identifiers": ["logit_scale", "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight", "add_embedding.linear_2.bias"],
             },
         ),
         (
-            "info.unet",
-            make_mir_tag("stabilityai/stable-cascade")[0],
+            "lodestones/Chroma",
+            "ChromaPipeline",
             {
-                "decoder": {
-                    "pkg": {  # prior=prior_unet
-                        0: {
-                            "generation": {  # image_embeddings=prior_output.image_embeddings,
-                                "negative_prompt": "",
-                                "guidance_scale": 0.0,
-                                "output_type": "pil",
-                                "num_inference_steps": 10,
-                            },
-                            "precision": "ops.precision.bfloat.b16",
+                "pkg": {
+                    1: {
+                        "generation": {
+                            "neg_text": "",
+                            "num_steps": "28",
+                            "latent_size": [64, 64],
+                        },
+                    }
+                },
+                "file_256": ["2c41e8a9831f3be1eaff2c2ed590abb62e4534e814f7ec58a5fd74ff71dc2036"],
+                "layer_b3": ["15e227ced8a89c41abaa9cc44f84dfffdf5ead0c626035e5a2dde2bbb0935479"],
+                "layer_256": ["a4daa6ff6f45ca70c738adb8c19bc3b6f228df931e6bf2a3394463e4dd7ec882"],
+            },
+        ),
+        (
+            "fal/AuraFlow",
+            "AuraFlowPipeline",
+            {
+                "identifiers": [[8192, 3072], "mlpX.c_fc2.weight", "joint_transformer_blocks.2.ff_context.linear_2.weight"],
+                "file_256": ["ce3e475246258b94ee9dcb8b83292cb34edfffc2bbde46c74604d9c6cd7c585c"],
+                "layer_b3": ["cc6d383576c35a9709798d2e2b9e3eb31ba8c608040cf3712bc37871cfd14e21"],
+                "layer_256": ["3c13e6a965d03a49227d8b1606ba6a343a23772d8768407cc78d4ddb9102bc80"],
+            },
+        ),
+        (
+            "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers",
+            "HunyuanDiTPipeline",
+            {
+                "identifiers": ["extra_embedder", "model.blocks", "skip_norm.weight"],
+                "file_256": ["4fb84f84079cda457d171b3c6b15d1be95b5a3e5d9825703951a99ddf92d1787", "e01db5e129e8ca1117e9cf473fc5a2b096949f03ab90048aeabbc328de7ec800"],
+                "layer_b3": ["aead6b61b17ebc77c4c186a4b82c193f11ec267b20d909726422ee9852e2e0b2", "885a056b94f6f9844c0660be489844d63bb74cc13316f441d10968fff3dd3120"],
+                "layer_256": ["d4842ce2b7f927203326b25ff4d6738ec9a8b95327f06791c387e4a351ed6ed0", "5af943f96f5dc9fecb1e92fe2b1fa17c94dd6947690201f4a5ee1a4a2721a68e"],
+            },
+        ),
+        (
+            "Alpha-VLLM/Lumina-Next-SFT-diffusers",
+            "LuminaPipeline",
+            {
+                "identifiers": ["time_caption", "feed_forward"],
+                "file_256": ["371153b7c7b7a64899d4016970c7cc472039f9c9b21ebe073adf0b8525cdf1bd"],
+                "layer_b3": ["fa134efd6e9672e7de2965e4895fc58879bd0a6c4fdf9165c278f2748254675f"],
+                "layer_256": ["3938a85568d9df186923edf04391d79e89e6199123bc175afb520e0948d1ae05"],
+            },
+        ),
+        (
+            "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS",
+            "PixArtSigmaPipeline",
+            {
+                "identifiers": ["adaln_single", "scale_shift_table"],
+                "file_256": ["c34b520ef473329b945c2a21083cdf1337c5a468d23b3215b65576789bfd0305"],
+                "layer_b3": ["a199930ff537994872da77391955f0dd52eddd22ab9105388f0c5852f1b8021f"],
+                "layer_256": ["e0afd203aff5a1d192e325d0f59361373273d85d138b51768c3f10a75c154dc0"],
+            },
+        ),
+        (
+            "PixArt-alpha/PixArt-XL-2-1024-MS",
+            "PixArtAlphaPipeline",
+            {
+                "identifiers": ["aspect_ratio", "y_embedding", "emb.resolution", "caption_projection"],
+            },
+        ),
+        (
+            "stabilityai/stable-diffusion-3-medium",
+            "StableDiffusion3Pipeline",
+            {
+                "identifiers": ["model.diffusion_model.joint_blocks.", "transformer_blocks.21.norm1_context.linear.weight", "transformer_blocks.31.norm1_context.linear.weight", "blocks.11.ff.net.2.weight"],
+                "file_256": ["ffef7a279d9134626e6ce0d494fba84fc1c7e720b3c7df2d19a09dc3796d8f93", "11fe06e22364b823dfeedc275912336b932b32a293a0b2f35ffac071990cc4de"],
+                "layer_b3": ["e411016545785046810b29cc3999f40bc6392be134a1318386c6f1c48f98726a", "a81e07ee67bc627e8b3c5e292ec1ca239009517a2106e8249d670ced0a88f746"],
+                "layer_256": ["13c982a6dc82d21c9f459e837d8c6f6d4696fd6e7e7b5783bdd2250b1f4fec61", "6ee79050373337bf63ac20916596df778bb22022bb38af986128a7459eda1463"],
+            },
+        ),
+        (
+            "stable-diffusion-v1-5/stable-diffusion-v1-5",
+            "StableDiffusionPipeline",
+            {
+                "identifiers": ["up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"],
+                "file_256": ["6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"],
+                "layer_b3": ["909c6ff3192ab2767e789a6125865bc23163db467ab78b1c633bad46a4293fad"],
+                "layer_256": ["ece771354ad470a82d56eda413ae3dd6c00d2de28ab3c56a88201d08d4424b4b"],
+            },
+        ),
+        (
+            "google-t5/t5-small",
+            "T5Model",
+            {
+                "identifiers": ["encoder.block.0.layer.1.DenseReluDense.wi.weight"],
+            },
+        ),
+        (
+            "google/umt5-small",
+            "UMT5Model",
+            {
+                "identifiers": ["encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"],
+                "file_256": ["decf9b70814ed5e9965bfca9fbd0483462e2bf743790663025b7742f8c014c72", "0a07449cf1141c0ec86e653c00465f6f0d79c6e58a2c60c8bcf4203d0e4ec4f6"],
+                "layer_b3": ["1c943dbcb8b328a7c6c852921ddaefbd84c9df8c83bc51fe303c1f06cb734102", "1639a6467af0db1e15828d33b878e568cba1335947eeadd481170bcdc9ba8e33"],
+                "layer_256": ["58deeef888d4ded4ffababfbf8da27227a4a6ff8adfa42016e12c0180f713816", "178ebd3fa3418d33a2e45a80d8b9d3662ff4a8e75f3de3f0332f82c505d8152a"],
+            },
+        ),
+        (
+            "google/mt5-small",
+            "MT5Model",
+            {
+                "identifiers": [[250112, 2048], "text_encoders.mt5xl.transformer.shared.weight"],
+                "file_256": ["0524484ec81425ba9deef6fac1393a78ba9b1c9bfed704a4be5f9c7255975cc1", "32f70f1d187e131a5fc3e4f0edc97ce89360d8e2f1d90177a443a05296097acc"],
+                "layer_b3": ["a1d616c37711ec7b9073d04734af2f5fd02f9035a322eb46efeace922e104c51", "bc71d4259f4feaa0fb27c1f288765004840f39247cddc98b3ac37329ff1354d0"],
+                "layer_256": ["bd337daf0c1aa36896013109b406a0580aa3bb8ab9291d89df3015d737358e95", "2e40c48c96fc7df636aad96d3e78ed0ba9f68c3059e21b7fcf917f284c569a61"],
+            },
+        ),
+        (
+            "Kwai-Kolors/Kolors-diffusers",
+            "KolorsPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.f16",
+                        "generation": {
+                            "negative_prompt": "",
+                            "guidance_scale": 5.0,
+                            "num_inference_steps": 50,
+                            "width": 1024,
+                            "height": 1024,
                         },
                     },
-                    "file_256": [
-                        "fe92687deefcfb33bb3ec181254b55fe4e434c5084ce9d38815eaa32487ad376",
-                        "2c8d58b267678aecfa6705a0a0375c88613065a8a8d32ad3a4c3867f5461cb3a",
-                        "6c218dc948575e3b14b03dffe2014d7870ac505005770ce3abdc28e920a03c05",
-                        "a6c3d534a9be308e95d2c3224af94a854bebd9b503f620f1ae3c8e6ba4a341bf",
-                        "7b431ea7d0f10e72b3eaece353bf6bf2f6bc717b6f4207411be186b40dec1f43",
-                    ],
-                    "layer_b3": [
-                        "9506d989de0226018de214f7ced4670eb5aad4a0c399a9229488ceccdf9a3ceb",
-                        "6c09dcb83e0cd7ad735eb763c5e3721c579d796853f0b9d31ba74fb13cad4f94",
-                        "e07025965cee925e31f1d617ea8baa575e7db910d40cc0482fd83df317c0812b",
-                        "d9a42e4226fb2778aaeaf0d6bda173a4ff95aa574c6d9e27e41542aa469e40a3",
-                        "8dcd87dc7a9b877e8e2a00abac44c4da9eadf2b8df4ae68f27415bb791381a96",
-                    ],
-                    "layer_256": [
-                        "630ec0f3adf97145316c034139836f9df952060d0237ac4e478c55d9a3a50bc8",
-                        "80904f707c192ddd06be2cebeb2ebbec3eb0e9c99076d50824d391ef3ac67bf2",
-                        "8ccedbe1e8cc4093f05b5f8d90e6103e688ae1ac71e0d6261fb17c42ff7c25e4",
-                        "3524e7fa9ca6f7ef695bc2d3410934eabd5272946a05c8cacd7f329e0bd9f1dd",
-                        "40499a8f45ae28558ed2fe4fc549a4cb469bd237434b331ccc0b1910310ed733",
-                    ],
-                    "identifiers": ["0.2.channelwise", "clip_mapper.bias", ".12.self_attn.k_proj.weight"],
-                }
+                    1: {"diffusers": "DiffusionPipeline"},
+                },
+                "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
+                "identifiers": [".DenseReluDense.wi.weight", "encoder_hid_proj.weight"],
+            },
+        ),
+        (
+            "stabilityai/stable-cascade-prior",
+            "StableCascadePriorPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.bfloat.b16",
+                        "generation": {
+                            "negative_prompt": "",
+                            "num_images_per_prompt": 1,
+                            "num_inference_steps": 20,
+                            "guidance_scale": 4.0,
+                            "width": 1024,
+                            "height": 1024,
+                        },
+                    }
+                },
+                "file_256": [
+                    "673b3173b037fb5f65b14fde37267390641a36726683de75dcf9df76fce2b866",
+                    "45c1eb5ce9b69efac891ad459b15c215cd90a986adbbfaf3effd3a89578cbcaf",
+                    "088ddf1e444abf399007b2da2bac87791df165c69f477994f6b3c745a20904b0",
+                    "39cec96c7212607f9e526db719bf1df507166d09f4748676c13b0d31cd4adb07",
+                    "31ffe2f1a3e2351d658fc7d3002a4eca22466a680f7fb3715b1e3768476f9633",
+                    "dfe24009fc881011f350d08d9d13be13a1a3b3cbfed667435efe0fd419aca099",
+                ],
+                "layer_b3": [
+                    "c55c83fa435ed128457f605bf1312e54727996d1c94413fc5ab5b49e9933857c",
+                    "6fb07ed9fc6ee636e50783802754b3a37bbecfc67037813b616223aeaf6fe877",
+                    "2ea194240e105c8962923e2baca88cb6a0c826794afc2ef82474301694711d68",
+                    "3412c8a184805621e4595d57268ced0b5c3c1974cd221bf67b2c908eec4fd61c",
+                    "53abfb013cfb0e41d0bc7b96bb83e42a4d4c67cb7325f9acf645b02d90efd8fe",
+                    "34556558f680c183adc2accd493cb9888a98ba853226bbecb07d95eb2055ff4f",
+                ],
+                "layer_256": [
+                    "4f5e0a738b963d3d4f8413387a0966ac1ce51f0f985bcbcc124fa221a2fff467",
+                    "8aa77e732a398b7d0dcd9a35d5682c2b5ab090ae90e915c7c91878abff0284d8",
+                    "4bbd46ded0916de3108f0da7145a80f5c7acea26ed35b0aaa29af12008352453",
+                    "415d1f3ecd06416708c1b83ab21e50b39c9d88d19dc33e60b977b7b7061880b9",
+                    "f678c32815c238e14091f690c8a83c3375c8f7738dc7abff79ff086ed9b59204",
+                    "17c8da803df7b9bbc8b1d7cc0c44916fea5b5ac0891330c4fdf0326fcd4496cb",
+                ],
+                "identifiers": ["down_blocks.0.2.kv_mapper", "previewer", "backbone"],
+            },
+        ),
+        (
+            "black-forest-labs/FLUX.1-dev",
+            "FluxPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.bfloat.b16",
+                        "generation": {
+                            "height": 1024,
+                            "width": 1024,
+                            "guidance_scale": 3.5,
+                            "num_inference_steps": 50,
+                            "max_sequence_length": 512,
+                        },
+                    },
+                    1: {
+                        "mflux": {"Flux1": {"model_name": "dev"}},
+                        "generation": {
+                            "height": 1024,
+                            "width": 1024,
+                            "gudance": 3.5,
+                            "steps": 25,
+                        },
+                    },
+                },
+                "file_256": ["4610115bb0c89560703c892c59ac2742fa821e60ef5871b33493ba544683abd7", ""],
+                "layer_b3": ["261559c8eaccae558f72621804a9ee188d338e45e2c622a58db709ac190198ba"],
+                "layer_256": ["3db58cf834d2f81abb1e035131956da4c90451074c681d0db10810e55e60c2c4"],
+                "identifiers": [
+                    "double_blocks.12.txt_mod.lin.weight",
+                    "add_q_proj.weight",
+                    "single_transformer_blocks.9.norm.linear.weight",
+                ],
+            },
+        ),
+        (
+            "black-forest-labs/FLUX.1-schnell",
+            "FluxPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.bfloat.b16",
+                        "generation": {
+                            "height": 1024,
+                            "width": 1024,
+                            "guidance_scale": 0.0,
+                            "num_inference_steps": 4,
+                            "max_sequence_length": 256,
+                        },
+                    },
+                    1: {
+                        "mflux": {"Flux1": {"model_name": "schnell"}},
+                        "generation": {
+                            "height": 1024,
+                            "width": 1024,
+                            "steps": 4,
+                        },
+                    },
+                },
+                "identifiers": [
+                    "double_blocks.12.txt_mod.lin.weight",
+                    "add_q_proj.weight",
+                    "single_transformer_blocks.9.norm.linear.weight",
+                ],
+                "file_256": ["9403429e0052277ac2a87ad800adece5481eecefd9ed334e1f348723621d2a0a"],
+                "layer_b3": ["c65ba812ce3ce056eb1585673f62fb896afe6ec049faaf00a97bc35c9a398c44"],
+                "layer_256": ["79c07e339865fe9e22c80f723d728c778130acd07a330339c68218b92bb7b3b8"],
+            },
+        ),
+        (
+            "stabilityai/stable-cascade",
+            "StableCascadeDecoderPipeline",
+            {
+                "pkg": {  # prior=prior_unet
+                    0: {
+                        "generation": {  # image_embeddings=prior_output.image_embeddings,
+                            "negative_prompt": "",
+                            "guidance_scale": 0.0,
+                            "output_type": "pil",
+                            "num_inference_steps": 10,
+                        },
+                        "precision": "ops.precision.bfloat.b16",
+                    },
+                },
+                "file_256": [
+                    "fe92687deefcfb33bb3ec181254b55fe4e434c5084ce9d38815eaa32487ad376",
+                    "2c8d58b267678aecfa6705a0a0375c88613065a8a8d32ad3a4c3867f5461cb3a",
+                    "6c218dc948575e3b14b03dffe2014d7870ac505005770ce3abdc28e920a03c05",
+                    "a6c3d534a9be308e95d2c3224af94a854bebd9b503f620f1ae3c8e6ba4a341bf",
+                    "7b431ea7d0f10e72b3eaece353bf6bf2f6bc717b6f4207411be186b40dec1f43",
+                ],
+                "layer_b3": [
+                    "9506d989de0226018de214f7ced4670eb5aad4a0c399a9229488ceccdf9a3ceb",
+                    "6c09dcb83e0cd7ad735eb763c5e3721c579d796853f0b9d31ba74fb13cad4f94",
+                    "e07025965cee925e31f1d617ea8baa575e7db910d40cc0482fd83df317c0812b",
+                    "d9a42e4226fb2778aaeaf0d6bda173a4ff95aa574c6d9e27e41542aa469e40a3",
+                    "8dcd87dc7a9b877e8e2a00abac44c4da9eadf2b8df4ae68f27415bb791381a96",
+                ],
+                "layer_256": [
+                    "630ec0f3adf97145316c034139836f9df952060d0237ac4e478c55d9a3a50bc8",
+                    "80904f707c192ddd06be2cebeb2ebbec3eb0e9c99076d50824d391ef3ac67bf2",
+                    "8ccedbe1e8cc4093f05b5f8d90e6103e688ae1ac71e0d6261fb17c42ff7c25e4",
+                    "3524e7fa9ca6f7ef695bc2d3410934eabd5272946a05c8cacd7f329e0bd9f1dd",
+                    "40499a8f45ae28558ed2fe4fc549a4cb469bd237434b331ccc0b1910310ed733",
+                ],
+                "identifiers": ["0.2.channelwise", "clip_mapper.bias", ".12.self_attn.k_proj.weight"],
             },
         ),
     ]
+
+    data_tuple = [re_create_pipe_tag(*entry) for entry in details]
     try:
         assimilate(mir_db, data_tuple)
     except (KeyError, StopIteration) as error_log:
@@ -812,6 +802,25 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
+    repo = "jack813liu/mlx-chroma"
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series=make_mir_tag("lodestones/Chroma")[0],
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            pkg={
+                0: {
+                    "chroma": "ChromaPipeline",
+                    "generation": {"neg_text": "", "num_steps": "28", "latent_size": [64, 64]},
+                }
+            },
+            file_256=["6ddc9e2bbe3376ab5ee9f10b2d947f127b6bf6f879f06f316a2208bb0da357b8"],
+            layer_b3=["15e227ced8a89c41abaa9cc44f84dfffdf5ead0c626035e5a2dde2bbb0935479"],
+            layer_256=["a4daa6ff6f45ca70c738adb8c19bc3b6f228df931e6bf2a3394463e4dd7ec882"],
+        )
+    )
     repo = "shuttleai/shuttle-jaguar"
     mir_db.add(
         mir_entry(
@@ -913,7 +922,7 @@ def auto_supplement(mir_db: MIRDatabase):
             series=series,
             comp=comp,
             repo=repo,
-            pkg={0: {"diffusers": "T5ForConditionalGeneration"}},
+            pkg={0: {"transformers": "T5ForConditionalGeneration"}},
             identifiers=[[4096], "encoder.embed_tokens.weight", "text_encoders.t5xxl.transformer.shared.weight", "t5xxl"],
             file_256=[
                 "565cb2487351282e8e4dbeb88e63f4ad28217ce0439f5a8e6525a924807d2d9b",
@@ -1139,7 +1148,7 @@ def auto_audio(mir_db: MIRDatabase):
             layer_b3=["3e9b5017cfe67a7804ac717b18b6add42ffc0bd3353490df2bcc520eaaef79b6"],
         )
     )
-    repo = "onnx-community/silero-vad"
+    repo = "freddyaboulton/silero-vad"
     series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
@@ -1152,8 +1161,13 @@ def auto_audio(mir_db: MIRDatabase):
                 0: {
                     "onnx": "onnx",
                 },
+                1: {
+                    "mlx_audio": "",
+                },
             },
-            layer_b3=["41ca5931452b3ffee588c6c7e5bd327c4e914141604eaf3fd05f4a790ac83bb2"],
+            file_256=["591f853590d11ddde2f2a54f9e7ccecb2533a8af7716330e8adfa6f3849787a9"],
+            layer_b3=["41ca5931452b3ffee588c6c7e5bd327c4e914141604eaf3fd05f4a790ac83bb2", "7dc736cd5d840182792bde4edfbf5ddc5aeaf16826a9c72d1ba8166c1e3fab9b"],
+            layer_256=["2ffef1834d5fe14ad8db58fc78d769d5dc38dda5eddbfc396786f74b326215fd"],
         ),
     )
     repo = "facebook/wav2vec2-conformer-rope-large-960h-ft"

@@ -21,22 +21,17 @@ nfo = sys.stderr.write
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
 
 
-def flag_config(transformers: bool = False, **kwargs):
+@TEMPLATE_FILE.decorator
+def flag_config(transformers: bool = False, data: dict = None, **kwargs):
     """Set type of MIR prefix depending on model type\n
     :param transformers: Use transformers data instead of diffusers data, defaults to False
     :raises ValueError: Model type not detected
     :return: _description_"""
 
-    @TEMPLATE_FILE.decorator
-    def _read_data(data: Optional[Dict[str, str]] = None):
-        return data
-
-    template_data = _read_data()
-
     if transformers:
-        flags = template_data["arch"]["transformer"]  # pylint:disable=unsubscriptable-object
+        flags = data["arch"]["transformer"]  # pylint:disable=unsubscriptable-object
     else:
-        flags = template_data["arch"]["diffuser"]  # pylint:disable=unsubscriptable-object
+        flags = data["arch"]["diffuser"]  # pylint:disable=unsubscriptable-object
     for mir_prefix, key_match in flags.items():
         if any(kwargs.get(param) for param in key_match):
             return mir_prefix
@@ -120,7 +115,7 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
     else:
         mir_prefix = flag_config(**sub_segments)
         if mir_prefix is None and class_name not in ["AutoPipelineForImage2Image", "DiffusionPipeline"]:
-            nfo(f"Failed to detect type for {class_name} {list(sub_segments)}")
+            nfo(f"Failed to detect type for {class_name} {list(sub_segments)}\n")
         else:
             mir_prefix = "info." + mir_prefix
     mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
@@ -211,11 +206,9 @@ def transformers_index():
                     break
             sub_segments: Dict[str, List[str]] = root_class(model_data["config"][-1], "transformers")
         if sub_segments and list(sub_segments) != ["kwargs"] and list(sub_segments) != ["use_cache", "kwargs"] and repo_path is not None:
-            # dbuq(class_name)
             mir_prefix = flag_config(transformers=True, **sub_segments)
             if mir_prefix is None:
-                nfo(f"Failed to detect type for {class_name} {list(sub_segments)}")
-                # dbuq(class_name, sub_segments, model_class_obj, model_data)
+                nfo(f"Failed to detect type for {class_name} {list(sub_segments)}\n")
                 continue
             else:
                 mir_prefix = "info." + mir_prefix

@@ -72,7 +72,6 @@ dependencies = [
     "sentencepiece ; python_version < '3.13' ",
     "sentencepiece @ git+https://github.com/google/sentencepiece.git#subdirectory=python ; python_version >= '3.13' ",
     "structlog>=25.4.0",
-    # "transformers>=4.54.0.dev0",
     "transformers>=4.53.2",
 ]
 

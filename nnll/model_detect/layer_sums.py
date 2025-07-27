@@ -16,7 +16,7 @@ async def sum_layers_of(model_metadata: str, hash_function: FunctionType) -> str
         model_metadata = next(iter(metadata for metadata in model_metadata if metadata.get("types", False)), model_metadata)
     model_metadata = list(model_metadata)
     layer_data = "".join(model_metadata)
-    return hash_function(text_stream=layer_data)
+    return await hash_function(text_stream=layer_data)
 
 
 async def sum_models_in(folder_path_named: str, layers: bool = True, b3_sum: bool = True) -> Dict[str, str]:

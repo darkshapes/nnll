@@ -88,11 +88,13 @@ class ExtensionType:
     PICK: Set[str] = {".pt", ".pth", ".ckpt", ".pickletensor"}
     ONNX: Set[str] = {".onnx"}
 
-    IMAGE: List[Set[str]] = [JPEG, WEBP, PNG_]
-    EXIF: List[Set[str]] = [JPEG, WEBP]
-    SCHEMA: List[Set[str]] = [JSON, TOML]
-    PLAIN: List[Set[str]] = [TEXT, XML_, HTML]
-    MODEL: List[Set[str]] = [SAFE, GGUF, PICK, ONNX]
+    IMAGE: List[str] = list(JPEG.union(WEBP, PNG_))
+    EXIF: List[str] = list(JPEG.union(WEBP))
+    SCHEMA: List[str] = list(JSON.union(TOML))
+    PLAIN: List[str] = list(TEXT.union(XML_, HTML))
+    MODEL: List[str] = list(SAFE.union(GGUF, PICK, ONNX))
+
+    MEDIA: List[str] = IMAGE + EXIF + SCHEMA + PLAIN
 
     IGNORE: List[Constant] = [
         "Thumbs.db",
@@ -256,5 +258,4 @@ class ListOfDelineatedStr(BaseModel):
 
 
 BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*[_-](\d{3,4}px)"
-PARAMETERS_SUFFIX = r"^(\d+[._-]?\d?[BbMmKk](it)?|[Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|.*\d+[bB]$|tiny|large|mlx|onnx|gguf|medium|base|mini|instruct|full|:latest|preview|small|it|pro|beta|hybrid|rl|plus|dpo|community)"
-
+PARAMETERS_SUFFIX = r"^(\d+[._-]?\d?[BbMmKk](it)?|[Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|.*\d+[bB]$|tiny|large|mlx|onnx|gguf|medium|base|multimodal|mini|instruct|full|:latest|preview|small|it|pro|beta|hybrid|rl|plus|dpo|community|--)"

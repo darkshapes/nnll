@@ -21,7 +21,10 @@
         "transformer": {
             "detr": [
                 "use_timm_backbone",
-                "_resnet_"
+                "_resnet_",
+                "disable_custom_kernels",
+                "dice_loss_coefficient",
+                "decoder_method"
             ],
             "cnn": [
                 "bbox_cost"
@@ -68,19 +71,20 @@
                 "separate_cls",
                 "keypoint_detector_config",
                 "local_attention",
-                "act_dropout"
+                "act_dropout",
+                "max_source_positions"
             ],
             "stst": [
+                "is_encoder_decoder",
                 "encoder_attention_heads",
                 "encoder_layers",
-                "decoder_layers",
-                "decoder_hidden_size",
                 "encoder_hidden_size",
-                "is_encoder_decoder",
                 "encoder_config",
                 "audio_token_index",
                 "codebook_dim",
-                "router_ignore_padding_tokens"
+                "router_ignore_padding_tokens",
+                "d_ff",
+                "d_kv"
             ],
             "art": [
                 "ffn_dim",
@@ -93,6 +97,7 @@
                 "rms_norm_eps",
                 "rope_theta",
                 "head_dim",
+                "layernorm_embedding",
                 "hidden_dropout_prob",
                 "rotary_pct",
                 "embed_dropout",
@@ -101,7 +106,9 @@
                 "n_positions",
                 "aux_loss_coef",
                 "residual_dropout",
-                "no_rope_layers"
+                "no_rope_layers",
+                "decoder_start_token_id",
+                "decoder_layers"
             ]
         },
         "diffuser": {
