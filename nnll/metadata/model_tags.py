@@ -28,13 +28,15 @@ class ReadModelTags:
         :param file_path_named: The full path to the file being opened
         :param separate_desc: Include `__metadata__` tag, or exclude and return only tensor layer names and shapes
         :return: A `dict` with the header data prepared to read, or `None`"""
-        gguf_type = (
+        meta_gguf = (
             self.create_gguf_reader,
             self.create_llama_parser,
         )
-        meta_precise = (
+        meta_safe = (
             self.metadata_from_safetensors,
             self.metadata_from_safe_open,
+        )
+        meta_onnx = (
             self.metadata_from_onnx_rt,
             self.metadata_from_onnx,
         )
@@ -42,19 +44,28 @@ class ReadModelTags:
             self.meta_load_pickletensor,
             self.metadata_from_pickletensor,
         )
-        if self.gguf_check(file_path_named):
-            for read_method in gguf_type:
+        file_extension = file_path_named.split(".")[-1]
+
+        if file_extension not in [*ExtensionType.SAFE, *ExtensionType.ONNX, *ExtensionType.PICK, *ExtensionType.MEDIA, ".py"] and self.gguf_check(file_path_named):
+            for read_method in meta_gguf:
                 metadata = read_method(file_path_named)
             if metadata and len(metadata) > 1:
                 return metadata
-        for read_method in meta_precise:
-            metadata = read_method(file_path_named, separate_desc)
-            if metadata and len(metadata) > 1:
-                return metadata
-        for read_method in meta_combined:
-            metadata = read_method(file_path_named)
-            if metadata and len(metadata) > 1:
-                return metadata
+        if file_extension not in [*ExtensionType.GGUF, *ExtensionType.ONNX, *ExtensionType.PICK, *ExtensionType.MEDIA, ".py"]:
+            for read_method in meta_safe:
+                metadata = read_method(file_path_named, separate_desc)
+                if metadata and len(metadata) > 1:
+                    return metadata
+        if file_extension not in [*ExtensionType.GGUF, *ExtensionType.SAFE, *ExtensionType.PICK, *ExtensionType.SCHEMA, *ExtensionType.MEDIA, ".py"]:
+            for read_method in meta_onnx:
+                metadata = read_method(file_path_named, separate_desc)
+                if metadata and len(metadata) > 1:
+                    return metadata
+        if file_extension not in [*ExtensionType.GGUF, *ExtensionType.SAFE, *ExtensionType.ONNX, *ExtensionType.MEDIA, ".py"]:
+            for read_method in meta_combined:
+                metadata = read_method(file_path_named)
+                if metadata and len(metadata) > 1:
+                    return metadata
         return None
 
     def attempt_file_open(self, file_path_named: str, separate_desc: bool) -> dict:

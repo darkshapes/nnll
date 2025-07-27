@@ -122,8 +122,8 @@ def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> 
         mir_data = mir_db.database[f"{arch}.{series}"]
 
         for comp, field_data in new_data.items():
-            print(field_data)
             if not isinstance(field_data, dict):
+                print(field_data)
                 raise TypeError(f"{field_data} <-- Cannot combine with database: Not `dict()`")
 
             # dbuq(f"{arch}.{series} : {comp}")
