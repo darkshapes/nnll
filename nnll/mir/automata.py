@@ -251,7 +251,7 @@ def auto_detail(mir_db: MIRDatabase):
             annotations = root_class(class_name.replace("Model", "Config"), "transformers")
             mir_prefix = flag_config(transformers=True, **annotations)
             mir_series, mir_comp = make_mir_tag(repo_path)
-            # mir_prefix = f"info.{mir_prefix}"
+            mir_prefix = f"info.{mir_prefix}"
         else:
             mir_series, data = create_pipe_entry(repo_path=repo_path, class_name=class_name)
             mir_prefix, mir_series = mir_series.rsplit(".", 1)
