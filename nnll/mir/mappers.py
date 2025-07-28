@@ -52,6 +52,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
     models_folder = os.path.join(os.path.dirname(transformers.__file__), "models")
     folder_data = folder_data.union(os.listdir(models_folder))
     for code_name in folder_data:
+        model_class = None
         if code_name and "__" not in code_name:
             tasks = show_tasks_for(code_name=code_name)
             if tasks:
@@ -71,7 +72,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
                     code_name = "donut-swin"
                 if not task_pipe and code_name and MODEL_MAPPING_NAMES.get(code_name.replace("_", "-")):
                     model_class = getattr(__import__("transformers"), MODEL_MAPPING_NAMES[code_name.replace("_", "-")], None)
-                else:
+                elif task_pipe:
                     model_class = getattr(__import__("transformers"), task_pipe)
                 config_class = CONFIG_MAPPING_NAMES.get(code_name.replace("_", "-"))
                 if not config_class:

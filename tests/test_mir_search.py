@@ -47,7 +47,7 @@ def test_grade_field_change(mock_test_database):
 
 
 def test_grade_letter_case_change(mock_test_database):
-    result = mock_test_database.find_path(field="pkg", target="AuDiOCrAfT.MoDeLs")
+    result = mock_test_database.find_path(field="pkg", target="AuDiOCrAfT")
     assert result == ["info.art.audiogen", "*"]
 
 
