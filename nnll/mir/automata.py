@@ -247,11 +247,11 @@ def auto_detail(mir_db: MIRDatabase):
     from nnll.tensor_pipe.deconstructors import root_class
 
     def re_create_pipe_tag(repo_path: str, class_name: str, addendum: dict) -> tuple:
-        if "google" in repo_path:
+        if "google" or "microsoft" in repo_path:
             annotations = root_class(class_name.replace("Model", "Config"), "transformers")
             mir_prefix = flag_config(transformers=True, **annotations)
             mir_series, mir_comp = make_mir_tag(repo_path)
-            mir_prefix = f"info.{mir_prefix}"
+            # mir_prefix = f"info.{mir_prefix}"
         else:
             mir_series, data = create_pipe_entry(repo_path=repo_path, class_name=class_name)
             mir_prefix, mir_series = mir_series.rsplit(".", 1)
@@ -391,6 +391,18 @@ def auto_detail(mir_db: MIRDatabase):
                 "file_256": ["0524484ec81425ba9deef6fac1393a78ba9b1c9bfed704a4be5f9c7255975cc1", "32f70f1d187e131a5fc3e4f0edc97ce89360d8e2f1d90177a443a05296097acc"],
                 "layer_b3": ["a1d616c37711ec7b9073d04734af2f5fd02f9035a322eb46efeace922e104c51", "bc71d4259f4feaa0fb27c1f288765004840f39247cddc98b3ac37329ff1354d0"],
                 "layer_256": ["bd337daf0c1aa36896013109b406a0580aa3bb8ab9291d89df3015d737358e95", "2e40c48c96fc7df636aad96d3e78ed0ba9f68c3059e21b7fcf917f284c569a61"],
+            },
+        ),
+        (
+            "microsoft/Phi-4-multimodal-instruct",
+            "Phi4MultimodalModel",
+            {
+                "pkg": {
+                    "0": {"transformers": "Phi4MultimodalModel"},
+                },
+                "file_256": ["7ff79b9d2d31076bac2663393451f6530f4fc8ca49b09002116c92c373dba983", "bc703090b63eda16f639fa4de7ac54635c23105ab1da2f6ec4d3403151d38ee6"],
+                "layer_b3": ["e5329a88602e1846e93ca015467d945d1c51ce3dc54abdadae8f1942d4f3879f", "b391ba867f6074f488f39bef52a475bf4e983328d5d437d196f2882cae79620f"],
+                "layer_256": ["158c16e579ec644b0861890919b4404677e72c3dc4278354dea0046f75d41607", "354276af1e65f68606c5cca62b4fc1ec87e905fc3a858aa30d01fe39d5a1d5d0"],
             },
         ),
         (
@@ -821,6 +833,30 @@ def auto_supplement(mir_db: MIRDatabase):
             layer_256=["a4daa6ff6f45ca70c738adb8c19bc3b6f228df931e6bf2a3394463e4dd7ec882"],
         )
     )
+    repo = "Zuellni/snac-24khz-ST"
+    series, comp = make_mir_tag(repo)
+    (
+        mir_db.add(
+            mir_entry(
+                domain="info",
+                arch="gan",
+                series=series,
+                comp=comp,
+                repo=repo,
+                pkg={
+                    0: {
+                        "snac": "SNAC",
+                    },
+                    "1": {
+                        "mlx_audio": "tts.generate.generate_audio",
+                    },
+                },
+                file_256=["e61ae2f638f56ee07a37592cd5a6a9e7d642560ddc78a76ee4a7f96d6922f1be"],
+                layer_b3=["ba07192df1860b0db8c4b46442d2c3712973a798a697ca5f688f544fe3bce303"],
+                layer_256=["08255792456ab823304f66cdd6a1b90001d8eb3f646a90aebc414afe5259c94c"],
+            )
+        ),
+    )
     repo = "shuttleai/shuttle-jaguar"
     mir_db.add(
         mir_entry(
@@ -914,7 +950,6 @@ def auto_supplement(mir_db: MIRDatabase):
     )
     repo = "google/t5-v1_1-xxl"
     series, comp = make_mir_tag(repo)
-
     mir_db.add(
         mir_entry(
             domain="info",
@@ -1091,8 +1126,12 @@ def auto_audio(mir_db: MIRDatabase):
             repo=repo,
             pkg={
                 0: {
-                    "audiocraft.models": {"AudioGen": {"duration": 5}},
-                    "audiocraft.data.audio": {"audio_write": {"strategy": "loudness", "loudness_compressor": True}},
+                    "audiocraft": "models.AudioGen",
+                    "generation": {"duration": 5},
+                    "stage_2": {
+                        "audiocraft": ".data.audioaudio_write",
+                        "generation": {"strategy": "loudness", "loudness_compressor": True},
+                    },
                 }
             },
         )
@@ -1109,9 +1148,11 @@ def auto_audio(mir_db: MIRDatabase):
             pkg={
                 0: {
                     "parler_tts": "ParlerTTSForConditionalGeneration",
-                    "transformers": {"AutoTokenizer": {"return_tensors": "pt"}},
+                    "stage_2": {
+                        "transformers": "AutoTokenizer",
+                        "generation": {"return_tensors": "pt"},
+                    },
                 },
-                # 1: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
             },
         )
     )
@@ -1127,7 +1168,10 @@ def auto_audio(mir_db: MIRDatabase):
             pkg={
                 0: {
                     "parler_tts": "ParlerTTSForConditionalGeneration",
-                    "transformers": {"AutoTokenizer": {"return_tensors": "pt"}},
+                    "stage_2": {
+                        "transformers": "AutoTokenizer",
+                        "generation": {"return_tensors": "pt"},
+                    },
                 }
             },
         )
@@ -1143,9 +1187,14 @@ def auto_audio(mir_db: MIRDatabase):
             repo=repo,
             pkg={
                 0: {"kokoro": "KPipeline"},
-                1: {"mlx_audio ": "tts.generate.generate_audio"},
+                1: {
+                    "mlx_audio": "tts.generate.generate_audio",
+                    "generation": {"audio_format": "wav", "join_audio": True, "verbose": False},
+                },
             },
+            file_256=["5a5cb3d87478f2e74dfca208ee52209ccfce024095e137097fd276026506e45f"],
             layer_b3=["3e9b5017cfe67a7804ac717b18b6add42ffc0bd3353490df2bcc520eaaef79b6"],
+            layer_256=["dbedf0e2115aa309b92689f86534be4a77b91d7900365e1717879fbb19b849f6"],
         )
     )
     repo = "freddyaboulton/silero-vad"
@@ -1162,7 +1211,8 @@ def auto_audio(mir_db: MIRDatabase):
                     "onnx": "onnx",
                 },
                 1: {
-                    "mlx_audio": "",
+                    "mlx_audio": "tts.generate.generate_audio",
+                    "generation": {"audio_format": "wav", "join_audio": True, "verbose": False},
                 },
             },
             file_256=["591f853590d11ddde2f2a54f9e7ccecb2533a8af7716330e8adfa6f3849787a9"],
@@ -1199,8 +1249,14 @@ def auto_audio(mir_db: MIRDatabase):
             comp=comp,
             repo=repo,
             pkg={
-                0: {"orpheus_tts": {"OrpheusModel": {"max_model_len": 2048}}},
-                1: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
+                0: {
+                    "orpheus_tts": "OrpheusModel",
+                    "generation": {"max_model_len": 2048},
+                },
+                1: {
+                    "mlx_audio": "tts.generate.generate_audio",
+                    "generation": {"audio_format": "wav", "join_audio": True, "verbose": False},
+                },
             },
         )
     )
@@ -1215,7 +1271,10 @@ def auto_audio(mir_db: MIRDatabase):
             repo=repo,
             pkg={
                 0: {"outetts": "InterfaceHF"},
-                1: {"mlx_audio": {"tts.generate.generate_audio": {"audio_format": "wav", "join_audio": True, "verbose": False}}},
+                1: {
+                    "mlx_audio": "tts.generate.generate_audio",
+                    "generation": {"audio_format": "wav", "join_audio": True, "verbose": False},
+                },
             },
         )
     )
