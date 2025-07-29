@@ -87,7 +87,6 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
                     series, comp_data = create_pipe_entry(staged_repo or pipe_repo, staged_class or pipe_class)
                 except TypeError:
                     continue  # Attempt 2,
-                    # nfo(pipe_repo, pipe_class)
                 pipe_data.setdefault(series, {}).update(comp_data)
     return dict(pipe_data)
 

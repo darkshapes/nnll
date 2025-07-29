@@ -101,8 +101,8 @@ class ReadModelTags:
                 )
         elif file_extension in ExtensionType.PICK:
             attempt_metadata(
-                lambda: self.meta_load_pickletensor(file_path_named),
                 lambda: self.metadata_from_pickletensor(file_path_named),
+                lambda: self.meta_load_pickletensor(file_path_named),
             )
         elif file_extension in ExtensionType.ONNX:
             attempt_metadata(

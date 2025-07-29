@@ -86,3 +86,16 @@ def test_find_path_decent(mock_test_database):
 def test_find_path_truncated_6(mock_test_database):
     result = mock_test_database.find_path(field="repo", target="UsefulSensors/moonshine-")
     assert result == ["info.stst.moonshine", "*"]
+
+
+def test_find_qwen(mock_test_database):
+    result = mock_test_database.find_path(field="repo", target="Qwen/Qwen2-VL-7B-Instruct")
+    assert result == ["info.vit.qwen2-vl", "*"]
+
+
+# def test_find_qwen_32(mock_test_database):
+#     result = mock_test_database.find_path(field="repo", target="Qwen/Qwen2-VL-nstruct".lower())
+#     assert result == ["info.vit.qwen2-vl", "*"]
+
+
+7

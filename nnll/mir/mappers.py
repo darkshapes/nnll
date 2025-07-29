@@ -82,7 +82,6 @@ def stock_llm_data() -> Dict[str, List[str]]:
                     model_data = {"config": str(config_class_obj.__module__ + "." + config_class_obj.__name__).split(".")}
                     if model_data and ("inspect" not in model_data) and ("deprecated" not in model_data) and model_class:
                         transformer_data.setdefault(model_class, model_data)
-                        # print(model_class, model_data)
     return transformer_data
 
 

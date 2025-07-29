@@ -378,7 +378,6 @@ def arrange_exif_metadata(header_data: dict) -> dict:
             decoded_data = dirty_string.decode("utf-16-be")  # If it is, decode into utf-16 format
         else:
             decoded_data = header_data[tag]
-        # print(decoded_data)
         if isinstance(decoded_data, str):
             map_start = decoded_data.find("{")
             decoded_string = decoded_data.replace("'", '"')

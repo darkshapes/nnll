@@ -118,7 +118,6 @@ class HyperChain:
         :return: `Block` the new block
         """
         index = len(self.chain)
-        # print(self.chain)
         previous_hash = self.chain[-1].block_hash
         new_block = Block.create(index=index, previous_hash=previous_hash, data=data)
         self.chain.append(new_block)
@@ -164,11 +163,9 @@ class HyperChain:
             previous_block = self.chain[i - 1]
             current_tag = f"{current_block.index}{previous_block.block_hash}{current_block.data}{current_block.timestamp}"
             current_tag = current_tag.encode("utf-8")
-            # print(current_block.block_hash, hashlib.sha256(current_tag).hexdigest())
             if not current_block.block_hash == hashlib.sha256(current_tag).hexdigest():
                 return False
 
-            # print((current_block.previous_hash, previous_block.block_hash))
             if not current_block.previous_hash == previous_block.block_hash:
                 return False
 
