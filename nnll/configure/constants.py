@@ -258,4 +258,4 @@ class ListOfDelineatedStr(BaseModel):
 
 
 BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*[_-](\d{3,4}px)"
-PARAMETERS_SUFFIX = r"^(\d+[._-]?\d?[BbMmKk](it)?|[Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|.*\d+[bB]$|tiny|large|mlx|onnx|gguf|medium|base|multimodal|mini|instruct|full|:latest|preview|small|it|pro|beta|hybrid|rl|plus|dpo|community|--)"
+PARAMETERS_SUFFIX = r"^(\d+[._-]?\d?[BbMmKk](it)?|[Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|.*\d+[bB]$|tiny|large|mlx|onnx|gguf|medium|base|multimodal|mini|[iI]nstruct|full|:latest|preview|small|it|pro|beta|hybrid|rl|plus|dpo|community|--)"

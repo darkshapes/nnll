@@ -92,7 +92,7 @@ class MetadataFileReader:
         if ext in Ext.TOML:
             loader, mode = (tomllib.load, {"mode": "rb"})
         else:
-            loader, mode = (json.load, {"model": "r", "encoding": "utf_8"})
+            loader, mode = (json.load, {"mode": "r", "encoding": "utf_8"})
         with open(file_path_named, **mode) as open_file:  # pylint:disable=unspecified-encoding
             try:
                 return loader(open_file)

@@ -55,7 +55,7 @@ class ChipStats:
                 if testing:
                     stats["data"]["mps"]["memory_fraction"] = 1.7
                     torch.mps.set_per_process_memory_fraction(stats["data"]["mps"]["memory_fraction"])
-                    os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = 0.0
+                    os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
         if "xpu" in device:
             stats["data"]["devices"]["xps"] = torch.xpu.mem_get_info()  # mostly just placeholder
         if "mtia" in device:
@@ -65,14 +65,44 @@ class ChipStats:
         if not os.path.exists(folder_path_named):
             os.mkdir(folder_path_named)
         write_paths = [folder_path_named, "."]
+        file_name = "chip_stats.json"
         for folder_path in write_paths:
             try:
-                write_json_file(folder_path_named=folder_path, file_name="chip_stats.json", data=stats, mode="x")
+                from nnll.integrity import ensure_path
+
+                ensure_path(folder_path, file_name)
+                write_json_file(folder_path_named=folder_path, file_name="chip_stats.json", data=stats, mode="w")
             except FileNotFoundError as error_log:
                 dbug(error_log)
             else:
                 break
         self.stats = stats
+
+    @lru_cache
+    def get_metrics(self):
+        """Retrieves system metrics including CPU usage, RAM usage and disk usage. Caches results to optimize performance.\n
+        :return: A dictionary of the system hardware state"""
+        from decimal import Decimal
+        import psutil
+        from socket import gethostname
+        from datetime import datetime
+
+        disk = psutil.disk_usage("/")
+        ram = psutil.virtual_memory()
+        chip_stats = self.get_stats()
+        data = {
+            "hostname": gethostname(),
+            "timestamp": datetime.now().strftime("%YY-%dd-%mm %H:%M:%SSS"),
+            "cpu": psutil.cpu_percent(interval=1),
+            "dram": psutil.virtual_memory().percent,
+            "dram_used": Decimal(str(round(ram.used / (1024**3), 2))),
+            "dram_total": Decimal(str(round(ram.total / (1024**3), 2))),
+            "disk": disk.percent,
+            "disk_used": round(disk.used / (1024**3), 2),
+            "disk_total": round(disk.total / (1024**3), 2),
+            "chip_stats": chip_stats,
+        }
+        return data
 
     @lru_cache
     def get_stats(self, folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:

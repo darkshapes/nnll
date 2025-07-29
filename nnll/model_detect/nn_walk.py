@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
+# <!-- // /*  d a r k s h a p e s */ -->
+
+# 從依賴關係中解析nn.module的實驗例程 experimental routines to parse nn.module out of dependencies
 import os
 import importlib
 from importlib.util import find_spec
@@ -50,15 +54,12 @@ async def find_classes_in_package(pkg: ModuleType, base_class: Type) -> List[Tup
         if module_name in visited:
             return
         visited.add(module_name)
-        print(visited)
         spec = find_spec(module_name)
         if not spec or not spec.origin:
             return
         if module_name not in exclude_list and "_tf" not in module_name and not any([segment.startswith("_") for segment in module_name.split(".")]):
-            print(module_name)
             module = importlib.import_module(module_name)
             for name in dir(module):
-                # print(module, name)
                 if name not in class_exclusions and "SkyReelsV2" not in name and not list([exclusion for exclusion in class_exclusions if exclusion in name]):
                     obj = getattr(module, name)
                     if isclass(obj) and issubclass(obj, base_class):

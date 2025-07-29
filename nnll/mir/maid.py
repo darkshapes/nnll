@@ -91,7 +91,6 @@ class MIRDatabase:
             option, series, compatibility, _ = match
             option = option.strip("_").strip("-").strip(".").lower()
             target = target.strip("_").strip("-").strip(".").lower()
-            # print(option, target)
             if target in option or option in target:
                 max_len = len(os.path.commonprefix([option, target]))
                 gap = Decimal(str(abs(len(option) - len(target)) + (len(option) - max_len))) * Decimal("0.1")
@@ -129,14 +128,12 @@ class MIRDatabase:
         parameters = r"-gguf|-exl2|-exl3|-onnx|-awq|-mlx|-ov"  #
         target = target.lower()
         target = re.sub(parameters, "", target)
-        # print(norm_target)
         self.matches = None
         self.matches = []
 
         for series, comp in self.database.items():
             for compatibility, fields in comp.items():
                 maybe_match = fields.get(field)  # check if this field is in this key
-                # print(fields.get(field))
                 if maybe_match is not None:
                     # check if this field is a dictionary
                     if isinstance(maybe_match, dict) and str(next(iter(maybe_match.keys()), None)).isnumeric():

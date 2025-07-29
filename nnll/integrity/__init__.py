@@ -10,7 +10,7 @@ def ensure_path(folder_path_named: Path, file_name: Optional[str] = None) -> Opt
     """Provide absolute certainty a file location exists\n
     :param folder_path_named: Location to test
     :param file_name: Optional file name to test, defaults to None
-    :return: The original folder path, or none if failure
+    :return: The original folder path, the original folder path with file, or None if failure
     """
     folder_path_named = Path(folder_path_named)
     if not folder_path_named.exists():

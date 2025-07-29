@@ -26,7 +26,8 @@ def read_state_dict_headers(folder_path_named: str = ".", save_location: str = "
     if folder_path_named is not None:
         for file_name in os.listdir(folder_path_named):
             file = os.path.join(folder_path_named, file_name)
-            virtual_data_00 = model_tool.read_metadata_from(file)
+            print(file)
+            virtual_data_00 = model_tool.read_metadata_from(file, separate_desc=False)
             if virtual_data_00 is not None:
                 write_json_file(save_location, f"{file_name}.json", virtual_data_00)
 
