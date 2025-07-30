@@ -1620,7 +1620,7 @@
             "repo": "SenseTime/deformable-detr",
             "pkg": {
                 "0": {
-                    "transformers": "DetaModel"
+                    "transformers": "DeformableDetrModel"
                 }
             }
         }
@@ -1710,7 +1710,7 @@
             "repo": "OFA-Sys/chinese-clip-vit-base-patch16",
             "pkg": {
                 "0": {
-                    "transformers": "ChineseCLIPVisionModel"
+                    "transformers": "ChineseCLIPModel"
                 }
             }
         }
@@ -2139,7 +2139,7 @@
             "repo": "Qwen/Qwen2-VL-7B-Instruct",
             "pkg": {
                 "0": {
-                    "transformers": "Qwen2_5_VLModel"
+                    "transformers": "Qwen2VLTextModel"
                 }
             }
         }
@@ -2276,10 +2276,10 @@
     },
     "info.vit.deepseek-vl-chat": {
         "*": {
-            "repo": "deepseek-community/deepseek-vl-1.3b-chat",
+            "repo": "deepseek-community/deepseek-vl-7b-chat",
             "pkg": {
                 "0": {
-                    "transformers": "DeepseekVLModel"
+                    "transformers": "DeepseekVLHybridModel"
                 }
             }
         }
@@ -2299,7 +2299,7 @@
             "repo": "openai/clip-vit-base-patch32",
             "pkg": {
                 "0": {
-                    "transformers": "CLIPModel"
+                    "transformers": "CLIPVisionModel"
                 }
             }
         }
@@ -2786,10 +2786,10 @@
     },
     "info.art.qwen3": {
         "*": {
-            "repo": "Qwen/Qwen3-8B",
+            "repo": "Qwen/Qwen3-15B-A2B",
             "pkg": {
                 "0": {
-                    "transformers": "Qwen3Model"
+                    "transformers": "Qwen3MoeModel"
                 }
             }
         }
@@ -3514,7 +3514,7 @@
             "repo": "Salesforce/instruct-blip-flan-t5",
             "pkg": {
                 "0": {
-                    "transformers": "InstructBlipVideoModel"
+                    "transformers": "InstructBlipModel"
                 }
             }
         }
@@ -3554,7 +3554,7 @@
             "repo": "google/siglip-base-patch16-224",
             "pkg": {
                 "0": {
-                    "transformers": "SiglipModel"
+                    "transformers": "SiglipVisionModel"
                 }
             }
         }
@@ -6163,7 +6163,8 @@
             ],
             "layer_b3": [
                 "41ca5931452b3ffee588c6c7e5bd327c4e914141604eaf3fd05f4a790ac83bb2",
-                "7dc736cd5d840182792bde4edfbf5ddc5aeaf16826a9c72d1ba8166c1e3fab9b"
+                "7dc736cd5d840182792bde4edfbf5ddc5aeaf16826a9c72d1ba8166c1e3fab9b",
+                "6e2c1bdbad74f56663ffb5710c7cb849a2b91ba331d81acdba47a21f69107434"
             ]
         }
     },

@@ -1419,7 +1419,12 @@ def auto_audio(mir_db: MIRDatabase):
                 },
             },
             file_256=["591f853590d11ddde2f2a54f9e7ccecb2533a8af7716330e8adfa6f3849787a9"],
-            layer_b3=["41ca5931452b3ffee588c6c7e5bd327c4e914141604eaf3fd05f4a790ac83bb2", "7dc736cd5d840182792bde4edfbf5ddc5aeaf16826a9c72d1ba8166c1e3fab9b"],
+            layer_b3=[
+                "41ca5931452b3ffee588c6c7e5bd327c4e914141604eaf3fd05f4a790ac83bb2",
+                "7dc736cd5d840182792bde4edfbf5ddc5aeaf16826a9c72d1ba8166c1e3fab9b",
+                "6e2c1bdbad74f56663ffb5710c7cb849a2b91ba331d81acdba47a21f69107434",  # onnx
+                "ab5ff443aece9171af5e7603d0b4309d3ecc934e3940ccedefff10f0b54b931e",  # onnx vad
+            ],
             layer_256=["2ffef1834d5fe14ad8db58fc78d769d5dc38dda5eddbfc396786f74b326215fd"],
         ),
     )
@@ -1874,6 +1879,7 @@ def auto_lora(mir_db: MIRDatabase):
             file_256=["77f7523a5e9c3da6cfc730c6b07461129fa52997ea06168e9ed5312228aa0bff"],
         )
     )
+    # qwen3 orsta e4f681bde70a753f30f83495a2aa340d251bf3d818eb5a1cbe58f85fd6ea0d40
     mir_db.add(
         mir_entry(
             domain="info",
@@ -1903,9 +1909,18 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series="flux1-schnell",
+            series=flux_series,
             comp="shuttle-jaguar",
             layer_b3=["0ebf9b7010accc44e219e355dd24bf1e3128004093c0c1dfc06f88c0a39fdbdd"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=flux_series,
+            compo="*",
+            layer_b3=["245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1"],
         )
     )
 
