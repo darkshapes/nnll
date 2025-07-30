@@ -103,9 +103,8 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
     if not repo_path and class_name:
         raise TypeError(f"'repo_path' {repo_path} or 'pipe_class' {class_name} unset")
     mir_prefix = "info"
-    # if not model_class_obj and hasattr(diffusers, class_name):
     model_class_obj = getattr(diffusers, class_name)
-    sub_segments = root_class(model_class_obj)
+    sub_segments = root_class(model_class_obj, "diffusers")
     decoder = "decoder" in sub_segments
     if repo_path in ["openai/shap-e", "kandinsky-community/kandinsky-3"]:
         mir_prefix = "info.unet"

@@ -41,7 +41,8 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
     async for file_name in tqdm(folder_contents, total=len(folder_contents), position=-2, leave=True):
         if any(Path(file_name).suffix.lower() in extensions for extensions in ExtensionType.MODEL) or unsafe:
             file_path_named = os.path.join(folder_path, file_name)
-            # file_size = os.path.getsize(file_path_named)  # 1GB  or file_size < 1e9
+            if os.path.isdir(file_path_named):
+                continue
             if layer is False:
                 hex_value = await calculate_hash(file_path_named=file_path_named)
                 hash_values.setdefault(os.path.basename(file_path_named), hex_value)

@@ -152,7 +152,6 @@ def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> 
 
     for arch, series, new_data in data_tuple:
         mir_data = mir_db.database[f"{arch}.{series}"]
-
         for comp, field_data in new_data.items():
             if not isinstance(field_data, dict):
                 raise TypeError(f"{field_data} <-- Cannot combine with database: Not `dict()`")
@@ -278,15 +277,15 @@ def auto_detail(mir_db: MIRDatabase):
     from nnll.tensor_pipe.deconstructors import root_class
 
     def re_create_pipe_tag(repo_path: str, class_name: str, addendum: dict) -> tuple:
-        if "google" or "microsoft" in repo_path:
+        if any([source for source in ["google", "microsoft"] if source in repo_path]):
             annotations = root_class(class_name.replace("Model", "Config"), "transformers")
             mir_prefix = flag_config(transformers=True, **annotations)
             mir_series, mir_comp = make_mir_tag(repo_path)
             mir_prefix = f"info.{mir_prefix}"
         else:
-            mir_series, data = create_pipe_entry(repo_path=repo_path, class_name=class_name)
+            mir_series, mir_data = create_pipe_entry(repo_path=repo_path, class_name=class_name)
             mir_prefix, mir_series = mir_series.rsplit(".", 1)
-            mir_comp = list(data)[0]
+            mir_comp = list(mir_data)[0]
         return mir_prefix, mir_series, {mir_comp: addendum}
 
     details = [
@@ -306,6 +305,12 @@ def auto_detail(mir_db: MIRDatabase):
                     },
                     1: {"diffusers": "DiffusionPipeline"},
                 },
+                "file_256": [
+                    "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",  # aio
+                    "e6bb9ea85bbf7bf6478a7c6d18b71246f22e95d41bcdd80ed40aa212c33cfeff",  # aio vae 0.9
+                    "357650fbfb3c7b4d94c1f5fd7664da819ad1ff5a839430484b4ec422d03f710a",  # diffusers
+                    "83e012a805b84c7ca28e5646747c90a243c65c8ba4f070e2d7ddc9d74661e139",  # fp16 diffusers
+                ],
                 "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
                 "layer_b3": ["8be44fa13c1efa60f8bcadaa57f1d718473f9660f03c4f0e65dc037960d8cba1"],
                 "identifiers": ["logit_scale", "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight", "add_embedding.linear_2.bias"],
@@ -325,6 +330,7 @@ def auto_detail(mir_db: MIRDatabase):
                     }
                 },
                 "file_256": [
+                    "53adcb3b6b6005758d40e2d8058b044ed4892bc8616efb7a62cc2dd384be07de",  # v1
                     "2c41e8a9831f3be1eaff2c2ed590abb62e4534e814f7ec58a5fd74ff71dc2036",  # v46,
                     "0a7b2d9699dbd22b3744ee2692900cabcfb731a43dac13729c33807f2bb7c9f6",  # v37 detail
                 ],
@@ -658,11 +664,7 @@ def auto_detail(mir_db: MIRDatabase):
     ]
 
     data_tuple = [re_create_pipe_tag(*entry) for entry in details]
-    try:
-        assimilate(mir_db, data_tuple)
-    except (KeyError, StopIteration) as error_log:
-        print(error_log)
-        pass
+    assimilate(mir_db, data_tuple)
 
 
 def auto_supplement(mir_db: MIRDatabase):
