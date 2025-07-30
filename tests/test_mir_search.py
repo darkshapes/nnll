@@ -85,7 +85,7 @@ def test_find_qwen(mock_test_database):
 
 def test_find_qwen_32(mock_test_database):
     result = mock_test_database.find_path(field="repo", target="Qwen/Qwen2-VL-nstruct".lower())
-    assert result is None  #  ["info.vit.qwen2-vl", "*"] would prefer to be this
+    assert result is None  # ["info.vit.qwen2-vl", "*"] would prefer to be this
 
 
 7

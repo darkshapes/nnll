@@ -101,6 +101,9 @@ class ExtensionType:
         "desktop.ini",
         ".fseventsd",
         ".DS_Store",
+        ".gitattributes",
+        ".env",
+        ".py",
     ]
 
 
