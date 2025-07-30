@@ -1924,7 +1924,6 @@ def auto_vae(mir_db: MIRDatabase):
         )
     )
 
-
 def auto_taesd(mir_db: MIRDatabase):
     """Create MIR VAE missing from the dtabase"""
     mir_db.add(
