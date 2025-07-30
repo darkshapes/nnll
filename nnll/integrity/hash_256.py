@@ -6,7 +6,9 @@ import sys
 sys.path.append(os.getcwd())
 
 from nnll.metadata.json_io import read_json_file
-from nnll.monitor.console import nfo
+from nnll.monitor.file import dbug as nfo
+
+tag_file = False
 
 
 async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = True, header: bool = False, unsafe: bool = False) -> dict[str, str]:
@@ -23,6 +25,7 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
     from nnll.integrity.hashing import compute_hash_for
     from nnll.integrity.hashing import compute_b3_for
     from nnll.configure.constants import ExtensionType
+    from nnll.monitor.file import dbug
 
     from nnll.metadata.model_tags import ReadModelTags
 
@@ -30,34 +33,37 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
     model_tool = ReadModelTags()
     hash_values = {}
     nfo(f"{folder_path} : TYPE:{'LAYER   W METADATA: ' + str(header) if layer else 'FILE'}   ALGORITHM:{'BLAKE3' if calculate_hash == compute_b3_for else 'SHA256'}")
-    data = {
-        "type": "LAYER" if layer else "FILE",
-        "algorithm": "BLAKE3" if calculate_hash == compute_b3_for else "SHA256",
-        "FunctionType": str(compute_b3_for.__name__).upper() if b3 else str(compute_hash_for.__name__).upper(),
-    }
-    data.setdefault("with_metadata", str(header)) if layer else ()
-    hash_values.setdefault(folder_path, data)
+    if tag_file:
+        data = {
+            "type": "LAYER" if layer else "FILE",
+            "algorithm": "BLAKE3" if calculate_hash == compute_b3_for else "SHA256",
+            "FunctionType": str(compute_b3_for.__name__).upper() if b3 else str(compute_hash_for.__name__).upper(),
+        }
+        data.setdefault("with_metadata", str(header)) if layer else ()
+        hash_values.setdefault(folder_path, data)
     folder_contents = os.listdir(os.path.normpath(Path(folder_path)))
-    async for file_name in tqdm(folder_contents, total=len(folder_contents), position=-2, leave=True):
+    async for file_name in tqdm(folder_contents, total=len(folder_contents), position=-2, leave=True, disable=nfo == dbug):
         if any(Path(file_name).suffix.lower() in extensions for extensions in ExtensionType.MODEL) or unsafe:
             file_path_named = os.path.join(folder_path, file_name)
-            # file_size = os.path.getsize(file_path_named)  # 1GB  or file_size < 1e9
-            if layer is False:
-                hex_value = await calculate_hash(file_path_named=file_path_named)
-                hash_values.setdefault(os.path.basename(file_path_named), hex_value)
-                nfo(f"'{file_name}' : '{os.path.basename(hex_value)}'")
-            else:
-                if unsafe:
-                    try:
-                        state_dict = model_tool.attempt_all_open(file_path_named, separate_desc=header)
-                    except Exception as error_log:
-                        print(error_log)
-                        continue
+            if not any(media for media in ExtensionType.IGNORE if media in file_path_named):
+                if os.path.isdir(file_path_named):
+                    continue
+                if layer is False:
+                    hex_value = await calculate_hash(file_path_named=file_path_named)
+                    hash_values.setdefault(os.path.basename(file_path_named), hex_value)
+                    nfo(f"'{file_name}' : '{os.path.basename(hex_value)}'")
                 else:
-                    state_dict = model_tool.read_metadata_from(file_path_named, separate_desc=header)
-                hex_value = await calculate_hash(text_stream=str(state_dict))
-                hash_values.setdefault(os.path.basename(file_path_named), hex_value)
-                nfo(f"'{hex_value}' : '{os.path.basename(file_name)}'")  # reversed to highlight difference
+                    if unsafe:
+                        try:
+                            state_dict = model_tool.attempt_all_open(file_path_named, separate_desc=header)
+                        except Exception as error_log:
+                            print(error_log)
+                            continue
+                    else:
+                        state_dict = model_tool.read_metadata_from(file_path_named, separate_desc=header)
+                    hex_value = await calculate_hash(text_stream=str(state_dict))
+                    hash_values.setdefault(os.path.basename(file_path_named), hex_value)
+                    nfo(f"'{hex_value}' : '{os.path.basename(file_name)}'")  # reversed to highlight difference
     return hash_values
 
 
@@ -125,6 +131,8 @@ def main():
     from nnll.metadata.json_io import write_json_file
     from datetime import datetime
 
+    tag_file = True
+
     program = str(parser.prog)
     location = argv[1].split(os.sep)[-2]
     hash_values = asyncio.run(hash_layers_or_files(folder_path=args.path, layer=not args.file, b3=not args.sha, header=args.include, unsafe=args.unsafe))
@@ -134,4 +142,6 @@ def main():
 
 
 if __name__ == "__main__":
+    from nnll.monitor.console import nfo
+
     main()

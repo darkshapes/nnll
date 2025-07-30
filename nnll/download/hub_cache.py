@@ -81,3 +81,42 @@ def download_hub_file(repo_id: str, source: str = "huggingface", **kwargs) -> Tu
         local_folder_path_named = kwargs["local_dir"]
     folder_contents = os.listdir(local_folder_path_named)  # Did not use 'Path' type b/c might be relative directory??
     return local_folder_path_named, folder_contents
+
+
+async def get_hub_path(repo_id: str) -> str:
+    """Returns the file path from a repository based on a query.\n
+    :param repo: Repository object with revisions and files information.
+    :return: The matched file path."""
+    from huggingface_hub import snapshot_download
+
+    return snapshot_download(repo_id=repo_id, local_files_only=True)
+
+
+async def get_hub_layers(repo_id: str) -> dict[str, dict[str, str | list[int] | None]]:
+    """Map the inner layers of a Safetensors model state dict from the hub\n
+    dtype, shape, data_offsets
+    :param repo_id: Hub location to index
+    :return: The model layer metadata"""
+    from huggingface_hub import HfApi
+    from huggingface_hub.errors import NotASafetensorsRepoError
+    from urllib3.exceptions import NameResolutionError, MaxRetryError
+    from requests.exceptions import ConnectionError
+    from socket import gaierror
+    import json
+
+    os.environ["HF_HUB_OFFLINE"] = "0"
+
+    hf_api = HfApi()
+    try:
+        api_data = hf_api.get_safetensors_metadata(repo_id).files_metadata
+    except (NotASafetensorsRepoError, NameResolutionError, MaxRetryError, ConnectionError, gaierror):
+        return None
+    else:
+        metadata = dict()
+        for safetensor, tensor_info in api_data.items():
+            tensor_data = tensor_info.tensors
+            for layer_name, layer_data in tensor_data.items():
+                data_bundle = {"dtype": layer_data.dtype, "shape": layer_data.shape, "data_offsets": list(layer_data.data_offsets)}
+                metadata.setdefault(layer_name, data_bundle)
+    metadata = json.dumps(metadata, sort_keys=True)
+    return metadata

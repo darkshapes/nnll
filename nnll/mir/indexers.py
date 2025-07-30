@@ -103,9 +103,8 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
     if not repo_path and class_name:
         raise TypeError(f"'repo_path' {repo_path} or 'pipe_class' {class_name} unset")
     mir_prefix = "info"
-    # if not model_class_obj and hasattr(diffusers, class_name):
     model_class_obj = getattr(diffusers, class_name)
-    sub_segments = root_class(model_class_obj)
+    sub_segments = root_class(model_class_obj, "diffusers")
     decoder = "decoder" in sub_segments
     if repo_path in ["openai/shap-e", "kandinsky-community/kandinsky-3"]:
         mir_prefix = "info.unet"
@@ -201,7 +200,12 @@ def transformers_index():
                 doc_string = pattern.__doc__
                 matches = re.findall(r"\[([^\]]+)\]", doc_string)
                 if matches:
-                    repo_path = next(iter(snip.strip('"').strip() for snip in matches if "/" in snip))
+                    print(matches)
+                    try:
+                        repo_path = next(iter(snip.strip('"').strip() for snip in matches if "/" in snip))
+                    except StopIteration as error_log:
+                        print(f"ERROR >>{matches} : LOG >> {error_log}")
+                        pass
                     break
             sub_segments: Dict[str, List[str]] = root_class(model_data["config"][-1], "transformers")
         if sub_segments and list(sub_segments) != ["kwargs"] and list(sub_segments) != ["use_cache", "kwargs"] and repo_path is not None:
