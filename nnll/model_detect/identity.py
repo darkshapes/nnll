@@ -4,8 +4,6 @@
 from typing import Callable
 
 import os
-from pathlib import Path
-from nnll.configure.constants import ExtensionType
 
 
 class ModelIdentity:
@@ -61,3 +59,20 @@ class ModelIdentity:
         for name in class_names:
             if mir_tag := self.find_path(field="pkg", target=name, sub_field="0"):
                 return [mir_tag]
+
+    async def get_model_path(self, repo_data: Callable, query: str, match_attr: str | None = None, path_attr: str = "file_path"):
+        """Returns the file path from a repository based on a query.\n
+        :param repo: Repository object with revisions and files information.
+        :param query: String to search for within the repository files.
+        :param match_attr: Attribute to match the query against, defaults to path_attr.
+        :param path_attr: Attribute containing the file path, defaults to "file_path".
+        :return: The matched file path or None if no match found."""
+
+        if not match_attr:
+            match_attr = path_attr
+        if hasattr(repo_data, "revisions") and repo_data.revisions:
+            file_path = [getattr(info, path_attr, []) for info in next(iter(repo_data.revisions)).files if query in str(getattr(info, match_attr, []))]
+            if file_path:
+                return file_path[-1]
+        return None
+
