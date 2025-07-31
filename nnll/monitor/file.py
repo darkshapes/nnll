@@ -19,14 +19,15 @@ from sys import modules as sys_modules
 from threading import get_native_id
 from typing import Callable, Literal
 
-from nnll.configure import LOG_FOLDER_PATH
+from nnll.configure import LOG_FOLDER_PATH, HOME_FOLDER_PATH
 
 EXC_INFO = any(mod in sys_modules for mod in ["textual"] if "pytest" not in sys_modules)
 
+DBUG_LOG: Logger = lambda x: configure_logging(level=DEBUG, folder_path_named=x if x else HOME_FOLDER_PATH)
+
 
 def configure_logging(file_name: str = ".nnll", folder_path_named: str = LOG_FOLDER_PATH, time_format: str = "%H:%M:%S.%f", level: str | Literal[10] = DEBUG) -> Logger:
-    """
-    Configure and launch *structured* logger integration
+    """Configure and launch *structured* logger integration\n
     base python logger + formatter + custom logger\n
     :param file_name: The desired filename of the log file
     :param folder_path_named: The desired path of the folder
