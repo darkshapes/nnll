@@ -104,6 +104,8 @@ class ExtensionType:
         ".gitattributes",
         ".env",
         ".py",
+        "LICENSE",
+        ".md",
     ]
 
 
