@@ -42,6 +42,39 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     return (cleaned_string, suffix)
 
 
+def tag_base_model(repo_path: str, class_name: str, addendum: dict | None = None) -> tuple[str]:
+    """Convert model repo paths to MIR tags, classifying by feature\n
+    :param name: Repo path
+    :param class_name: The HF transformers class for the model
+    :return: A segmented MIR tag useful for appending index entries"""
+
+    from nnll.tensor_pipe.deconstructors import root_class
+    from nnll.mir.indexers import flag_config
+
+    annotations = root_class(class_name.replace("Model", "Config"), "transformers")
+    mir_prefix = flag_config(transformers=True, **annotations)
+    base_series, base_comp = make_mir_tag(repo_path)
+    if not addendum:
+        return mir_prefix, base_series, base_comp
+    else:
+        mir_prefix = f"info.{mir_prefix}"
+    return mir_prefix, base_series, {base_comp: addendum}
+
+
+def tag_pipe(repo_path: str, class_name: str, addendum: dict) -> tuple:
+    """Convert model repo pipes to MIR tags, classifying by feature\n
+    :param name: Repo path
+    :param class_name: The HF diffusers class for the model
+    :return: A segmented MIR tag useful for appending index entries"""
+
+    from nnll.mir.indexers import create_pipe_entry
+
+    mir_series, mir_data = create_pipe_entry(repo_path=repo_path, class_name=class_name)
+    mir_prefix, mir_series = mir_series.rsplit(".", 1)
+    mir_comp = list(mir_data)[0]
+    return mir_prefix, mir_series, {mir_comp: addendum}
+
+
 def class_to_mir_tag(mir_db: Dict[str, str], id_tag: str) -> Optional[str]:
     """Converts a class identifier to its corresponding MIR tag.\n
     :param mir_db: A dictionary mapping series-compatibility pairs to their respective data.

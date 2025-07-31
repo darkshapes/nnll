@@ -2,21 +2,21 @@
 # <!-- // /*  d a r k s h a p e s */ -->
 import os
 import sys
+from types import FunctionType
 
 sys.path.append(os.getcwd())
 
 from nnll.metadata.json_io import read_json_file
-from nnll.monitor.file import dbug as nfo
 
 tag_file = False
 
 
-async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = True, header: bool = False, unsafe: bool = False) -> dict[str, str]:
+async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = True, desc_process: bool = False, unsafe: bool = False) -> dict[str, str]:
     """Hashes layers or files in a folder using BLAKE3 or SHA256, with optional metadata inclusion.\n
     :param folder_path: Path to the folder containing model files.
     :param layer: If True, processes plaintext state dict layer names; if False, processes binary files.
     :param b3: If True, uses BLAKE3 algorithm; if False, uses SHA256.
-    :param header: If True, includes metadata in layer processing.
+    :param desc_process: Procedures metadata included in output file.
     :param unsafe: Attempt to read metadata even from non-normal files, defaults False
     :return: Dictionary mapping hash values to file names."""
     import os
@@ -29,17 +29,22 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
 
     from nnll.metadata.model_tags import ReadModelTags
 
+    if not desc_process:
+        from nnll.monitor.file import dbug as nfo
+    else:
+        from nnll.monitor.console import nfo
+
     calculate_hash = compute_b3_for if b3 else compute_hash_for
     model_tool = ReadModelTags()
     hash_values = {}
-    nfo(f"{folder_path} : TYPE:{'LAYER   W METADATA: ' + str(header) if layer else 'FILE'}   ALGORITHM:{'BLAKE3' if calculate_hash == compute_b3_for else 'SHA256'}")
-    if tag_file:
+    nfo(f"{folder_path} : TYPE:{'LAYER   W METADATA: False' if layer else 'FILE'}   ALGORITHM:{'BLAKE3' if calculate_hash == compute_b3_for else 'SHA256'}")
+    if desc_process:
         data = {
             "type": "LAYER" if layer else "FILE",
             "algorithm": "BLAKE3" if calculate_hash == compute_b3_for else "SHA256",
             "FunctionType": str(compute_b3_for.__name__).upper() if b3 else str(compute_hash_for.__name__).upper(),
         }
-        data.setdefault("with_metadata", str(header)) if layer else ()
+        data.setdefault("with_metadata", False) if layer else ()
         hash_values.setdefault(folder_path, data)
     folder_contents = os.listdir(os.path.normpath(Path(folder_path)))
     async for file_name in tqdm(folder_contents, total=len(folder_contents), position=-2, leave=True, disable=nfo == dbug):
@@ -55,12 +60,12 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
                 else:
                     if unsafe:
                         try:
-                            state_dict = model_tool.attempt_all_open(file_path_named, separate_desc=header)
+                            state_dict = model_tool.attempt_all_open(file_path_named, separate_desc=layer)
                         except Exception as error_log:
-                            print(error_log)
+                            nfo(error_log)
                             continue
                     else:
-                        state_dict = model_tool.read_metadata_from(file_path_named, separate_desc=header)
+                        state_dict = model_tool.read_metadata_from(file_path_named, separate_desc=layer)
                     hex_value = await calculate_hash(text_stream=str(state_dict))
                     hash_values.setdefault(os.path.basename(file_path_named), hex_value)
                     nfo(f"'{hex_value}' : '{os.path.basename(file_name)}'")  # reversed to highlight difference
@@ -104,13 +109,21 @@ async def compare_hash_values(hash_values: dict):
         if not known_hashes:
             known_hashes = data.get("file_256")
         trail = identify_model(known_hashes, hex_value)
-        nfo(trail)
         if trail:
             model_id.setdefault(hex_value, trail)
     return model_id
 
 
-def main():
+async def write_to_file(program: FunctionType | str, folder_path_named: str, hash_values: dict[str, str], write_path: str) -> None:
+    from nnll.metadata.json_io import write_json_file
+    from datetime import datetime
+
+    date_stamp = f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    hash_values.setdefault(program, str(date_stamp))
+    write_json_file(".", f"{program}_{write_path}_{date_stamp}.json", hash_values)
+
+
+async def main():
     """Parse arguments to feed to dict header reader"""
     import argparse
     from sys import argv
@@ -122,26 +135,17 @@ def main():
     )
     parser.add_argument("-f", "--file", action="store_true", help="Change mode to calculate hash for the whole file instead of state dict layers")
     parser.add_argument("-s", "--sha", action="store_true", help="Change algorithm from b3 to sha")
-    parser.add_argument("-i", "--include", "--include-header", action="store_true", help="Include the metadata header, only applies to hashing state dict layers")
+    parser.add_argument("-d", "--describe", "--describe-process", action="store_true", help="Include processing metadata in the output", default=True)
     parser.add_argument("-u", "--unsafe", action="store_true", help="Try to hash non-standard type model files layers")
     parser.add_argument("path", default=".", help="Path to directory where files should be analyzed. (default .)")
 
     args = parser.parse_args()
-    import asyncio
-    from nnll.metadata.json_io import write_json_file
-    from datetime import datetime
 
-    tag_file = True
-
-    program = str(parser.prog)
-    location = argv[1].split(os.sep)[-2]
-    hash_values = asyncio.run(hash_layers_or_files(folder_path=args.path, layer=not args.file, b3=not args.sha, header=args.include, unsafe=args.unsafe))
-    date_stamp = f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    hash_values[args.path][program] = str(date_stamp)
-    write_json_file(".", f"{program}_{location}_{date_stamp}.json", hash_values)
+    hash_values = await hash_layers_or_files(folder_path=args.path, layer=not args.file, b3=not args.sha, desc_process=args.describe, unsafe=args.unsafe)
+    await write_to_file(program=str(parser.prog), folder_path_named=args.path, hash_values=hash_values, write_path=argv[1].split(os.sep)[-2])
 
 
 if __name__ == "__main__":
-    from nnll.monitor.console import nfo
+    import asyncio
 
-    main()
+    asyncio.run(main())

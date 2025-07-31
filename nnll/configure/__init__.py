@@ -19,13 +19,14 @@ def set_home_stable(folder: str = "Shadowbox") -> Path:
     To accommodate user so they can return to previous settings, leverage os-specific library location.
     """
     from platform import system
+    from pathlib import Path
 
     return (
-        os.path.join(os.environ.get("LOCALAPPDATA", os.path.join(os.path.expanduser("~"), "AppData", "Local")), folder)
+        str(os.path.join(Path.home(), "AppData", "Local", folder))
         if system().lower() == "windows"
-        else os.path.join(os.path.expanduser("~"), "Library", "Application Support", folder)
+        else str(os.path.join(Path.home(), "Library", "Application Support", folder))
         if system().lower() == "darwin"
-        else os.path.join(os.path.expanduser("~"), ".config", folder.lower())
+        else str(os.path.join(Path.home(), ".config", folder.lower()))
     )
 
 

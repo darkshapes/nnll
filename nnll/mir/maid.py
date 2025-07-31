@@ -156,7 +156,18 @@ class MIRDatabase:
 
 def main(mir_db: Callable = MIRDatabase()) -> None:
     """Build the database"""
-    from nnll.mir.automata import auto_detail, auto_hub, auto_dtype, auto_lora, auto_schedulers, auto_supplement, auto_audio, auto_taesd, auto_vae
+    from nnll.mir.automata import (
+        auto_detail,
+        auto_hub,
+        auto_dtype,
+        auto_lora,
+        auto_schedulers,
+        auto_supplement,
+        auto_audio,
+        auto_taesd,
+        auto_vae,
+        auto_text,
+    )
 
     auto_hub(mir_db)
     auto_dtype(mir_db)
@@ -164,6 +175,7 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
     auto_lora(mir_db)
     auto_audio(mir_db)
     auto_supplement(mir_db)
+    auto_text(mir_db)
     auto_detail(mir_db)
     auto_taesd(mir_db)
     auto_vae(mir_db)
