@@ -41,11 +41,12 @@ class ModelIdentity:
 
         from nnll.download.hub_cache import get_hub_path
         from nnll.integrity.hash_256 import hash_layers_or_files
+        from nnll.monitor.file import dbug as nfo
 
         async def scan_folder_hashes(folder_path_named: str) -> list[list[str]]:
             hashes = await hash_layers_or_files(os.path.join(root, folder_path_named))
             if hashes:
-                print(hashes)
+                nfo(hashes)
                 for file_name, hash_data in hashes.items():
                     mir_tag = self.find_path(field="layer_b3", target=hash_data)
                     if mir_tag:

@@ -86,5 +86,6 @@ def generate_chroma():
         for i in images:
             write_to_disk(content=images)
 
-    if __name__ == "__main__":
-        main(sys.argv[0])
+
+# if __name__ == "__main__":
+#     main(sys.argv[0])

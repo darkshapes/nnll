@@ -19,7 +19,6 @@ def read_state_dict_headers(folder_path_named: str = ".", save_location: str = "
     """
     from nnll.metadata.json_io import write_json_file
     from nnll.metadata.model_tags import ReadModelTags
-    from pathlib import Path
     import os
 
     model_tool = ReadModelTags()
