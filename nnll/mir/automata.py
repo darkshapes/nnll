@@ -1919,10 +1919,11 @@ def auto_vae(mir_db: MIRDatabase):
             domain="info",
             arch="vae",
             series=flux_series,
-            compo="*",
+            comp="*",
             layer_b3=["245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1"],
         )
     )
+
 
 def auto_taesd(mir_db: MIRDatabase):
     """Create MIR VAE missing from the dtabase"""
