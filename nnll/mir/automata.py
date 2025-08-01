@@ -336,6 +336,7 @@ def auto_detail(mir_db: MIRDatabase):
                     "53adcb3b6b6005758d40e2d8058b044ed4892bc8616efb7a62cc2dd384be07de",  # v1
                     "2c41e8a9831f3be1eaff2c2ed590abb62e4534e814f7ec58a5fd74ff71dc2036",  # v46,
                     "0a7b2d9699dbd22b3744ee2692900cabcfb731a43dac13729c33807f2bb7c9f6",  # v37 detail
+                    "6ddc9e2bbe3376ab5ee9f10b2d947f127b6bf6f879f06f316a2208bb0da357b8",  # mlx chroma / v36 detail
                 ],
                 "layer_b3": [
                     "15e227ced8a89c41abaa9cc44f84dfffdf5ead0c626035e5a2dde2bbb0935479",
@@ -541,8 +542,16 @@ def auto_detail(mir_db: MIRDatabase):
                     "4610115bb0c89560703c892c59ac2742fa821e60ef5871b33493ba544683abd7",  # modelspec sai
                     "d86a3038eacaa720682cb9b1da3c49fecf8a3ded605af4def6061eaa18903eb8",  # diffusers
                 ],
-                "layer_b3": ["261559c8eaccae558f72621804a9ee188d338e45e2c622a58db709ac190198ba"],
-                "layer_256": ["3db58cf834d2f81abb1e035131956da4c90451074c681d0db10810e55e60c2c4"],
+                "layer_b3": [
+                    "261559c8eaccae558f72621804a9ee188d338e45e2c622a58db709ac190198ba",
+                    "87f5d565c66e40eb02eb96498243ad81afcbf86192db99a4fc8fff215470320e",  # modelspec sai
+                    "e61d10a394902dadca9367467b2245070f651f4553ec4a96192fbba64e820acb",  # diffusers
+                ],
+                "layer_256": [
+                    "3db58cf834d2f81abb1e035131956da4c90451074c681d0db10810e55e60c2c4",
+                    "ddf1a34a06b355ce2bcd0f9beb0713450d9bcdc61a03a6bc37716361735e96f1",  # diffusers
+                    "ad8763121f98e28bc4a3d5a8b494c1e8f385f14abe92fc0ca5e4ab3191f3a881",  # modelspec sai
+                ],
                 "identifiers": [
                     "double_blocks.12.txt_mod.lin.weight",
                     "add_q_proj.weight",
@@ -579,9 +588,20 @@ def auto_detail(mir_db: MIRDatabase):
                     "add_q_proj.weight",
                     "single_transformer_blocks.9.norm.linear.weight",
                 ],
-                "file_256": ["9403429e0052277ac2a87ad800adece5481eecefd9ed334e1f348723621d2a0a"],
-                "layer_b3": ["c65ba812ce3ce056eb1585673f62fb896afe6ec049faaf00a97bc35c9a398c44"],
-                "layer_256": ["79c07e339865fe9e22c80f723d728c778130acd07a330339c68218b92bb7b3b8"],
+                "file_256": [
+                    "9403429e0052277ac2a87ad800adece5481eecefd9ed334e1f348723621d2a0a",  # sai modelspec
+                    "9b633dbe87316385c5b1c262bd4b5a01e3d955170661d63dcec8a01e89c0d820",  # diffusers
+                ],
+                "layer_b3": [
+                    "c65ba812ce3ce056eb1585673f62fb896afe6ec049faaf00a97bc35c9a398c44",
+                    "03049273329fc7db2da10de6d3eb27cb03f190e379c0556cc97b3f0f29001d0c",  # sai modelspec
+                    "483c4be8ef031c56bc8450d1a3cfbe54445ed317bcd801be5abe89f1d3c48790",  # diffusers
+                ],
+                "layer_256": [
+                    "79c07e339865fe9e22c80f723d728c778130acd07a330339c68218b92bb7b3b8",
+                    "ef5c9cd1ebe6e3be5e8b1347eca0a6f0b138986c71220a7f1c2c14f29d01beed",  # sai modelspec
+                    "27bc71eca2d2ff7459165acc12010230911db7709a4f6a5c255befedfa6b1649",  # diffusers
+                ],
             },
         ),
         (
@@ -687,6 +707,21 @@ def auto_detail(mir_db: MIRDatabase):
             },
         ),
         (
+            "Qwen/Qwen2-VL-7B-Instruct",
+            "Qwen2_5_VLModel",
+            {
+                "file_256": [
+                    "1f48ac458d6fbd0aec53a116065a7ee3f1d34bddde544e25c16a05c9d5392b78",  # orsta
+                ],
+                "layer_b3": [
+                    "e4f681bde70a753f30f83495a2aa340d251bf3d818eb5a1cbe58f85fd6ea0d40",  # orsta
+                ],
+                "layer_256": [
+                    "ed36a4a11c4ebebb10d1e010cb93e2e43fcaf975cd42bb6c9958537593d0d44d",  # orsta
+                ],
+            },
+        ),
+        (
             "microsoft/Phi-4-multimodal-instruct",
             "Phi4MultimodalModel",
             {
@@ -697,20 +732,16 @@ def auto_detail(mir_db: MIRDatabase):
                     "bc703090b63eda16f639fa4de7ac54635c23105ab1da2f6ec4d3403151d38ee6",  # mini
                 ],
                 "layer_b3": [
-                    "b391ba867f6074f488f39bef52a475bf4e983328d5d437d196f2882cae79620f",  # mini
+                    "cf4add4ada6082f448788eaf2937f645b5212db88e06ee81475b8be0e99063dc",  # mini
                 ],
                 "layer_256": [
-                    "354276af1e65f68606c5cca62b4fc1ec87e905fc3a858aa30d01fe39d5a1d5d0",  # mini
+                    "7ff992b780b2f8993dd6bb9612207943638b2a42badc976ce80893bc205e801b",  # mini
                 ],
             },
         ),
     ]
-
-    diffusers_tuple = [tag_pipe(*entry) for entry in details]
-    transformers_tuple = [tag_base_model(*entry) for entry in alt_details]
-
-    assimilate(mir_db, diffusers_tuple)
-    assimilate(mir_db, transformers_tuple)
+    assimilate(mir_db, [tag_pipe(*entry) for entry in details])
+    assimilate(mir_db, [tag_base_model(*entry) for entry in alt_details])
 
 
 def auto_supplement(mir_db: MIRDatabase):
@@ -1014,23 +1045,6 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
-    repo = "jack813liu/mlx-chroma"
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="dit",
-            series=make_mir_tag("lodestones/Chroma")[0],
-            comp=make_mir_tag(repo)[0],
-            repo=repo,
-            pkg={
-                0: {
-                    "chroma": "ChromaPipeline",
-                    "generation": {"neg_text": "", "num_steps": "28", "latent_size": [64, 64]},
-                }
-            },
-            file_256=["6ddc9e2bbe3376ab5ee9f10b2d947f127b6bf6f879f06f316a2208bb0da357b8"],
-        )
-    )
     repo = "enhanceaiteam/Mystic"
     mir_db.add(
         mir_entry(
@@ -1070,9 +1084,9 @@ def auto_supplement(mir_db: MIRDatabase):
                         "mlx_audio": "tts.generate.generate_audio",
                     },
                 },
-                file_256=["e61ae2f638f56ee07a37592cd5a6a9e7d642560ddc78a76ee4a7f96d6922f1be"],
-                layer_b3=["ba07192df1860b0db8c4b46442d2c3712973a798a697ca5f688f544fe3bce303"],
-                layer_256=["08255792456ab823304f66cdd6a1b90001d8eb3f646a90aebc414afe5259c94c"],
+                file_256=["e61ae2f638f56ee07a37592cd5a6a9e7d642560ddc78a76ee4a7f96d6922f1be", "973ee1be4032319fd9685ec54eee1b93e79c7bc98c786e67f17c04669714f11d"],
+                layer_b3=["18307b00460a64cc4893f9061592ce8d7e15b70fc54065cc8ae0f0155381ec46", "d599b1bb36dee3cee4674b7922fcd69e5ec05b74413f611d21cfdfdf8f9b6119"],
+                layer_256=["35ba9aa1feb931010559a178fcac243673d2efdd1396a4b69d406c9853a88300", "5a22c4707ed6c928043f23b59f2d102a579db3a9af41cf6e60d7c3958f182841"],
             )
         ),
     )
@@ -1094,7 +1108,13 @@ def auto_supplement(mir_db: MIRDatabase):
                 "dcbc4f2470b177eed12c7d7515c0e7342515a849ebd31a50c8d8d43913d7bd32",
                 "26a7aa64c0798a3549e1d767932da0a7fb82b49f8edcbdcde804a20d9ed1478f",  # mlx q8
             ],
-            layer_b3=["9906c29933d0c33a6ee8d9712f33fa8bd4b35b46a1c7b565ae48832b757dd980"],
+            layer_b3=[
+                "9906c29933d0c33a6ee8d9712f33fa8bd4b35b46a1c7b565ae48832b757dd980",
+                "89c453c4bf99220405687eed984dace4492bdae1b6fb08f3d9629145b1a11672",  # mlx q8
+            ],
+            sha_256=[
+                "4eacf27e5659f5dc42f34c407cbe9e1e202290692df754eb68fe913f59fa2941",
+            ],
         )
     )
     repo = "freepik/flux.1-lite-8b"
@@ -1248,7 +1268,7 @@ def auto_text(mir_db: MIRDatabase):
             domain="info",
             arch=mir_prefix,
             series=base_series,
-            comp=comp,
+            comp=series,
             repo=repo,
             pkg={
                 0: {
@@ -1280,7 +1300,7 @@ def auto_text(mir_db: MIRDatabase):
             pkg={0: {"transformers": "T5ForConditionalGeneration"}},
             identifiers=[[4096], "encoder.embed_tokens.weight", "text_encoders.t5xxl.transformer.shared.weight", "t5xxl"],
             file_256=[
-                "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # shuttle/dev diffusers
+                "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # shuttle/flux diffusers
                 "565cb2487351282e8e4dbeb88e63f4ad28217ce0439f5a8e6525a924807d2d9b",  # bf16 modelspec sai
                 "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",  # fp16 modelspec sai
                 "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",  # fp16 diffusers
@@ -1291,10 +1311,10 @@ def auto_text(mir_db: MIRDatabase):
                 "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",  # q5 k m gguf
                 "d8720addef2596fef86b1b22e4b62875c9118779ba8723759a75dfcbc649ffd5",  # mystic mlx
                 "7d0eac95abe8daae454bcd3d166b8bfc6a35fe68278f97479d62dbb6850f38c0",  # mlx flex2
-                "ceabd6f71c7112cfaa4dfca8711dda97b79fb9b25983f1c95532de226045f1f8",  # mlx shuttle jaguar q8
+                "ceabd6f71c7112cfaa4dfca8711dda97b79fb9b25983f1c95532de226045f1f8",  # mlx jaguar q8
                 "49e139f50824fef40908ef4307c851e7adaa8b91bed44054c4829600dbedfdda",  # mlx shuttle 3 q4
                 "211ade1d474f5dc83190aec8be5c4baf52643777790d64de0cbd84f63613e5e9",  # mlx flex1 q8
-                "7894547154ba3fd6e364e66e2951ee82b4c3fc1ae0f95df6a4f9d1c5a4e98f17",  # DeepFloyd/t5-v1_1-xxl
+                "7894547154ba3fd6e364e66e2951ee82b4c3fc1ae0f95df6a4f9d1c5a4e98f17",  # DeepFloyd/t5-v1_1-xxl sft
                 "eb529f693f4b17773a24e787fcba29486d5e1700dadcc20bb91e4c8b00212d08",  # pixart a
                 "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # flux dev
             ],
@@ -1309,12 +1329,13 @@ def auto_text(mir_db: MIRDatabase):
                 "3f4e51dec6d542759cdea49b3bec14c090a4908f953fa3e182e2ea43b5b05402",  #  q5 k m gguf
                 "77619d5278d9f547ddac17d4d99df56cb6a3a9e660ae31b2f896a4297907e62e",  # mlx t5 jaguar
                 "c87c9d3cc7becc46ee34821299cf8551a6df5541582a45469a031bccdc4bd340",  # mlx shuttle t5 q8
+                "7e6c32c01c89fc5d1610c410135aa9708e77a7444510e5e479fa677ff2b53643"  # mlx jaguar q8
                 "a49c2bc301733967ddff113790e301773dc5dd71368b657af4141458de593ced",  # mlx flex2 preview
                 "c2ea94030ea362e03d73d448fa5353ace0a449dc38c51a4a49fb148444ebb8ef",  # mlx shuttle3 diff q4
                 "4a90463350f08ef41479da1d561ab41b8f8b792f1603a092226a838156aebfb0",  # mlx flex1 alpha q8
-                "f86cd0324eebbffb81b15ad47dc8b63fedfa51dc222e44e1a958a7becce2bcb0",  # df
+                "f86cd0324eebbffb81b15ad47dc8b63fedfa51dc222e44e1a958a7becce2bcb0",  # df safetensors
                 "48c54c61c5f14e42761c6177539b2da3a22222516dab053952ca8d8e92f93d65",  # pixart a
-                "311332d9738773669128814d944b1e860a8e3176b37abf43370bc06b43b454d0",  # flux dev
+                "311332d9738773669128814d944b1e860a8e3176b37abf43370bc06b43b454d0",  # flux
             ],
             layer_256=[
                 "bb20f7805209379aea4d6548f17e551cf27d0f8426ca169e4df8234f718ed5ef",
@@ -1329,7 +1350,7 @@ def auto_text(mir_db: MIRDatabase):
                 "4dbdeadc957c898c327197a3d8770188535672e9208beb29bbf48dfdf51c8955",
                 "669172c2b5e8b97774d9dd0227ede40c4d25cae3adae97d9f281d03531e7e137",
                 "39fff130b9ee240102c28a78ee1c4a643e9f800b734ff133f3ab2ad1357bd2f6",
-                "6e047ed8cb7007034ff15840dd53c92096f0e7ed5befa07808de8afa35d35874",
+                "6e047ed8cb7007034ff15840dd53c92096f0e7ed5befa07808de8afa35d35874",  # safetensors
                 "adbd0baa059074501b7686db2b0c01715f3a317275c2657c5dfbfd6ee92389b7",
                 "eb63790fb32b5660de34fa42c2e608df58f7aa3680b4984f0ee9008fe613729c",
             ],
@@ -1349,7 +1370,7 @@ def auto_text(mir_db: MIRDatabase):
             file_256=[
                 "cb0cba1ead482a850532ebe5ff6b5c8d4456aee32a5228acf0a31e7d9472415e",  # long vit best
                 "39e79c916feca4ddf546d9fe923e664714b59ea61074f7228037d17c302f3d17",  # vit l detail improved hit gmp
-                "893d67a23f4693ed42cdab4cbad7fe3e727cf59609c40da28a46b5470f9ed082",  # shuttle 3 aes
+                "893d67a23f4693ed42cdab4cbad7fe3e727cf59609c40da28a46b5470f9ed082",  # flux/shuttle 3 aes
                 "778d02eb9e707c3fbaae0b67b79ea0d1399b52e624fb634f2f19375ae7c047c3",  # playground 2.5
                 "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",  # playground 2.5 fp16
                 "71e183d11db0c6b6282a4d9e0abb74125edc8692393e89ed8ee5571005f35cb1",  # sd3.5 fp16
@@ -1360,7 +1381,7 @@ def auto_text(mir_db: MIRDatabase):
                 "5487ea0eee9c9a9bff8abd097908d4deff3ae1fa87b3b67397f8b9538139d447",  # ssd-1b fp16
                 "92b998a9a64549bfa05c019bde114be6681549a0c79caee903fe30c9444d08b9",  # vega
                 "1e090d6a828fd92401be5f83e615fd7b4fb1f4a22e9af9040a38f602e839317c",  # vega fp16
-                "11807cb2522cfe99240e5ee2bbeb1ccb42cecca2215102ee872567c7773b28b9",  # flux dev
+                "11807cb2522cfe99240e5ee2bbeb1ccb42cecca2215102ee872567c7773b28b9",  # flux
             ],
             layer_b3=[
                 "f58a22a381f79985b6d38782f6110a52c2f319b40fdedd3b88b24945dfcbdf64",
@@ -1374,7 +1395,8 @@ def auto_text(mir_db: MIRDatabase):
                 "1540fd8844898960e18ce8fd153e5f21a8c446bd8c4d6f536a7cf11418f02bf3",
                 "c4c9caccdbec12b965d93688c521893f75e0bf9a5e0aad70a6a962b669e7b9d5",  # vega
                 "e43fae8d5fd1e562607da172369cc0c5ec99b834e42502e682287ff7d12baacc",  # vega fp16
-                "c6f79f7416a882891957b815fbdfd6edfaa253c43970b1a25ef14e217599c7bc",
+                "c6f79f7416a882891957b815fbdfd6edfaa253c43970b1a25ef14e217599c7bc",  # flux
+                "daf5e09f67ad09a909f58a01298fec0132324634cb8fca2a604c3a240c2c453f",  # jaguar mlx q8
             ],
             layer_256=[
                 "48daa3d8f939972e69f044533a4312a941971c18c78255f5e555fa26faf664c1",
@@ -1388,6 +1410,7 @@ def auto_text(mir_db: MIRDatabase):
                 "5d6d9d0cc7943eb1b8c16862bfd5bee5c3766d0df027ec837e90fac715ac2bd3",
                 "68fb122f7d6c3cfbef320341b2af8f5916678e36a69ed36fa8cfcb19e7d5c43d",
                 "11807cb2522cfe99240e5ee2bbeb1ccb42cecca2215102ee872567c7773b28b9",
+                "50c46cdddbe9f0162278c69b9a1f818519330e3a91b994272e19b5c789670471",  # jaguar mlx q8
             ],
         )
     )
@@ -1547,9 +1570,20 @@ def auto_audio(mir_db: MIRDatabase):
                     "generation": {"audio_format": "wav", "join_audio": True, "verbose": False},
                 },
             },
-            file_256=["5a5cb3d87478f2e74dfca208ee52209ccfce024095e137097fd276026506e45f"],
-            layer_b3=["3e9b5017cfe67a7804ac717b18b6add42ffc0bd3353490df2bcc520eaaef79b6"],
-            layer_256=["dbedf0e2115aa309b92689f86534be4a77b91d7900365e1717879fbb19b849f6"],
+            file_256=[
+                "5a5cb3d87478f2e74dfca208ee52209ccfce024095e137097fd276026506e45f",
+                "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+            ],
+            layer_b3=[
+                "3e9b5017cfe67a7804ac717b18b6add42ffc0bd3353490df2bcc520eaaef79b6",
+                "379660a87a64524bab69a267e3d9580f04b5eec4f7e3fbd48c6597d164d9b17d",  # safetensors
+                "997f154f5a78879ef3ba1a1556977c40b28b9c21076b8f583f752c57ecc36e93"  # pytorch
+                "2dc3dba29452b85ea85266084a6248f9e0efe642d5f75b43e64f25b9f2837f92",
+            ],
+            layer_256=[
+                "dbedf0e2115aa309b92689f86534be4a77b91d7900365e1717879fbb19b849f6",
+                "2c68574571b3f9229e015a909788116ea2251142e29c1bd5c687863192124e8b",
+            ],
         )
     )
     repo = "freddyaboulton/silero-vad"
@@ -2033,7 +2067,6 @@ def auto_lora(mir_db: MIRDatabase):
             file_256=["77f7523a5e9c3da6cfc730c6b07461129fa52997ea06168e9ed5312228aa0bff"],
         )
     )
-    # qwen3 orsta e4f681bde70a753f30f83495a2aa340d251bf3d818eb5a1cbe58f85fd6ea0d40
     mir_db.add(
         mir_entry(
             domain="info",
@@ -2102,7 +2135,14 @@ def auto_vae(mir_db: MIRDatabase):
             pkg={
                 0: {"diffusers": "AutoencoderKL"},
             },
-            layer_b3=["0ebf9b7010accc44e219e355dd24bf1e3128004093c0c1dfc06f88c0a39fdbdd"],
+            file_256=["6fdfa2add4f04d94f36157cbb0197f97966b612e3f8eff4095315aefea74b904"],  # q8,
+            layer_b3=[
+                "0ebf9b7010accc44e219e355dd24bf1e3128004093c0c1dfc06f88c0a39fdbdd",
+                "d0e7ef3c4af06fa08b4c0485a073e2df55f7b1e9e3ba8f7b261688bc562568f0",  # q8
+            ],
+            layer_256=[
+                "9b28f36873ea283905094a64e1ccb7cfc2b0f0aa166201d0ca63807ac37caa7b",  # q8
+            ],
         )
     )
     mir_db.add(
@@ -2121,11 +2161,12 @@ def auto_vae(mir_db: MIRDatabase):
             ],
             layer_b3=[
                 "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
-                "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # dev diffusers
+                "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
             ],
             layer_256=[
                 "7950e4f3897c75affaa5f9f3c51c88b4d9a27bfd9b05ad41c3f71d8c1c620b89",
-                "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # def diffusers
+                "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # diffusers
+                "8f084dc91fd5b481875bc9c86a4ef05e5f176896b7d31c6a5c2ce45c2e174004",  # dev diffusers
             ],
         )
     )

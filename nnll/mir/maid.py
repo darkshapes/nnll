@@ -10,8 +10,6 @@ from typing import Any, Callable, List, Optional
 
 from nnll.mir.json_cache import MIR_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
 
-nfo = sys.stderr.write
-
 
 class MIRDatabase:
     """Machine Intelligence Resource Database"""
@@ -36,7 +34,8 @@ class MIRDatabase:
     @mir_file.decorator
     def write_to_disk(self, data: Optional[dict] = None) -> None:  # pylint:disable=unused-argument
         """Save data to JSON file\n"""
-        # from nnll.integrity import ensure_path
+        from nnll.monitor.console import nfo
+
         try:
             os.remove(MIR_PATH_NAMED)
         except (FileNotFoundError, OSError) as error_log:
@@ -80,6 +79,7 @@ class MIRDatabase:
         :param target: Desired entry to match
         :return: The closest matching dictionary elements
         """
+        from nnll.monitor.file import dbug as nfo
         from decimal import Decimal
         from math import isclose
 
@@ -91,6 +91,7 @@ class MIRDatabase:
             option, series, compatibility, _ = match
             option = option.strip("_").strip("-").strip(".").lower()
             target = target.strip("_").strip("-").strip(".").lower()
+            nfo(option)
             if target in option or option in target:
                 max_len = len(os.path.commonprefix([option, target]))
                 gap = Decimal(str(abs(len(option) - len(target)) + (len(option) - max_len))) * Decimal("0.1")
@@ -155,19 +156,28 @@ class MIRDatabase:
 
 
 def main(mir_db: Callable = MIRDatabase()) -> None:
+    nfo = print
     """Build the database"""
+
+    from nnll.integrity import ensure_path
     from nnll.mir.automata import (
+        auto_audio,
         auto_detail,
-        auto_hub,
         auto_dtype,
+        auto_hub,
         auto_lora,
         auto_schedulers,
         auto_supplement,
-        auto_audio,
         auto_taesd,
-        auto_vae,
         auto_text,
+        auto_vae,
     )
+
+    try:
+        os.remove(MIR_PATH_NAMED)
+    except (FileNotFoundError, OSError) as error_log:
+        nfo(f"MIR file not found before write, regenerating... {error_log}")
+    ensure_path(folder_path_named=os.path.dirname(MIR_PATH_NAMED), file_name=os.path.basename(MIR_PATH_NAMED))
 
     auto_hub(mir_db)
     auto_dtype(mir_db)

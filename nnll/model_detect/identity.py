@@ -44,13 +44,19 @@ class ModelIdentity:
         from nnll.monitor.file import dbug as nfo
 
         async def scan_folder_hashes(folder_path_named: str) -> list[list[str]]:
-            hashes = await hash_layers_or_files(os.path.join(root, folder_path_named))
+            nfo(f"{os.path.join(root, folder_path_named)}")
+            hashes: dict[tuple[str, str]] = await hash_layers_or_files(os.path.join(root, folder_path_named), layer=True, b3=True, unsafe=False)
+            # hashes should be a dictionary of {file_name}, {hex_value}
             if hashes:
-                nfo(hashes)
                 for file_name, hash_data in hashes.items():
                     mir_tag = self.find_path(field="layer_b3", target=hash_data)
+                    file_path_named = os.path.join(root, folder_path_named, file_name)
                     if mir_tag:
                         mir_tags.append(mir_tag)
+                    elif os.path.islink(file_path_named) and os.readlink(file_path_named):
+                        mir_tag = self.find_path(field="file_256", target=os.path.basename(file_path_named))
+                        if mir_tag:
+                            mir_tags.append(mir_tag)
             return mir_tags
 
         mir_tags = []
@@ -69,15 +75,16 @@ class ModelIdentity:
 
         from nnll.mir.tag import class_to_mir_tag
 
-        if mir_tag := self.find_path(field="repo", target=repo_id):
-            return [mir_tag]
         if cue_type == "HUB":
             if mir_tags := await self.label_model_layers(repo_id):
                 return mir_tags
-        if mir_tag := class_to_mir_tag(self.mir_db, base_model.lower()):
+        if mir_tag := self.find_path(field="repo", target=repo_id):
             return [mir_tag]
-        if mir_tag := await self.label_model_class(base_model):
-            return [mir_tag]
+        if base_model:
+            if mir_tag := class_to_mir_tag(self.mir_db, base_model.lower()):
+                return [mir_tag]
+            if mir_tag := await self.label_model_class(base_model):
+                return [mir_tag]
         if mir_tag := await self.label_model_class(repo_id):
             return [mir_tag]
 
