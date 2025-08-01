@@ -42,7 +42,7 @@ class ReadModelTags:
         )
         meta_combined = (
             self.meta_load_pickletensor,
-            self.metadata_from_pickletensor,
+            self.meta_load_pickletensor,
         )
         file_extension = file_path_named.split(".")[-1]
 
@@ -101,7 +101,7 @@ class ReadModelTags:
                 )
         elif file_extension in ExtensionType.PICK:
             attempt_metadata(
-                lambda: self.metadata_from_pickletensor(file_path_named),
+                lambda: self.meta_load_pickletensor(file_path_named),
                 lambda: self.meta_load_pickletensor(file_path_named),
             )
         elif file_extension in ExtensionType.ONNX:
@@ -242,20 +242,20 @@ class ReadModelTags:
 
             return llama_data
 
-    def metadata_from_pickletensor(self, file_path_named: str) -> dict:
-        """Collect metadata from a pickletensor file header\n
-        :param file_path: `str` the full path to the file being opened
-        :return: `dict` the key value pair structure found in the file"""
-        import pickle
-        from mmap import mmap
+    # def metadata_from_pickletensor(self, file_path_named: str) -> dict:
+    #     """Collect metadata from a pickletensor file header\n
+    #     :param file_path: `str` the full path to the file being opened
+    #     :return: `dict` the key value pair structure found in the file"""
+    #     import pickle
+    #     from mmap import mmap
 
-        # separate_desc not implemented here yet
-        with open(file_path_named, "r+b") as file_contents_to:
-            mem_map_data = mmap(file_contents_to.fileno(), 0)
-            view = memoryview(mem_map_data)
-            return pickle.loads(view)
+    #     # separate_desc not implemented here yet
+    #     with open(file_path_named, "r+b") as file_contents_to:
+    #         mem_map_data = mmap(file_contents_to.fileno(), 0)
+    #         view = memoryview(mem_map_data)
+    #         return pickle.loads(view)
 
-    def meta_load_pickletensor(self, file_path_named: str) -> dict:
+    def meta_load_pickletensor(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """Load metadata from a pickled tensor file.\n
         **USE ONLY FOR TRUSTED FILES**
         :param file_path_named: Path to the pickled tensor file containing metadata.
@@ -266,6 +266,11 @@ class ReadModelTags:
         import torch
 
         metadata = torch.load(file_path_named, map_location="meta")
+        if separate_desc:  # in this case we leave the rest of the dict behind
+            meta_copy = metadata.copy()
+            meta_key = next(iter(metadata))
+            metadata = {meta_key: {"dtype": tensor.dtype, "shape": tensor.size, "data_offsets": tensor.storage_offset} for meta_key, tensor in meta_copy[meta_key].items()}
+
         return metadata
 
     def metadata_from_safetensors(self, file_path_named: str, separate_desc: bool = True) -> dict:
@@ -321,7 +326,7 @@ class ReadModelTags:
         :param separate_desc: Exclude or include metadata description, default True
         :return: A mapping of metadata about the model
         """
-        from onnxruntime import InferenceSession, get_available_providers
+        from onnxruntime import InferenceSession  # , get_available_providers
         from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf
 
         try:

@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
-import os
 from typing import List, Dict, Optional
 from nnll.mir.json_cache import JSONCache, TEMPLATE_PATH_NAMED
 from nnll.configure.constants import PARAMETERS_SUFFIX, BREAKING_SUFFIX
