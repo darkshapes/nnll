@@ -105,5 +105,5 @@ def class_to_mir_tag(mir_db: Dict[str, str], id_tag: str) -> Optional[str]:
 
 
 def mir_package(mir_db: Dict[str, str]):
-    mir_db.find_path()
+    mir_db.find_tag()
     pass

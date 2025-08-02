@@ -133,7 +133,7 @@ class ConstructPipeline:
             sub_cls_locs = self._get_sub_cls_locs(pipe_classes[-1])
             # for folder, package in sub_cls_locs:
             # self._get_module(package[:1], package[-1:])
-            # self.construct.find_path()
+            # self.construct.find_tag()
 
         repo_paths = arch_data.get("repo")
         init_kwargs = arch_data.get("init_kwargs", {})
