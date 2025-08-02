@@ -46,24 +46,24 @@ class ModelIdentity:
 
         @lru_cache
         async def scan_folder_hashes(folder_path_named: str) -> list[list[str]]:
-            nfo(f"{os.path.join(root, folder_path_named)}")
-            hashes: dict[tuple[str, str]] = await hash_layers_or_files(path_named=os.path.join(root, folder_path_named), layer=True, b3=True, unsafe=False)
-            if hashes:
-                for file_name, hex_value in hashes.items():
-                    file_path_named = os.path.join(root, folder_path_named, file_name)
-                    mir_tag = self.find_tag(field="layer_b3", target=hex_value)
-                    if mir_tag:
-                        mir_tags.insert(0, mir_tag)
-                    elif os.path.islink(file_path_named) and os.readlink(file_path_named):  # check huggingface symlinks
-                        if mir_tag := self.find_tag(field="file_256", target=os.path.basename(file_path_named)):
+            for root, folders, files in os.walk(folder_path_named):
+                for folder_path_named in folders:
+                    hashes: dict[tuple[str, str]] = await hash_layers_or_files(path_named=folder_path_named, layer=True, b3=True, unsafe=False)
+                    for file_name, hex_value in hashes.items():
+                        file_path_named = os.path.join(folder_path_named, file_name)
+                        mir_tag = self.find_tag(field="layer_b3", target=hex_value)
+                        if mir_tag:
                             mir_tags.insert(0, mir_tag)
+                        elif os.path.islink(file_path_named) and os.readlink(file_path_named):  # check huggingface symlinks
+                            if mir_tag := self.find_tag(field="file_256", target=os.path.basename(file_path_named)):
+                                mir_tags.insert(0, mir_tag)
             return mir_tags
 
         mir_tags = []
         model_path_named = await self.get_cache_path(file_name=repo_id, repo_obj=repo_obj)
         if os.path.isdir(model_path_named):
-            for root, folders, files in os.walk(model_path_named):
-                mir_tags = await scan_folder_hashes(root)
+            nfo(f"{os.path.join(model_path_named)}")
+            mir_tags = await scan_folder_hashes(model_path_named)
         else:
             hash_data = await hash_layers_or_files(path_named=model_path_named, layer=True, b3=True, unsafe=False)
             if mir_tag := self.find_tag(field="layer_b3", target=next(iter(hash_data))):
