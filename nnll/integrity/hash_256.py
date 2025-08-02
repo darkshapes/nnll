@@ -51,9 +51,9 @@ async def hash_for_mir(
         return os.path.join(folder_path_named, file_name), hex_value
 
 
-async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = True, desc_process: bool = False, unsafe: bool = False) -> dict[str, str]:
+async def hash_layers_or_files(path_named: str, layer: bool = True, b3: bool = True, desc_process: bool = False, unsafe: bool = False) -> dict[str, str]:
     """Hashes layers or files in a folder using BLAKE3 or SHA256, with optional metadata inclusion.\n
-    :param folder_path: Path to the folder containing model files.
+    :param path_named: Path to a filea or folder containing model files.
     :param layer: If True, processes plaintext state dict layer names; if False, processes binary files.
     :param b3: If True, uses BLAKE3 algorithm; if False, uses SHA256.
     :param desc_process: Procedures metadata included in output file.
@@ -74,7 +74,12 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
         from nnll.monitor.file import dbug as nfo
     else:
         from nnll.monitor.console import nfo
-
+    if os.path.isdir(path_named):
+        folder_contents = os.listdir(os.path.normpath(Path(path_named)))
+        folder_path = path_named
+    else:
+        folder_path = os.path.dirname(path_named)
+        folder_contents = [path_named]
     hash_calculator = compute_b3_for if b3 else compute_hash_for
     hash_values = {}
     nfo(f"{folder_path} : TYPE:{'LAYER   W METADATA: False' if layer else 'FILE'}   ALGORITHM:{'BLAKE3' if hash_calculator == compute_b3_for else 'SHA256'}")
@@ -86,7 +91,7 @@ async def hash_layers_or_files(folder_path: str, layer: bool = True, b3: bool = 
         }
         data.setdefault("with_metadata", False) if layer else ()
         hash_values.setdefault(folder_path, data)
-    folder_contents = os.listdir(os.path.normpath(Path(folder_path)))
+
     model_tool = ReadModelTags()
     model_reader = model_tool.attempt_all_open if unsafe else model_tool.read_metadata_from
     async for file_name in tqdm(folder_contents, total=len(folder_contents), position=-2, leave=True, disable=quiet):
@@ -177,7 +182,7 @@ async def main():
 
     args = parser.parse_args()
 
-    hash_values = await hash_layers_or_files(folder_path=args.path, layer=not args.file, b3=not args.sha, desc_process=args.describe, unsafe=args.unsafe)
+    hash_values = await hash_layers_or_files(path_named=args.path, layer=not args.file, b3=not args.sha, desc_process=args.describe, unsafe=args.unsafe)
     await write_to_file(program=str(parser.prog), folder_path_named=args.path, hash_values=hash_values, write_path=argv[1].split(os.sep)[-2])
 
 

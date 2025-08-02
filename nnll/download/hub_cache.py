@@ -194,7 +194,7 @@ def main() -> None:
         for kwarg_set in hash_kwargs:
             hashes = {}
             for root, folders, files in os.walk(contents[0]):
-                hashed_layers = asyncio.run(hash_layers_or_files(folder_path=root, **kwarg_set))
+                hashed_layers = asyncio.run(hash_layers_or_files(path_named=root, **kwarg_set))
                 for file_path in hashed_layers:
                     hashes.setdefault(file_path, hashed_layers[file_path])
             file_name_prefix = "b3_" if kwarg_set["b3"] else "sha256_"

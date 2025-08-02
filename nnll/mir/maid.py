@@ -116,7 +116,7 @@ class MIRDatabase:
             self.matches.extend(match_results)
         return None
 
-    def find_path(self, field: str, target: str, sub_field: Optional[str] = None) -> list[str]:
+    def find_tag(self, field: str, target: str, sub_field: Optional[str] = None) -> list[str]:
         """Retrieve MIR path based on nested value search\n
         :param field: Known field to look within
         :param target: Search pattern for field

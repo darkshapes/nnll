@@ -711,13 +711,32 @@ def auto_detail(mir_db: MIRDatabase):
             "Qwen2_5_VLModel",
             {
                 "file_256": [
-                    "1f48ac458d6fbd0aec53a116065a7ee3f1d34bddde544e25c16a05c9d5392b78",  # orsta
+                    "1f48ac458d6fbd0aec53a116065a7ee3f1d34bddde544e25c16a05c9d5392b78",  # orsta 32
+                    "0e85c7111ce849293e97aa09ce1172352ecece023a3ecea7ac8311e326b47f3a",  # orsta 7
                 ],
                 "layer_b3": [
-                    "e4f681bde70a753f30f83495a2aa340d251bf3d818eb5a1cbe58f85fd6ea0d40",  # orsta
+                    "e4f681bde70a753f30f83495a2aa340d251bf3d818eb5a1cbe58f85fd6ea0d40",  # orsta 32
+                    "47b062ce8ddb14845fb1a71d2fd88fd52a82e26561ba3eb05be057915a867775",  # orsta 7
+                    "b52807536902cabbf84f99e4fa2f8713fb4ef77e739f06367ee0d486e3222faa",
                 ],
                 "layer_256": [
-                    "ed36a4a11c4ebebb10d1e010cb93e2e43fcaf975cd42bb6c9958537593d0d44d",  # orsta
+                    "ed36a4a11c4ebebb10d1e010cb93e2e43fcaf975cd42bb6c9958537593d0d44d",  # orsta 32
+                    "f7f6f64e7b6d7826400a2fc0eef942a47c47bd5914e051ad0c8cd9ff5ff7982b",  # orsta 7
+                ],
+            },
+        ),
+        (
+            "Qwen/Qwen3-8B",
+            "Qwen3Model",
+            {
+                "file_256": [
+                    "c56947057481fb5e7cdf766e442da81717b34addc88bbe8f3728fd25bd03cbae",  # qwen3 coder 53 a35
+                ],
+                "layer_b3": [
+                    "d2d1e0875202f5c9c84c781a2105620250733bd01832f67b2c17bc981d1eb508"  # qwen3 coder 53 a35
+                ],
+                "layer_256": [
+                    "408c01da57c4968b7b0e36d98a74e321153e7aeb058fea63ffd140e323526476",  # qwen3 coder 53 a35
                 ],
             },
         ),
