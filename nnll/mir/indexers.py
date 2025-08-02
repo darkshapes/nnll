@@ -12,11 +12,12 @@ from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, JSONCache  # pylint:disable
 from nnll.mir.mappers import cut_docs
 from nnll.mir.tag import make_mir_tag
 from nnll.tensor_pipe.deconstructors import root_class
+from nnll.monitor.file import dbug
 
 if "pytest" in sys.modules:
     import diffusers  # noqa # pyright:ignore[reportMissingImports] # pylint:disable=unused-import
 
-nfo = sys.stderr.write
+nfo = print
 
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
 
@@ -103,32 +104,33 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
     if not repo_path and class_name:
         raise TypeError(f"'repo_path' {repo_path} or 'pipe_class' {class_name} unset")
     mir_prefix = "info"
-    model_class_obj = getattr(diffusers, class_name)
-    sub_segments = root_class(model_class_obj, "diffusers")
-    decoder = "decoder" in sub_segments
-    if repo_path in ["openai/shap-e", "kandinsky-community/kandinsky-3"]:
-        mir_prefix = "info.unet"
-    elif class_name == "MotionAdapter":
-        mir_prefix = "info.lora"
-    else:
-        mir_prefix = flag_config(**sub_segments)
-        if mir_prefix is None and class_name not in ["AutoPipelineForImage2Image", "DiffusionPipeline"]:
-            nfo(f"Failed to detect type for {class_name} {list(sub_segments)}\n")
+    if hasattr(diffusers, class_name):
+        model_class_obj = getattr(diffusers, class_name)
+        sub_segments = root_class(model_class_obj, "diffusers")
+        decoder = "decoder" in sub_segments
+        if repo_path in ["openai/shap-e", "kandinsky-community/kandinsky-3"]:
+            mir_prefix = "info.unet"
+        elif class_name == "MotionAdapter":
+            mir_prefix = "info.lora"
         else:
-            mir_prefix = "info." + mir_prefix
-    mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
-    mir_series = mir_prefix + "." + mir_series
-    prefixed_data = {
-        "repo": repo_path,
-        "pkg": {0: {"diffusers": class_name}},
-    }
-    if class_name == "FluxPipeline":
-        class_name = {1: {"mflux.flux.flux": "Flux1"}}
-        prefixed_data["pkg"].update(class_name)
-    elif class_name == "ChromaPipeline":
-        class_name = {1: {"chroma": "ChromaPipeline"}}
-        prefixed_data["pkg"].update(class_name)
-    return mir_series, {mir_comp: prefixed_data}
+            mir_prefix = flag_config(**sub_segments)
+            if mir_prefix is None and class_name not in ["AutoPipelineForImage2Image", "DiffusionPipeline"]:
+                nfo(f"Failed to detect type for {class_name} {list(sub_segments)}\n")
+            else:
+                mir_prefix = "info." + mir_prefix
+        mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
+        mir_series = mir_prefix + "." + mir_series
+        prefixed_data = {
+            "repo": repo_path,
+            "pkg": {0: {"diffusers": class_name}},
+        }
+        if class_name == "FluxPipeline":
+            class_name = {1: {"mflux.flux.flux": "Flux1"}}
+            prefixed_data["pkg"].update(class_name)
+        elif class_name == "ChromaPipeline":
+            class_name = {1: {"chroma": "ChromaPipeline"}}
+            prefixed_data["pkg"].update(class_name)
+        return mir_series, {mir_comp: prefixed_data}
 
 
 def transformers_index():
@@ -200,11 +202,11 @@ def transformers_index():
                 doc_string = pattern.__doc__
                 matches = re.findall(r"\[([^\]]+)\]", doc_string)
                 if matches:
-                    print(matches)
+                    dbug(matches)
                     try:
                         repo_path = next(iter(snip.strip('"').strip() for snip in matches if "/" in snip))
                     except StopIteration as error_log:
-                        print(f"ERROR >>{matches} : LOG >> {error_log}")
+                        nfo(f"ERROR >>{matches} : LOG >> {error_log}")
                         pass
                     break
             sub_segments: Dict[str, List[str]] = root_class(model_data["config"][-1], "transformers")

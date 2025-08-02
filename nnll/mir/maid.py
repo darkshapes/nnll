@@ -6,9 +6,10 @@
 # pylint: disable=possibly-used-before-assignment, line-too-long
 import os
 import sys
-from typing import Any, Callable, List, Optional
+from typing import Any, AsyncGenerator, Callable, List, Optional
 
 from nnll.mir.json_cache import MIR_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
+from nnll.monitor.file import dbug as nfo
 
 
 class MIRDatabase:
@@ -79,7 +80,6 @@ class MIRDatabase:
         :param target: Desired entry to match
         :return: The closest matching dictionary elements
         """
-        from nnll.monitor.file import dbug as nfo
         from decimal import Decimal
         from math import isclose
 
@@ -151,13 +151,14 @@ class MIRDatabase:
         if best_match:
             return best_match
         else:
-            # nfo(f"Query '{target}' not found when {len(self.database)}'{field}' options searched\n")
+            nfo(f"Query '{target}' not found when {len(self.database)}'{field}' options searched\n")
             return None
 
 
 def main(mir_db: Callable = MIRDatabase()) -> None:
     nfo = print
     """Build the database"""
+    import asyncio
 
     from nnll.integrity import ensure_path
     from nnll.mir.automata import (
@@ -172,7 +173,10 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
         auto_text,
         auto_vae,
     )
+    from nnll.mir.tasks import AutoPkg
+    from nnll.monitor.console import nfo
 
+    auto_pkg = AutoPkg()
     try:
         os.remove(MIR_PATH_NAMED)
     except (FileNotFoundError, OSError) as error_log:
@@ -189,7 +193,7 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
     auto_detail(mir_db)
     auto_taesd(mir_db)
     auto_vae(mir_db)
-    mir_db.write_to_disk()
+    asyncio.run(auto_pkg.detect_tasks(mir_db))  # writes to disk
 
 
 if __name__ == "__main__":

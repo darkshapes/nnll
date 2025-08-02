@@ -1178,26 +1178,6 @@
             }
         }
     },
-    "info.dit.skyreels-v2-t2v-720p": {
-        "diffusers": {
-            "repo": "Skywork/SkyReels-V2-T2V-14B-720P-Diffusers",
-            "pkg": {
-                "0": {
-                    "diffusers": "SkyReelsV2Pipeline"
-                }
-            }
-        }
-    },
-    "info.dit.skyreels-v2-i2v-720p": {
-        "diffusers": {
-            "repo": "Skywork/SkyReels-V2-I2V-14B-720P-Diffusers",
-            "pkg": {
-                "0": {
-                    "diffusers": "SkyReelsV2ImageToVideoPipeline"
-                }
-            }
-        }
-    },
     "info.dit.stable-audio-open-1": {
         "*": {
             "repo": "stabilityai/stable-audio-open-1.0",
@@ -1464,22 +1444,12 @@
             }
         }
     },
-    "info.gan.levit-128s": {
+    "info.art.helium": {
         "*": {
-            "repo": "facebook/levit-128S",
+            "repo": "kyutai/helium-2b",
             "pkg": {
                 "0": {
-                    "transformers": "LevitModel"
-                }
-            }
-        }
-    },
-    "info.stst.bart": {
-        "*": {
-            "repo": "facebook/bart-large",
-            "pkg": {
-                "0": {
-                    "transformers": "BartModel"
+                    "transformers": "HeliumModel"
                 }
             }
         }
@@ -1494,22 +1464,1184 @@
             }
         }
     },
-    "info.vit.vip-llava-hf": {
+    "info.vit.mobilevitv2-1": {
         "*": {
-            "repo": "ybelkada/vip-llava-7b-hf",
+            "repo": "apple/mobilevitv2-1.0",
             "pkg": {
                 "0": {
-                    "transformers": "VipLlavaModel"
+                    "transformers": "MobileViTV2Model"
                 }
             }
         }
     },
-    "info.art.phi-1": {
+    "info.vit.siglip-patch16-224": {
         "*": {
-            "repo": "microsoft/phi-1",
+            "repo": "google/siglip-base-patch16-224",
             "pkg": {
                 "0": {
-                    "transformers": "PhiModel"
+                    "transformers": "SiglipModel"
+                }
+            }
+        }
+    },
+    "info.ssm.zamba-v1": {
+        "*": {
+            "repo": "Zyphra/Zamba-7B-v1",
+            "pkg": {
+                "0": {
+                    "transformers": "ZambaModel"
+                }
+            }
+        }
+    },
+    "info.art.codegen-mono": {
+        "*": {
+            "repo": "Salesforce/codegen-2B-mono",
+            "pkg": {
+                "0": {
+                    "transformers": "CodeGenModel"
+                }
+            }
+        }
+    },
+    "info.aet.efficient-mlm-m0-0": {
+        "*": {
+            "repo": "andreasmadsen/efficient_mlm_m0.40",
+            "pkg": {
+                "0": {
+                    "transformers": "RobertaPreLayerNormModel"
+                }
+            }
+        }
+    },
+    "info.gan.encodec-hz": {
+        "*": {
+            "repo": "facebook/encodec_24khz",
+            "pkg": {
+                "0": {
+                    "transformers": "EncodecModel"
+                }
+            }
+        }
+    },
+    "info.aet.hubert-ls960": {
+        "*": {
+            "repo": "facebook/hubert-base-ls960",
+            "pkg": {
+                "0": {
+                    "transformers": "HubertModel"
+                }
+            }
+        }
+    },
+    "info.aet.ernie-m--pytorch": {
+        "*": {
+            "repo": "susnato/ernie-m-base_pytorch",
+            "pkg": {
+                "0": {
+                    "transformers": "ErnieMModel"
+                }
+            }
+        }
+    },
+    "info.vit.mobilenet-v2-1--224": {
+        "*": {
+            "repo": "google/mobilenet_v2_1.0_224",
+            "pkg": {
+                "0": {
+                    "transformers": "MobileNetV2Model"
+                }
+            }
+        }
+    },
+    "info.vit.vitpose-simple": {
+        "*": {
+            "repo": "usyd-community/vitpose-base-simple",
+            "pkg": {
+                "0": {
+                    "transformers": "VitPoseBackbone"
+                }
+            }
+        }
+    },
+    "info.stst.autoformer-tourism-monthly": {
+        "*": {
+            "repo": "huggingface/autoformer-tourism-monthly",
+            "pkg": {
+                "0": {
+                    "transformers": "AutoformerModel"
+                }
+            }
+        }
+    },
+    "info.art.tapas-finetuned-sqa": {
+        "*": {
+            "repo": "google/tapas-base-finetuned-sqa",
+            "pkg": {
+                "0": {
+                    "transformers": "TapasModel"
+                }
+            }
+        }
+    },
+    "info.vit.align": {
+        "*": {
+            "repo": "kakaobrain/align-base",
+            "pkg": {
+                "0": {
+                    "transformers": "AlignModel"
+                }
+            }
+        }
+    },
+    "info.vit.glpn-kitti": {
+        "*": {
+            "repo": "vinvino02/glpn-kitti",
+            "pkg": {
+                "0": {
+                    "transformers": "GLPNModel"
+                }
+            }
+        }
+    },
+    "info.art.mistral-v0": {
+        "*": {
+            "repo": "mistralai/Mistral-7B-v0.1",
+            "pkg": {
+                "0": {
+                    "transformers": "MistralModel"
+                }
+            }
+        }
+    },
+    "info.vit.dfine-x-coco": {
+        "*": {
+            "repo": "ustc-community/dfine_x_coco",
+            "pkg": {
+                "0": {
+                    "transformers": "HGNetV2Backbone"
+                }
+            }
+        }
+    },
+    "info.art.trajectory-transformer-halfcheetah-v2": {
+        "*": {
+            "repo": "CarlCochet/trajectory-transformer-halfcheetah-medium-v2",
+            "pkg": {
+                "0": {
+                    "transformers": "TrajectoryTransformerModel"
+                }
+            }
+        }
+    },
+    "info.gan.dac-hz": {
+        "*": {
+            "repo": "descript/dac_16khz",
+            "pkg": {
+                "0": {
+                    "transformers": "DacModel"
+                }
+            }
+        }
+    },
+    "info.art.llama-2-hf": {
+        "*": {
+            "repo": "meta-llama/Llama-2-7b-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "LlamaModel"
+                }
+            }
+        }
+    },
+    "info.aet.ernie-3-zh": {
+        "*": {
+            "repo": "nghuyong/ernie-3.0-base-zh",
+            "pkg": {
+                "0": {
+                    "transformers": "ErnieModel"
+                }
+            }
+        }
+    },
+    "info.vit.xclip-patch32": {
+        "*": {
+            "repo": "microsoft/xclip-base-patch32",
+            "pkg": {
+                "0": {
+                    "transformers": "XCLIPModel"
+                }
+            }
+        }
+    },
+    "info.art.qwen3": {
+        "*": {
+            "repo": "Qwen/Qwen3-8B",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen3Model"
+                }
+            },
+            "file_256": [
+                "c56947057481fb5e7cdf766e442da81717b34addc88bbe8f3728fd25bd03cbae"
+            ],
+            "layer_b3": [
+                "d2d1e0875202f5c9c84c781a2105620250733bd01832f67b2c17bc981d1eb508"
+            ],
+            "layer_256": [
+                "408c01da57c4968b7b0e36d98a74e321153e7aeb058fea63ffd140e323526476"
+            ]
+        }
+    },
+    "info.stst.pegasus": {
+        "*": {
+            "repo": "google/pegasus-large",
+            "pkg": {
+                "0": {
+                    "transformers": "PegasusModel"
+                }
+            }
+        }
+    },
+    "info.aet.xmod": {
+        "*": {
+            "repo": "facebook/xmod-base",
+            "pkg": {
+                "0": {
+                    "transformers": "XmodModel"
+                }
+            }
+        }
+    },
+    "info.vit.llava-next-video-hf": {
+        "*": {
+            "repo": "llava-hf/LLaVA-NeXT-Video-7B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "LlavaNextVideoModel"
+                }
+            }
+        }
+    },
+    "info.art.qwen2": {
+        "*": {
+            "repo": "Qwen/Qwen2-7B-beta",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen2Model"
+                }
+            }
+        }
+    },
+    "info.art.musicgen-melody": {
+        "*": {
+            "repo": "facebook/musicgen-melody",
+            "pkg": {
+                "0": {
+                    "transformers": "MusicgenMelodyModel"
+                }
+            }
+        }
+    },
+    "info.art.gpt-neo": {
+        "*": {
+            "repo": "EleutherAI/gpt-neo-1.3B",
+            "pkg": {
+                "0": {
+                    "transformers": "GPTNeoModel"
+                }
+            }
+        }
+    },
+    "info.art.bert-uncased": {
+        "*": {
+            "repo": "google-bert/bert-base-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "QDQBertModel"
+                }
+            }
+        }
+    },
+    "info.aet.camembert": {
+        "*": {
+            "repo": "almanach/camembert-base",
+            "pkg": {
+                "0": {
+                    "transformers": "CamembertModel"
+                }
+            }
+        }
+    },
+    "info.aet.roberta": {
+        "*": {
+            "repo": "FacebookAI/roberta-base",
+            "pkg": {
+                "0": {
+                    "transformers": "RobertaModel"
+                }
+            }
+        }
+    },
+    "info.vit.groupvit-gcc-yfcc": {
+        "*": {
+            "repo": "nvidia/groupvit-gcc-yfcc",
+            "pkg": {
+                "0": {
+                    "transformers": "GroupViTModel"
+                }
+            }
+        }
+    },
+    "info.art.reformer-crime-and-punishment": {
+        "*": {
+            "repo": "google/reformer-crime-and-punishment",
+            "pkg": {
+                "0": {
+                    "transformers": "ReformerModel"
+                }
+            }
+        }
+    },
+    "info.art.dots-llm1-base": {
+        "*": {
+            "repo": "rednote-hilab/dots.llm1.base",
+            "pkg": {
+                "0": {
+                    "transformers": "Dots1Model"
+                }
+            }
+        }
+    },
+    "info.art.mixtral": {
+        "*": {
+            "repo": "mixtralai/Mixtral-8x7B",
+            "pkg": {
+                "0": {
+                    "transformers": "MixtralModel"
+                }
+            }
+        }
+    },
+    "info.art.trocr-handwritten": {
+        "*": {
+            "repo": "microsoft/trocr-base-handwritten",
+            "pkg": {
+                "0": {
+                    "transformers": "TrOCRForCausalLM"
+                }
+            }
+        }
+    },
+    "info.aet.unispeech-1500h-cv": {
+        "*": {
+            "repo": "microsoft/unispeech-large-1500h-cv",
+            "pkg": {
+                "0": {
+                    "transformers": "UniSpeechModel"
+                }
+            }
+        }
+    },
+    "info.detr.vit-bit-384": {
+        "*": {
+            "repo": "google/vit-hybrid-base-bit-384",
+            "pkg": {
+                "0": {
+                    "transformers": "ViTHybridModel"
+                }
+            }
+        }
+    },
+    "info.art.bloom": {
+        "*": {
+            "repo": "bigscience/bloom",
+            "pkg": {
+                "0": {
+                    "transformers": "BloomModel"
+                }
+            }
+        }
+    },
+    "info.stst.mvp": {
+        "*": {
+            "repo": "RUCAIBox/mvp",
+            "pkg": {
+                "0": {
+                    "transformers": "MvpModel"
+                }
+            }
+        }
+    },
+    "info.aet.sew": {
+        "*": {
+            "repo": "asapp/sew-tiny-100k",
+            "pkg": {
+                "0": {
+                    "transformers": "SEWModel"
+                }
+            }
+        }
+    },
+    "info.stst.blenderbot-small": {
+        "*": {
+            "repo": "facebook/blenderbot_small-90M",
+            "pkg": {
+                "0": {
+                    "transformers": "BlenderbotSmallModel"
+                }
+            }
+        }
+    },
+    "info.vit.clip-vit-patch32": {
+        "*": {
+            "repo": "openai/clip-vit-base-patch32",
+            "pkg": {
+                "0": {
+                    "transformers": "CLIPTextModel"
+                }
+            }
+        }
+    },
+    "info.stst.m2m100": {
+        "*": {
+            "repo": "facebook/m2m100_418M",
+            "pkg": {
+                "0": {
+                    "transformers": "M2M100Model"
+                }
+            }
+        }
+    },
+    "info.art.rembert": {
+        "*": {
+            "repo": "google/rembert",
+            "pkg": {
+                "0": {
+                    "transformers": "RemBertModel"
+                }
+            }
+        }
+    },
+    "info.detr.rtdetr-r50vd": {
+        "*": {
+            "repo": "PekingU/rtdetr_r50vd",
+            "pkg": {
+                "0": {
+                    "transformers": "RTDetrModel"
+                }
+            }
+        }
+    },
+    "info.art.gemma2": {
+        "*": {
+            "repo": "google/gemma2-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Gemma2Model"
+                }
+            }
+        }
+    },
+    "info.art.bros-uncased": {
+        "*": {
+            "repo": "jinho8345/bros-base-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "BrosModel"
+                }
+            }
+        }
+    },
+    "info.vit.sam-hq-vit-huge": {
+        "*": {
+            "repo": "facebook/sam_hq-vit-huge",
+            "pkg": {
+                "0": {
+                    "transformers": "SamHQVisionModel"
+                }
+            }
+        }
+    },
+    "info.art.transfo-xl-wt103": {
+        "*": {
+            "repo": "transfo-xl/transfo-xl-wt103",
+            "pkg": {
+                "0": {
+                    "transformers": "TransfoXLModel"
+                }
+            }
+        }
+    },
+    "info.aet.mra-512-4": {
+        "*": {
+            "repo": "uw-madison/mra-base-512-4",
+            "pkg": {
+                "0": {
+                    "transformers": "MraModel"
+                }
+            }
+        }
+    },
+    "info.aet.wav2vec2-960h": {
+        "*": {
+            "repo": "facebook/wav2vec2-base-960h",
+            "pkg": {
+                "0": {
+                    "transformers": "Wav2Vec2Model"
+                }
+            }
+        }
+    },
+    "info.stst.t5": {
+        "*": {
+            "repo": "google-t5/t5-small",
+            "pkg": {
+                "0": {
+                    "transformers": "T5Model"
+                }
+            },
+            "identifiers": [
+                "encoder.block.0.layer.1.DenseReluDense.wi.weight"
+            ]
+        }
+    },
+    "info.vit.aria-chat": {
+        "*": {
+            "repo": "rhymes-ai/Aria-Chat",
+            "pkg": {
+                "0": {
+                    "transformers": "AriaModel"
+                }
+            }
+        }
+    },
+    "info.art.lxmert-uncased": {
+        "*": {
+            "repo": "unc-nlp/lxmert-base-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "LxmertModel"
+                }
+            }
+        }
+    },
+    "info.detr.rtdetr-r18vd": {
+        "*": {
+            "repo": "PekingU/rtdetr_r18vd",
+            "pkg": {
+                "0": {
+                    "transformers": "RTDetrV2Model"
+                }
+            }
+        }
+    },
+    "info.vit.ast-finetuned-audioset-10-10-0593": {
+        "*": {
+            "repo": "MIT/ast-finetuned-audioset-10-10-0.4593",
+            "pkg": {
+                "0": {
+                    "transformers": "ASTModel"
+                }
+            }
+        }
+    },
+    "info.vit.mobilevit": {
+        "*": {
+            "repo": "apple/mobilevit-small",
+            "pkg": {
+                "0": {
+                    "transformers": "MobileViTModel"
+                }
+            }
+        }
+    },
+    "info.aet.albert-xxlarge-v2": {
+        "*": {
+            "repo": "albert/albert-xxlarge-v2",
+            "pkg": {
+                "0": {
+                    "transformers": "AlbertModel"
+                }
+            }
+        }
+    },
+    "info.aet.data2vec-text": {
+        "*": {
+            "repo": "facebook/data2vec-text-base",
+            "pkg": {
+                "0": {
+                    "transformers": "Data2VecTextModel"
+                }
+            }
+        }
+    },
+    "info.vit.deepseek-vl-chat": {
+        "*": {
+            "repo": "deepseek-community/deepseek-vl-7b-chat",
+            "pkg": {
+                "0": {
+                    "transformers": "DeepseekVLHybridModel"
+                }
+            }
+        }
+    },
+    "info.ssm.falconh1-t-hf": {
+        "*": {
+            "repo": "ibm-fms/FalconH1-9.8b-2.2T-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "FalconH1Model"
+                }
+            }
+        }
+    },
+    "info.art.diffllama-handcut": {
+        "*": {
+            "repo": "kajuma/DiffLlama-0.3B-handcut",
+            "pkg": {
+                "0": {
+                    "transformers": "DiffLlamaModel"
+                }
+            }
+        }
+    },
+    "info.art.openai-gpt": {
+        "*": {
+            "repo": "openai-community/openai-gpt",
+            "pkg": {
+                "0": {
+                    "transformers": "OpenAIGPTModel"
+                }
+            }
+        }
+    },
+    "info.vit.clvp-dev": {
+        "*": {
+            "repo": "susnato/clvp_dev",
+            "pkg": {
+                "0": {
+                    "transformers": "ClvpModelForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.rnn.recurrentgemma": {
+        "*": {
+            "repo": "google/recurrentgemma-2b",
+            "pkg": {
+                "0": {
+                    "transformers": "RecurrentGemmaModel"
+                }
+            }
+        }
+    },
+    "info.art.splinter": {
+        "*": {
+            "repo": "tau/splinter-base",
+            "pkg": {
+                "0": {
+                    "transformers": "SplinterModel"
+                }
+            }
+        }
+    },
+    "info.aet.lilt-roberta-en": {
+        "*": {
+            "repo": "SCUT-DLVCLab/lilt-roberta-en-base",
+            "pkg": {
+                "0": {
+                    "transformers": "LiltModel"
+                }
+            }
+        }
+    },
+    "info.aet.xlm-roberta-xl": {
+        "*": {
+            "repo": "facebook/xlm-roberta-xl",
+            "pkg": {
+                "0": {
+                    "transformers": "XLMRobertaXLModel"
+                }
+            }
+        }
+    },
+    "info.art.imagegpt": {
+        "*": {
+            "repo": "openai/imagegpt-small",
+            "pkg": {
+                "0": {
+                    "transformers": "ImageGPTModel"
+                }
+            }
+        }
+    },
+    "info.vit.idefics2": {
+        "*": {
+            "repo": "HuggingFaceM4/idefics2-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "Idefics2Model"
+                }
+            }
+        }
+    },
+    "info.detr.detr-resnet-50": {
+        "*": {
+            "repo": "facebook/detr-resnet-50",
+            "pkg": {
+                "0": {
+                    "transformers": "DetrModel"
+                }
+            }
+        }
+    },
+    "info.art.powermoe": {
+        "*": {
+            "repo": "ibm-research/PowerMoE-3b",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteMoeModel"
+                }
+            }
+        }
+    },
+    "info.vit.chinese-clip-vit-patch16": {
+        "*": {
+            "repo": "OFA-Sys/chinese-clip-vit-base-patch16",
+            "pkg": {
+                "0": {
+                    "transformers": "ChineseCLIPVisionModel"
+                }
+            }
+        }
+    },
+    "info.stst.long-t5-local": {
+        "*": {
+            "repo": "google/long-t5-local-base",
+            "pkg": {
+                "0": {
+                    "transformers": "LongT5Model"
+                }
+            }
+        }
+    },
+    "info.vit.llava-onevision-qwen2-ov-hf": {
+        "*": {
+            "repo": "llava-hf/llava-onevision-qwen2-7b-ov-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "LlavaOnevisionModel"
+                }
+            }
+        }
+    },
+    "info.art.glm-4": {
+        "*": {
+            "repo": "THUDM/GLM-4-100B-A10B",
+            "pkg": {
+                "0": {
+                    "transformers": "Glm4MoeModel"
+                }
+            }
+        }
+    },
+    "info.vit.owlvit-patch32": {
+        "*": {
+            "repo": "google/owlvit-base-patch32",
+            "pkg": {
+                "0": {
+                    "transformers": "OwlViTModel"
+                }
+            }
+        }
+    },
+    "info.art.persimmon": {
+        "*": {
+            "repo": "adept/persimmon-8b-base",
+            "pkg": {
+                "0": {
+                    "transformers": "PersimmonModel"
+                }
+            }
+        }
+    },
+    "info.art.glm-4-0414": {
+        "*": {
+            "repo": "THUDM/GLM-4-9B-0414",
+            "pkg": {
+                "0": {
+                    "transformers": "Glm4Model"
+                }
+            }
+        }
+    },
+    "info.vit.internvl3-hf": {
+        "*": {
+            "repo": "OpenGVLab/InternVL3-1B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "InternVLVisionModel"
+                }
+            }
+        }
+    },
+    "info.vit.tvlt": {
+        "*": {
+            "repo": "ZinengTang/tvlt-base",
+            "pkg": {
+                "0": {
+                    "transformers": "TvltModel"
+                }
+            }
+        }
+    },
+    "info.vit.convnextv2-224": {
+        "*": {
+            "repo": "facebook/convnextv2-tiny-1k-224",
+            "pkg": {
+                "0": {
+                    "transformers": "ConvNextV2Model"
+                }
+            }
+        }
+    },
+    "info.aet.esm": {
+        "*": {
+            "repo": "facebook/esm-1b",
+            "pkg": {
+                "0": {
+                    "transformers": "EsmModel"
+                }
+            }
+        }
+    },
+    "info.aet.roc-bert-zh": {
+        "*": {
+            "repo": "weiweishi/roc-bert-base-zh",
+            "pkg": {
+                "0": {
+                    "transformers": "RoCBertModel"
+                }
+            }
+        }
+    },
+    "info.aet.lightglue-superpoint": {
+        "*": {
+            "repo": "ETH-CVG/lightglue_superpoint",
+            "pkg": {
+                "0": {
+                    "transformers": "LightGlueForKeypointMatching"
+                }
+            }
+        }
+    },
+    "info.vit.resnet-50": {
+        "*": {
+            "repo": "microsoft/resnet-50",
+            "pkg": {
+                "0": {
+                    "transformers": "ResNetModel"
+                }
+            }
+        }
+    },
+    "info.vit.poolformer-s12": {
+        "*": {
+            "repo": "sail/poolformer_s12",
+            "pkg": {
+                "0": {
+                    "transformers": "PoolFormerModel"
+                }
+            }
+        }
+    },
+    "info.ssm.falcon": {
+        "*": {
+            "repo": "tiiuae/falcon-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "FalconModel"
+                }
+            }
+        }
+    },
+    "info.aet.voxtral-2507": {
+        "*": {
+            "repo": "mistralai/Voxtral-Mini-3B-2507",
+            "pkg": {
+                "0": {
+                    "transformers": "VoxtralEncoder"
+                }
+            }
+        }
+    },
+    "info.stst.voxtral-2507": {
+        "*": {
+            "repo": "mistralai/Voxtral-Mini-3B-2507",
+            "pkg": {
+                "0": {
+                    "transformers": "VoxtralForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.art.stablelm-4e1t": {
+        "*": {
+            "repo": "stabilityai/stablelm-3b-4e1t",
+            "pkg": {
+                "0": {
+                    "transformers": "StableLmModel"
+                }
+            }
+        }
+    },
+    "info.vit.aimv2-patch14-224-lit": {
+        "*": {
+            "repo": "apple/aimv2-large-patch14-224-lit",
+            "pkg": {
+                "0": {
+                    "transformers": "Aimv2Model"
+                }
+            }
+        }
+    },
+    "info.aet.unispeech-sat-100h-libri-ft": {
+        "*": {
+            "repo": "microsoft/unispeech-sat-base-100h-libri-ft",
+            "pkg": {
+                "0": {
+                    "transformers": "UniSpeechSatModel"
+                }
+            }
+        }
+    },
+    "info.vit.dinov2-patch16-224": {
+        "*": {
+            "repo": "google/dinov2-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "Dinov2Model"
+                }
+            }
+        }
+    },
+    "info.aet.xlm-roberta": {
+        "*": {
+            "repo": "FacebookAI/xlm-roberta-base",
+            "pkg": {
+                "0": {
+                    "transformers": "XLMRobertaModel"
+                }
+            }
+        }
+    },
+    "info.art.qwen15-moe": {
+        "*": {
+            "repo": "Qwen/Qwen1.5-MoE-A2.7B",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen2MoeModel"
+                }
+            }
+        }
+    },
+    "info.vit.altclip": {
+        "*": {
+            "repo": "BAAI/AltCLIP",
+            "pkg": {
+                "0": {
+                    "transformers": "AltCLIPModel"
+                }
+            }
+        }
+    },
+    "info.vit.fuyu": {
+        "*": {
+            "repo": "adept/fuyu-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "FuyuModel"
+                }
+            }
+        }
+    },
+    "info.art.hf-moshiko": {
+        "*": {
+            "repo": "kmhf/hf-moshiko",
+            "pkg": {
+                "0": {
+                    "transformers": "MoshiModel"
+                }
+            }
+        }
+    },
+    "info.art.moe-active-shared-experts": {
+        "*": {
+            "repo": "ibm-research/moe-7b-1b-active-shared-experts",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteMoeSharedModel"
+                }
+            }
+        }
+    },
+    "info.vit.vit-patch16-224": {
+        "*": {
+            "repo": "google/vit-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "ViTModel"
+                }
+            }
+        }
+    },
+    "info.vit.vjepa2-vitl-fpc64-256": {
+        "*": {
+            "repo": "facebook/vjepa2-vitl-fpc64-256",
+            "pkg": {
+                "0": {
+                    "transformers": "VJEPA2Model"
+                }
+            }
+        }
+    },
+    "info.vit.swinv2-patch4-window8-256": {
+        "*": {
+            "repo": "microsoft/swinv2-tiny-patch4-window8-256",
+            "pkg": {
+                "0": {
+                    "transformers": "Swinv2Model"
+                }
+            }
+        }
+    },
+    "info.art.xlm-mlm-en-2048": {
+        "*": {
+            "repo": "FacebookAI/xlm-mlm-en-2048",
+            "pkg": {
+                "0": {
+                    "transformers": "XLMModel"
+                }
+            }
+        }
+    },
+    "info.vit.segformer-b0-finetuned-ade-512-512": {
+        "*": {
+            "repo": "nvidia/segformer-b0-finetuned-ade-512-512",
+            "pkg": {
+                "0": {
+                    "transformers": "SegformerModel"
+                }
+            }
+        }
+    },
+    "info.ssm.mamba2": {
+        "*": {
+            "repo": "state-spaces/mamba2-2.8b",
+            "pkg": {
+                "0": {
+                    "transformers": "Mamba2Model"
+                }
+            }
+        }
+    },
+    "info.gan.levit-128s": {
+        "*": {
+            "repo": "facebook/levit-128S",
+            "pkg": {
+                "0": {
+                    "transformers": "LevitModel"
+                }
+            }
+        }
+    },
+    "info.art.deepseek-v3": {
+        "*": {
+            "repo": "bzantium/tiny-deepseek-v3",
+            "pkg": {
+                "0": {
+                    "transformers": "DeepseekV3Model"
+                }
+            }
+        }
+    },
+    "info.vit.vitdet-patch16-224": {
+        "*": {
+            "repo": "google/vitdet-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "VitDetModel"
+                }
+            }
+        }
+    },
+    "info.art.olmo-hf": {
+        "*": {
+            "repo": "allenai/OLMo-7B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "OlmoModel"
+                }
+            }
+        }
+    },
+    "info.vit.glm-4v-thinking": {
+        "*": {
+            "repo": "THUDM/GLM-4.1V-9B-Thinking",
+            "pkg": {
+                "0": {
+                    "transformers": "Glm4vModel"
+                }
+            }
+        }
+    },
+    "info.vit.sam-hq-vit-h": {
+        "*": {
+            "repo": "sushmanth/sam_hq_vit_h",
+            "pkg": {
+                "0": {
+                    "transformers": "SamHQModel"
+                }
+            }
+        }
+    },
+    "info.stst.plbart": {
+        "*": {
+            "repo": "uclanlp/plbart-base",
+            "pkg": {
+                "0": {
+                    "transformers": "PLBartModel"
+                }
+            }
+        }
+    },
+    "info.art.gpt2": {
+        "*": {
+            "repo": "openai-community/gpt2",
+            "pkg": {
+                "0": {
+                    "transformers": "GPT2Model"
+                }
+            }
+        }
+    },
+    "info.vit.paligemma": {
+        "*": {
+            "repo": "paligemma-hf/paligemma-2b",
+            "pkg": {
+                "0": {
+                    "transformers": "PaliGemmaModel"
+                }
+            }
+        }
+    },
+    "info.art.squeezebert-uncased": {
+        "*": {
+            "repo": "squeezebert/squeezebert-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "SqueezeBertModel"
                 }
             }
         }
@@ -1519,7 +2651,7 @@
             "repo": "Qwen/Qwen2-VL-7B-Instruct",
             "pkg": {
                 "0": {
-                    "transformers": "Qwen2_5_VLModel"
+                    "transformers": "Qwen2_5_VLTextModel"
                 }
             },
             "file_256": [
@@ -1537,642 +2669,32 @@
             ]
         }
     },
-    "info.stst.blenderbot": {
+    "info.vit.videomae": {
         "*": {
-            "repo": "facebook/blenderbot-3B",
+            "repo": "MCG-NJU/videomae-base",
             "pkg": {
                 "0": {
-                    "transformers": "BlenderbotModel"
+                    "transformers": "VideoMAEModel"
                 }
             }
         }
     },
-    "info.vit.janus": {
+    "info.vit.layoutlmv3": {
         "*": {
-            "repo": "deepseek-community/Janus-Pro-1B",
+            "repo": "microsoft/layoutlmv3-base",
             "pkg": {
                 "0": {
-                    "transformers": "JanusModel"
+                    "transformers": "LayoutLMv3Model"
                 }
             }
         }
     },
-    "info.art.moe-active-shared-experts": {
+    "info.art.starcoder2": {
         "*": {
-            "repo": "ibm-research/moe-7b-1b-active-shared-experts",
+            "repo": "bigcode/starcoder2-7b",
             "pkg": {
                 "0": {
-                    "transformers": "GraniteMoeSharedModel"
-                }
-            }
-        }
-    },
-    "info.detr.deformable-detr": {
-        "*": {
-            "repo": "SenseTime/deformable-detr",
-            "pkg": {
-                "0": {
-                    "transformers": "DeformableDetrModel"
-                }
-            }
-        }
-    },
-    "info.vit.paligemma": {
-        "*": {
-            "repo": "paligemma-hf/paligemma-2b",
-            "pkg": {
-                "0": {
-                    "transformers": "PaliGemmaModel"
-                }
-            }
-        }
-    },
-    "info.vit.smolvlm-b": {
-        "*": {
-            "repo": "HuggingFaceTB/SmolVLM2-2.2B-Instruct",
-            "pkg": {
-                "0": {
-                    "transformers": "SmolVLMModel"
-                }
-            }
-        }
-    },
-    "info.vit.mobilevitv2-1": {
-        "*": {
-            "repo": "apple/mobilevitv2-1.0",
-            "pkg": {
-                "0": {
-                    "transformers": "MobileViTV2Model"
-                }
-            }
-        }
-    },
-    "info.vit.fuyu": {
-        "*": {
-            "repo": "adept/fuyu-8b",
-            "pkg": {
-                "0": {
-                    "transformers": "FuyuModel"
-                }
-            }
-        }
-    },
-    "info.vit.git": {
-        "*": {
-            "repo": "microsoft/git-base",
-            "pkg": {
-                "0": {
-                    "transformers": "GitModel"
-                }
-            }
-        }
-    },
-    "info.vit.sam-vit-huge": {
-        "*": {
-            "repo": "facebook/sam-vit-huge",
-            "pkg": {
-                "0": {
-                    "transformers": "SamModel"
-                }
-            }
-        }
-    },
-    "info.detr.upernet-convnext": {
-        "*": {
-            "repo": "openmmlab/upernet-convnext-tiny",
-            "pkg": {
-                "0": {
-                    "transformers": "UperNetForSemanticSegmentation"
-                }
-            }
-        }
-    },
-    "info.art.canine-s": {
-        "*": {
-            "repo": "google/canine-s",
-            "pkg": {
-                "0": {
-                    "transformers": "CanineModel"
-                }
-            }
-        }
-    },
-    "info.rnn.recurrentgemma": {
-        "*": {
-            "repo": "google/recurrentgemma-2b",
-            "pkg": {
-                "0": {
-                    "transformers": "RecurrentGemmaModel"
-                }
-            }
-        }
-    },
-    "info.art.helium": {
-        "*": {
-            "repo": "kyutai/helium-2b",
-            "pkg": {
-                "0": {
-                    "transformers": "HeliumModel"
-                }
-            }
-        }
-    },
-    "info.detr.tvp": {
-        "*": {
-            "repo": "Intel/tvp-base",
-            "pkg": {
-                "0": {
-                    "transformers": "TvpModel"
-                }
-            }
-        }
-    },
-    "info.vit.llava-next-video-hf": {
-        "*": {
-            "repo": "llava-hf/LLaVA-NeXT-Video-7B-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "LlavaNextVideoModel"
-                }
-            }
-        }
-    },
-    "info.vit.chinese-clip-vit-patch16": {
-        "*": {
-            "repo": "OFA-Sys/chinese-clip-vit-base-patch16",
-            "pkg": {
-                "0": {
-                    "transformers": "ChineseCLIPModel"
-                }
-            }
-        }
-    },
-    "info.vit.resnet-50": {
-        "*": {
-            "repo": "microsoft/resnet-50",
-            "pkg": {
-                "0": {
-                    "transformers": "ResNetModel"
-                }
-            }
-        }
-    },
-    "info.art.stt-en-trfs": {
-        "*": {
-            "repo": "kyutai/stt-2.6b-en-trfs",
-            "pkg": {
-                "0": {
-                    "transformers": "KyutaiSpeechToTextModel"
-                }
-            }
-        }
-    },
-    "info.stst.pop2piano": {
-        "*": {
-            "repo": "sweetcocoa/pop2piano",
-            "pkg": {
-                "0": {
-                    "transformers": "Pop2PianoForConditionalGeneration"
-                }
-            }
-        }
-    },
-    "info.vit.groupvit-gcc-yfcc": {
-        "*": {
-            "repo": "nvidia/groupvit-gcc-yfcc",
-            "pkg": {
-                "0": {
-                    "transformers": "GroupViTModel"
-                }
-            }
-        }
-    },
-    "info.vit.focalnet": {
-        "*": {
-            "repo": "microsoft/focalnet-tiny",
-            "pkg": {
-                "0": {
-                    "transformers": "FocalNetModel"
-                }
-            }
-        }
-    },
-    "info.art.olmo2-1124-hf": {
-        "*": {
-            "repo": "allenai/Olmo2-7B-1124-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "Olmo2Model"
-                }
-            }
-        }
-    },
-    "info.art.qwen3": {
-        "*": {
-            "repo": "Qwen/Qwen3-15B-A2B",
-            "pkg": {
-                "0": {
-                    "transformers": "Qwen3MoeModel"
-                }
-            },
-            "file_256": [
-                "c56947057481fb5e7cdf766e442da81717b34addc88bbe8f3728fd25bd03cbae"
-            ],
-            "layer_b3": [
-                "d2d1e0875202f5c9c84c781a2105620250733bd01832f67b2c17bc981d1eb508"
-            ],
-            "layer_256": [
-                "408c01da57c4968b7b0e36d98a74e321153e7aeb058fea63ffd140e323526476"
-            ]
-        }
-    },
-    "info.vit.idefics2": {
-        "*": {
-            "repo": "HuggingFaceM4/idefics2-8b",
-            "pkg": {
-                "0": {
-                    "transformers": "Idefics2Model"
-                }
-            }
-        }
-    },
-    "info.stst.qwen2-audio": {
-        "*": {
-            "repo": "Qwen/Qwen2-Audio-7B",
-            "pkg": {
-                "0": {
-                    "transformers": "Qwen2AudioForConditionalGeneration"
-                }
-            }
-        }
-    },
-    "info.art.llama-4-scout-16e": {
-        "*": {
-            "repo": "meta-llama/Llama-4-Scout-17B-16E",
-            "pkg": {
-                "0": {
-                    "transformers": "Llama4TextModel"
-                }
-            }
-        }
-    },
-    "info.stst.autoformer-tourism-monthly": {
-        "*": {
-            "repo": "huggingface/autoformer-tourism-monthly",
-            "pkg": {
-                "0": {
-                    "transformers": "AutoformerModel"
-                }
-            }
-        }
-    },
-    "info.ssm.falcon": {
-        "*": {
-            "repo": "tiiuae/falcon-7b",
-            "pkg": {
-                "0": {
-                    "transformers": "FalconModel"
-                }
-            }
-        }
-    },
-    "info.art.gemma": {
-        "*": {
-            "repo": "google/gemma-7b",
-            "pkg": {
-                "0": {
-                    "transformers": "GemmaModel"
-                }
-            },
-            "file_256": [
-                "01676b4c6e765f737a5e9854a315de3887e939c370cae116d505777729099a68"
-            ],
-            "layer_b3": [
-                "438d82c867240f194a4e15798eef2886a911c8f57fa2d9f4ffad1d56e7bd1ccf",
-                "1de38e09f5f2c5345de48b8cd4dddcfff3e341cc0059752446e186b3863f0981"
-            ],
-            "layer_256": [
-                "e4835a72d582b4ae066d6ff0519f2ee9f8b21fb02e8c28d8eaa317f8d1e9ea75",
-                "1657c7180b48672004f4463308dfdd56d92eedeb23d1408ea766985ca208e5aa"
-            ]
-        }
-    },
-    "info.art.deepseek-v2-lite": {
-        "*": {
-            "repo": "deepseek-ai/DeepSeek-V2-Lite",
-            "pkg": {
-                "0": {
-                    "transformers": "DeepseekV2Model"
-                }
-            }
-        }
-    },
-    "info.detr.detr-resnet-50": {
-        "*": {
-            "repo": "facebook/detr-resnet-50",
-            "pkg": {
-                "0": {
-                    "transformers": "DetrModel"
-                }
-            }
-        }
-    },
-    "info.aet.lilt-roberta-en": {
-        "*": {
-            "repo": "SCUT-DLVCLab/lilt-roberta-en-base",
-            "pkg": {
-                "0": {
-                    "transformers": "LiltModel"
-                }
-            }
-        }
-    },
-    "info.art.llama-2-hf": {
-        "*": {
-            "repo": "meta-llama/Llama-2-7b-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "LlamaModel"
-                }
-            }
-        }
-    },
-    "info.aet.data2vec-text": {
-        "*": {
-            "repo": "facebook/data2vec-text-base",
-            "pkg": {
-                "0": {
-                    "transformers": "Data2VecTextModel"
-                }
-            }
-        }
-    },
-    "info.cnn.yolos": {
-        "*": {
-            "repo": "hustvl/yolos-base",
-            "pkg": {
-                "0": {
-                    "transformers": "YolosModel"
-                }
-            }
-        }
-    },
-    "info.art.hf-moshiko": {
-        "*": {
-            "repo": "kmhf/hf-moshiko",
-            "pkg": {
-                "0": {
-                    "transformers": "MoshiModel"
-                }
-            }
-        }
-    },
-    "info.stst.plbart": {
-        "*": {
-            "repo": "uclanlp/plbart-base",
-            "pkg": {
-                "0": {
-                    "transformers": "PLBartModel"
-                }
-            }
-        }
-    },
-    "info.vit.aya-vision": {
-        "*": {
-            "repo": "CohereForAI/aya-vision-8b",
-            "pkg": {
-                "0": {
-                    "transformers": "AyaVisionModel"
-                }
-            }
-        }
-    },
-    "info.vit.beit-patch16-224-pt22k": {
-        "*": {
-            "repo": "microsoft/beit-base-patch16-224-pt22k",
-            "pkg": {
-                "0": {
-                    "transformers": "BeitModel"
-                }
-            }
-        }
-    },
-    "info.vit.timesformer-finetuned-k600": {
-        "*": {
-            "repo": "facebook/timesformer-base-finetuned-k600",
-            "pkg": {
-                "0": {
-                    "transformers": "TimesformerModel"
-                }
-            }
-        }
-    },
-    "info.vit.tvlt": {
-        "*": {
-            "repo": "ZinengTang/tvlt-base",
-            "pkg": {
-                "0": {
-                    "transformers": "TvltModel"
-                }
-            }
-        }
-    },
-    "info.art.doge": {
-        "*": {
-            "repo": "SmallDoge/Doge-320M",
-            "pkg": {
-                "0": {
-                    "transformers": "DogeModel"
-                }
-            }
-        }
-    },
-    "info.vit.gemma-3": {
-        "*": {
-            "repo": "google/gemma-3-4b",
-            "pkg": {
-                "0": {
-                    "transformers": "ShieldGemma2ForImageClassification"
-                }
-            }
-        }
-    },
-    "info.aet.esm": {
-        "*": {
-            "repo": "facebook/esm-1b",
-            "pkg": {
-                "0": {
-                    "transformers": "EsmModel"
-                }
-            }
-        }
-    },
-    "info.vit.segformer-b0-finetuned-ade-512-512": {
-        "*": {
-            "repo": "nvidia/segformer-b0-finetuned-ade-512-512",
-            "pkg": {
-                "0": {
-                    "transformers": "SegformerModel"
-                }
-            }
-        }
-    },
-    "info.art.ernie-45-pt": {
-        "*": {
-            "repo": "baidu/ERNIE-4.5-0.3B-PT",
-            "pkg": {
-                "0": {
-                    "transformers": "Ernie4_5Model"
-                }
-            }
-        }
-    },
-    "info.vit.clvp-dev": {
-        "*": {
-            "repo": "susnato/clvp_dev",
-            "pkg": {
-                "0": {
-                    "transformers": "ClvpModelForConditionalGeneration"
-                }
-            }
-        }
-    },
-    "info.art.lxmert-uncased": {
-        "*": {
-            "repo": "unc-nlp/lxmert-base-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "LxmertModel"
-                }
-            }
-        }
-    },
-    "info.stst.m2m100": {
-        "*": {
-            "repo": "facebook/m2m100_418M",
-            "pkg": {
-                "0": {
-                    "transformers": "M2M100Model"
-                }
-            }
-        }
-    },
-    "info.vit.clip-vit-patch32": {
-        "*": {
-            "repo": "openai/clip-vit-base-patch32",
-            "pkg": {
-                "0": {
-                    "transformers": "CLIPModel"
-                }
-            }
-        }
-    },
-    "info.vit.idefics": {
-        "*": {
-            "repo": "HuggingFaceM4/idefics-9b",
-            "pkg": {
-                "0": {
-                    "transformers": "IdeficsModel"
-                }
-            }
-        }
-    },
-    "info.vit.blip-vqa": {
-        "*": {
-            "repo": "Salesforce/blip-vqa-base",
-            "pkg": {
-                "0": {
-                    "transformers": "BlipModel"
-                }
-            }
-        }
-    },
-    "info.art.max-text-01-hf": {
-        "*": {
-            "repo": "MiniMaxAI/MiniMax-Text-01-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "MiniMaxModel"
-                }
-            }
-        }
-    },
-    "info.art.layoutlmv2-uncased": {
-        "*": {
-            "repo": "microsoft/layoutlmv2-base-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "LayoutLMv2Model"
-                }
-            }
-        }
-    },
-    "info.art.openai-gpt": {
-        "*": {
-            "repo": "openai-community/openai-gpt",
-            "pkg": {
-                "0": {
-                    "transformers": "OpenAIGPTModel"
-                }
-            }
-        }
-    },
-    "info.art.olmoe-0924": {
-        "*": {
-            "repo": "allenai/OLMoE-1B-7B-0924",
-            "pkg": {
-                "0": {
-                    "transformers": "OlmoeModel"
-                }
-            }
-        }
-    },
-    "info.vit.glpn-kitti": {
-        "*": {
-            "repo": "vinvino02/glpn-kitti",
-            "pkg": {
-                "0": {
-                    "transformers": "GLPNModel"
-                }
-            }
-        }
-    },
-    "info.art.splinter": {
-        "*": {
-            "repo": "tau/splinter-base",
-            "pkg": {
-                "0": {
-                    "transformers": "SplinterModel"
-                }
-            }
-        }
-    },
-    "info.vit.dinov2-patch16-224": {
-        "*": {
-            "repo": "google/dinov2-base-patch16-224",
-            "pkg": {
-                "0": {
-                    "transformers": "Dinov2Model"
-                }
-            }
-        }
-    },
-    "info.art.opt": {
-        "*": {
-            "repo": "facebook/opt-350m",
-            "pkg": {
-                "0": {
-                    "transformers": "OPTModel"
-                }
-            }
-        }
-    },
-    "info.vit.language-perceiver": {
-        "*": {
-            "repo": "deepmind/language-perceiver",
-            "pkg": {
-                "0": {
-                    "transformers": "PerceiverModel"
+                    "transformers": "Starcoder2Model"
                 }
             }
         }
@@ -2187,324 +2709,62 @@
             }
         }
     },
-    "info.art.mobilebert-uncased": {
+    "info.art.bark": {
         "*": {
-            "repo": "google/mobilebert-uncased",
+            "repo": "suno/bark",
             "pkg": {
                 "0": {
-                    "transformers": "MobileBertModel"
+                    "transformers": "BarkModel"
                 }
             }
         }
     },
-    "info.vit.convnextv2-224": {
+    "info.vit.janus": {
         "*": {
-            "repo": "facebook/convnextv2-tiny-1k-224",
+            "repo": "deepseek-community/Janus-Pro-1B",
             "pkg": {
                 "0": {
-                    "transformers": "ConvNextV2Model"
+                    "transformers": "JanusModel"
                 }
             }
         }
     },
-    "info.vit.xclip-patch32": {
+    "info.stst.mbart-cc25": {
         "*": {
-            "repo": "microsoft/xclip-base-patch32",
+            "repo": "facebook/mbart-large-cc25",
             "pkg": {
                 "0": {
-                    "transformers": "XCLIPModel"
+                    "transformers": "MBartModel"
                 }
             }
         }
     },
-    "info.vit.blip2-opt": {
+    "info.art.exaone-4": {
         "*": {
-            "repo": "Salesforce/blip2-opt-2.7b",
+            "repo": "LGAI-EXAONE/EXAONE-4.0-Instruct",
             "pkg": {
                 "0": {
-                    "transformers": "Blip2Model"
+                    "transformers": "Exaone4Model"
                 }
             }
         }
     },
-    "info.aet.sew-d": {
+    "info.vit.depthpro": {
         "*": {
-            "repo": "asapp/sew-d-tiny-100k",
+            "repo": "apple/DepthPro",
             "pkg": {
                 "0": {
-                    "transformers": "SEWDModel"
+                    "transformers": "DepthProModel"
                 }
             }
         }
     },
-    "info.stst.wmt19-en-ru": {
+    "info.vit.blip-flan-t5": {
         "*": {
-            "repo": "facebook/wmt19-en-ru",
+            "repo": "Salesforce/instruct-blip-flan-t5",
             "pkg": {
                 "0": {
-                    "transformers": "FSMTModel"
-                }
-            }
-        }
-    },
-    "info.detr.dab-detr": {
-        "*": {
-            "repo": "IDEA-Research/dab_detr-base",
-            "pkg": {
-                "0": {
-                    "transformers": "DabDetrModel"
-                }
-            }
-        }
-    },
-    "info.vit.llava": {
-        "*": {
-            "repo": "llava-hf/llava-9b",
-            "pkg": {
-                "0": {
-                    "transformers": "LlavaModel"
-                }
-            }
-        }
-    },
-    "info.detr.conditional-detr-resnet-50": {
-        "*": {
-            "repo": "microsoft/conditional-detr-resnet-50",
-            "pkg": {
-                "0": {
-                    "transformers": "ConditionalDetrModel"
-                }
-            }
-        }
-    },
-    "info.ssm.bamba-t-hf": {
-        "*": {
-            "repo": "ibm-fms/Bamba-9.8b-2.2T-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "BambaModel"
-                }
-            }
-        }
-    },
-    "info.vit.cvt-13": {
-        "*": {
-            "repo": "microsoft/cvt-13",
-            "pkg": {
-                "0": {
-                    "transformers": "CvtModel"
-                }
-            }
-        }
-    },
-    "info.art.trocr-handwritten": {
-        "*": {
-            "repo": "microsoft/trocr-base-handwritten",
-            "pkg": {
-                "0": {
-                    "transformers": "TrOCRForCausalLM"
-                }
-            }
-        }
-    },
-    "info.ssm.powermoe": {
-        "*": {
-            "repo": "ibm-research/PowerMoE-3b",
-            "pkg": {
-                "0": {
-                    "transformers": "GraniteMoeHybridModel"
-                }
-            }
-        }
-    },
-    "info.vit.mlcd-vit-bigg-patch14-336": {
-        "*": {
-            "repo": "DeepGlint-AI/mlcd-vit-bigG-patch14-336",
-            "pkg": {
-                "0": {
-                    "transformers": "MLCDVisionModel"
-                }
-            }
-        }
-    },
-    "info.art.musicgen-melody": {
-        "*": {
-            "repo": "facebook/musicgen-melody",
-            "pkg": {
-                "0": {
-                    "transformers": "MusicgenMelodyModel"
-                }
-            }
-        }
-    },
-    "info.vit.swin-patch4-window7-224": {
-        "*": {
-            "repo": "microsoft/swin-tiny-patch4-window7-224",
-            "pkg": {
-                "0": {
-                    "transformers": "MaskFormerSwinModel"
-                }
-            }
-        }
-    },
-    "info.vit.kosmos-2-patch14-224": {
-        "*": {
-            "repo": "microsoft/kosmos-2-patch14-224",
-            "pkg": {
-                "0": {
-                    "transformers": "Kosmos2Model"
-                }
-            }
-        }
-    },
-    "info.aet.sew": {
-        "*": {
-            "repo": "asapp/sew-tiny-100k",
-            "pkg": {
-                "0": {
-                    "transformers": "SEWModel"
-                }
-            }
-        }
-    },
-    "info.aet.ernie-3-zh": {
-        "*": {
-            "repo": "nghuyong/ernie-3.0-base-zh",
-            "pkg": {
-                "0": {
-                    "transformers": "ErnieModel"
-                }
-            }
-        }
-    },
-    "info.vit.phi-4": {
-        "*": {
-            "repo": "microsoft/Phi-4-multimodal-instruct",
-            "pkg": {
-                "0": {
-                    "transformers": "Phi4MultimodalModel"
-                },
-                "0": {
-                    "transformers": "Phi4MultimodalModel"
-                }
-            },
-            "file_256": [
-                "bc703090b63eda16f639fa4de7ac54635c23105ab1da2f6ec4d3403151d38ee6"
-            ],
-            "layer_b3": [
-                "cf4add4ada6082f448788eaf2937f645b5212db88e06ee81475b8be0e99063dc"
-            ],
-            "layer_256": [
-                "7ff992b780b2f8993dd6bb9612207943638b2a42badc976ce80893bc205e801b"
-            ]
-        }
-    },
-    "info.aet.whisper": {
-        "*": {
-            "repo": "openai/whisper-tiny",
-            "pkg": {
-                "0": {
-                    "transformers": "WhisperModel"
-                }
-            }
-        }
-    },
-    "info.gan.mimi": {
-        "*": {
-            "repo": "kyutai/mimi",
-            "pkg": {
-                "0": {
-                    "transformers": "MimiModel"
-                }
-            }
-        }
-    },
-    "info.ssm.zamba-v1": {
-        "*": {
-            "repo": "Zyphra/Zamba-7B-v1",
-            "pkg": {
-                "0": {
-                    "transformers": "ZambaModel"
-                }
-            }
-        }
-    },
-    "info.vit.data2vec-vision": {
-        "*": {
-            "repo": "facebook/data2vec-vision-base",
-            "pkg": {
-                "0": {
-                    "transformers": "Data2VecVisionModel"
-                }
-            }
-        }
-    },
-    "info.vit.swiftformer-xs": {
-        "*": {
-            "repo": "MBZUAI/swiftformer-xs",
-            "pkg": {
-                "0": {
-                    "transformers": "SwiftFormerModel"
-                }
-            }
-        }
-    },
-    "info.art.gpt2": {
-        "*": {
-            "repo": "openai-community/gpt2",
-            "pkg": {
-                "0": {
-                    "transformers": "GPT2Model"
-                }
-            }
-        }
-    },
-    "info.vit.textnet": {
-        "*": {
-            "repo": "czczup/textnet-base",
-            "pkg": {
-                "0": {
-                    "transformers": "TextNetModel"
-                }
-            }
-        }
-    },
-    "info.vit.siglip-patch16-224": {
-        "*": {
-            "repo": "google/siglip-base-patch16-224",
-            "pkg": {
-                "0": {
-                    "transformers": "Idefics3VisionTransformer"
-                }
-            }
-        }
-    },
-    "info.vit.van": {
-        "*": {
-            "repo": "Visual-Attention-Network/van-base",
-            "pkg": {
-                "0": {
-                    "transformers": "VanModel"
-                }
-            }
-        }
-    },
-    "info.art.gpt-j": {
-        "*": {
-            "repo": "EleutherAI/gpt-j-6B",
-            "pkg": {
-                "0": {
-                    "transformers": "GPTJModel"
-                }
-            }
-        }
-    },
-    "info.art.ctrl": {
-        "*": {
-            "repo": "Salesforce/ctrl",
-            "pkg": {
-                "0": {
-                    "transformers": "CTRLModel"
+                    "transformers": "InstructBlipVideoModel"
                 }
             }
         }
@@ -2538,6 +2798,56 @@
             ]
         }
     },
+    "info.art.granite": {
+        "*": {
+            "repo": "ibm-granite/granite-3.3-2b-base",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteModel"
+                }
+            }
+        }
+    },
+    "info.vit.mgp-str": {
+        "*": {
+            "repo": "alibaba-damo/mgp-str-base",
+            "pkg": {
+                "0": {
+                    "transformers": "MgpstrForSceneTextRecognition"
+                }
+            }
+        }
+    },
+    "info.art.stt-en-trfs": {
+        "*": {
+            "repo": "kyutai/stt-2.6b-en-trfs",
+            "pkg": {
+                "0": {
+                    "transformers": "KyutaiSpeechToTextModel"
+                }
+            }
+        }
+    },
+    "info.vit.udop": {
+        "*": {
+            "repo": "microsoft/udop-large",
+            "pkg": {
+                "0": {
+                    "transformers": "UdopModel"
+                }
+            }
+        }
+    },
+    "info.art.bitnet-b18-4t": {
+        "*": {
+            "repo": "microsoft/bitnet-b1.58-2B-4T",
+            "pkg": {
+                "0": {
+                    "transformers": "BitNetModel"
+                }
+            }
+        }
+    },
     "info.aet.dpr-question-encoder-single-nq": {
         "*": {
             "repo": "facebook/dpr-question_encoder-single-nq-base",
@@ -2548,172 +2858,92 @@
             }
         }
     },
-    "info.art.phi-3": {
+    "info.vit.colqwen2-v1-hf": {
         "*": {
-            "repo": "microsoft/Phi-3-mini-4k-instruct",
+            "repo": "vidore/colqwen2-v1.0-hf",
             "pkg": {
                 "0": {
-                    "transformers": "Phi3Model"
+                    "transformers": "ColQwen2ForRetrieval"
                 }
             }
         }
     },
-    "info.art.stablelm-4e1t": {
+    "info.vit.ijepa-vith14": {
         "*": {
-            "repo": "stabilityai/stablelm-3b-4e1t",
+            "repo": "facebook/ijepa_vith14_1k",
             "pkg": {
                 "0": {
-                    "transformers": "StableLmModel"
+                    "transformers": "IJepaModel"
                 }
             }
         }
     },
-    "info.vit.convnext-224": {
+    "info.art.olmo2-1124-hf": {
         "*": {
-            "repo": "facebook/convnext-tiny-224",
+            "repo": "allenai/Olmo2-7B-1124-hf",
             "pkg": {
                 "0": {
-                    "transformers": "ConvNextModel"
+                    "transformers": "Olmo2Model"
                 }
             }
         }
     },
-    "info.stst.pegasus": {
+    "info.vit.blip2-opt": {
         "*": {
-            "repo": "google/pegasus-large",
+            "repo": "Salesforce/blip2-opt-2.7b",
             "pkg": {
                 "0": {
-                    "transformers": "PegasusModel"
+                    "transformers": "Blip2Model"
                 }
             }
         }
     },
-    "info.ssm.mamba": {
+    "info.art.deberta-v2-xlarge": {
         "*": {
-            "repo": "state-spaces/mamba-2.8b",
+            "repo": "microsoft/deberta-v2-xlarge",
             "pkg": {
                 "0": {
-                    "transformers": "MambaModel"
+                    "transformers": "DebertaV2Model"
                 }
             }
         }
     },
-    "info.detr.dfine-xlarge-coco": {
+    "info.gan.nat-in1k-224": {
         "*": {
-            "repo": "ustc-community/dfine-xlarge-coco",
+            "repo": "shi-labs/nat-mini-in1k-224",
             "pkg": {
                 "0": {
-                    "transformers": "DFineModel"
+                    "transformers": "NatModel"
                 }
             }
         }
     },
-    "info.vit.mobilevit": {
+    "info.vit.llava": {
         "*": {
-            "repo": "apple/mobilevit-small",
+            "repo": "llava-hf/llava-9b",
             "pkg": {
                 "0": {
-                    "transformers": "MobileViTModel"
+                    "transformers": "LlavaModel"
                 }
             }
         }
     },
-    "info.vit.siglip2-patch16-224": {
+    "info.vit.owlv2-patch16": {
         "*": {
-            "repo": "google/siglip2-base-patch16-224",
+            "repo": "google/owlv2-base-patch16",
             "pkg": {
                 "0": {
-                    "transformers": "Siglip2Model"
+                    "transformers": "Owlv2Model"
                 }
             }
         }
     },
-    "info.stst.granite-speech": {
+    "info.lstm.xlstm": {
         "*": {
-            "repo": "ibm-granite/granite-speech-3.3-8b",
+            "repo": "NX-AI/xLSTM-7b",
             "pkg": {
                 "0": {
-                    "transformers": "GraniteSpeechForConditionalGeneration"
-                }
-            }
-        }
-    },
-    "info.aet.ibert-roberta": {
-        "*": {
-            "repo": "kssteven/ibert-roberta-base",
-            "pkg": {
-                "0": {
-                    "transformers": "IBertModel"
-                }
-            }
-        }
-    },
-    "info.art.starcoder2": {
-        "*": {
-            "repo": "bigcode/starcoder2-7b",
-            "pkg": {
-                "0": {
-                    "transformers": "Starcoder2Model"
-                }
-            }
-        }
-    },
-    "info.stst.bigbird-pegasus-arxiv": {
-        "*": {
-            "repo": "google/bigbird-pegasus-large-arxiv",
-            "pkg": {
-                "0": {
-                    "transformers": "BigBirdPegasusModel"
-                }
-            }
-        }
-    },
-    "info.vit.pixtral": {
-        "*": {
-            "repo": "pixtral-hf/pixtral-9b",
-            "pkg": {
-                "0": {
-                    "transformers": "PixtralVisionModel"
-                }
-            }
-        }
-    },
-    "info.art.rembert": {
-        "*": {
-            "repo": "google/rembert",
-            "pkg": {
-                "0": {
-                    "transformers": "RemBertModel"
-                }
-            }
-        }
-    },
-    "info.vit.clap-htsat-fused": {
-        "*": {
-            "repo": "laion/clap-htsat-fused",
-            "pkg": {
-                "0": {
-                    "transformers": "ClapModel"
-                }
-            }
-        }
-    },
-    "info.detr.rtdetr-r50vd": {
-        "*": {
-            "repo": "PekingU/rtdetr_r50vd",
-            "pkg": {
-                "0": {
-                    "transformers": "RTDetrModel"
-                }
-            }
-        }
-    },
-    "info.art.biogpt": {
-        "*": {
-            "repo": "microsoft/biogpt",
-            "pkg": {
-                "0": {
-                    "transformers": "BioGptModel"
+                    "transformers": "xLSTMModel"
                 }
             }
         }
@@ -2728,72 +2958,172 @@
             }
         }
     },
-    "info.vit.vjepa2-vitl-fpc64-256": {
+    "info.vit.hiera-224": {
         "*": {
-            "repo": "facebook/vjepa2-vitl-fpc64-256",
+            "repo": "facebook/hiera-base-224",
             "pkg": {
                 "0": {
-                    "transformers": "VJEPA2Model"
+                    "transformers": "HieraModel"
                 }
             }
         }
     },
-    "info.aet.mra-512-4": {
+    "info.detr.grounding-dino": {
         "*": {
-            "repo": "uw-madison/mra-base-512-4",
+            "repo": "IDEA-Research/grounding-dino-tiny",
             "pkg": {
                 "0": {
-                    "transformers": "MraModel"
+                    "transformers": "GroundingDinoModel"
                 }
             }
         }
     },
-    "info.aet.wavlm": {
+    "info.detr.tvp": {
         "*": {
-            "repo": "microsoft/wavlm-base",
+            "repo": "Intel/tvp-base",
             "pkg": {
                 "0": {
-                    "transformers": "WavLMModel"
+                    "transformers": "TvpModel"
                 }
             }
         }
     },
-    "info.vit.donut": {
+    "info.vit.dinov2-with-registers": {
         "*": {
-            "repo": "naver-clova-ix/donut-base",
+            "repo": "facebook/dinov2-with-registers-base",
             "pkg": {
                 "0": {
-                    "transformers": "DonutSwinModel"
+                    "transformers": "Dinov2WithRegistersModel"
                 }
             }
         }
     },
-    "info.aet.modernbert": {
+    "info.art.roformer-chinese": {
         "*": {
-            "repo": "answerdotai/ModernBERT-base",
+            "repo": "junnyu/roformer_chinese_base",
             "pkg": {
                 "0": {
-                    "transformers": "ModernBertModel"
+                    "transformers": "RoFormerModel"
                 }
             }
         }
     },
-    "info.vit.pvt-v2-b0": {
+    "info.vit.language-perceiver": {
         "*": {
-            "repo": "OpenGVLab/pvt_v2_b0",
+            "repo": "deepmind/language-perceiver",
             "pkg": {
                 "0": {
-                    "transformers": "PvtV2Model"
+                    "transformers": "PerceiverModel"
                 }
             }
         }
     },
-    "info.vit.bridgetower": {
+    "info.art.luke": {
         "*": {
-            "repo": "BridgeTower/bridgetower-base",
+            "repo": "studio-ousia/luke-base",
             "pkg": {
                 "0": {
-                    "transformers": "BridgeTowerModel"
+                    "transformers": "LukeModel"
+                }
+            }
+        }
+    },
+    "info.art.gemma3-text": {
+        "*": {
+            "repo": "google/gemma3_text-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Gemma3TextModel"
+                }
+            }
+        }
+    },
+    "info.art.mega-wikitext": {
+        "*": {
+            "repo": "mnaylor/mega-base-wikitext",
+            "pkg": {
+                "0": {
+                    "transformers": "MegaModel"
+                }
+            }
+        }
+    },
+    "info.vit.pixtral": {
+        "*": {
+            "repo": "pixtral-hf/pixtral-9b",
+            "pkg": {
+                "0": {
+                    "transformers": "PixtralVisionModel"
+                }
+            }
+        }
+    },
+    "info.art.gpt-neox": {
+        "*": {
+            "repo": "EleutherAI/gpt-neox-20b",
+            "pkg": {
+                "0": {
+                    "transformers": "GPTNeoXModel"
+                }
+            }
+        }
+    },
+    "info.art.opt": {
+        "*": {
+            "repo": "facebook/opt-350m",
+            "pkg": {
+                "0": {
+                    "transformers": "OPTModel"
+                }
+            }
+        }
+    },
+    "info.cnn.yolos": {
+        "*": {
+            "repo": "hustvl/yolos-base",
+            "pkg": {
+                "0": {
+                    "transformers": "YolosModel"
+                }
+            }
+        }
+    },
+    "info.aet.layoutlm-uncased": {
+        "*": {
+            "repo": "microsoft/layoutlm-base-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "LayoutLMModel"
+                }
+            }
+        }
+    },
+    "info.stst.opus-mt-en-de": {
+        "*": {
+            "repo": "Helsinki-NLP/opus-mt-en-de",
+            "pkg": {
+                "0": {
+                    "transformers": "MarianModel"
+                }
+            }
+        }
+    },
+    "info.aet.whisper": {
+        "*": {
+            "repo": "openai/whisper-tiny",
+            "pkg": {
+                "0": {
+                    "transformers": "WhisperModel"
+                }
+            }
+        }
+    },
+    "info.art.bigbird-roberta": {
+        "*": {
+            "repo": "google/bigbird-roberta-base",
+            "pkg": {
+                "0": {
+                    "transformers": "BigBirdModel"
                 }
             }
         }
@@ -2808,6 +3138,922 @@
             }
         }
     },
+    "info.stst.wmt19-en-ru": {
+        "*": {
+            "repo": "facebook/wmt19-en-ru",
+            "pkg": {
+                "0": {
+                    "transformers": "FSMTModel"
+                }
+            }
+        }
+    },
+    "info.aet.megatron-bert-uncased": {
+        "*": {
+            "repo": "nvidia/megatron-bert-uncased-345m",
+            "pkg": {
+                "0": {
+                    "transformers": "MegatronBertModel"
+                }
+            }
+        }
+    },
+    "info.vit.vip-llava-hf": {
+        "*": {
+            "repo": "ybelkada/vip-llava-7b-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "VipLlavaModel"
+                }
+            }
+        }
+    },
+    "info.detr.deformable-detr": {
+        "*": {
+            "repo": "SenseTime/deformable-detr",
+            "pkg": {
+                "0": {
+                    "transformers": "DeformableDetrModel"
+                }
+            }
+        }
+    },
+    "info.vit.swin2sr-classicalsr-x2-64": {
+        "*": {
+            "repo": "caidas/swin2sr-classicalsr-x2-64",
+            "pkg": {
+                "0": {
+                    "transformers": "Swin2SRModel"
+                }
+            }
+        }
+    },
+    "info.vit.swin-patch4-window7-224": {
+        "*": {
+            "repo": "microsoft/swin-tiny-patch4-window7-224",
+            "pkg": {
+                "0": {
+                    "transformers": "MaskFormerSwinModel"
+                }
+            }
+        }
+    },
+    "info.vit.kosmos-2-patch14-224": {
+        "*": {
+            "repo": "microsoft/kosmos-2-patch14-224",
+            "pkg": {
+                "0": {
+                    "transformers": "Kosmos2Model"
+                }
+            }
+        }
+    },
+    "info.aet.bert-for-seq-generation-l-bc-encoder": {
+        "*": {
+            "repo": "google/bert_for_seq_generation_L-24_bbc_encoder",
+            "pkg": {
+                "0": {
+                    "transformers": "BertGenerationEncoder"
+                }
+            }
+        }
+    },
+    "info.detr.omdet-turbo-swin-hf": {
+        "*": {
+            "repo": "omlab/omdet-turbo-swin-tiny-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "OmDetTurboForObjectDetection"
+                }
+            }
+        }
+    },
+    "info.detr.resnet18-a1-in1k": {
+        "*": {
+            "repo": "timm/resnet18.a1_in1k",
+            "pkg": {
+                "0": {
+                    "transformers": "TimmWrapperModel"
+                }
+            }
+        }
+    },
+    "info.art.phi-3-moe": {
+        "*": {
+            "repo": "microsoft/Phi-3.5-MoE-instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "PhimoeModel"
+                }
+            }
+        }
+    },
+    "info.art.open-llama-v1": {
+        "*": {
+            "repo": "s-JoL/Open-Llama-V1",
+            "pkg": {
+                "0": {
+                    "transformers": "OpenLlamaModel"
+                }
+            }
+        }
+    },
+    "info.vit.mlcd-vit-bigg-patch14-336": {
+        "*": {
+            "repo": "DeepGlint-AI/mlcd-vit-bigG-patch14-336",
+            "pkg": {
+                "0": {
+                    "transformers": "MLCDVisionModel"
+                }
+            }
+        }
+    },
+    "info.detr.conditional-detr-resnet-50": {
+        "*": {
+            "repo": "microsoft/conditional-detr-resnet-50",
+            "pkg": {
+                "0": {
+                    "transformers": "ConditionalDetrModel"
+                }
+            }
+        }
+    },
+    "info.vit.sam-vit-huge": {
+        "*": {
+            "repo": "facebook/sam-vit-huge",
+            "pkg": {
+                "0": {
+                    "transformers": "SamVisionModel"
+                }
+            }
+        }
+    },
+    "info.rnn.rwkv-4-pile": {
+        "*": {
+            "repo": "RWKV/rwkv-4-169m-pile",
+            "pkg": {
+                "0": {
+                    "transformers": "RwkvModel"
+                }
+            }
+        }
+    },
+    "info.art.mpt": {
+        "*": {
+            "repo": "mosaicml/mpt-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "MptModel"
+                }
+            }
+        }
+    },
+    "info.art.mobilebert-uncased": {
+        "*": {
+            "repo": "google/mobilebert-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "MobileBertModel"
+                }
+            }
+        }
+    },
+    "info.vit.llava-v1-mistral-hf": {
+        "*": {
+            "repo": "llava-hf/llava-v1.6-mistral-7b-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "LlavaNextModel"
+                }
+            }
+        }
+    },
+    "info.stst.pegasus-x": {
+        "*": {
+            "repo": "google/pegasus-x-large",
+            "pkg": {
+                "0": {
+                    "transformers": "PegasusXModel"
+                }
+            }
+        }
+    },
+    "info.detr.table-transformer-detection": {
+        "*": {
+            "repo": "microsoft/table-transformer-detection",
+            "pkg": {
+                "0": {
+                    "transformers": "TableTransformerModel"
+                }
+            }
+        }
+    },
+    "info.ssm.jamba-v0": {
+        "*": {
+            "repo": "ai21labs/Jamba-v0.1",
+            "pkg": {
+                "0": {
+                    "transformers": "JambaModel"
+                }
+            }
+        }
+    },
+    "info.art.xlnet-cased": {
+        "*": {
+            "repo": "xlnet/xlnet-large-cased",
+            "pkg": {
+                "0": {
+                    "transformers": "XLNetModel"
+                }
+            }
+        }
+    },
+    "info.art.xglm": {
+        "*": {
+            "repo": "facebook/xglm-564M",
+            "pkg": {
+                "0": {
+                    "transformers": "XGLMModel"
+                }
+            }
+        }
+    },
+    "info.aet.blip2-opt": {
+        "*": {
+            "repo": "Salesforce/blip2-opt-2.7b",
+            "pkg": {
+                "0": {
+                    "transformers": "Blip2QFormerModel"
+                }
+            }
+        }
+    },
+    "info.gan.dinat-in1k-224": {
+        "*": {
+            "repo": "shi-labs/dinat-mini-in1k-224",
+            "pkg": {
+                "0": {
+                    "transformers": "DinatModel"
+                }
+            }
+        }
+    },
+    "info.art.jukebox-lyrics": {
+        "*": {
+            "repo": "openai/jukebox-1b-lyrics",
+            "pkg": {
+                "0": {
+                    "transformers": "JukeboxModel"
+                }
+            }
+        }
+    },
+    "info.vit.pvt-v2-b0": {
+        "*": {
+            "repo": "OpenGVLab/pvt_v2_b0",
+            "pkg": {
+                "0": {
+                    "transformers": "PvtV2Model"
+                }
+            }
+        }
+    },
+    "info.ssm.mamba": {
+        "*": {
+            "repo": "state-spaces/mamba-2.8b",
+            "pkg": {
+                "0": {
+                    "transformers": "MambaModel"
+                }
+            }
+        }
+    },
+    "info.vit.van": {
+        "*": {
+            "repo": "Visual-Attention-Network/van-base",
+            "pkg": {
+                "0": {
+                    "transformers": "VanModel"
+                }
+            }
+        }
+    },
+    "info.vit.blip-vqa": {
+        "*": {
+            "repo": "Salesforce/blip-vqa-base",
+            "pkg": {
+                "0": {
+                    "transformers": "BlipModel"
+                }
+            }
+        }
+    },
+    "info.vit.regnet-y-040": {
+        "*": {
+            "repo": "facebook/regnet-y-040",
+            "pkg": {
+                "0": {
+                    "transformers": "RegNetModel"
+                }
+            }
+        }
+    },
+    "info.art.ctrl": {
+        "*": {
+            "repo": "Salesforce/ctrl",
+            "pkg": {
+                "0": {
+                    "transformers": "CTRLModel"
+                }
+            }
+        }
+    },
+    "info.art.mpnet": {
+        "*": {
+            "repo": "microsoft/mpnet-base",
+            "pkg": {
+                "0": {
+                    "transformers": "MPNetModel"
+                }
+            }
+        }
+    },
+    "info.art.glm-4-chat": {
+        "*": {
+            "repo": "THUDM/glm-4-9b-chat",
+            "pkg": {
+                "0": {
+                    "transformers": "GlmModel"
+                }
+            }
+        }
+    },
+    "info.art.c4ai-command-r-v01": {
+        "*": {
+            "repo": "CohereForAI/c4ai-command-r-v01",
+            "pkg": {
+                "0": {
+                    "transformers": "CohereModel"
+                }
+            }
+        }
+    },
+    "info.ssm.zamba2": {
+        "*": {
+            "repo": "Zyphra/Zamba2-2.7B",
+            "pkg": {
+                "0": {
+                    "transformers": "Zamba2Model"
+                }
+            }
+        }
+    },
+    "info.vit.vit-msn": {
+        "*": {
+            "repo": "facebook/vit_msn_base",
+            "pkg": {
+                "0": {
+                    "transformers": "ViTMSNModel"
+                }
+            }
+        }
+    },
+    "info.vit.perception-lm": {
+        "*": {
+            "repo": "facebook/Perception-LM-1B",
+            "pkg": {
+                "0": {
+                    "transformers": "PerceptionLMModel"
+                }
+            }
+        }
+    },
+    "info.aet.sew-d": {
+        "*": {
+            "repo": "asapp/sew-d-tiny-100k",
+            "pkg": {
+                "0": {
+                    "transformers": "SEWDModel"
+                }
+            }
+        }
+    },
+    "info.aet.": {
+        "*": {
+            "repo": "funnel-transformer/small",
+            "pkg": {
+                "0": {
+                    "transformers": "FunnelModel"
+                }
+            }
+        }
+    },
+    "info.ssm.bamba-t-hf": {
+        "*": {
+            "repo": "ibm-fms/Bamba-9.8b-2.2T-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "BambaModel"
+                }
+            }
+        }
+    },
+    "info.stst.granite-speech": {
+        "*": {
+            "repo": "ibm-granite/granite-speech-3.3-8b",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteSpeechForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.vit.idefics": {
+        "*": {
+            "repo": "HuggingFaceM4/idefics-9b",
+            "pkg": {
+                "0": {
+                    "transformers": "IdeficsModel"
+                }
+            }
+        }
+    },
+    "info.stst.umt5": {
+        "*": {
+            "repo": "google/umt5-small",
+            "pkg": {
+                "0": {
+                    "transformers": "UMT5Model"
+                }
+            },
+            "identifiers": [
+                "encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"
+            ],
+            "file_256": [
+                "decf9b70814ed5e9965bfca9fbd0483462e2bf743790663025b7742f8c014c72",
+                "0a07449cf1141c0ec86e653c00465f6f0d79c6e58a2c60c8bcf4203d0e4ec4f6"
+            ],
+            "layer_b3": [
+                "1c943dbcb8b328a7c6c852921ddaefbd84c9df8c83bc51fe303c1f06cb734102",
+                "1639a6467af0db1e15828d33b878e568cba1335947eeadd481170bcdc9ba8e33"
+            ],
+            "layer_256": [
+                "58deeef888d4ded4ffababfbf8da27227a4a6ff8adfa42016e12c0180f713816",
+                "178ebd3fa3418d33a2e45a80d8b9d3662ff4a8e75f3de3f0332f82c505d8152a"
+            ]
+        }
+    },
+    "info.vit.textnet": {
+        "*": {
+            "repo": "czczup/textnet-base",
+            "pkg": {
+                "0": {
+                    "transformers": "TextNetModel"
+                }
+            }
+        }
+    },
+    "info.art.nezha-cn": {
+        "*": {
+            "repo": "sijunhe/nezha-cn-base",
+            "pkg": {
+                "0": {
+                    "transformers": "NezhaModel"
+                }
+            }
+        }
+    },
+    "info.stst.pop2piano": {
+        "*": {
+            "repo": "sweetcocoa/pop2piano",
+            "pkg": {
+                "0": {
+                    "transformers": "Pop2PianoForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.art.ernie-4-pt": {
+        "*": {
+            "repo": "baidu/ERNIE-4.5-21B-A3B-PT",
+            "pkg": {
+                "0": {
+                    "transformers": "Ernie4_5_MoeModel"
+                }
+            }
+        }
+    },
+    "info.aet.yoso-4096": {
+        "*": {
+            "repo": "uw-madison/yoso-4096",
+            "pkg": {
+                "0": {
+                    "transformers": "YosoModel"
+                }
+            }
+        }
+    },
+    "info.art.c4ai-command-12-2024": {
+        "*": {
+            "repo": "CohereLabs/c4ai-command-r7b-12-2024",
+            "pkg": {
+                "0": {
+                    "transformers": "Cohere2Model"
+                }
+            }
+        }
+    },
+    "info.detr.dfine-xlarge-coco": {
+        "*": {
+            "repo": "ustc-community/dfine-xlarge-coco",
+            "pkg": {
+                "0": {
+                    "transformers": "DFineModel"
+                }
+            }
+        }
+    },
+    "info.ssm.falcon-mamba": {
+        "*": {
+            "repo": "tiiuae/falcon-mamba-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "FalconMambaModel"
+                }
+            }
+        }
+    },
+    "info.art.afm": {
+        "*": {
+            "repo": "arcee-ai/AFM-4.5B",
+            "pkg": {
+                "0": {
+                    "transformers": "ArceeModel"
+                }
+            }
+        }
+    },
+    "info.aet.wavlm": {
+        "*": {
+            "repo": "microsoft/wavlm-base",
+            "pkg": {
+                "0": {
+                    "transformers": "WavLMModel"
+                }
+            }
+        }
+    },
+    "info.aet.test-dec": {
+        "*": {
+            "repo": "blab-jhu/test-32m-dec",
+            "pkg": {
+                "0": {
+                    "transformers": "ModernBertDecoderModel"
+                }
+            }
+        }
+    },
+    "info.vit.focalnet": {
+        "*": {
+            "repo": "microsoft/focalnet-tiny",
+            "pkg": {
+                "0": {
+                    "transformers": "FocalNetModel"
+                }
+            }
+        }
+    },
+    "info.vit.bit-50": {
+        "*": {
+            "repo": "google/bit-50",
+            "pkg": {
+                "0": {
+                    "transformers": "BitModel"
+                }
+            }
+        }
+    },
+    "info.art.olmoe-0924": {
+        "*": {
+            "repo": "allenai/OLMoE-1B-7B-0924",
+            "pkg": {
+                "0": {
+                    "transformers": "OlmoeModel"
+                }
+            }
+        }
+    },
+    "info.aet.data2vec-audio-960h": {
+        "*": {
+            "repo": "facebook/data2vec-audio-base-960h",
+            "pkg": {
+                "0": {
+                    "transformers": "Data2VecAudioModel"
+                }
+            }
+        }
+    },
+    "info.art.flaubert-uncased": {
+        "*": {
+            "repo": "flaubert/flaubert_base_uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "FlaubertModel"
+                }
+            }
+        }
+    },
+    "info.aet.bert-uncased": {
+        "*": {
+            "repo": "google-bert/bert-base-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "BertModel"
+                }
+            }
+        }
+    },
+    "info.art.ernie-45-pt": {
+        "*": {
+            "repo": "baidu/ERNIE-4.5-0.3B-PT",
+            "pkg": {
+                "0": {
+                    "transformers": "Ernie4_5Model"
+                }
+            }
+        }
+    },
+    "info.detr.upernet-convnext": {
+        "*": {
+            "repo": "openmmlab/upernet-convnext-tiny",
+            "pkg": {
+                "0": {
+                    "transformers": "UperNetForSemanticSegmentation"
+                }
+            }
+        }
+    },
+    "info.stst.switch-8": {
+        "*": {
+            "repo": "google/switch-base-8",
+            "pkg": {
+                "0": {
+                    "transformers": "SwitchTransformersModel"
+                }
+            }
+        }
+    },
+    "info.aet.wav2vec2-bert-rel-pos": {
+        "*": {
+            "repo": "facebook/wav2vec2-bert-rel-pos-large",
+            "pkg": {
+                "0": {
+                    "transformers": "Wav2Vec2BertModel"
+                }
+            }
+        }
+    },
+    "info.vit.siglip2-patch16-224": {
+        "*": {
+            "repo": "google/siglip2-base-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "Siglip2Model"
+                }
+            }
+        }
+    },
+    "info.vit.colpali-v1": {
+        "*": {
+            "repo": "vidore/colpali-v1.2",
+            "pkg": {
+                "0": {
+                    "transformers": "ColPaliForRetrieval"
+                }
+            }
+        }
+    },
+    "info.art.aria": {
+        "*": {
+            "repo": "rhymes-ai/Aria",
+            "pkg": {
+                "0": {
+                    "transformers": "AriaTextModel"
+                }
+            }
+        }
+    },
+    "info.art.max-text-01-hf": {
+        "*": {
+            "repo": "MiniMaxAI/MiniMax-Text-01-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "MiniMaxModel"
+                }
+            }
+        }
+    },
+    "info.art.smollm3": {
+        "*": {
+            "repo": "HuggingFaceTB/SmolLM3-3B",
+            "pkg": {
+                "0": {
+                    "transformers": "SmolLM3Model"
+                }
+            }
+        }
+    },
+    "info.vit.got-ocr-2-hf": {
+        "*": {
+            "repo": "stepfun-ai/GOT-OCR-2.0-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "GotOcr2Model"
+                }
+            }
+        }
+    },
+    "info.vit.clap-htsat-fused": {
+        "*": {
+            "repo": "laion/clap-htsat-fused",
+            "pkg": {
+                "0": {
+                    "transformers": "ClapModel"
+                }
+            }
+        }
+    },
+    "info.vit.retribert-uncased": {
+        "*": {
+            "repo": "yjernite/retribert-base-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "RetriBertModel"
+                }
+            }
+        }
+    },
+    "info.art.visualbert-vqa-coco-pre": {
+        "*": {
+            "repo": "uclanlp/visualbert-vqa-coco-pre",
+            "pkg": {
+                "0": {
+                    "transformers": "VisualBertModel"
+                }
+            }
+        }
+    },
+    "info.ssm.powermoe": {
+        "*": {
+            "repo": "ibm-research/PowerMoE-3b",
+            "pkg": {
+                "0": {
+                    "transformers": "GraniteMoeHybridModel"
+                }
+            }
+        }
+    },
+    "info.art.llama-4-scout-16e": {
+        "*": {
+            "repo": "meta-llama/Llama-4-Scout-17B-16E",
+            "pkg": {
+                "0": {
+                    "transformers": "Llama4TextModel"
+                }
+            }
+        }
+    },
+    "info.art.gemma": {
+        "*": {
+            "repo": "google/gemma-7b",
+            "pkg": {
+                "0": {
+                    "transformers": "GemmaModel"
+                }
+            },
+            "file_256": [
+                "01676b4c6e765f737a5e9854a315de3887e939c370cae116d505777729099a68"
+            ],
+            "layer_b3": [
+                "438d82c867240f194a4e15798eef2886a911c8f57fa2d9f4ffad1d56e7bd1ccf",
+                "1de38e09f5f2c5345de48b8cd4dddcfff3e341cc0059752446e186b3863f0981"
+            ],
+            "layer_256": [
+                "e4835a72d582b4ae066d6ff0519f2ee9f8b21fb02e8c28d8eaa317f8d1e9ea75",
+                "1657c7180b48672004f4463308dfdd56d92eedeb23d1408ea766985ca208e5aa"
+            ]
+        }
+    },
+    "info.aet.fastspeech2-conformer": {
+        "*": {
+            "repo": "espnet/fastspeech2_conformer",
+            "pkg": {
+                "0": {
+                    "transformers": "FastSpeech2ConformerModel"
+                }
+            }
+        }
+    },
+    "info.vit.vilt-b32-mlm": {
+        "*": {
+            "repo": "dandelin/vilt-b32-mlm",
+            "pkg": {
+                "0": {
+                    "transformers": "ViltModel"
+                }
+            }
+        }
+    },
+    "info.vit.git": {
+        "*": {
+            "repo": "microsoft/git-base",
+            "pkg": {
+                "0": {
+                    "transformers": "GitModel"
+                }
+            }
+        }
+    },
+    "info.aet.wav2vec2-conformer-rel-pos": {
+        "*": {
+            "repo": "facebook/wav2vec2-conformer-rel-pos-large",
+            "pkg": {
+                "0": {
+                    "transformers": "Wav2Vec2ConformerModel"
+                }
+            }
+        }
+    },
+    "info.vit.vivit-b-16x2-kinetics400": {
+        "*": {
+            "repo": "google/vivit-b-16x2-kinetics400",
+            "pkg": {
+                "0": {
+                    "transformers": "VivitModel"
+                }
+            }
+        }
+    },
+    "info.art.conv-bert": {
+        "*": {
+            "repo": "YituTech/conv-bert-base",
+            "pkg": {
+                "0": {
+                    "transformers": "ConvBertModel"
+                }
+            }
+        }
+    },
+    "info.vit.beit-patch16-224-pt22k": {
+        "*": {
+            "repo": "microsoft/beit-base-patch16-224-pt22k",
+            "pkg": {
+                "0": {
+                    "transformers": "BeitModel"
+                }
+            }
+        }
+    },
+    "info.art.layoutlmv2-uncased": {
+        "*": {
+            "repo": "microsoft/layoutlmv2-base-uncased",
+            "pkg": {
+                "0": {
+                    "transformers": "LayoutLMv2Model"
+                }
+            }
+        }
+    },
+    "info.vit.donut": {
+        "*": {
+            "repo": "naver-clova-ix/donut-base",
+            "pkg": {
+                "0": {
+                    "transformers": "DonutSwinModel"
+                }
+            }
+        }
+    },
+    "info.vit.convnext-224": {
+        "*": {
+            "repo": "facebook/convnext-tiny-224",
+            "pkg": {
+                "0": {
+                    "transformers": "ConvNextModel"
+                }
+            }
+        }
+    },
+    "info.art.nemotron-3-hf": {
+        "*": {
+            "repo": "nvidia/nemotron-3-8b-base-4k-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "NemotronModel"
+                }
+            }
+        }
+    },
     "info.art.csm": {
         "*": {
             "repo": "sesame/csm-1b",
@@ -2818,12 +4064,463 @@
             }
         }
     },
-    "info.aet.hubert-ls960": {
+    "info.stst.led-16384": {
         "*": {
-            "repo": "facebook/hubert-base-ls960",
+            "repo": "allenai/led-base-16384",
             "pkg": {
                 "0": {
-                    "transformers": "HubertModel"
+                    "transformers": "LEDModel"
+                }
+            }
+        }
+    },
+    "info.vit.bridgetower": {
+        "*": {
+            "repo": "BridgeTower/bridgetower-base",
+            "pkg": {
+                "0": {
+                    "transformers": "BridgeTowerModel"
+                }
+            }
+        }
+    },
+    "info.vit.smolvlm-b": {
+        "*": {
+            "repo": "HuggingFaceTB/SmolVLM2-2.2B-Instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "SmolVLMModel"
+                }
+            }
+        }
+    },
+    "info.vit.deit-distilled-patch16-224": {
+        "*": {
+            "repo": "facebook/deit-base-distilled-patch16-224",
+            "pkg": {
+                "0": {
+                    "transformers": "DeiTModel"
+                }
+            }
+        }
+    },
+    "info.vit.vit-mae": {
+        "*": {
+            "repo": "facebook/vit-mae-base",
+            "pkg": {
+                "0": {
+                    "transformers": "ViTMAEModel"
+                }
+            }
+        }
+    },
+    "info.vit.phi-4": {
+        "*": {
+            "repo": "microsoft/Phi-4-multimodal-instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "Phi4MultimodalModel"
+                },
+                "0": {
+                    "transformers": "Phi4MultimodalModel"
+                }
+            },
+            "file_256": [
+                "bc703090b63eda16f639fa4de7ac54635c23105ab1da2f6ec4d3403151d38ee6"
+            ],
+            "layer_b3": [
+                "cf4add4ada6082f448788eaf2937f645b5212db88e06ee81475b8be0e99063dc"
+            ],
+            "layer_256": [
+                "7ff992b780b2f8993dd6bb9612207943638b2a42badc976ce80893bc205e801b"
+            ],
+            "tasks": [
+                "Phi4MultimodalAudioPreTrainedModel",
+                "Phi4MultimodalAudioModel",
+                "Phi4MultimodalVisionPreTrainedModel",
+                "Phi4MultimodalVisionModel",
+                "Phi4MultimodalPreTrainedModel",
+                "Phi4MultimodalModel",
+                "Phi4MultimodalForCausalLM"
+            ]
+        }
+    },
+    "info.stst.nllb-moe": {
+        "*": {
+            "repo": "facebook/nllb-moe-54b",
+            "pkg": {
+                "0": {
+                    "transformers": "NllbMoeModel"
+                }
+            }
+        }
+    },
+    "info.vit.video-llava-hf": {
+        "*": {
+            "repo": "LanguageBind/Video-LLaVA-7B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "VideoLlavaModel"
+                }
+            }
+        }
+    },
+    "info.aet.ibert-roberta": {
+        "*": {
+            "repo": "kssteven/ibert-roberta-base",
+            "pkg": {
+                "0": {
+                    "transformers": "IBertModel"
+                }
+            }
+        }
+    },
+    "info.stst.gptsan-japanese": {
+        "*": {
+            "repo": "Tanrei/GPTSAN-japanese",
+            "pkg": {
+                "0": {
+                    "transformers": "GPTSanJapaneseForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.vit.seggpt-vit": {
+        "*": {
+            "repo": "BAAI/seggpt-vit-large",
+            "pkg": {
+                "0": {
+                    "transformers": "SegGptModel"
+                }
+            }
+        }
+    },
+    "info.art.gpt-j": {
+        "*": {
+            "repo": "EleutherAI/gpt-j-6B",
+            "pkg": {
+                "0": {
+                    "transformers": "GPTJModel"
+                }
+            }
+        }
+    },
+    "info.vit.siglip-so400m-patch14-384": {
+        "*": {
+            "repo": "google/siglip-so400m-patch14-384",
+            "pkg": {
+                "0": {
+                    "transformers": "SmolVLMVisionTransformer"
+                }
+            }
+        }
+    },
+    "info.art.gpt-neox-japanese": {
+        "*": {
+            "repo": "abeja/gpt-neox-japanese-2.7b",
+            "pkg": {
+                "0": {
+                    "transformers": "GPTNeoXJapaneseModel"
+                }
+            }
+        }
+    },
+    "info.vit.llama-3-vision": {
+        "*": {
+            "repo": "meta-llama/Llama-3.2-11B-Vision",
+            "pkg": {
+                "0": {
+                    "transformers": "MllamaModel"
+                }
+            }
+        }
+    },
+    "info.art.doge": {
+        "*": {
+            "repo": "SmallDoge/Doge-320M",
+            "pkg": {
+                "0": {
+                    "transformers": "DogeModel"
+                }
+            }
+        }
+    },
+    "info.vit.cvt-13": {
+        "*": {
+            "repo": "microsoft/cvt-13",
+            "pkg": {
+                "0": {
+                    "transformers": "CvtModel"
+                }
+            }
+        }
+    },
+    "info.vit.mobilenet-v1-1--224": {
+        "*": {
+            "repo": "google/mobilenet_v1_1.0_224",
+            "pkg": {
+                "0": {
+                    "transformers": "MobileNetV1Model"
+                }
+            }
+        }
+    },
+    "info.aet.markuplm": {
+        "*": {
+            "repo": "microsoft/markuplm-base",
+            "pkg": {
+                "0": {
+                    "transformers": "MarkupLMModel"
+                }
+            }
+        }
+    },
+    "info.vit.swiftformer-xs": {
+        "*": {
+            "repo": "MBZUAI/swiftformer-xs",
+            "pkg": {
+                "0": {
+                    "transformers": "SwiftFormerModel"
+                }
+            }
+        }
+    },
+    "info.aet.s2t-librispeech-asr": {
+        "*": {
+            "repo": "facebook/s2t-small-librispeech-asr",
+            "pkg": {
+                "0": {
+                    "transformers": "Speech2TextModel"
+                }
+            }
+        }
+    },
+    "info.vit.gemma-3": {
+        "*": {
+            "repo": "google/gemma-3-4b",
+            "pkg": {
+                "0": {
+                    "transformers": "ShieldGemma2ForImageClassification"
+                }
+            }
+        }
+    },
+    "info.stst.speecht5-asr": {
+        "*": {
+            "repo": "microsoft/speecht5_asr",
+            "pkg": {
+                "0": {
+                    "transformers": "SpeechT5Model"
+                }
+            }
+        }
+    },
+    "info.art.evolla-hf": {
+        "*": {
+            "repo": "westlake-repl/Evolla-10B-hf",
+            "pkg": {
+                "0": {
+                    "transformers": "EvollaModel"
+                }
+            }
+        }
+    },
+    "info.gan.mimi": {
+        "*": {
+            "repo": "kyutai/mimi",
+            "pkg": {
+                "0": {
+                    "transformers": "MimiModel"
+                }
+            }
+        }
+    },
+    "info.aet.modernbert": {
+        "*": {
+            "repo": "answerdotai/ModernBERT-base",
+            "pkg": {
+                "0": {
+                    "transformers": "ModernBertModel"
+                }
+            }
+        }
+    },
+    "info.stst.bigbird-pegasus-arxiv": {
+        "*": {
+            "repo": "google/bigbird-pegasus-large-arxiv",
+            "pkg": {
+                "0": {
+                    "transformers": "BigBirdPegasusModel"
+                }
+            }
+        }
+    },
+    "info.art.m-ctc-t": {
+        "*": {
+            "repo": "speechbrain/m-ctc-t-large",
+            "pkg": {
+                "0": {
+                    "transformers": "MCTCTModel"
+                }
+            }
+        }
+    },
+    "info.stst.moonshine": {
+        "*": {
+            "repo": "UsefulSensors/moonshine-tiny",
+            "pkg": {
+                "0": {
+                    "transformers": "MoonshineModel"
+                }
+            }
+        }
+    },
+    "info.stst.bart": {
+        "*": {
+            "repo": "facebook/bart-large",
+            "pkg": {
+                "0": {
+                    "transformers": "BartModel"
+                }
+            }
+        }
+    },
+    "info.vit.idefics3-llama3": {
+        "*": {
+            "repo": "HuggingFaceM4/Idefics3-8B-Llama3",
+            "pkg": {
+                "0": {
+                    "transformers": "Idefics3Model"
+                }
+            }
+        }
+    },
+    "info.vit.llama-4-scout-16e": {
+        "*": {
+            "repo": "meta-llama/Llama-4-Scout-17B-16E",
+            "pkg": {
+                "0": {
+                    "transformers": "Llama4ForConditionalGeneration"
+                }
+            }
+        }
+    },
+    "info.art.fnet": {
+        "*": {
+            "repo": "google/fnet-base",
+            "pkg": {
+                "0": {
+                    "transformers": "FNetModel"
+                }
+            }
+        }
+    },
+    "info.stst.blenderbot": {
+        "*": {
+            "repo": "facebook/blenderbot-3B",
+            "pkg": {
+                "0": {
+                    "transformers": "BlenderbotModel"
+                }
+            }
+        }
+    },
+    "info.detr.dab-detr": {
+        "*": {
+            "repo": "IDEA-Research/dab_detr-base",
+            "pkg": {
+                "0": {
+                    "transformers": "DabDetrModel"
+                }
+            }
+        }
+    },
+    "info.gan.univnet-dev": {
+        "*": {
+            "repo": "dg845/univnet-dev",
+            "pkg": {
+                "0": {
+                    "transformers": "UnivNetModel"
+                }
+            }
+        }
+    },
+    "info.art.phi-3": {
+        "*": {
+            "repo": "microsoft/Phi-3-mini-4k-instruct",
+            "pkg": {
+                "0": {
+                    "transformers": "Phi3Model"
+                }
+            }
+        }
+    },
+    "info.art.phi-1": {
+        "*": {
+            "repo": "microsoft/phi-1",
+            "pkg": {
+                "0": {
+                    "transformers": "PhiModel"
+                }
+            }
+        }
+    },
+    "info.vit.timesformer-finetuned-k600": {
+        "*": {
+            "repo": "facebook/timesformer-base-finetuned-k600",
+            "pkg": {
+                "0": {
+                    "transformers": "TimesformerModel"
+                }
+            }
+        }
+    },
+    "info.aet.qwen2-audio": {
+        "*": {
+            "repo": "Qwen/Qwen2-Audio-7B",
+            "pkg": {
+                "0": {
+                    "transformers": "Qwen2AudioEncoder"
+                }
+            }
+        }
+    },
+    "info.art.musicgen": {
+        "*": {
+            "repo": "facebook/musicgen-small",
+            "pkg": {
+                "0": {
+                    "transformers": "MusicgenModel"
+                }
+            }
+        }
+    },
+    "info.vit.mistral-3-2503": {
+        "*": {
+            "repo": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
+            "pkg": {
+                "0": {
+                    "transformers": "Mistral3Model"
+                }
+            }
+        }
+    },
+    "info.art.nystromformer-512": {
+        "*": {
+            "repo": "uw-madison/nystromformer-512",
+            "pkg": {
+                "0": {
+                    "transformers": "NystromformerModel"
+                }
+            }
+        }
+    },
+    "info.art.deepseek-v2-lite": {
+        "*": {
+            "repo": "deepseek-ai/DeepSeek-V2-Lite",
+            "pkg": {
+                "0": {
+                    "transformers": "DeepseekV2Model"
                 }
             }
         }
@@ -2860,7 +4557,7 @@
                     }
                 },
                 "1": {
-                    "transformers": "ChameleonXLLMXForConditionalGeneration"
+                    "inference_solver": "ChameleonXLLMXForConditionalGeneration"
                 }
             },
             "file_256": [
@@ -2877,695 +4574,12 @@
             ]
         }
     },
-    "info.art.exaone-4": {
+    "info.art.biogpt": {
         "*": {
-            "repo": "LGAI-EXAONE/EXAONE-4.0-Instruct",
+            "repo": "microsoft/biogpt",
             "pkg": {
                 "0": {
-                    "transformers": "Exaone4Model"
-                }
-            }
-        }
-    },
-    "info.art.bark": {
-        "*": {
-            "repo": "suno/bark",
-            "pkg": {
-                "0": {
-                    "transformers": "BarkModel"
-                }
-            }
-        }
-    },
-    "info.art.gpt-neox": {
-        "*": {
-            "repo": "EleutherAI/gpt-neox-20b",
-            "pkg": {
-                "0": {
-                    "transformers": "GPTNeoXModel"
-                }
-            }
-        }
-    },
-    "info.vit.swinv2-patch4-window8-256": {
-        "*": {
-            "repo": "microsoft/swinv2-tiny-patch4-window8-256",
-            "pkg": {
-                "0": {
-                    "transformers": "Swinv2Model"
-                }
-            }
-        }
-    },
-    "info.gan.univnet-dev": {
-        "*": {
-            "repo": "dg845/univnet-dev",
-            "pkg": {
-                "0": {
-                    "transformers": "UnivNetModel"
-                }
-            }
-        }
-    },
-    "info.art.squeezebert-uncased": {
-        "*": {
-            "repo": "squeezebert/squeezebert-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "SqueezeBertModel"
-                }
-            }
-        }
-    },
-    "info.art.xlm-mlm-en-2048": {
-        "*": {
-            "repo": "FacebookAI/xlm-mlm-en-2048",
-            "pkg": {
-                "0": {
-                    "transformers": "XLMModel"
-                }
-            }
-        }
-    },
-    "info.art.gemma2": {
-        "*": {
-            "repo": "google/gemma2-7b",
-            "pkg": {
-                "0": {
-                    "transformers": "Gemma2Model"
-                }
-            }
-        }
-    },
-    "info.stst.mbart-cc25": {
-        "*": {
-            "repo": "facebook/mbart-large-cc25",
-            "pkg": {
-                "0": {
-                    "transformers": "MBartModel"
-                }
-            }
-        }
-    },
-    "info.art.glm-4-0414": {
-        "*": {
-            "repo": "THUDM/GLM-4-9B-0414",
-            "pkg": {
-                "0": {
-                    "transformers": "Glm4Model"
-                }
-            }
-        }
-    },
-    "info.art.musicgen": {
-        "*": {
-            "repo": "facebook/musicgen-small",
-            "pkg": {
-                "0": {
-                    "transformers": "MusicgenModel"
-                }
-            }
-        }
-    },
-    "info.vit.ijepa-vith14": {
-        "*": {
-            "repo": "facebook/ijepa_vith14_1k",
-            "pkg": {
-                "0": {
-                    "transformers": "IJepaModel"
-                }
-            }
-        }
-    },
-    "info.vit.colqwen2-v1-hf": {
-        "*": {
-            "repo": "vidore/colqwen2-v1.0-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "ColQwen2ForRetrieval"
-                }
-            }
-        }
-    },
-    "info.art.phi-3-moe": {
-        "*": {
-            "repo": "microsoft/Phi-3.5-MoE-instruct",
-            "pkg": {
-                "0": {
-                    "transformers": "PhimoeModel"
-                }
-            }
-        }
-    },
-    "info.art.mpnet": {
-        "*": {
-            "repo": "microsoft/mpnet-base",
-            "pkg": {
-                "0": {
-                    "transformers": "MPNetModel"
-                }
-            }
-        }
-    },
-    "info.art.reformer-crime-and-punishment": {
-        "*": {
-            "repo": "google/reformer-crime-and-punishment",
-            "pkg": {
-                "0": {
-                    "transformers": "ReformerModel"
-                }
-            }
-        }
-    },
-    "info.detr.resnet18-a1-in1k": {
-        "*": {
-            "repo": "timm/resnet18.a1_in1k",
-            "pkg": {
-                "0": {
-                    "transformers": "TimmWrapperModel"
-                }
-            }
-        }
-    },
-    "info.stst.pegasus-x": {
-        "*": {
-            "repo": "google/pegasus-x-large",
-            "pkg": {
-                "0": {
-                    "transformers": "PegasusXModel"
-                }
-            }
-        }
-    },
-    "info.aet.unispeech-sat-100h-libri-ft": {
-        "*": {
-            "repo": "microsoft/unispeech-sat-base-100h-libri-ft",
-            "pkg": {
-                "0": {
-                    "transformers": "UniSpeechSatModel"
-                }
-            }
-        }
-    },
-    "info.art.fnet": {
-        "*": {
-            "repo": "google/fnet-base",
-            "pkg": {
-                "0": {
-                    "transformers": "FNetModel"
-                }
-            }
-        }
-    },
-    "info.stst.t5": {
-        "*": {
-            "repo": "google-t5/t5-small",
-            "pkg": {
-                "0": {
-                    "transformers": "T5Model"
-                }
-            },
-            "identifiers": [
-                "encoder.block.0.layer.1.DenseReluDense.wi.weight"
-            ]
-        }
-    },
-    "info.art.mpt": {
-        "*": {
-            "repo": "mosaicml/mpt-7b",
-            "pkg": {
-                "0": {
-                    "transformers": "MptModel"
-                }
-            }
-        }
-    },
-    "info.art.mega-wikitext": {
-        "*": {
-            "repo": "mnaylor/mega-base-wikitext",
-            "pkg": {
-                "0": {
-                    "transformers": "MegaModel"
-                }
-            }
-        }
-    },
-    "info.gan.dinat-in1k-224": {
-        "*": {
-            "repo": "shi-labs/dinat-mini-in1k-224",
-            "pkg": {
-                "0": {
-                    "transformers": "DinatModel"
-                }
-            }
-        }
-    },
-    "info.art.codegen-mono": {
-        "*": {
-            "repo": "Salesforce/codegen-2B-mono",
-            "pkg": {
-                "0": {
-                    "transformers": "CodeGenModel"
-                }
-            }
-        }
-    },
-    "info.vit.deepseek-vl-chat": {
-        "*": {
-            "repo": "deepseek-community/deepseek-vl-7b-chat",
-            "pkg": {
-                "0": {
-                    "transformers": "DeepseekVLHybridModel"
-                }
-            }
-        }
-    },
-    "info.vit.sam-hq-vit-huge": {
-        "*": {
-            "repo": "facebook/sam_hq-vit-huge",
-            "pkg": {
-                "0": {
-                    "transformers": "SamHQVisionModel"
-                }
-            }
-        }
-    },
-    "info.vit.idefics3-llama3": {
-        "*": {
-            "repo": "HuggingFaceM4/Idefics3-8B-Llama3",
-            "pkg": {
-                "0": {
-                    "transformers": "Idefics3Model"
-                }
-            }
-        }
-    },
-    "info.vit.mobilenet-v1-1--224": {
-        "*": {
-            "repo": "google/mobilenet_v1_1.0_224",
-            "pkg": {
-                "0": {
-                    "transformers": "MobileNetV1Model"
-                }
-            }
-        }
-    },
-    "info.art.c4ai-command-r-v01": {
-        "*": {
-            "repo": "CohereForAI/c4ai-command-r-v01",
-            "pkg": {
-                "0": {
-                    "transformers": "CohereModel"
-                }
-            }
-        }
-    },
-    "info.art.bros-uncased": {
-        "*": {
-            "repo": "jinho8345/bros-base-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "BrosModel"
-                }
-            }
-        }
-    },
-    "info.detr.omdet-turbo-swin-hf": {
-        "*": {
-            "repo": "omlab/omdet-turbo-swin-tiny-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "OmDetTurboForObjectDetection"
-                }
-            }
-        }
-    },
-    "info.aet.qwen2-audio": {
-        "*": {
-            "repo": "Qwen/Qwen2-Audio-7B",
-            "pkg": {
-                "0": {
-                    "transformers": "Qwen2AudioEncoder"
-                }
-            }
-        }
-    },
-    "info.rnn.rwkv-4-pile": {
-        "*": {
-            "repo": "RWKV/rwkv-4-169m-pile",
-            "pkg": {
-                "0": {
-                    "transformers": "RwkvModel"
-                }
-            }
-        }
-    },
-    "info.vit.colpali-v1": {
-        "*": {
-            "repo": "vidore/colpali-v1.2",
-            "pkg": {
-                "0": {
-                    "transformers": "ColPaliForRetrieval"
-                }
-            }
-        }
-    },
-    "info.art.trajectory-transformer-halfcheetah-v2": {
-        "*": {
-            "repo": "CarlCochet/trajectory-transformer-halfcheetah-medium-v2",
-            "pkg": {
-                "0": {
-                    "transformers": "TrajectoryTransformerModel"
-                }
-            }
-        }
-    },
-    "info.ssm.zamba2": {
-        "*": {
-            "repo": "Zyphra/Zamba2-2.7B",
-            "pkg": {
-                "0": {
-                    "transformers": "Zamba2Model"
-                }
-            }
-        }
-    },
-    "info.vit.deit-distilled-patch16-224": {
-        "*": {
-            "repo": "facebook/deit-base-distilled-patch16-224",
-            "pkg": {
-                "0": {
-                    "transformers": "DeiTModel"
-                }
-            }
-        }
-    },
-    "info.aet.wav2vec2-bert-rel-pos": {
-        "*": {
-            "repo": "facebook/wav2vec2-bert-rel-pos-large",
-            "pkg": {
-                "0": {
-                    "transformers": "Wav2Vec2BertModel"
-                }
-            }
-        }
-    },
-    "info.vit.mobilenet-v2-1--224": {
-        "*": {
-            "repo": "google/mobilenet_v2_1.0_224",
-            "pkg": {
-                "0": {
-                    "transformers": "MobileNetV2Model"
-                }
-            }
-        }
-    },
-    "info.art.gemma3-text": {
-        "*": {
-            "repo": "google/gemma3_text-7b",
-            "pkg": {
-                "0": {
-                    "transformers": "Gemma3TextModel"
-                }
-            }
-        }
-    },
-    "info.vit.llava-onevision-qwen2-ov-hf": {
-        "*": {
-            "repo": "llava-hf/llava-onevision-qwen2-7b-ov-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "LlavaOnevisionModel"
-                }
-            }
-        }
-    },
-    "info.ssm.mamba2": {
-        "*": {
-            "repo": "state-spaces/mamba2-2.8b",
-            "pkg": {
-                "0": {
-                    "transformers": "Mamba2Model"
-                }
-            }
-        }
-    },
-    "info.art.bitnet-b18-4t": {
-        "*": {
-            "repo": "microsoft/bitnet-b1.58-2B-4T",
-            "pkg": {
-                "0": {
-                    "transformers": "BitNetModel"
-                }
-            }
-        }
-    },
-    "info.art.evolla-hf": {
-        "*": {
-            "repo": "westlake-repl/Evolla-10B-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "EvollaModel"
-                }
-            }
-        }
-    },
-    "info.aet.bert-uncased": {
-        "*": {
-            "repo": "google-bert/bert-base-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "BertModel"
-                }
-            }
-        }
-    },
-    "info.art.qwen2": {
-        "*": {
-            "repo": "Qwen/Qwen2-7B-beta",
-            "pkg": {
-                "0": {
-                    "transformers": "Qwen2Model"
-                }
-            }
-        }
-    },
-    "info.vit.vilt-b32-mlm": {
-        "*": {
-            "repo": "dandelin/vilt-b32-mlm",
-            "pkg": {
-                "0": {
-                    "transformers": "ViltModel"
-                }
-            }
-        }
-    },
-    "info.aet.efficient-mlm-m0-0": {
-        "*": {
-            "repo": "andreasmadsen/efficient_mlm_m0.40",
-            "pkg": {
-                "0": {
-                    "transformers": "RobertaPreLayerNormModel"
-                }
-            }
-        }
-    },
-    "info.vit.mgp-str": {
-        "*": {
-            "repo": "alibaba-damo/mgp-str-base",
-            "pkg": {
-                "0": {
-                    "transformers": "MgpstrForSceneTextRecognition"
-                }
-            }
-        }
-    },
-    "info.vit.llama-3-vision": {
-        "*": {
-            "repo": "meta-llama/Llama-3.2-11B-Vision",
-            "pkg": {
-                "0": {
-                    "transformers": "MllamaModel"
-                }
-            }
-        }
-    },
-    "info.aet.ernie-m--pytorch": {
-        "*": {
-            "repo": "susnato/ernie-m-base_pytorch",
-            "pkg": {
-                "0": {
-                    "transformers": "ErnieMModel"
-                }
-            }
-        }
-    },
-    "info.vit.hiera-224": {
-        "*": {
-            "repo": "facebook/hiera-base-224",
-            "pkg": {
-                "0": {
-                    "transformers": "HieraModel"
-                }
-            }
-        }
-    },
-    "info.art.ernie-4-pt": {
-        "*": {
-            "repo": "baidu/ERNIE-4.5-21B-A3B-PT",
-            "pkg": {
-                "0": {
-                    "transformers": "Ernie4_5_MoeModel"
-                }
-            }
-        }
-    },
-    "info.vit.glm-4v-thinking": {
-        "*": {
-            "repo": "THUDM/GLM-4.1V-9B-Thinking",
-            "pkg": {
-                "0": {
-                    "transformers": "Glm4vModel"
-                }
-            }
-        }
-    },
-    "info.art.afm": {
-        "*": {
-            "repo": "arcee-ai/AFM-4.5B",
-            "pkg": {
-                "0": {
-                    "transformers": "ArceeModel"
-                }
-            }
-        }
-    },
-    "info.vit.blip-flan-t5": {
-        "*": {
-            "repo": "Salesforce/instruct-blip-flan-t5",
-            "pkg": {
-                "0": {
-                    "transformers": "InstructBlipVideoModel"
-                }
-            }
-        }
-    },
-    "info.aet.bert-for-seq-generation-l-bc-encoder": {
-        "*": {
-            "repo": "google/bert_for_seq_generation_L-24_bbc_encoder",
-            "pkg": {
-                "0": {
-                    "transformers": "BertGenerationEncoder"
-                }
-            }
-        }
-    },
-    "info.art.xlnet-cased": {
-        "*": {
-            "repo": "xlnet/xlnet-large-cased",
-            "pkg": {
-                "0": {
-                    "transformers": "XLNetModel"
-                }
-            }
-        }
-    },
-    "info.art.diffllama-handcut": {
-        "*": {
-            "repo": "kajuma/DiffLlama-0.3B-handcut",
-            "pkg": {
-                "0": {
-                    "transformers": "DiffLlamaModel"
-                }
-            }
-        }
-    },
-    "info.art.persimmon": {
-        "*": {
-            "repo": "adept/persimmon-8b-base",
-            "pkg": {
-                "0": {
-                    "transformers": "PersimmonModel"
-                }
-            }
-        }
-    },
-    "info.vit.seggpt-vit": {
-        "*": {
-            "repo": "BAAI/seggpt-vit-large",
-            "pkg": {
-                "0": {
-                    "transformers": "SegGptModel"
-                }
-            }
-        }
-    },
-    "info.vit.vit-msn": {
-        "*": {
-            "repo": "facebook/vit_msn_base",
-            "pkg": {
-                "0": {
-                    "transformers": "ViTMSNModel"
-                }
-            }
-        }
-    },
-    "info.art.glm-4-chat": {
-        "*": {
-            "repo": "THUDM/glm-4-9b-chat",
-            "pkg": {
-                "0": {
-                    "transformers": "GlmModel"
-                }
-            }
-        }
-    },
-    "info.detr.rtdetr-r18vd": {
-        "*": {
-            "repo": "PekingU/rtdetr_r18vd",
-            "pkg": {
-                "0": {
-                    "transformers": "RTDetrV2Model"
-                }
-            }
-        }
-    },
-    "info.art.mixtral": {
-        "*": {
-            "repo": "mixtralai/Mixtral-8x7B",
-            "pkg": {
-                "0": {
-                    "transformers": "MixtralModel"
-                }
-            }
-        }
-    },
-    "info.gan.encodec-hz": {
-        "*": {
-            "repo": "facebook/encodec_24khz",
-            "pkg": {
-                "0": {
-                    "transformers": "EncodecModel"
-                }
-            }
-        }
-    },
-    "info.vit.dinov2-with-registers": {
-        "*": {
-            "repo": "facebook/dinov2-with-registers-base",
-            "pkg": {
-                "0": {
-                    "transformers": "Dinov2WithRegistersModel"
-                }
-            }
-        }
-    },
-    "info.art.deberta-v2-xlarge": {
-        "*": {
-            "repo": "microsoft/deberta-v2-xlarge",
-            "pkg": {
-                "0": {
-                    "transformers": "DebertaV2Model"
+                    "transformers": "BioGptModel"
                 }
             }
         }
@@ -3580,102 +4594,22 @@
             }
         }
     },
-    "info.vit.swin2sr-classicalsr-x2-64": {
+    "info.vit.data2vec-vision": {
         "*": {
-            "repo": "caidas/swin2sr-classicalsr-x2-64",
+            "repo": "facebook/data2vec-vision-base",
             "pkg": {
                 "0": {
-                    "transformers": "Swin2SRModel"
+                    "transformers": "Data2VecVisionModel"
                 }
             }
         }
     },
-    "info.art.powermoe": {
+    "info.stst.qwen2-audio": {
         "*": {
-            "repo": "ibm-research/PowerMoE-3b",
+            "repo": "Qwen/Qwen2-Audio-7B",
             "pkg": {
                 "0": {
-                    "transformers": "GraniteMoeModel"
-                }
-            }
-        }
-    },
-    "info.art.imagegpt": {
-        "*": {
-            "repo": "openai/imagegpt-small",
-            "pkg": {
-                "0": {
-                    "transformers": "ImageGPTModel"
-                }
-            }
-        }
-    },
-    "info.art.c4ai-command-12-2024": {
-        "*": {
-            "repo": "CohereLabs/c4ai-command-r7b-12-2024",
-            "pkg": {
-                "0": {
-                    "transformers": "Cohere2Model"
-                }
-            }
-        }
-    },
-    "info.art.gpt-neo": {
-        "*": {
-            "repo": "EleutherAI/gpt-neo-1.3B",
-            "pkg": {
-                "0": {
-                    "transformers": "GPTNeoModel"
-                }
-            }
-        }
-    },
-    "info.aet.roberta": {
-        "*": {
-            "repo": "FacebookAI/roberta-base",
-            "pkg": {
-                "0": {
-                    "transformers": "RobertaModel"
-                }
-            }
-        }
-    },
-    "info.gan.nat-in1k-224": {
-        "*": {
-            "repo": "shi-labs/nat-mini-in1k-224",
-            "pkg": {
-                "0": {
-                    "transformers": "NatModel"
-                }
-            }
-        }
-    },
-    "info.vit.udop": {
-        "*": {
-            "repo": "microsoft/udop-large",
-            "pkg": {
-                "0": {
-                    "transformers": "UdopModel"
-                }
-            }
-        }
-    },
-    "info.aet.xlm-roberta-xl": {
-        "*": {
-            "repo": "facebook/xlm-roberta-xl",
-            "pkg": {
-                "0": {
-                    "transformers": "XLMRobertaXLModel"
-                }
-            }
-        }
-    },
-    "info.aet.wav2vec2-960h": {
-        "*": {
-            "repo": "facebook/wav2vec2-base-960h",
-            "pkg": {
-                "0": {
-                    "transformers": "Wav2Vec2Model"
+                    "transformers": "Qwen2AudioForConditionalGeneration"
                 }
             }
         }
@@ -3690,947 +4624,22 @@
             }
         }
     },
-    "info.stst.mvp": {
+    "info.vit.aya-vision": {
         "*": {
-            "repo": "RUCAIBox/mvp",
+            "repo": "CohereForAI/aya-vision-8b",
             "pkg": {
                 "0": {
-                    "transformers": "MvpModel"
+                    "transformers": "AyaVisionModel"
                 }
             }
         }
     },
-    "info.aet.s2t-librispeech-asr": {
+    "info.art.canine-s": {
         "*": {
-            "repo": "facebook/s2t-small-librispeech-asr",
+            "repo": "google/canine-s",
             "pkg": {
                 "0": {
-                    "transformers": "Speech2TextModel"
-                }
-            }
-        }
-    },
-    "info.vit.retribert-uncased": {
-        "*": {
-            "repo": "yjernite/retribert-base-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "RetriBertModel"
-                }
-            }
-        }
-    },
-    "info.vit.ast-finetuned-audioset-10-10-0593": {
-        "*": {
-            "repo": "MIT/ast-finetuned-audioset-10-10-0.4593",
-            "pkg": {
-                "0": {
-                    "transformers": "ASTModel"
-                }
-            }
-        }
-    },
-    "info.gan.dac-hz": {
-        "*": {
-            "repo": "descript/dac_16khz",
-            "pkg": {
-                "0": {
-                    "transformers": "DacModel"
-                }
-            }
-        }
-    },
-    "info.stst.opus-mt-en-de": {
-        "*": {
-            "repo": "Helsinki-NLP/opus-mt-en-de",
-            "pkg": {
-                "0": {
-                    "transformers": "MarianModel"
-                }
-            }
-        }
-    },
-    "info.art.qwen15-moe": {
-        "*": {
-            "repo": "Qwen/Qwen1.5-MoE-A2.7B",
-            "pkg": {
-                "0": {
-                    "transformers": "Qwen2MoeModel"
-                }
-            }
-        }
-    },
-    "info.aet.blip2-opt": {
-        "*": {
-            "repo": "Salesforce/blip2-opt-2.7b",
-            "pkg": {
-                "0": {
-                    "transformers": "Blip2QFormerModel"
-                }
-            }
-        }
-    },
-    "info.art.dots-llm1-base": {
-        "*": {
-            "repo": "rednote-hilab/dots.llm1.base",
-            "pkg": {
-                "0": {
-                    "transformers": "Dots1Model"
-                }
-            }
-        }
-    },
-    "info.art.glm-4": {
-        "*": {
-            "repo": "THUDM/GLM-4-100B-A10B",
-            "pkg": {
-                "0": {
-                    "transformers": "Glm4MoeModel"
-                }
-            }
-        }
-    },
-    "info.art.mistral-v0": {
-        "*": {
-            "repo": "mistralai/Mistral-7B-v0.1",
-            "pkg": {
-                "0": {
-                    "transformers": "MistralModel"
-                }
-            }
-        }
-    },
-    "info.art.smollm3": {
-        "*": {
-            "repo": "HuggingFaceTB/SmolLM3-3B",
-            "pkg": {
-                "0": {
-                    "transformers": "SmolLM3Model"
-                }
-            }
-        }
-    },
-    "info.stst.switch-8": {
-        "*": {
-            "repo": "google/switch-base-8",
-            "pkg": {
-                "0": {
-                    "transformers": "SwitchTransformersModel"
-                }
-            }
-        }
-    },
-    "info.art.nemotron-3-hf": {
-        "*": {
-            "repo": "nvidia/nemotron-3-8b-base-4k-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "NemotronModel"
-                }
-            }
-        }
-    },
-    "info.aet.voxtral-2507": {
-        "*": {
-            "repo": "mistralai/Voxtral-Mini-3B-2507",
-            "pkg": {
-                "0": {
-                    "transformers": "VoxtralEncoder"
-                }
-            }
-        }
-    },
-    "info.aet.wav2vec2-conformer-rel-pos": {
-        "*": {
-            "repo": "facebook/wav2vec2-conformer-rel-pos-large",
-            "pkg": {
-                "0": {
-                    "transformers": "Wav2Vec2ConformerModel"
-                }
-            }
-        }
-    },
-    "info.aet.": {
-        "*": {
-            "repo": "funnel-transformer/small",
-            "pkg": {
-                "0": {
-                    "transformers": "FunnelModel"
-                }
-            }
-        }
-    },
-    "info.vit.poolformer-s12": {
-        "*": {
-            "repo": "sail/poolformer_s12",
-            "pkg": {
-                "0": {
-                    "transformers": "PoolFormerModel"
-                }
-            }
-        }
-    },
-    "info.art.transfo-xl-wt103": {
-        "*": {
-            "repo": "transfo-xl/transfo-xl-wt103",
-            "pkg": {
-                "0": {
-                    "transformers": "TransfoXLModel"
-                }
-            }
-        }
-    },
-    "info.vit.regnet-y-040": {
-        "*": {
-            "repo": "facebook/regnet-y-040",
-            "pkg": {
-                "0": {
-                    "transformers": "RegNetModel"
-                }
-            }
-        }
-    },
-    "info.vit.internvl3-hf": {
-        "*": {
-            "repo": "OpenGVLab/InternVL3-1B-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "InternVLModel"
-                }
-            }
-        }
-    },
-    "info.vit.perception-lm": {
-        "*": {
-            "repo": "facebook/Perception-LM-1B",
-            "pkg": {
-                "0": {
-                    "transformers": "PerceptionLMModel"
-                }
-            }
-        }
-    },
-    "info.ssm.jamba-v0": {
-        "*": {
-            "repo": "ai21labs/Jamba-v0.1",
-            "pkg": {
-                "0": {
-                    "transformers": "JambaModel"
-                }
-            }
-        }
-    },
-    "info.art.visualbert-vqa-coco-pre": {
-        "*": {
-            "repo": "uclanlp/visualbert-vqa-coco-pre",
-            "pkg": {
-                "0": {
-                    "transformers": "VisualBertModel"
-                }
-            }
-        }
-    },
-    "info.aet.xlm-roberta": {
-        "*": {
-            "repo": "FacebookAI/xlm-roberta-base",
-            "pkg": {
-                "0": {
-                    "transformers": "XLMRobertaModel"
-                }
-            }
-        }
-    },
-    "info.vit.llama-4-scout-16e": {
-        "*": {
-            "repo": "meta-llama/Llama-4-Scout-17B-16E",
-            "pkg": {
-                "0": {
-                    "transformers": "Llama4ForConditionalGeneration"
-                }
-            }
-        }
-    },
-    "info.art.aria": {
-        "*": {
-            "repo": "rhymes-ai/Aria",
-            "pkg": {
-                "0": {
-                    "transformers": "AriaTextModel"
-                }
-            }
-        }
-    },
-    "info.aet.xmod": {
-        "*": {
-            "repo": "facebook/xmod-base",
-            "pkg": {
-                "0": {
-                    "transformers": "XmodModel"
-                }
-            }
-        }
-    },
-    "info.vit.video-llava-hf": {
-        "*": {
-            "repo": "LanguageBind/Video-LLaVA-7B-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "VideoLlavaModel"
-                }
-            }
-        }
-    },
-    "info.art.bigbird-roberta": {
-        "*": {
-            "repo": "google/bigbird-roberta-base",
-            "pkg": {
-                "0": {
-                    "transformers": "BigBirdModel"
-                }
-            }
-        }
-    },
-    "info.stst.nllb-moe": {
-        "*": {
-            "repo": "facebook/nllb-moe-54b",
-            "pkg": {
-                "0": {
-                    "transformers": "NllbMoeModel"
-                }
-            }
-        }
-    },
-    "info.stst.umt5": {
-        "*": {
-            "repo": "google/umt5-small",
-            "pkg": {
-                "0": {
-                    "transformers": "UMT5Model"
-                }
-            },
-            "identifiers": [
-                "encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"
-            ],
-            "file_256": [
-                "decf9b70814ed5e9965bfca9fbd0483462e2bf743790663025b7742f8c014c72",
-                "0a07449cf1141c0ec86e653c00465f6f0d79c6e58a2c60c8bcf4203d0e4ec4f6"
-            ],
-            "layer_b3": [
-                "1c943dbcb8b328a7c6c852921ddaefbd84c9df8c83bc51fe303c1f06cb734102",
-                "1639a6467af0db1e15828d33b878e568cba1335947eeadd481170bcdc9ba8e33"
-            ],
-            "layer_256": [
-                "58deeef888d4ded4ffababfbf8da27227a4a6ff8adfa42016e12c0180f713816",
-                "178ebd3fa3418d33a2e45a80d8b9d3662ff4a8e75f3de3f0332f82c505d8152a"
-            ]
-        }
-    },
-    "info.aet.unispeech-1500h-cv": {
-        "*": {
-            "repo": "microsoft/unispeech-large-1500h-cv",
-            "pkg": {
-                "0": {
-                    "transformers": "UniSpeechModel"
-                }
-            }
-        }
-    },
-    "info.ssm.falcon-mamba": {
-        "*": {
-            "repo": "tiiuae/falcon-mamba-7b",
-            "pkg": {
-                "0": {
-                    "transformers": "FalconMambaModel"
-                }
-            }
-        }
-    },
-    "info.vit.vit-mae": {
-        "*": {
-            "repo": "facebook/vit-mae-base",
-            "pkg": {
-                "0": {
-                    "transformers": "ViTMAEModel"
-                }
-            }
-        }
-    },
-    "info.art.m-ctc-t": {
-        "*": {
-            "repo": "speechbrain/m-ctc-t-large",
-            "pkg": {
-                "0": {
-                    "transformers": "MCTCTModel"
-                }
-            }
-        }
-    },
-    "info.vit.vitdet-patch16-224": {
-        "*": {
-            "repo": "google/vitdet-base-patch16-224",
-            "pkg": {
-                "0": {
-                    "transformers": "VitDetModel"
-                }
-            }
-        }
-    },
-    "info.aet.layoutlm-uncased": {
-        "*": {
-            "repo": "microsoft/layoutlm-base-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "LayoutLMModel"
-                }
-            }
-        }
-    },
-    "info.vit.depthpro": {
-        "*": {
-            "repo": "apple/DepthPro",
-            "pkg": {
-                "0": {
-                    "transformers": "DepthProModel"
-                }
-            }
-        }
-    },
-    "info.ssm.falconh1-t-hf": {
-        "*": {
-            "repo": "ibm-fms/FalconH1-9.8b-2.2T-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "FalconH1Model"
-                }
-            }
-        }
-    },
-    "info.art.gpt-neox-japanese": {
-        "*": {
-            "repo": "abeja/gpt-neox-japanese-2.7b",
-            "pkg": {
-                "0": {
-                    "transformers": "GPTNeoXJapaneseModel"
-                }
-            }
-        }
-    },
-    "info.vit.owlv2-patch16": {
-        "*": {
-            "repo": "google/owlv2-base-patch16",
-            "pkg": {
-                "0": {
-                    "transformers": "Owlv2Model"
-                }
-            }
-        }
-    },
-    "info.vit.videomae": {
-        "*": {
-            "repo": "MCG-NJU/videomae-base",
-            "pkg": {
-                "0": {
-                    "transformers": "VideoMAEModel"
-                }
-            }
-        }
-    },
-    "info.art.deepseek-v3": {
-        "*": {
-            "repo": "bzantium/tiny-deepseek-v3",
-            "pkg": {
-                "0": {
-                    "transformers": "DeepseekV3Model"
-                }
-            }
-        }
-    },
-    "info.aet.fastspeech2-conformer": {
-        "*": {
-            "repo": "espnet/fastspeech2_conformer",
-            "pkg": {
-                "0": {
-                    "transformers": "FastSpeech2ConformerModel"
-                }
-            }
-        }
-    },
-    "info.aet.roc-bert-zh": {
-        "*": {
-            "repo": "weiweishi/roc-bert-base-zh",
-            "pkg": {
-                "0": {
-                    "transformers": "RoCBertModel"
-                }
-            }
-        }
-    },
-    "info.vit.layoutlmv3": {
-        "*": {
-            "repo": "microsoft/layoutlmv3-base",
-            "pkg": {
-                "0": {
-                    "transformers": "LayoutLMv3Model"
-                }
-            }
-        }
-    },
-    "info.vit.llava-v1-mistral-hf": {
-        "*": {
-            "repo": "llava-hf/llava-v1.6-mistral-7b-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "LlavaNextModel"
-                }
-            }
-        }
-    },
-    "info.vit.got-ocr-2-hf": {
-        "*": {
-            "repo": "stepfun-ai/GOT-OCR-2.0-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "GotOcr2Model"
-                }
-            }
-        }
-    },
-    "info.detr.table-transformer-detection": {
-        "*": {
-            "repo": "microsoft/table-transformer-detection",
-            "pkg": {
-                "0": {
-                    "transformers": "TableTransformerModel"
-                }
-            }
-        }
-    },
-    "info.vit.sam-hq-vit-h": {
-        "*": {
-            "repo": "sushmanth/sam_hq_vit_h",
-            "pkg": {
-                "0": {
-                    "transformers": "SamHQModel"
-                }
-            }
-        }
-    },
-    "info.vit.bit-50": {
-        "*": {
-            "repo": "google/bit-50",
-            "pkg": {
-                "0": {
-                    "transformers": "BitModel"
-                }
-            }
-        }
-    },
-    "info.stst.led-16384": {
-        "*": {
-            "repo": "allenai/led-base-16384",
-            "pkg": {
-                "0": {
-                    "transformers": "LEDModel"
-                }
-            }
-        }
-    },
-    "info.aet.yoso-4096": {
-        "*": {
-            "repo": "uw-madison/yoso-4096",
-            "pkg": {
-                "0": {
-                    "transformers": "YosoModel"
-                }
-            }
-        }
-    },
-    "info.vit.aria-chat": {
-        "*": {
-            "repo": "rhymes-ai/Aria-Chat",
-            "pkg": {
-                "0": {
-                    "transformers": "AriaModel"
-                }
-            }
-        }
-    },
-    "info.art.jukebox-lyrics": {
-        "*": {
-            "repo": "openai/jukebox-1b-lyrics",
-            "pkg": {
-                "0": {
-                    "transformers": "JukeboxModel"
-                }
-            }
-        }
-    },
-    "info.vit.vit-patch16-224": {
-        "*": {
-            "repo": "google/vit-base-patch16-224",
-            "pkg": {
-                "0": {
-                    "transformers": "ViTModel"
-                }
-            }
-        }
-    },
-    "info.vit.altclip": {
-        "*": {
-            "repo": "BAAI/AltCLIP",
-            "pkg": {
-                "0": {
-                    "transformers": "AltCLIPModel"
-                }
-            }
-        }
-    },
-    "info.art.roformer-chinese": {
-        "*": {
-            "repo": "junnyu/roformer_chinese_base",
-            "pkg": {
-                "0": {
-                    "transformers": "RoFormerModel"
-                }
-            }
-        }
-    },
-    "info.aet.megatron-bert-uncased": {
-        "*": {
-            "repo": "nvidia/megatron-bert-uncased-345m",
-            "pkg": {
-                "0": {
-                    "transformers": "MegatronBertModel"
-                }
-            }
-        }
-    },
-    "info.detr.grounding-dino": {
-        "*": {
-            "repo": "IDEA-Research/grounding-dino-tiny",
-            "pkg": {
-                "0": {
-                    "transformers": "GroundingDinoModel"
-                }
-            }
-        }
-    },
-    "info.art.conv-bert": {
-        "*": {
-            "repo": "YituTech/conv-bert-base",
-            "pkg": {
-                "0": {
-                    "transformers": "ConvBertModel"
-                }
-            }
-        }
-    },
-    "info.aet.markuplm": {
-        "*": {
-            "repo": "microsoft/markuplm-base",
-            "pkg": {
-                "0": {
-                    "transformers": "MarkupLMModel"
-                }
-            }
-        }
-    },
-    "info.vit.dfine-x-coco": {
-        "*": {
-            "repo": "ustc-community/dfine_x_coco",
-            "pkg": {
-                "0": {
-                    "transformers": "HGNetV2Backbone"
-                }
-            }
-        }
-    },
-    "info.aet.albert-xxlarge-v2": {
-        "*": {
-            "repo": "albert/albert-xxlarge-v2",
-            "pkg": {
-                "0": {
-                    "transformers": "AlbertModel"
-                }
-            }
-        }
-    },
-    "info.stst.speecht5-asr": {
-        "*": {
-            "repo": "microsoft/speecht5_asr",
-            "pkg": {
-                "0": {
-                    "transformers": "SpeechT5Model"
-                }
-            }
-        }
-    },
-    "info.aet.camembert": {
-        "*": {
-            "repo": "almanach/camembert-base",
-            "pkg": {
-                "0": {
-                    "transformers": "CamembertModel"
-                }
-            }
-        }
-    },
-    "info.stst.long-t5-local": {
-        "*": {
-            "repo": "google/long-t5-local-base",
-            "pkg": {
-                "0": {
-                    "transformers": "LongT5Model"
-                }
-            }
-        }
-    },
-    "info.art.nystromformer-512": {
-        "*": {
-            "repo": "uw-madison/nystromformer-512",
-            "pkg": {
-                "0": {
-                    "transformers": "NystromformerModel"
-                }
-            }
-        }
-    },
-    "info.aet.data2vec-audio-960h": {
-        "*": {
-            "repo": "facebook/data2vec-audio-base-960h",
-            "pkg": {
-                "0": {
-                    "transformers": "Data2VecAudioModel"
-                }
-            }
-        }
-    },
-    "info.aet.test-dec": {
-        "*": {
-            "repo": "blab-jhu/test-32m-dec",
-            "pkg": {
-                "0": {
-                    "transformers": "ModernBertDecoderModel"
-                }
-            }
-        }
-    },
-    "info.art.bert-uncased": {
-        "*": {
-            "repo": "google-bert/bert-base-uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "QDQBertModel"
-                }
-            }
-        }
-    },
-    "info.detr.vit-bit-384": {
-        "*": {
-            "repo": "google/vit-hybrid-base-bit-384",
-            "pkg": {
-                "0": {
-                    "transformers": "ViTHybridModel"
-                }
-            }
-        }
-    },
-    "info.vit.align": {
-        "*": {
-            "repo": "kakaobrain/align-base",
-            "pkg": {
-                "0": {
-                    "transformers": "AlignModel"
-                }
-            }
-        }
-    },
-    "info.art.xglm": {
-        "*": {
-            "repo": "facebook/xglm-564M",
-            "pkg": {
-                "0": {
-                    "transformers": "XGLMModel"
-                }
-            }
-        }
-    },
-    "info.art.open-llama-v1": {
-        "*": {
-            "repo": "s-JoL/Open-Llama-V1",
-            "pkg": {
-                "0": {
-                    "transformers": "OpenLlamaModel"
-                }
-            }
-        }
-    },
-    "info.vit.vivit-b-16x2-kinetics400": {
-        "*": {
-            "repo": "google/vivit-b-16x2-kinetics400",
-            "pkg": {
-                "0": {
-                    "transformers": "VivitModel"
-                }
-            }
-        }
-    },
-    "info.art.nezha-cn": {
-        "*": {
-            "repo": "sijunhe/nezha-cn-base",
-            "pkg": {
-                "0": {
-                    "transformers": "NezhaModel"
-                }
-            }
-        }
-    },
-    "info.vit.mistral-3-2503": {
-        "*": {
-            "repo": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
-            "pkg": {
-                "0": {
-                    "transformers": "Mistral3Model"
-                }
-            }
-        }
-    },
-    "info.aet.lightglue-superpoint": {
-        "*": {
-            "repo": "ETH-CVG/lightglue_superpoint",
-            "pkg": {
-                "0": {
-                    "transformers": "LightGlueForKeypointMatching"
-                }
-            }
-        }
-    },
-    "info.art.tapas-finetuned-sqa": {
-        "*": {
-            "repo": "google/tapas-base-finetuned-sqa",
-            "pkg": {
-                "0": {
-                    "transformers": "TapasModel"
-                }
-            }
-        }
-    },
-    "info.art.bloom": {
-        "*": {
-            "repo": "bigscience/bloom",
-            "pkg": {
-                "0": {
-                    "transformers": "BloomModel"
-                }
-            }
-        }
-    },
-    "info.stst.gptsan-japanese": {
-        "*": {
-            "repo": "Tanrei/GPTSAN-japanese",
-            "pkg": {
-                "0": {
-                    "transformers": "GPTSanJapaneseForConditionalGeneration"
-                }
-            }
-        }
-    },
-    "info.stst.blenderbot-small": {
-        "*": {
-            "repo": "facebook/blenderbot_small-90M",
-            "pkg": {
-                "0": {
-                    "transformers": "BlenderbotSmallModel"
-                }
-            }
-        }
-    },
-    "info.vit.vitpose-simple": {
-        "*": {
-            "repo": "usyd-community/vitpose-base-simple",
-            "pkg": {
-                "0": {
-                    "transformers": "VitPoseBackbone"
-                }
-            }
-        }
-    },
-    "info.vit.siglip-so400m-patch14-384": {
-        "*": {
-            "repo": "google/siglip-so400m-patch14-384",
-            "pkg": {
-                "0": {
-                    "transformers": "SmolVLMVisionTransformer"
-                }
-            }
-        }
-    },
-    "info.vit.owlvit-patch32": {
-        "*": {
-            "repo": "google/owlvit-base-patch32",
-            "pkg": {
-                "0": {
-                    "transformers": "OwlViTModel"
-                }
-            }
-        }
-    },
-    "info.vit.aimv2-patch14-224-lit": {
-        "*": {
-            "repo": "apple/aimv2-large-patch14-224-lit",
-            "pkg": {
-                "0": {
-                    "transformers": "Aimv2Model"
-                }
-            }
-        }
-    },
-    "info.art.luke": {
-        "*": {
-            "repo": "studio-ousia/luke-base",
-            "pkg": {
-                "0": {
-                    "transformers": "LukeModel"
-                }
-            }
-        }
-    },
-    "info.art.flaubert-uncased": {
-        "*": {
-            "repo": "flaubert/flaubert_base_uncased",
-            "pkg": {
-                "0": {
-                    "transformers": "FlaubertModel"
-                }
-            }
-        }
-    },
-    "info.art.olmo-hf": {
-        "*": {
-            "repo": "allenai/OLMo-7B-hf",
-            "pkg": {
-                "0": {
-                    "transformers": "OlmoModel"
-                }
-            }
-        }
-    },
-    "info.art.granite": {
-        "*": {
-            "repo": "ibm-granite/granite-3.3-2b-base",
-            "pkg": {
-                "0": {
-                    "transformers": "GraniteModel"
-                }
-            }
-        }
-    },
-    "info.stst.moonshine": {
-        "*": {
-            "repo": "UsefulSensors/moonshine-tiny",
-            "pkg": {
-                "0": {
-                    "transformers": "MoonshineModel"
+                    "transformers": "CanineModel"
                 }
             }
         }
@@ -6280,7 +6289,7 @@
             "repo": "facebook/wav2vec2-conformer-rope-large-960h-ft",
             "pkg": {
                 "0": {
-                    "diffusers": "Wav2Vec2ConformerForCTC"
+                    "transformers": "Wav2Vec2ConformerForCTC"
                 }
             },
             "file_256": [
@@ -6397,7 +6406,7 @@
             "repo": "google/t5-v1_1-xxl",
             "pkg": {
                 "0": {
-                    "transformers": "T5ForConditionalGeneration"
+                    "transformers": "T5EncoderModel"
                 }
             },
             "file_256": [
@@ -6461,7 +6470,7 @@
             "repo": "openai/clip-vit-large-patch14",
             "pkg": {
                 "0": {
-                    "diffusers": "CLIPTextModel"
+                    "transformers": "CLIPTextModel"
                 }
             },
             "file_256": [
@@ -6516,7 +6525,7 @@
             "repo": "laion/CLIP-ViT-g-14-laion2B-s12B-b42K",
             "pkg": {
                 "0": {
-                    "diffusers": "CLIPModelwithProjection"
+                    "transformers": "CLIPTextModelWithProjection"
                 }
             },
             "file_256": [
@@ -6551,7 +6560,7 @@
             "repo": "zai-org/chatglm3-6b",
             "pkg": {
                 "0": {
-                    "transformers": "ChatGLMModel",
+                    "transformers": "AutoModel",
                     "stage_2": {
                         "transformers": "AutoTokenizer"
                     }
@@ -6692,6 +6701,26 @@
                 "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
                 "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17"
             ]
+        }
+    },
+    "info.dit.skyreels-v2-t2v-720p": {
+        "diffusers": {
+            "repo": "Skywork/SkyReels-V2-T2V-14B-720P-Diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "SkyReelsV2Pipeline"
+                }
+            }
+        }
+    },
+    "info.dit.skyreels-v2-i2v-720p": {
+        "diffusers": {
+            "repo": "Skywork/SkyReels-V2-I2V-14B-720P-Diffusers",
+            "pkg": {
+                "0": {
+                    "diffusers": "SkyReelsV2ImageToVideoPipeline"
+                }
+            }
         }
     }
 }

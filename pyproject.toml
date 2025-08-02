@@ -168,6 +168,7 @@ Documentation = "https://github.com/darkshapes/sdbx/wiki"
 [project.scripts]
 mir-add       = "nnll.mir.mir:main"
 mir-maid      = "nnll.mir.maid:main"
+mir-tasks     = "nnll.mir.tasks:main"
 nnll-autocard = "nnll.metadata.autocard:main"
 nnll-autohash = "nnll.download.hub_cache:main"
 nnll-find     = "nnll.model_detect.layer_compare:main"

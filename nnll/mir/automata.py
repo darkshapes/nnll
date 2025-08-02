@@ -11,6 +11,7 @@ from typing import Dict, List, Tuple
 from nnll.mir.maid import MIRDatabase
 from nnll.mir.mir import mir_entry
 from nnll.mir.tag import make_mir_tag
+from nnll.monitor.file import dbug
 
 nfo_obj = Logger(INFO)
 nfo = nfo_obj.info
@@ -103,38 +104,6 @@ sd3_series, sd3_comp = make_mir_tag("stable-diffusion-3")
 #     },
 # ),
 
-# b3 hashes
-# SD3.5 LARGE 878387
-# ['EBAA8DB98ADFBC460A59BDBAB8979E5DBE9ABAAF10973E7FF6BA7B6D4ABBF7CB']
-# SD3.5 MEDIUM 896953
-# ['FEA996B8E95723AA902AA14D6F44FB1B4F61FF5AF8581431CDE2540D4FA7F9F3']
-# AURAFLOW 0.3 573326
-# ['5D0E864E51E1747B5CE28C4368EEA6D858162AA62E155656DE49833EB8055217', '2C0F0988184E9E7CB5E4BA16A31C03073CBBD49BE5B99982D3D250E7BB511083', 'FAEA311A0D9F2BCE77B27D689BE33F0F3147F37C6A47170D0D5631A338BD9ED1', '17D652AE4ECF5404C86CBE895D75504D5029C9E27047B95861E1E3CA9C07B8B0']
-# SCHNELL 699279
-# ['202D1D57667FDC0B5B088A46DCE7C801FFCF2E0933D4C521E272399ECE17AA7B','79C38CA0E3DB84E77849DC8DDCD0A6AE4DEC34843842628F25C5A4E0AA2756E3']
-# DEV 618692,699279
-# ['40ACE2CF5D03A95EC710054EC5E4C8E864341A7EBFEFE188ED750C41A0463795','0B9CB7749990B8E3E26E46FF5DC2CA18AA5F970DA68E8AEA681EE995898D2542']
-# ANIMAGINE XL 4 1188071
-# ['C8FACC6833DCF4FA0E3194539519EC2AD6B10C274605DCD988BBBDF160223A76', '89EA185CBCE8F6C0AD0308A92055C5C50002BA20803EEC42142566763AA7C0C2', '2A4A32D2E607AAA5AFCECC13F3F0035B21C949EF1DE7C7DC7836AFF11CA65E5B']
-# ANIMAGINE XL 3.1 260267
-# ['DE1931B2EEF4D32725B3064FE3F50AB5392E78DDF497C8A1B6BCF175CFE6C73A', '9EF46CD2F47F064860494C1D6E6BBB0D1A12052B641ED09C78DD265F767CD110', 'BA8B3384D287A2AE24E59D05898F92A39CCD56C28CD5560F854CF0900FBF8948', '49DF88B1702C2C1C684AC01D40CE0147934FBC9245DE676EA307812231B4766F']
-# ILLUSTRIOUS 795765
-# ['EF3A6DD9C8A71E07D77CE8E84780524357E629EE8750EB3018AED648D4C803F1']
-# PONY 257749
-# ['E0BB278C0127A4AC4267498174E0226D6A0A77A636BDF82B770CF05D5B85D3CA', 'D46EB6988A26BCAF9E9CFA5E5C6264C4EE1A70F2018F33B8BC2DD7CA0681B490', '65B4E5A1E83C6A0133C1981C464E2F2D1ACA7ADE10BBC661C3C9EA63A848FE06', 'D95F9AD55421D99EF9F39D9A85CF91366514737B26BE52E467A328517C645B94', '0501A74F91EAA4D67AF7B25F8C8AF2870CF0A28B99438D9F4B4818BA43C3D3EE', '58C5003E9151020DCC66587EF0A69F8806812CB3E270D6F7E57FCF9BD9E73CCB']
-# PLAYGROUND V2 1024 AESTHETIC FP16 307370
-# ['9910B7A72C69CDDDF924966318C3187312F29E46F7D1006BAAF8CB5F3B188EAA']
-# PLAYGROUND V2.5 1024 AESTHETIC FP16 325263
-# ['5FD2BAEA87F36F0597DE81312EF6F6ED3EADED23A54498CA77CCE02A98532E02', '78318DF13E0A01C69E9AFF5C65171CDA03CE955B19BAFD185989EDF1FD8E6570']
-# HIDREAM 1562709
-# ['E42D95FF782D391DFB8B561C37ECD1DF60CE1A6E97DF4AC5564E3BBD8DC002F2', 'A4DBD21D675F9A3012F86747CCF7D52A9EE0A43A4DC72E2B7A08916F4639BC90', 'F19A3D6987C9884E5521E35C715B12FFEEFDD5AF4C918436037C1C89E83F6FDC', '34527337B85AB2272120C8C2181D5864DFBB3B203B72938E0DDE18387FEBE1BF', 'A588FCC0CD75FCD38CE2B68352632A8607349699F3968F5F46E60D0EF73F5E6A', '8F40C3BDC5D2F2C0388B8364F454D962A2605B6D2628F40AB275BBFF9610562D', 'E5DDEC1C287B048D9E07C655895511BAA68C3A5C0F4E476E149FDACA3281AD98']
-# WAN VIDEO 1329096
-# ['65AFB17E7F1F28F75A02BFF5F85AF2F83875647A8392C13E5F64AB28D772B4B7', 'E731BF9FB7614C712674F678A6EE60726A2A1A471CFA3BAD3106E925C138F843', 'C3AFF07CFF3A90224C4742FD8D0323987C99D1BB13AAC472AADF72641D2594AA', '0F84C6D87440CD058B6ACD525774C63367C10EBCEC911C817D68390ACCC11A5C', '822D712DA6C4F99567553F5409D7EBF78842CE2DF4F5B0C01E2A159B7E3CBB88', 'DE4037BC9D3AED3FCC081FD95EC398C04D54B06BC79A6AE51FA9BC574BF6D63B', '08FC8A4DEDD056A24ACABD1BE42092E61B806056B72FCBDB3F8A98F1C3B9F8CD']
-# CHROMA 1330309
-# ['0440A97DA1DD918F1FBDAB06508A139C4B9195DE1978737AAE19374404B2B62E', 'FDD6AF4C10B10A026FD0F1245E947D360A8C0E78B889EC9E77D1A1B8CB2EA339', '94810CA30128722B5DD3E55B9D61CFE404ACEBFCA311BB099DEB68E6942B4D60', 'FF6DC9C5B6951654DDF898A52F929790334B40A2FF2AC5627BD90919CC7B3C0C', 'E23677576F35E818699711644A61BA7510DB305809279ED3612C588CF6B52E39', '3EC4AA2EED939FB534E65544173185C22EF41158FA0D025B91B9F81B38630A51', '5CAD59F110A15AD6DCF334596C769C91EBA533093B26A30EC32C1EDE55A18D46', 'CE21CB76364AA6E2421311CF4A4B5EB052A76C4F1CD207B50703D8978198A068']
-# KOLORS 566526
-# ['0FEFC290666FCBE2F09E0838C39AF44C07903AAC314C77E454C49A6DEAD44A2B']
-
 
 def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> None:
     """
@@ -159,6 +128,7 @@ def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> 
                 else:
                     target = {key: value}
 
+    dbug(f"{data_tuple}, {len(data_tuple)}")
     for arch, series, new_data in data_tuple:
         mir_data = mir_db.database[f"{arch}.{series}"]
         for comp, field_data in new_data.items():
@@ -798,12 +768,11 @@ def auto_supplement(mir_db: MIRDatabase):
             },
         )
     )
-    sdxl_base = make_mir_tag("stabilityai/stable-diffusion-xl-base-1.0")[0]
     mir_db.add(
         mir_entry(
             domain="info",
             arch="unet",
-            series=sdxl_base,
+            series=sdxl_series,
             comp="pony-diffusion",
             file_256=["67ab2fd8ec439a89b3fedb15cc65f54336af163c7eb5e4f2acc98f090a29b0b3"],
             layer_b3=["bf4c2154daa4ece7292277b210d081f98759e9ed4d5c889564632e3ccc4a1071"],
@@ -814,7 +783,7 @@ def auto_supplement(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="unet",
-            series=sdxl_base,
+            series=sdxl_series,
             comp="pony-diffusion-turbo",
             file_256=[
                 "7555ac941f3a767833830ba5cc9a4508a9777cbf97b487b6baf0400ab7000587",  # turbomerge
@@ -835,7 +804,7 @@ def auto_supplement(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="unet",
-            series=sdxl_base,
+            series=sdxl_series,
             comp=make_mir_tag(repo)[0],
             repo=repo,
             file_256=[
@@ -863,7 +832,7 @@ def auto_supplement(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="unet",
-            series=sdxl_base,
+            series=sdxl_series,
             comp=make_mir_tag(repo)[0],
             repo=repo,
             file_256=[
@@ -916,7 +885,7 @@ def auto_supplement(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="unet",
-            series=sdxl_base,
+            series=sdxl_series,
             comp=make_mir_tag(repo)[0],
             repo=repo,
             file_256=[
@@ -950,7 +919,7 @@ def auto_supplement(mir_db: MIRDatabase):
             mir_entry(
                 domain="info",
                 arch="unet",
-                series=sdxl_base,
+                series=sdxl_series,
                 comp=vega_comp,
                 repo=repo,
                 file_256=[
@@ -971,13 +940,14 @@ def auto_supplement(mir_db: MIRDatabase):
             )
         ),
     )
+
     repo = "segmind/Segmind-SSD-1B"
     (
         mir_db.add(
             mir_entry(
                 domain="info",
                 arch="unet",
-                series=sdxl_base,
+                series=sdxl_series,
                 comp=ssd_series,
                 repo=repo,
                 file_256=[
@@ -1248,7 +1218,7 @@ def auto_supplement(mir_db: MIRDatabase):
             domain="ops",
             arch="patch",
             series="hidiffusion",
-            comp=sdxl_base,
+            comp=sdxl_series,
             pkg={
                 0: {
                     "hidiffusion": {"apply_hidiffusion": {"timesteps": "StableDiffusionXLTimesteps"}},
@@ -1262,7 +1232,7 @@ def auto_supplement(mir_db: MIRDatabase):
             domain="ops",
             arch="scheduler",
             series="align-your-steps",
-            comp=sdxl_base,
+            comp=sdxl_series,
             pkg={
                 0: {
                     "diffusers.schedulers.scheduling_utils": {
@@ -1294,7 +1264,7 @@ def auto_text(mir_db: MIRDatabase):
                     "inference_solver": {"FlexARInferenceSolver": {"precision": "bf16", "target_size": 768}},
                     "generation": {"images": [], "qas": [["q1", None]], "max_gen_len": 8192, "temperature": 1.0},
                 },
-                1: {"transformers": "ChameleonXLLMXForConditionalGeneration"},
+                1: {"inference_solver": "ChameleonXLLMXForConditionalGeneration"},
             },
             identifiers=["model.embed_tokens.weight"],
             file_256=[
@@ -1316,7 +1286,7 @@ def auto_text(mir_db: MIRDatabase):
             series=series,
             comp=comp,
             repo=repo,
-            pkg={0: {"transformers": "T5ForConditionalGeneration"}},
+            pkg={0: {"transformers": "T5EncoderModel"}},
             identifiers=[[4096], "encoder.embed_tokens.weight", "text_encoders.t5xxl.transformer.shared.weight", "t5xxl"],
             file_256=[
                 "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # shuttle/flux diffusers
@@ -1384,7 +1354,7 @@ def auto_text(mir_db: MIRDatabase):
             series=series,
             comp=comp,
             repo=repo,
-            pkg={0: {"diffusers": "CLIPTextModel"}},
+            pkg={0: {"transformers": "CLIPTextModel"}},
             identifiers=["text_model.encoder.layers.0.mlp.fc1.weight", "clip-l"],
             file_256=[
                 "cb0cba1ead482a850532ebe5ff6b5c8d4456aee32a5228acf0a31e7d9472415e",  # long vit best
@@ -1442,7 +1412,7 @@ def auto_text(mir_db: MIRDatabase):
             series=series,
             comp=comp,
             repo=repo,
-            pkg={0: {"diffusers": "CLIPModelwithProjection"}},
+            pkg={0: {"transformers": "CLIPTextModelWithProjection"}},
             identifiers=["31.self_attn.k_proj.weight", "text_model.encoder.layers.22.mlp.fc1.weight", "clip-g"],
             file_256=[
                 "ca18e0c67c1ef1e64cac22926266765b60688f692307ecc06283d987c5768134",  # seaart furry g
@@ -1481,7 +1451,7 @@ def auto_text(mir_db: MIRDatabase):
             comp=comp,
             repo=repo,
             pkg={
-                0: {"transformers": "ChatGLMModel", "stage_2": {"transformers": "AutoTokenizer"}},
+                0: {"transformers": "AutoModel", "stage_2": {"transformers": "AutoTokenizer"}},
             },
             file_256=[
                 "0054d03310248928fdabdeef3fdc753170218dc49a1e9eb5f98323e27683f654",  # kolors
@@ -1648,7 +1618,7 @@ def auto_audio(mir_db: MIRDatabase):
             repo=repo,
             pkg={
                 0: {
-                    "diffusers": "Wav2Vec2ConformerForCTC",
+                    "transformers": "Wav2Vec2ConformerForCTC",
                 },
             },
             file_256=["97bb9761fb71ec1225100bc81ccf7d002e0d0ba3d0604c1fd2dbda7d7d491f1d"],

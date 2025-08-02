@@ -1,12 +1,11 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
-import sys
 from typing import List, Optional, Tuple
 
 from pydantic import BaseModel, field_validator
 
-nfo = sys.stderr.write
+nfo = print
 
 
 def parse_docs(doc_string: str) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
