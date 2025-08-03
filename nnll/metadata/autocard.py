@@ -152,11 +152,15 @@ def main():
     import shutil
 
     parser = argparse.ArgumentParser(
-        description="""Process repo path and conversion type
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="""Create a new HuggingFace RepoCard.\n
+    Retrieve HuggingFace repository data, fill out missing metadata,create a model card.
+    Optionally download and quantize repo to a desired folder that will be ready for upload.
+    Online function. """,
+        usage="nnll-autocard black-forest-labs/FLUX.1-Krea-dev -u exdysa -f FLUX.1-Krea-dev-MLX -l mlx -q 8",
+        epilog="""**Valid pipeline tags**:
 
-         **Valid pipeline tags**:
-
-         text-classification, token-classification, table-question-answering, question-answering, zero-shot-classification, translation, summarization, feature-extraction, text-generation, text2text-generation, fill-mask, sentence-similarity, text-to-speech, text-to-audio, automatic-speech-recognition, audio-to-audio, audio-classification, audio-text-to-text, voice-activity-detection, depth-estimation, image-classification, object-detection, image-segmentation, text-to-image, image-to-text, image-to-image, image-to-video, unconditional-image-generation, video-classification, reinforcement-learning, robotics, tabular-classification, tabular-regression, tabular-to-text, table-to-text, multiple-choice, text-ranking, text-retrieval, time-series-forecasting, text-to-video, image-text-to-text, visual-question-answering, document-question-answering, zero-shot-image-classification, graph-ml, mask-generation, zero-shot-object-detection, text-to-3d, image-to-3d, image-feature-extraction, video-text-to-text, keypoint-detection, visual-document-retrieval, any-to-any, other"""
+         text-classification, token-classification, table-question-answering, question-answering, zero-shot-classification, translation, summarization, feature-extraction, text-generation, text2text-generation, fill-mask, sentence-similarity, text-to-speech, text-to-audio, automatic-speech-recognition, audio-to-audio, audio-classification, audio-text-to-text, voice-activity-detection, depth-estimation, image-classification, object-detection, image-segmentation, text-to-image, image-to-text, image-to-image, image-to-video, unconditional-image-generation, video-classification, reinforcement-learning, robotics, tabular-classification, tabular-regression, tabular-to-text, table-to-text, multiple-choice, text-ranking, text-retrieval, time-series-forecasting, text-to-video, image-text-to-text, visual-question-answering, document-question-answering, zero-shot-image-classification, graph-ml, mask-generation, zero-shot-object-detection, text-to-3d, image-to-3d, image-feature-extraction, video-text-to-text, keypoint-detection, visual-document-retrieval, any-to-any, other""",
     )
     example = {
         "gguf": "",
@@ -165,12 +169,12 @@ def main():
         "mlx": "",
     }
     parser.add_argument("repo", type=str, help="Relative path to HF repository")
-    parser.add_argument("-d", "--dry_run", action="store_true", help="Perform a dry run, reading and generating a repo card without converting the model")
-    parser.add_argument("-q", "--quantization", type=int, choices=[8, 6, 4, 3, 2], required=False, help="Set quantization level")
-    parser.add_argument("-l", "--library", type=str, choices=list(example), default="mlx", help="Code example type [gguf,mlx,dev,schnell]")
-    parser.add_argument("-u", "--user", type=str, default="darkshapes", help="User for generated repo card")
-    parser.add_argument("-f", "--folder", type=str, default=os.path.join(os.path.expanduser("~"), "Downloads"), help="Optional folder path for downloading")
-    parser.add_argument("-p", "--prompt", type=str, default="Test Prompt", help="Optional prompt for code example")
+    parser.add_argument("-l", "--library", type=str, choices=list(example), default="mlx", help="Output model type [gguf,mlx,dev,schnell] (optional, default: 'mlx') NOTE: dev/schnell use MFLUX.")
+    parser.add_argument("-q", "--quantization", type=int, choices=[8, 6, 4, 3, 2], required=False, help="Set quantization level (optional, default: None)")
+    parser.add_argument("-d", "--dry_run", action="store_true", help="Perform a dry run, reading and generating a repo card without converting the model (optional, default: False)")
+    parser.add_argument("-u", "--user", type=str, default="darkshapes", help="User for generated repo card (optional)")
+    parser.add_argument("-f", "--folder", type=str, default=os.path.join(str(Path.home()), "Downloads"), help=f"Folder path for downloading (optional, default: {os.path.join(str(Path.home()), 'Downloads')})")
+    parser.add_argument("-p", "--prompt", type=str, default="Test Prompt", help="A prompt for the code example (optional, default: 'Test Prompt')")
 
     args = parser.parse_args()
     os.environ["HF_HUB_OFFLINE"] = "0"

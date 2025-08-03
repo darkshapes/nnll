@@ -174,7 +174,12 @@ def main() -> None:
     import argparse
     import asyncio
 
-    parser = argparse.ArgumentParser(description="""Generate hash files for a remote or cached repo""")
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="""Generate hashes for files or state dicts located remotely or in a cached repo\n
+        Online function.""",
+        usage="nnll-autohash zai-org/GLM-4.5",
+    )
     parser.add_argument("repo", type=str, help="Relative path to repository")
     args = parser.parse_args()
     repo_id = args.repo

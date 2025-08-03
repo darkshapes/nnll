@@ -171,9 +171,9 @@ mir-maid      = "nnll.mir.maid:main"
 mir-tasks     = "nnll.mir.tasks:main"
 nnll-autocard = "nnll.metadata.autocard:main"
 nnll-autohash = "nnll.download.hub_cache:main"
-nnll-find     = "nnll.model_detect.layer_compare:main"
 nnll-hash     = "nnll.integrity.hash_256:main"
-nnll-inspect  = "nnll.metadata.model_tags:main"
+nnll-layer    = "nnll.model_detect.layer_compare:main"
+nnll-meta     = "nnll.metadata.model_tags:main"
 nnll-parse    = "nnll.model_detect.state_dict_json:main"
 
 [tool.uv]

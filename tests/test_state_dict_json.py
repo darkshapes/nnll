@@ -5,7 +5,7 @@ import shutil
 import unittest
 
 from nnll.download.hub_cache import download_hub_file
-from nnll.model_detect.state_dict_json import read_state_dict_headers
+from nnll.metadata.model_tags import main
 
 
 class TestReadStateDictHeaders(unittest.TestCase):
@@ -16,9 +16,9 @@ class TestReadStateDictHeaders(unittest.TestCase):
 
         # Call the function under test
 
-        read_state_dict_headers("test_folder", "test_folder")
+        main("test_folder", "test_folder")
 
-        self.assertIsNone(read_state_dict_headers(folder_path_named="test_folder", save_location="./test_folder"))
+        self.assertIsNone(main(folder_path_named="test_folder", save_location="./test_folder"))
 
         try:
             shutil.rmtree(gguf_folder__path_named)

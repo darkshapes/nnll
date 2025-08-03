@@ -164,29 +164,30 @@ async def write_to_file(program: FunctionType | str, folder_path_named: str, has
     write_json_file(".", f"{date_stamp}_{prog_name}.json", hash_values)
 
 
-async def main():
+def main():
     """Parse arguments to feed to dict header reader"""
     import argparse
     from sys import argv
+    import asyncio
 
     # Set up argument parser
     parser = argparse.ArgumentParser(
-        description="Output the hashes of model state dicts or files from [path] to console and file",
-        epilog="Example: nnll-hash '~/Downloads/models/'",
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="""Output hashes of each model file state dict in [path] to console and .JSON \n Offline function.""",
+        usage="nnll-localhash '~/Downloads/models/'",
     )
-    parser.add_argument("-f", "--file", action="store_true", help="Change mode to calculate hash for the whole file instead of state dict layers")
-    parser.add_argument("-s", "--sha", action="store_true", help="Change algorithm from b3 to sha")
-    parser.add_argument("-d", "--describe", "--describe-process", action="store_true", help="Include processing metadata in the output", default=True)
-    parser.add_argument("-u", "--unsafe", action="store_true", help="Try to hash non-standard type model files layers")
-    parser.add_argument("path", default=".", help="Path to directory where files should be analyzed. (default .)")
+    parser.add_argument("path", default=".", help="Path to the directory where files should be analyzed. (default '.'')")
+
+    parser.add_argument("-f", "--file", action="store_true", help="Change mode to calculate hash for the whole file instead of state dict layers (default: False)")
+    parser.add_argument("-s", "--sha", action="store_true", help="Change algorithm from BLAKE3 to SHA256 (default: False)")
+    parser.add_argument("-d", "--describe", "--describe-process", action="store_true", help="Include processing metadata in the output (default: True)", default=True)
+    parser.add_argument("-u", "--unsafe", action="store_true", help="Try to hash non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)")
 
     args = parser.parse_args()
 
-    hash_values = await hash_layers_or_files(path_named=args.path, layer=not args.file, b3=not args.sha, desc_process=args.describe, unsafe=args.unsafe)
-    await write_to_file(program=str(parser.prog), folder_path_named=args.path, hash_values=hash_values, write_path=argv[1].split(os.sep)[-2])
+    hash_values = asyncio.run(hash_layers_or_files(path_named=args.path, layer=not args.file, b3=not args.sha, desc_process=args.describe, unsafe=args.unsafe))
+    asyncio.run(write_to_file(program=str(parser.prog), folder_path_named=args.path, hash_values=hash_values, write_path=argv[1].split(os.sep)[-2]))
 
 
 if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
+    main()
