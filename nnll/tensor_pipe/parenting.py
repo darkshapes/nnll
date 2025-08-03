@@ -24,31 +24,6 @@ def find_config_classes(parameter_filter: Optional[str] = None) -> List[str]:
     return config_data
 
 
-def show_tasks_for(code_name: str, class_name: Optional[str] = None) -> List[str]:
-    """Return Diffusers/Transformers task pipes based on package-specific query\n
-    :param class_name: To find task pipes from a Diffusers class pipe, defaults to None
-    :param code_name: To find task pipes from a Transformers class pipe, defaults to None
-    :return: A list of alternate class pipelines derived from the specified class"""
-
-    if class_name:
-        from diffusers.pipelines.auto_pipeline import SUPPORTED_TASKS_MAPPINGS, _get_task_class
-
-        alt_tasks = []
-        for task_map in SUPPORTED_TASKS_MAPPINGS:
-            task_class = _get_task_class(task_map, class_name, False)
-            if task_class:
-                alt_tasks.append(task_class.__name__)
-            for model_code, pipe_class_obj in task_map.items():
-                if code_name in model_code:
-                    alt_tasks.append(pipe_class_obj.__name__)
-
-    elif code_name:
-        from transformers.utils.fx import _generate_supported_model_class_names
-
-        alt_tasks = _generate_supported_model_class_names(code_name)
-    return alt_tasks
-
-
 def seek_class_path(class_name: str, pkg_name: str) -> List[str]:
     # from nnll.monitor.file import dbuq
     from nnll.tensor_pipe.deconstructors import get_code_names, root_class

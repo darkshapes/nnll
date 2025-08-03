@@ -8,7 +8,7 @@
 from typing import Callable, Dict, List, Optional, Union, Type
 from nnll.monitor.console import nfo
 from nnll.metadata.helpers import make_callable
-from nnll.tensor_pipe.parenting import class_parent, show_tasks_for
+from nnll.tensor_pipe.parenting import class_parent
 
 
 def get_code_names(
@@ -62,6 +62,7 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     :param pipe_class: Origin pipe
     :param pkg_name: Dependency package
     :return: A dictionary of pipelines"""
+    from nnll.mir.tasks import AutoPkg
 
     related_pipes = []
     code_name = get_code_names(pipe_class, pkg_name)
@@ -69,7 +70,7 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
         related_pipe_class_name = pipe_class
     else:
         related_pipe_class_name = None
-    related_pipes: list[str] = show_tasks_for(code_name=code_name, class_name=related_pipe_class_name)
+    related_pipes: list[str] = AutoPkg.show_diffusers_tasks(code_name=code_name, class_name=related_pipe_class_name)
     # for i in range(len(auto_tasks)):
     #     auto_tasks.setdefault(i, revealed_tasks[i])
     parent_folder = class_parent(code_name, pkg_name)

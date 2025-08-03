@@ -41,6 +41,17 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     return (cleaned_string, suffix)
 
 
+# def tag_mlx_model(repo_path: str, class_name: str, addendum: dict) -> tuple[str]:
+#     dev_series, dev_comp = make_mir_tag("black-forest-labs/FLUX.1-dev")
+#     schnell_series, schnell_comp = make_mir_tag("black-forest-labs/FLUX.1-schnell")
+#     series, comp = make_mir_tag(repo_path)
+#     if class_name == "Flux1":
+#         mir_prefix = "info.dit"
+#         base_series = dev_series
+#         mir_comp = series
+#         return mir_prefix, base_series, {base_comp: addendum}
+
+
 def tag_base_model(repo_path: str, class_name: str, addendum: dict | None = None) -> tuple[str]:
     """Convert model repo paths to MIR tags, classifying by feature\n
     :param name: Repo path

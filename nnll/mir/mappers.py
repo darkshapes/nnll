@@ -1,15 +1,16 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
-from typing import Dict, List, Generator, Iterator, Tuple
 import pkgutil
-import diffusers.pipelines
 import sys
+from typing import Dict, Generator, Iterator, List, Tuple
+
+import diffusers.pipelines
+
 from nnll.metadata.helpers import make_callable
 from nnll.tensor_pipe.deconstructors import root_class
-from nnll.tensor_pipe.parenting import show_tasks_for
 
-nfo = sys.stderr.write
+nfo = print
 
 
 def stock_llm_data() -> Dict[str, List[str]]:
@@ -43,7 +44,9 @@ def stock_llm_data() -> Dict[str, List[str]]:
     import os
 
     import transformers
-    from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES, CONFIG_MAPPING_NAMES
+    from transformers.models.auto.modeling_auto import CONFIG_MAPPING_NAMES, MODEL_MAPPING_NAMES
+
+    from nnll.mir.tasks import AutoPkg
 
     model_data = None
     task_pipe = None
@@ -54,7 +57,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
     for code_name in folder_data:
         model_class = None
         if code_name and "__" not in code_name:
-            tasks = show_tasks_for(code_name=code_name)
+            tasks = AutoPkg.show_transformers_tasks(code_name=code_name)
             if tasks:
                 task_pipe = next(iter(tasks))
                 if isinstance(task_pipe, tuple):
@@ -91,8 +94,8 @@ def process_with_folder_path(pkg_name: str, folder_path: bool) -> Iterator[Tuple
     :param file_specific: A flag indicating whether processing is specific to certain files.
     :yield: A tuple containing (pkg_name, file_name, EXAMPLE_DOC_STRING) if found.
     """
-    from importlib import import_module
     import os
+    from importlib import import_module
 
     file_names = list(getattr(folder_path, "_import_structure").keys())
     module_path = os.path.dirname(import_module("diffusers.pipelines").__file__)
@@ -105,7 +108,8 @@ def process_with_folder_path(pkg_name: str, folder_path: bool) -> Iterator[Tuple
             if path_exists:
                 pipe_file = make_callable(file_name, pkg_path)
         except ModuleNotFoundError:
-            nfo(f"Module Not Found for {pkg_name}")
+            if pkg_name != "skyreels_v2":
+                nfo(f"Module Not Found for {pkg_name}")
             pipe_file = None
 
         try:
@@ -115,7 +119,8 @@ def process_with_folder_path(pkg_name: str, folder_path: bool) -> Iterator[Tuple
                 if path_exists:
                     pipe_file = import_module(pkg_path)
         except (ModuleNotFoundError, AttributeError):
-            nfo(f"Doc String Not Found for {pipe_file} {pkg_name}")
+            if pkg_name != "skyreels_v2":
+                nfo(f"Doc String Not Found for {pipe_file} {pkg_name}")
 
 
 def process_with_file_name(pkg_name: str, file_specific: bool) -> Iterator[Tuple[str, str, str]]:
@@ -131,7 +136,8 @@ def process_with_file_name(pkg_name: str, file_specific: bool) -> Iterator[Tuple
         pkg_path = f"diffusers.pipelines.{pkg_name}"
         pipe_file = make_callable(file_name, pkg_path)
     except ModuleNotFoundError:
-        nfo(f"Module Not Found for {pkg_name}")
+        if pkg_name != "skyreels_v2":
+            nfo(f"Module Not Found for {pkg_name}")
         pipe_file = None
     try:
         if pipe_file and hasattr(pipe_file, "EXAMPLE_DOC_STRING"):
@@ -140,7 +146,8 @@ def process_with_file_name(pkg_name: str, file_specific: bool) -> Iterator[Tuple
             pipe_file = import_module(pkg_path)
 
     except AttributeError:
-        nfo(f"Doc String Not Found for {pipe_file} {pkg_name}")
+        if pkg_name != "skyreels_v2":
+            nfo(f"Doc String Not Found for {pipe_file} {pkg_name}")
 
 
 # Refactored main loop
@@ -160,32 +167,32 @@ def cut_docs() -> Generator:
 
     exclusion_list = [  # no doc string or other issues. all can be be gathered by other means
         "autopipeline",  #
-        "diffusionpipeline",  #
-        "pag",  # not model based
-        "stable_diffusion_attend_and_excite",
-        "stable_diffusion_sag",  #
-        "t2i_adapter",
-        "ledits_pp",  # "leditspp_stable_diffusion",
-        "latent_consistency_models",  # "latent_consistency_text2img",
-        "unclip",
-        # these are uncommon afaik
         "dance_diffusion",  # no doc_string
-        "dit",
         "ddim",
         "ddpm",
         "deprecated",
+        "diffusionpipeline",  #
+        "dit",
+        "latent_consistency_models",  # "latent_consistency_text2img",
         "latent_diffusion",  # no doc_string
+        "ledits_pp",  # "leditspp_stable_diffusion",
         "marigold",  # specific processing routines
         "omnigen",  # tries to import torchvision
+        "pag",  # not model based
         "paint_by_example",  # no docstring
         "pia",  # lora adapter
         "semantic_stable_diffusion",  # no_docstring
+        "stable_diffusion_attend_and_excite",
         "stable_diffusion_diffedit",
         "stable_diffusion_k_diffusion",  # tries to import k_diffusion
         "stable_diffusion_panorama",
         "stable_diffusion_safe",  # impossible
+        "stable_diffusion_sag",  #
+        "t2i_adapter",
         "text_to_video_synthesis",
+        "unclip",
         "unidiffuser",
+        # these are uncommon afaik
     ]
 
     for _, pkg_name, is_pkg in pkgutil.iter_modules(diffusers.pipelines.__path__):

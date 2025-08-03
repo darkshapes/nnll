@@ -10,15 +10,17 @@
             "brnn": "",
             "rcnn": "",
             "gru": "",
-            "lstm": "",
             "rbm": "",
-            "taesd": "",
+            "tae": "",
             "vae": "",
             "embedding": "",
             "scheduler": "",
             "resnet": ""
         },
         "transformer": {
+            "lstm": [
+                "sequence_kernel"
+            ],
             "detr": [
                 "use_timm_backbone",
                 "_resnet_",
@@ -84,7 +86,8 @@
                 "codebook_dim",
                 "router_ignore_padding_tokens",
                 "d_ff",
-                "d_kv"
+                "d_kv",
+                "audio_config"
             ],
             "art": [
                 "ffn_dim",
@@ -108,7 +111,8 @@
                 "residual_dropout",
                 "no_rope_layers",
                 "decoder_start_token_id",
-                "decoder_layers"
+                "decoder_layers",
+                "tie_codebooks_embeddings"
             ]
         },
         "diffuser": {
