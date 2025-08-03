@@ -170,14 +170,16 @@ def main(mir_db: MIRDatabase = None):
 
     # from sys import argv
     import asyncio
+    from sys import modules as sys_modules
 
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter,
-        description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
-        usage="mir-tasks",
-        epilog="Should be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
-    )
-    parser.parse_args()
+    if "pytest" not in sys_modules:
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
+            usage="mir-tasks",
+            epilog="Should be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+        )
+        parser.parse_args()
 
     from nnll.mir.automata import assimilate
 
