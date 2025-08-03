@@ -8,4 +8,4 @@ from nnll.mir.maid import MIRDatabase
 
 def test_task_and_pipe():
     mir_db = MIRDatabase()
-    main(mir_db)
+    return main(mir_db)
