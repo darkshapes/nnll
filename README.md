@@ -1,3 +1,10 @@
+---
+language:
+- en
+library_name: nnll
+license_name: MPL-2.0 + Commons Clause 1.0
+---
+
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
