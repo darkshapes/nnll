@@ -31,6 +31,7 @@ class AutoPkg:
                 task_class = _get_task_class(task_map, class_name, False)
                 if task_class:
                     alt_tasks.append(task_class.__name__)
+                    print(task_class)
                 for model_code, pipe_class_obj in task_map.items():
                     if code_name in model_code:
                         alt_tasks.append(pipe_class_obj.__name__)
@@ -68,8 +69,7 @@ class AutoPkg:
 
         avoid_classes = [".gligen", "imagenet64"]
         avoid_series = ["info.lora", "info.vae"]
-        from nnll.mir.automata import assimilate
-
+        data_tuple = []
         for series, compatibility_data in mir_db.database.items():
             if (
                 series.startswith("info.")  # formatting comment
@@ -86,10 +86,9 @@ class AutoPkg:
                                 for task in detected_tasks:
                                     if task not in tasks_for_class["tasks"]:
                                         tasks_for_class["tasks"].append(task)
-                                data_tuple = (*series.rsplit(".", 1), {compatibility: tasks_for_class})
-                                assimilate(mir_db, [data_tuple])
+                                data_tuple.append((*series.rsplit(".", 1), {compatibility: tasks_for_class}))
 
-        mir_db.write_to_disk()
+        return data_tuple
 
     async def trace_tasks(self, pkg_tree: dict[str, str | int | list[str | int]]) -> List[str]:
         """Trace tasks for a given MIR entry.\n
@@ -103,7 +102,7 @@ class AutoPkg:
         snip_words: set[str] = {"PreTrained", "ForConditionalGeneration"}
         package_name = next(iter(pkg_tree))
         class_name = pkg_tree[package_name]
-        # print(f"{package_name}, {class_name}")
+        print(f"{package_name}, {class_name}")
         if class_name not in ["AutoTokenizer", "AutoModel", "AutoencoderTiny", "AutoencoderKL", "AutoPipelineForImage2Image"]:
             if isinstance(class_name, dict):
                 class_name = next(iter(list(class_name)))
@@ -122,17 +121,25 @@ class AutoPkg:
                 return package_name, class_name, filtered_tasks
 
 
-def main():
+def main(mir_db: MIRDatabase = None):
     """Parse arguments to feed to dict header reader"""
     # import argparse
     # from sys import argv
     import asyncio
 
-    mir_db = MIRDatabase()
+    if not mir_db:
+        mir_db = MIRDatabase()
 
     auto_pkg = AutoPkg()
-    asyncio.run(auto_pkg.detect_tasks(mir_db))
+    data_tuple = asyncio.run(auto_pkg.detect_tasks(mir_db))
+    return data_tuple
 
 
 if __name__ == "__main__":
-    task = main()
+    mir_db = MIRDatabase()
+    data_tuple = main(mir_db)
+    nfo(data_tuple)
+    from nnll.mir.automata import assimilate
+
+    assimilate(mir_db, [task for task in data_tuple])
+    mir_db.write_to_disk()

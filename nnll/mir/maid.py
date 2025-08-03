@@ -23,7 +23,7 @@ class MIRDatabase:
 
     def add(self, resource: dict[str, Any]) -> None:
         """Merge pre-existing MIR entries, or add new ones
-        :param element: _description_
+        :param resource: Entry to apply
         """
         parent_key = next(iter(resource))
         if self.database is not None:
@@ -158,7 +158,6 @@ class MIRDatabase:
 def main(mir_db: Callable = MIRDatabase()) -> None:
     nfo = print
     """Build the database"""
-    import asyncio
 
     from nnll.integrity import ensure_path
     from nnll.mir.automata import (
@@ -173,10 +172,8 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
         auto_text,
         auto_vae,
     )
-    from nnll.mir.tasks import AutoPkg
     from nnll.monitor.console import nfo
 
-    auto_pkg = AutoPkg()
     try:
         os.remove(MIR_PATH_NAMED)
     except (FileNotFoundError, OSError) as error_log:
@@ -193,7 +190,7 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
     auto_detail(mir_db)
     auto_taesd(mir_db)
     auto_vae(mir_db)
-    asyncio.run(auto_pkg.detect_tasks(mir_db))  # writes to disk
+    mir_db.write_to_disk()
 
 
 if __name__ == "__main__":

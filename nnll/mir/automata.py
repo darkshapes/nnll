@@ -106,8 +106,7 @@ sd3_series, sd3_comp = make_mir_tag("stable-diffusion-3")
 
 
 def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> None:
-    """
-    Merge new data into a pre-generated MIR database, updating while preserving existing data structures.\n
+    """Merge new data into a pre-generated MIR database, updating while preserving existing data structures.\n
     :param mir_db: The MIRDatabase instance
     :param data_tuple: A list of tuples, each containing:\n
             - arch (str): The architecture name
@@ -914,31 +913,29 @@ def auto_supplement(mir_db: MIRDatabase):
         )
     )
     repo = "segmind/Segmind-Vega"
-    (
-        mir_db.add(
-            mir_entry(
-                domain="info",
-                arch="unet",
-                series=sdxl_series,
-                comp=vega_comp,
-                repo=repo,
-                file_256=[
-                    "94762e983e5942056be73c5c1d4464b8ffa1ada500b4fef1267550e2447953ce",  # modelspec sai
-                    "1ab33e37fbb2566c55cd729e4ab79cc2f99cd9d0a578fabc7a2cf4ee47968be1",  # diffusers
-                    "8cfa375669b1222d6fecf470f41b2abb370c76a90ab9568964c4bb15b34ec8a2",  # diffusers fp16
-                ],
-                layer_b3=[
-                    "2f353c5e6ed0a2c05af00d014e18e65f69f1ce8c48f8eefbf8ad71b34f940fbf",
-                    "cc34bd3135d7cafc3cb6e3f6e7cb6896c98277bad52877a952ddbd2ffe222e01",
-                    "b90efdc848f5386d5250b6fb233ce380cf6cc299f497cfa1d2feaef22f87c9d1",
-                ],
-                layer_256=[
-                    "029b89ee311110c8f945dbdfc52c1d5daeb1e78c353c38aa3141ec68ce28e7cc",
-                    "5cdb948e5f3873300679073391d48fc648171f02093d7737d078557ff75762bb",
-                    "f73afbe43cc76571cb86ebcfced618668a2fb2252b0bc6ba88d6e942bae75741",
-                ],
-            )
-        ),
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="unet",
+            series=sdxl_series,
+            comp=vega_comp,
+            repo=repo,
+            file_256=[
+                "94762e983e5942056be73c5c1d4464b8ffa1ada500b4fef1267550e2447953ce",  # modelspec sai
+                "1ab33e37fbb2566c55cd729e4ab79cc2f99cd9d0a578fabc7a2cf4ee47968be1",  # diffusers
+                "8cfa375669b1222d6fecf470f41b2abb370c76a90ab9568964c4bb15b34ec8a2",  # diffusers fp16
+            ],
+            layer_b3=[
+                "2f353c5e6ed0a2c05af00d014e18e65f69f1ce8c48f8eefbf8ad71b34f940fbf",
+                "cc34bd3135d7cafc3cb6e3f6e7cb6896c98277bad52877a952ddbd2ffe222e01",
+                "b90efdc848f5386d5250b6fb233ce380cf6cc299f497cfa1d2feaef22f87c9d1",
+            ],
+            layer_256=[
+                "029b89ee311110c8f945dbdfc52c1d5daeb1e78c353c38aa3141ec68ce28e7cc",
+                "5cdb948e5f3873300679073391d48fc648171f02093d7737d078557ff75762bb",
+                "f73afbe43cc76571cb86ebcfced618668a2fb2252b0bc6ba88d6e942bae75741",
+            ],
+        )
     )
 
     repo = "segmind/Segmind-SSD-1B"
@@ -2080,6 +2077,54 @@ def auto_lora(mir_db: MIRDatabase):
     )
 
 
+def auto_taesd(mir_db: MIRDatabase):
+    """Create MIR VAE missing from the dtabase"""
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp=sd3_series,
+            repo="madebyollin/taesd3",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp=sdxl_series,
+            repo="madebyollin/taesdxl",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp=sd1_series,
+            repo="madebyollin/taesd",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="taesd",
+            comp=dev_comp,
+            repo="madebyollin/taef1 ",
+            pkg={0: {"diffusers": "AutoencoderTiny"}},
+            file_256=["927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"],
+        )
+    )
+
+
 def auto_vae(mir_db: MIRDatabase):
     mir_db.add(
         mir_entry(
@@ -2157,53 +2202,5 @@ def auto_vae(mir_db: MIRDatabase):
                 "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # diffusers
                 "8f084dc91fd5b481875bc9c86a4ef05e5f176896b7d31c6a5c2ce45c2e174004",  # dev diffusers
             ],
-        )
-    )
-
-
-def auto_taesd(mir_db: MIRDatabase):
-    """Create MIR VAE missing from the dtabase"""
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="vae",
-            series="taesd",
-            comp=sd3_series,
-            repo="madebyollin/taesd3",
-            pkg={0: {"diffusers": "AutoencoderTiny"}},
-            file_256=["6f79c1397cb9ce1dac363722dbe70147aee0ccca75e28338f8482fe515891399"],
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="vae",
-            series="taesd",
-            comp=sdxl_series,
-            repo="madebyollin/taesdxl",
-            pkg={0: {"diffusers": "AutoencoderTiny"}},
-            file_256=["ff4824aca94dd6111e0340fa749347fb74101060d9712cb5ef1ca8f1cf17502f"],
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="vae",
-            series="taesd",
-            comp=sd1_series,
-            repo="madebyollin/taesd",
-            pkg={0: {"diffusers": "AutoencoderTiny"}},
-            file_256=["db169d69145ec4ff064e49d99c95fa05d3eb04ee453de35824a6d0f325513549"],
-        )
-    )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="vae",
-            series="taesd",
-            comp=dev_comp,
-            repo="madebyollin/taef1 ",
-            pkg={0: {"diffusers": "AutoencoderTiny"}},
-            file_256=["927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"],
         )
     )
