@@ -6,6 +6,7 @@ from typing import Any, Callable, List
 
 from nnll.mir.maid import MIRDatabase
 from nnll.monitor.console import nfo
+from nnll.monitor.file import dbuq
 
 
 flatten_map: List[Any] = lambda nested, unpack: [element for iterative in getattr(nested, unpack)() for element in iterative]
@@ -31,7 +32,7 @@ class AutoPkg:
                 task_class = _get_task_class(task_map, class_name, False)
                 if task_class:
                     alt_tasks.append(task_class.__name__)
-                    print(task_class)
+                    dbuq(task_class)
                 for model_code, pipe_class_obj in task_map.items():
                     if code_name in model_code:
                         alt_tasks.append(pipe_class_obj.__name__)
@@ -99,10 +100,10 @@ class AutoPkg:
 
         preformatted_task_data = None
         filtered_tasks = None
-        snip_words: set[str] = {"PreTrained", "ForConditionalGeneration"}
+        snip_words: set[str] = {"load_tf_weights_in"}  # "PreTrained", "ForConditionalGeneration",
         package_name = next(iter(pkg_tree))
         class_name = pkg_tree[package_name]
-        print(f"{package_name}, {class_name}")
+        dbuq(f"{package_name}, {class_name}")
         if class_name not in ["AutoTokenizer", "AutoModel", "AutoencoderTiny", "AutoencoderKL", "AutoPipelineForImage2Image"]:
             if isinstance(class_name, dict):
                 class_name = next(iter(list(class_name)))
@@ -114,8 +115,6 @@ class AutoPkg:
                 preformatted_task_data.sort()
             elif package_name == "mflux":
                 preformatted_task_data = ["Image", "Redux", "Kontext", "Depth", "Fill", "ConceptAttention", "ControlNet", "CavTon", "IC-Edit"]
-            # class_snippets = snip_words | self.all_tasks
-            # subtracted_name = class_name
             if preformatted_task_data:
                 filtered_tasks = [task for task in preformatted_task_data for snip in snip_words if snip not in task]
                 return package_name, class_name, filtered_tasks
@@ -123,23 +122,30 @@ class AutoPkg:
 
 def main(mir_db: MIRDatabase = None):
     """Parse arguments to feed to dict header reader"""
-    # import argparse
+    import argparse
+
     # from sys import argv
     import asyncio
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
+        usage="mir-tasks",
+        epilog="Should be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+    )
+    parser.parse_args()
+
+    from nnll.mir.automata import assimilate
 
     if not mir_db:
         mir_db = MIRDatabase()
 
     auto_pkg = AutoPkg()
     data_tuple = asyncio.run(auto_pkg.detect_tasks(mir_db))
-    return data_tuple
+    nfo(data_tuple)
+    assimilate(mir_db, [task for task in data_tuple])
+    mir_db.write_to_disk()
 
 
 if __name__ == "__main__":
-    mir_db = MIRDatabase()
-    data_tuple = main(mir_db)
-    nfo(data_tuple)
-    from nnll.mir.automata import assimilate
-
-    assimilate(mir_db, [task for task in data_tuple])
-    mir_db.write_to_disk()
+    main()

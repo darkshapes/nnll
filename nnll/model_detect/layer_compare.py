@@ -48,7 +48,19 @@ def main() -> None:
     import subprocess
     from nnll.monitor.console import nfo
 
-    parser = argparse.ArgumentParser(description="Search layer name metadata in the current folder's models.")
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="""Recursively search for layer name metadata in state dict .JSON files of the current folder. \n\
+Print filenames with matching layers to console along with the first matching layer's corresponding shape, and tensor counts.
+Offline function.""",
+        usage="nnll-find adaln",
+        epilog="""Output:\n\
+2025-08-03 14:57:10 INFO     ('./Pixart-Sigma-XL-2-2k-ms.diffusers.safetensors.json', {'shape': [1152], 'tensors': 604})\
+                             console.py:84
+                    INFO     ('./PixartXL-2-1024-ms.diffusers.safetensors.json', {'shape': [384], 'tensors': 613})\
+                                   console.py:84
+                    INFO     ('./flash-pixart-a.safetensors.json', {'shape': [64, 256], 'tensors': 587})    """,
+    )
     parser.add_argument("pattern", help="Pattern to search for")
     args = parser.parse_args()
 

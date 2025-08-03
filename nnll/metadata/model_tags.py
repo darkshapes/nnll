@@ -15,7 +15,7 @@ from nnll.monitor.file import dbug
 
 
 class ReadModelTags:
-    """Output state dict from a model file at [path] to the ui"""
+    """Output state dict from a model file"""
 
     GGUF_MAGIC_NUMBER = b"GGUF"
 
@@ -364,20 +364,31 @@ class ReadModelTags:
                 return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
 
 
-def main():
+def main(folder_path_named: str = None, save_location: str = None, separate_desc: bool = False) -> None:
     import argparse
     import os
+    from sys import modules
 
     from nnll.integrity import ensure_path
 
-    # Set up argument parser
-    parser = argparse.ArgumentParser(description="Output state dict from a model file at [path] to the console, then write to a json file at [save].", epilog="Example: nnll-parse ~/Downloads/models/images ~Downloads/models/metadata")
-    parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=".")
-    parser.add_argument("-d", "--directory", required=False, help="Path where output should be stored. (default: current directory)", default=".")
-    parser.add_argument("-s", "--separate_desc", required=False, action="store_true", help="Ignore the metadata from the header. (default: False)", default=False)
-    args = parser.parse_args()
+    if "pytest" not in modules:  # bypass in case of testing
+        # Set up argument parser
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Scan the state dict metadata from a folder of files at [path] to the console, then write to a json file at [save]\nOffline function.",
+            usage="nnll-autometa ~/Downloads/models/images ~Downloads/models/metadata",
+            epilog=f"Valid input formats: {[*ExtensionType.MODEL]}",
+        )
+        parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=".")
+        parser.add_argument("-s", "--save_to_folder_path", required=False, help="Path where output should be stored. (default: '.')", type=str, default=".")
+        parser.add_argument("-d", "--separate_desc", required=False, action="store_true", help="Ignore the metadata from the header. (default: False)", default=False)
+        args = parser.parse_args()
+
+        folder_path_named = args.path
+        separate_desc = args.separate_desc
+        save_location = args.save_to_folder_path
     model_tool = ReadModelTags()
-    meta_data = model_tool.read_metadata_from(args.path, separate_desc=args.separate_desc)
-    file_name = f"{os.path.basename(args.path)}.json"
-    folder_path_named = ensure_path(args.directory)
+    meta_data = model_tool.read_metadata_from(folder_path_named, separate_desc=separate_desc)
+    file_name = f"{os.path.basename(folder_path_named)}.json"
+    folder_path_named = ensure_path(save_location)
     write_json_file(folder_path_named=folder_path_named, file_name=file_name, data=meta_data)
