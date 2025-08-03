@@ -367,11 +367,11 @@ class ReadModelTags:
 def main(folder_path_named: str = None, save_location: str = None, separate_desc: bool = False) -> None:
     import argparse
     import os
-    from sys import modules
+    from sys import modules as sys_modules
 
     from nnll.integrity import ensure_path
 
-    if "pytest" not in modules:  # bypass in case of testing
+    if "pytest" not in sys_modules:  # bypass in case of testing
         # Set up argument parser
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,

@@ -1,7 +1,7 @@
 #  # # <!-- // /*  SPDX-License-Identifier: MPL-2.0*/ -->
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
-from typing import Any, Callable, List
+from typing import Any, Callable, List, get_type_hints
 
 
 from nnll.mir.maid import MIRDatabase
@@ -69,7 +69,7 @@ class AutoPkg:
         :rtype: dict"""
 
         avoid_classes = [".gligen", "imagenet64"]
-        avoid_series = ["info.lora", "info.vae"]
+        avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
         data_tuple = []
         for series, compatibility_data in mir_db.database.items():
             if (
@@ -88,6 +88,50 @@ class AutoPkg:
                                     if task not in tasks_for_class["tasks"]:
                                         tasks_for_class["tasks"].append(task)
                                 data_tuple.append((*series.rsplit(".", 1), {compatibility: tasks_for_class}))
+
+        return data_tuple
+
+    async def detect_pipes(self, mir_db: MIRDatabase, field_name: str = "pkg") -> dict:
+        """Detects and traces Pipes MIR data\n
+        :param mir_db:: An instance of MIRDatabase containing the database of information.
+        :type mir_db: MIRDatabase
+        :param field_name:  The name of the field in compatibility data to process for task detection, defaults to "pkg".
+        :type field_name: str, optional
+        :return:A dictionary mapping series names to their respective compatibility and traced tasks.
+        :rtype: dict"""
+        from nnll.metadata.helpers import make_callable
+        from typing import _UnionGenericAlias
+        from types import NoneType, UnionType
+
+        avoid_classes = [".gligen", "imagenet64"]
+        avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
+        data_tuple = []
+        for series, compatibility_data in mir_db.database.items():
+            if (
+                series.startswith("info.")  # formatting comment
+                and not any(series.startswith(tag) for tag in avoid_series)
+                and not any(tag for tag in avoid_classes if tag in series)
+            ):
+                for compatibility, field_data in compatibility_data.items():
+                    if field_data and field_data.get("pkg", {}).get("0"):
+                        for index, pkg_tree in field_data["pkg"].items():
+                            if pkg_tree and next(iter(pkg_tree)) == "diffusers":
+                                module_name = pkg_tree[next(iter(pkg_tree))]
+                                class_obj = make_callable(module_name, "diffusers")
+                                pipe_args = get_type_hints(class_obj.__init__)
+                                detected_pipe = {"pipe_names": dict()}
+                                for role, pipe_class in pipe_args.items():
+                                    if not any(segment for segment in [float, NoneType, bool] if isinstance(pipe_class, segment)):
+                                        print(pipe_class)
+                                        if isinstance(pipe_class, _UnionGenericAlias):
+                                            detected_pipe["pipe_names"][role] = []
+                                            for union_class in pipe_class.__args__:
+                                                if not any(segment for segment in [float, NoneType, bool, _UnionGenericAlias, UnionType] if isinstance(union_class, segment)):
+                                                    detected_pipe["pipe_names"][role].append(union_class.__name__)
+                                        else:
+                                            detected_pipe["pipe_names"][role] = [pipe_class.__name__]
+
+                                data_tuple.append((*series.rsplit(".", 1), {compatibility: detected_pipe}))
 
         return data_tuple
 
@@ -141,9 +185,12 @@ def main(mir_db: MIRDatabase = None):
         mir_db = MIRDatabase()
 
     auto_pkg = AutoPkg()
-    data_tuple = asyncio.run(auto_pkg.detect_tasks(mir_db))
-    nfo(data_tuple)
-    assimilate(mir_db, [task for task in data_tuple])
+    task_tuple = asyncio.run(auto_pkg.detect_tasks(mir_db))
+    pipe_tuple = asyncio.run(auto_pkg.detect_pipes(mir_db))
+    nfo(task_tuple)
+    nfo(pipe_tuple)
+    assimilate(mir_db, [task for task in task_tuple])
+    assimilate(mir_db, [pipe for pipe in pipe_tuple])
     mir_db.write_to_disk()
 
 

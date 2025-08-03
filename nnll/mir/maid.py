@@ -157,18 +157,21 @@ class MIRDatabase:
 
 def main(mir_db: Callable = MIRDatabase()) -> None:
     """Build the database"""
-    import argparse
+    from sys import modules as sys_modules
 
-    nfo = print
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter,
-        description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
-        usage="mir-maid",
-        epilog="""Output:
-        2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
-        2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
-    )
-    parser.parse_args()
+    if "pytest" not in sys_modules:  #
+        import argparse
+
+        nfo = print
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
+            usage="mir-maid",
+            epilog="""Output:
+            2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
+            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
+        )
+        parser.parse_args()
 
     from nnll.integrity import ensure_path
     from nnll.mir.automata import (
