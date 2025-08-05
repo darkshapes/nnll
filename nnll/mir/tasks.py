@@ -2,10 +2,12 @@
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 from typing import Any, Callable, List, get_type_hints
+from typing import Any, Callable, List, get_type_hints
 
 
 from nnll.mir.maid import MIRDatabase
 from nnll.monitor.console import nfo
+from nnll.monitor.file import dbuq
 from nnll.monitor.file import dbuq
 
 
@@ -32,6 +34,7 @@ class AutoPkg:
                 task_class = _get_task_class(task_map, class_name, False)
                 if task_class:
                     alt_tasks.append(task_class.__name__)
+                    dbuq(task_class)
                     dbuq(task_class)
                 for model_code, pipe_class_obj in task_map.items():
                     if code_name in model_code:
@@ -69,6 +72,7 @@ class AutoPkg:
         :rtype: dict"""
 
         avoid_classes = [".gligen", "imagenet64"]
+        avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
         avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
         data_tuple = []
         for series, compatibility_data in mir_db.database.items():
@@ -166,8 +170,10 @@ class AutoPkg:
         preformatted_task_data = None
         filtered_tasks = None
         snip_words: set[str] = {"load_tf_weights_in"}  # "PreTrained", "ForConditionalGeneration",
+        snip_words: set[str] = {"load_tf_weights_in"}  # "PreTrained", "ForConditionalGeneration",
         package_name = next(iter(pkg_tree))
         class_name = pkg_tree[package_name]
+        dbuq(f"{package_name}, {class_name}")
         dbuq(f"{package_name}, {class_name}")
         if class_name not in ["AutoTokenizer", "AutoModel", "AutoencoderTiny", "AutoencoderKL", "AutoPipelineForImage2Image"]:
             if isinstance(class_name, dict):
@@ -189,6 +195,18 @@ def main(mir_db: MIRDatabase = None):
     """Parse arguments to feed to dict header reader"""
     import argparse
     import asyncio
+    from sys import modules as sys_modules
+
+    if "pytest" not in sys_modules:
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
+            usage="mir-tasks",
+            epilog="Should be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+        )
+        parser.parse_args()
+
+    from nnll.mir.automata import assimilate
     from sys import modules as sys_modules
 
     if "pytest" not in sys_modules:

@@ -5,6 +5,13 @@ library_name: nnll
 license_name: MPL-2.0 + Commons Clause 1.0
 ---
 
+---
+language:
+- en
+library_name: nnll
+license_name: MPL-2.0 + Commons Clause 1.0
+---
+
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
@@ -19,6 +26,7 @@ license_name: MPL-2.0 + Commons Clause 1.0
 * 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
 * :shipit: <br><br>
 
+[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](nnll/actions/workflows/nnll.yml) <br>
 [![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](nnll/actions/workflows/nnll.yml) <br>
 ![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>

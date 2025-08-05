@@ -310,7 +310,19 @@ def main():
     """Add a single entry to MIR database\n"""
     import argparse
     from nnll.mir.maid import MIRDatabase
+    from nnll.mir.maid import MIRDatabase
 
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Manually add entries to MIR database.\nOffline function.",
+        usage="""mir-add --domain info --arch lora --series slam --compatibility sd1_series \\
+        -k {'repo':'alimama-creative/slam-sd1.5', 'pkg':{0: {'diffusers': 'load_lora_weights'}}}""",
+        epilog=f"MIR Class attributes:\n \
+        Domain: {[k for k in Domain.__annotations__ if not k.startswith('_')]}\n \
+        Ops: {[k for k in Ops.__annotations__ if not k.startswith('_')]}\n \
+        Info: {[k for k in Info.__annotations__ if not k.startswith('_')]}\n \
+        Dev: {[k for k in Dev.__annotations__ if not k.startswith('_')]}",
+    )
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description="Manually add entries to MIR database.\nOffline function.",

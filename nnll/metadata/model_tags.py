@@ -18,6 +18,8 @@ from nnll.monitor.file import dbug
 class ReadModelTags:
     """Output state dict from a model file"""
 
+    """Output state dict from a model file"""
+
     GGUF_MAGIC_NUMBER = b"GGUF"
 
     def __init__(self):
