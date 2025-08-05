@@ -1316,7 +1316,7 @@ def auto_text(mir_db: MIRDatabase):
                 "3f4e51dec6d542759cdea49b3bec14c090a4908f953fa3e182e2ea43b5b05402",  #  q5 k m gguf
                 "77619d5278d9f547ddac17d4d99df56cb6a3a9e660ae31b2f896a4297907e62e",  # mlx t5 jaguar
                 "c87c9d3cc7becc46ee34821299cf8551a6df5541582a45469a031bccdc4bd340",  # mlx shuttle t5 q8
-                "7e6c32c01c89fc5d1610c410135aa9708e77a7444510e5e479fa677ff2b53643"  # mlx jaguar q8
+                "7e6c32c01c89fc5d1610c410135aa9708e77a7444510e5e479fa677ff2b53643",  # mlx jaguar q8
                 "a49c2bc301733967ddff113790e301773dc5dd71368b657af4141458de593ced",  # mlx flex2 preview
                 "c2ea94030ea362e03d73d448fa5353ace0a449dc38c51a4a49fb148444ebb8ef",  # mlx shuttle3 diff q4
                 "4a90463350f08ef41479da1d561ab41b8f8b792f1603a092226a838156aebfb0",  # mlx flex1 alpha q8
