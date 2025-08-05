@@ -2,7 +2,6 @@
 # <!-- // /*  d a r k s h a p e s */ -->
 
 import pkgutil
-import sys
 from typing import Dict, Generator, Iterator, List, Tuple
 
 import diffusers.pipelines
@@ -88,7 +87,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
     return transformer_data
 
 
-def process_with_folder_path(pkg_name: str, folder_path: bool) -> Iterator[Tuple[str, str, str]]:
+def pkg_path_to_docstring(pkg_name: str, folder_path: bool) -> Iterator[Tuple[str, str, str]]:
     """Processes package folder paths to yield example doc strings if available.\n
     :param pkg_name: The name of the package under diffusers.pipelines.
     :param file_specific: A flag indicating whether processing is specific to certain files.
@@ -123,7 +122,7 @@ def process_with_folder_path(pkg_name: str, folder_path: bool) -> Iterator[Tuple
                 nfo(f"Doc String Not Found for {pipe_file} {pkg_name}")
 
 
-def process_with_file_name(pkg_name: str, file_specific: bool) -> Iterator[Tuple[str, str, str]]:
+def file_name_to_docstring(pkg_name: str, file_specific: bool) -> Iterator[Tuple[str, str, str]]:
     """Processes package using file name to yield example doc strings if available.\n
     :param pkg_name: The name of the package under diffusers.pipelines.
     :param file_specific: A flag indicating whether processing is specific to certain files.
@@ -201,8 +200,8 @@ def cut_docs() -> Generator:
             folder_name = getattr(diffusers.pipelines, pkg_name)
             if folder_name:
                 if hasattr(folder_name, "_import_structure"):
-                    yield from process_with_folder_path(pkg_name, folder_name)
+                    yield from pkg_path_to_docstring(pkg_name, folder_name)
                 else:
-                    yield from process_with_file_name(pkg_name, file_specific)
+                    yield from file_name_to_docstring(pkg_name, file_specific)
             else:
                 continue

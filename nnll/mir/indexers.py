@@ -94,15 +94,13 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
 
 def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional[Callable] = None) -> tuple[str, Dict[str, Dict[Any, Any]]]:
     """Create a pipeline article and generate corresponding information according to the provided repo path and pipeline category\n
-    :param Repo_path (str): Repository path.
+    :param repo_path (str): Repository path.
     :param model_class_obj (str): The model class function
     :raises TypeError: If 'repo_path' or 'class_name' are not set.
     :return: Tuple: The data structure containing mir_series and mir_comp is used for subsequent processing.
     """
     import diffusers  # pyright: ignore[reportMissingImports] # pylint:disable=redefined-outer-name
 
-    if not repo_path and class_name:
-        raise TypeError(f"'repo_path' {repo_path} or 'pipe_class' {class_name} unset")
     mir_prefix = "info"
     if hasattr(diffusers, class_name):
         model_class_obj = getattr(diffusers, class_name)

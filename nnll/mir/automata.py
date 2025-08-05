@@ -508,6 +508,8 @@ def auto_detail(mir_db: MIRDatabase):
                     },
                 },
                 "file_256": [
+                    "f6315581b7cddd450b9aba72b4e9ccf8b6580dc1a6b9538aff43ee26a1a3b6c2",  # krea sai
+                    "1b2170ac37156d4cf91909eb6834bb8adac84bc1fce8098a29cfb03738df84ad",  # krea diffusers
                     "4610115bb0c89560703c892c59ac2742fa821e60ef5871b33493ba544683abd7",  # modelspec sai
                     "d86a3038eacaa720682cb9b1da3c49fecf8a3ded605af4def6061eaa18903eb8",  # diffusers
                 ],
@@ -1232,9 +1234,8 @@ def auto_supplement(mir_db: MIRDatabase):
             comp=sdxl_series,
             pkg={
                 0: {
-                    "diffusers.schedulers.scheduling_utils": {
-                        "AysSchedules": {"timesteps": "StableDiffusionXLTimesteps", "num_inference_steps": 10},
-                    }
+                    "diffusers": "schedulers.scheduling_utils.AysSchedules",
+                    "generation": {"timesteps": "StableDiffusionXLTimesteps", "num_inference_steps": 10},
                 }
             },
         )

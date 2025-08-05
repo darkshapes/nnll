@@ -310,7 +310,19 @@ def main():
     """Add a single entry to MIR database\n"""
     import argparse
     from nnll.mir.maid import MIRDatabase
+    from nnll.mir.maid import MIRDatabase
 
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Manually add entries to MIR database.\nOffline function.",
+        usage="""mir-add --domain info --arch lora --series slam --compatibility sd1_series \\
+        -k {'repo':'alimama-creative/slam-sd1.5', 'pkg':{0: {'diffusers': 'load_lora_weights'}}}""",
+        epilog=f"MIR Class attributes:\n \
+        Domain: {[k for k in Domain.__annotations__ if not k.startswith('_')]}\n \
+        Ops: {[k for k in Ops.__annotations__ if not k.startswith('_')]}\n \
+        Info: {[k for k in Info.__annotations__ if not k.startswith('_')]}\n \
+        Dev: {[k for k in Dev.__annotations__ if not k.startswith('_')]}",
+    )
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description="Manually add entries to MIR database.\nOffline function.",
@@ -325,8 +337,8 @@ def main():
     parser.add_argument("-d", "--domain", type=str, help=" Broad name of the type of data (model/ops/info/dev)")
     parser.add_argument("-a", "--arch", type=str, help=" Common name of the neural network structure being referenced")
     parser.add_argument("-s", "--series", type=str, help="Specific release title or technique")
-    parser.add_argument("-c", "--compatibility", type=str, help="Details about purpose, tasks")
-    parser.add_argument("-k", "--kwargs", type=dict[str | int, str | int | dict | list], help="Keyword arguments to pass to function constructors (default: NOne)")
+    parser.add_argument("-c", "--comp", "--compatibility", type=str, help="Details about purpose, tasks")
+    parser.add_argument("-k", "--kwargs", "--keyword-arguments", type=dict[str | int, str | int | dict | list], help="Keyword arguments to pass to function constructors (default: NOne)")
 
     args = parser.parse_args()
 
@@ -334,6 +346,7 @@ def main():
     mir_db.add(
         mir_entry(domain=args.domain, arch=args.arch, series=args.series, comp=args.compatibility, **args.kwargs),
     )
+    mir_db.write_to_disk()
 
 
 if __name__ == "__main__":

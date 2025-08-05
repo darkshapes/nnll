@@ -94,17 +94,6 @@ def test_create_flux():
     assert prefixed_data["*"]["pkg"][1]["mflux.flux.flux"] == "Flux1"
 
 
-def test_create_empty():
-    repo_path = ""
-    from diffusers import StableDiffusionPipeline
-
-    with pytest.raises(TypeError) as exc_info:
-        create_pipe_entry(repo_path, StableDiffusionPipeline.__name__)
-
-    assert isinstance(exc_info.value, TypeError)
-    assert exc_info.value.args == ("'repo_path'  or 'pipe_class' StableDiffusionPipeline unset",)
-
-
 def test_create_prior():
     repo_path = "babalityai/finish_him_.kascade_prior"
     from diffusers import StableCascadePriorPipeline

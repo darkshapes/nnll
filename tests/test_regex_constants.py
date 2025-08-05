@@ -19,6 +19,7 @@ def test_constants():
         "qwen1-5-moe-a2-7b": ["qwen1-5-moe-a2", "*"],
         "Efficient-Large-Model/Sana_Sprint_1.6B_1024px_diffusers": ["sana-sprint-1024px", "diffusers"],
         "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers": ["hunyuandit-v1", "diffusers"],
+        "parler-tts/parler-tts-large-v1": ["parler-tts-v1", "*"],
     }
     # regex = PARAMETERS_SUFFIX
     for test, expected in data_tests.items():

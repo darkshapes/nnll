@@ -5,6 +5,13 @@ library_name: nnll
 license_name: MPL-2.0 + Commons Clause 1.0
 ---
 
+---
+language:
+- en
+library_name: nnll
+license_name: MPL-2.0 + Commons Clause 1.0
+---
+
 <div align="center">
 
 ![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
@@ -19,6 +26,7 @@ license_name: MPL-2.0 + Commons Clause 1.0
 * 🧨Diffusers, 🤗Transformers, 🦙Ollama, 🍏MLX, 🌀DSPy, 🚅LiteLLM
 * :shipit: <br><br>
 
+[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](nnll/actions/workflows/nnll.yml) <br>
 [![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](nnll/actions/workflows/nnll.yml) <br>
 ![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
@@ -172,7 +180,7 @@ Output:
 
 ### nnll-meta
 ```
-usage: nnll-meta ~/Downloads/models/images ~Downloads/models/metadata
+usage: nnll-meta ~/Downloads/models/images -s ~Downloads/models/metadata
 
 Scan the state dict metadata from a folder of files at [path] to the console, then write to a json file at [save]
 Offline function.
@@ -185,8 +193,9 @@ options:
   -s, --save_to_folder_path SAVE_TO_FOLDER_PATH
                         Path where output should be stored. (default: '.')
   -d, --separate_desc   Ignore the metadata from the header. (default: False)
+  -u, --unsafe          Try to read non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)
 
-Valid input formats: ['.pth', '.onnx', '.pt', '.pickletensor', '.sft', '.ckpt', '.gguf', '.safetensors']
+Valid input formats: ['.pth', '.ckpt', '.onnx', '.pt', '.pickletensor', '.safetensors', '.sft', '.gguf']
 ```
 [A link to example output of the `nnll-meta` command](https://huggingface.co/darkshapes/MIR/blob/main/layer_data/chroma-unlocked-v46.safetensors.json)
 

@@ -9,7 +9,7 @@ import sys
 from typing import Any, AsyncGenerator, Callable, List, Optional
 
 from nnll.mir.json_cache import MIR_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
-from nnll.monitor.file import dbug as nfo
+from nnll.monitor.file import dbug as nfo, dbuq
 
 
 class MIRDatabase:
@@ -61,16 +61,24 @@ class MIRDatabase:
         :param compatibility: MIR URI compatibility identifier\n
         (found value, path, sub-path,boolean for exact match)
         :return: A list of likely options and their MIR paths"""
+        from nnll.configure.constants import SEARCH_SUFFIX
+        import re
 
         results = []
         if isinstance(maybe_match, str):
             maybe_match = [maybe_match]
+        elif isinstance(maybe_match, dict):
+            maybe_match = list(maybe_match.values())
+        # print(maybe_match)
         for option in maybe_match:
-            option_lower = option.lower()
-            if option_lower == target:
-                return [option, series, compatibility, True]
-            elif target in option_lower:
-                results.append([option, series, compatibility, False])
+            option_lower = re.sub(SEARCH_SUFFIX, "", option.lower())
+            target = re.sub(SEARCH_SUFFIX, "", target.lower())
+            if option_lower:
+                if option_lower:
+                    if option_lower in target:
+                        return [option, series, compatibility, True]
+                    elif target in option_lower:
+                        results.append([option, series, compatibility, False])
         return results
 
     @staticmethod
@@ -83,22 +91,21 @@ class MIRDatabase:
         from decimal import Decimal
         from math import isclose
 
+        # print(matches)
         if not matches:
             return None
         min_gap = float("inf")
         best_match = None
         for match in matches:
             option, series, compatibility, _ = match
-            option = option.strip("_").strip("-").strip(".").lower()
-            target = target.strip("_").strip("-").strip(".").lower()
-            nfo(option)
+            option = option.replace("_", "").replace("-", "").replace(".", "").lower()
+            target = target.replace("_", "").replace("-", "").replace(".", "").lower()
             if target in option or option in target:
                 max_len = len(os.path.commonprefix([option, target]))
                 gap = Decimal(str(abs(len(option) - len(target)) + (len(option) - max_len))) * Decimal("0.1")
                 if gap < min_gap and isclose(gap, 0.9, rel_tol=15e-2):  # 15% variation, 5% error margin, 45% buffer below fail
                     min_gap = gap
                     best_match = [series, compatibility]
-
         return best_match
 
     def ready_stage(self, maybe_match: str, target: str, series: str, compatibility: str) -> Optional[List[str]]:
@@ -109,14 +116,15 @@ class MIRDatabase:
         :param compatibility: MIR compatibility tag
         :return: A list of exact matches or None
         """
-        match_results = self._stage_maybes(maybe_match, target, series, compatibility)
-        if next(iter(match_results), 0):
-            if next(iter(match_results))[3]:
-                return [series, compatibility]
-            self.matches.extend(match_results)
+        if maybe_match:
+            match_results = self._stage_maybes(maybe_match, target, series, compatibility)
+            if next(iter(match_results), 0):
+                if next(iter(match_results))[3]:
+                    return [series, compatibility]
+                self.matches.extend(match_results)
         return None
 
-    def find_tag(self, field: str, target: str, sub_field: Optional[str] = None) -> list[str]:
+    def find_tag(self, field: str, target: str, sub_field: Optional[str] = None, domain: None | str = None) -> list[str]:
         """Retrieve MIR path based on nested value search\n
         :param field: Known field to look within
         :param target: Search pattern for field
@@ -133,22 +141,19 @@ class MIRDatabase:
         self.matches = []
 
         for series, comp in self.database.items():
-            for compatibility, fields in comp.items():
-                maybe_match = fields.get(field)  # check if this field is in this key
-                if maybe_match is not None:
-                    # check if this field is a dictionary
-                    if isinstance(maybe_match, dict) and str(next(iter(maybe_match.keys()), None)).isnumeric():
-                        for _, sub_field in maybe_match.items():
-                            result = self.ready_stage(sub_field, target, series, compatibility)
-                            if result:
+            if (not domain) or series.startswith(domain):
+                for compatibility, fields in comp.items():
+                    if maybe_match := fields.get(field):
+                        if isinstance(maybe_match, dict) and str(next(iter(maybe_match.keys()), None)).isnumeric():  #  is a dictionary with a number
+                            for _, sub_maybe in maybe_match.items():
+                                # print(sub_maybe)
+                                if result := self.ready_stage(sub_maybe.get(sub_field, list(sub_maybe)), target, series, compatibility):
+                                    return result
+                        else:
+                            if result := self.ready_stage(maybe_match, target, series, compatibility):
                                 return result
-                    else:
-                        result = self.ready_stage(maybe_match, target, series, compatibility)
-                        if result:
-                            return result
 
-        best_match = self.grade_maybes(self.matches, target)
-        if best_match:
+        if best_match := self.grade_maybes(self.matches, target):
             return best_match
         else:
             nfo(f"Query '{target}' not found when {len(self.database)}'{field}' options searched\n")

@@ -2,10 +2,12 @@
 #  # # <!-- // /*  d a r k s h a p e s */ -->
 
 from typing import Any, Callable, List, get_type_hints
+from typing import Any, Callable, List, get_type_hints
 
 
 from nnll.mir.maid import MIRDatabase
 from nnll.monitor.console import nfo
+from nnll.monitor.file import dbuq
 from nnll.monitor.file import dbuq
 
 
@@ -32,6 +34,7 @@ class AutoPkg:
                 task_class = _get_task_class(task_map, class_name, False)
                 if task_class:
                     alt_tasks.append(task_class.__name__)
+                    dbuq(task_class)
                     dbuq(task_class)
                 for model_code, pipe_class_obj in task_map.items():
                     if code_name in model_code:
@@ -70,6 +73,7 @@ class AutoPkg:
 
         avoid_classes = [".gligen", "imagenet64"]
         avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
+        avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
         data_tuple = []
         for series, compatibility_data in mir_db.database.items():
             if (
@@ -78,9 +82,9 @@ class AutoPkg:
                 and not any(tag for tag in avoid_classes if tag in series)
             ):
                 for compatibility, field_data in compatibility_data.items():
-                    if field_data and field_data.get("pkg", {}).get("0"):
+                    if field_data and field_data.get(field_name, {}).get("0"):
                         tasks_for_class = {"tasks": []}
-                        for index, pkg_tree in field_data["pkg"].items():
+                        for index, pkg_tree in field_data[field_name].items():
                             task_data = await self.trace_tasks(pkg_tree=pkg_tree)
                             if task_data:
                                 package_name, class_name, detected_tasks = task_data
@@ -100,8 +104,6 @@ class AutoPkg:
         :return:A dictionary mapping series names to their respective compatibility and traced tasks.
         :rtype: dict"""
         from nnll.metadata.helpers import make_callable
-        from typing import _UnionGenericAlias
-        from types import NoneType, UnionType
 
         avoid_classes = [".gligen", "imagenet64"]
         avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
@@ -113,27 +115,50 @@ class AutoPkg:
                 and not any(tag for tag in avoid_classes if tag in series)
             ):
                 for compatibility, field_data in compatibility_data.items():
-                    if field_data and field_data.get("pkg", {}).get("0"):
-                        for index, pkg_tree in field_data["pkg"].items():
+                    if field_data and field_data.get(field_name, {}).get("0"):
+                        for _, pkg_tree in field_data[field_name].items():
                             if pkg_tree and next(iter(pkg_tree)) == "diffusers":
                                 module_name = pkg_tree[next(iter(pkg_tree))]
+                                dbuq(f"{module_name} pipe originator")
                                 class_obj = make_callable(module_name, "diffusers")
                                 pipe_args = get_type_hints(class_obj.__init__)
-                                detected_pipe = {"pipe_names": dict()}
-                                for role, pipe_class in pipe_args.items():
-                                    if not any(segment for segment in [float, NoneType, bool] if isinstance(pipe_class, segment)):
-                                        print(pipe_class)
-                                        if isinstance(pipe_class, _UnionGenericAlias):
-                                            detected_pipe["pipe_names"][role] = []
-                                            for union_class in pipe_class.__args__:
-                                                if not any(segment for segment in [float, NoneType, bool, _UnionGenericAlias, UnionType] if isinstance(union_class, segment)):
-                                                    detected_pipe["pipe_names"][role].append(union_class.__name__)
-                                        else:
-                                            detected_pipe["pipe_names"][role] = [pipe_class.__name__]
-
+                                detected_pipe = await self.hyperlink_to_mir(pipe_args, mir_db)
                                 data_tuple.append((*series.rsplit(".", 1), {compatibility: detected_pipe}))
 
         return data_tuple
+
+    async def hyperlink_to_mir(self, pipe_args: dict, mir_db: MIRDatabase):
+        """_summary_\n
+        :param pipe_args: _description_
+        :param mir_db: _description_
+        :return: _description_"""
+        excluded_types = ["int", "bool", "float", "Optional", "NoneType", "List", "UNet2DConditionModel"]
+        mir_tag: None | list[str] = None
+        detected_links: dict[str, dict] = {"pipe_names": dict()}
+        for pipe_role, pipe_class in pipe_args.items():
+            if not any(segment for segment in excluded_types if pipe_class.__name__ == segment):
+                detected_links["pipe_names"][pipe_role] = []
+                dbuq(f"pipe_class.__name__ {pipe_class.__name__} {pipe_class}")
+                if pipe_class.__name__ in ["Union"]:
+                    for union_class in pipe_class.__args__:
+                        mir_tag = None
+                        class_name = union_class.__name__
+                        if not any(segment for segment in excluded_types if class_name == segment):
+                            mir_tag = mir_db.find_tag(field="tasks", target=class_name)
+                            dbuq(f"{mir_tag} {class_name}")
+                            detected_links["pipe_names"][pipe_role].append(mir_tag if mir_tag else class_name)
+                else:
+                    class_name = pipe_class.__name__
+                    if pipe_role == "scheduler":
+                        sub_field = pipe_class.__module__.split(".")[0]
+                        # print(class_name)
+                        mir_tag = mir_db.find_tag(field="pkg", target=class_name, sub_field=sub_field, domain="ops.scheduler")
+                        dbuq(f"scheduler {mir_tag} {class_name} {sub_field} ")
+                    else:
+                        mir_tag = mir_db.find_tag(field="tasks", target=class_name)
+                    # dbuq(f"{mir_tag} {class_name}")
+                    detected_links["pipe_names"][pipe_role].append(mir_tag if mir_tag else class_name)
+        return detected_links
 
     async def trace_tasks(self, pkg_tree: dict[str, str | int | list[str | int]]) -> List[str]:
         """Trace tasks for a given MIR entry.\n
@@ -145,8 +170,10 @@ class AutoPkg:
         preformatted_task_data = None
         filtered_tasks = None
         snip_words: set[str] = {"load_tf_weights_in"}  # "PreTrained", "ForConditionalGeneration",
+        snip_words: set[str] = {"load_tf_weights_in"}  # "PreTrained", "ForConditionalGeneration",
         package_name = next(iter(pkg_tree))
         class_name = pkg_tree[package_name]
+        dbuq(f"{package_name}, {class_name}")
         dbuq(f"{package_name}, {class_name}")
         if class_name not in ["AutoTokenizer", "AutoModel", "AutoencoderTiny", "AutoencoderKL", "AutoPipelineForImage2Image"]:
             if isinstance(class_name, dict):
@@ -167,9 +194,19 @@ class AutoPkg:
 def main(mir_db: MIRDatabase = None):
     """Parse arguments to feed to dict header reader"""
     import argparse
-
-    # from sys import argv
     import asyncio
+    from sys import modules as sys_modules
+
+    if "pytest" not in sys_modules:
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
+            usage="mir-tasks",
+            epilog="Should be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+        )
+        parser.parse_args()
+
+    from nnll.mir.automata import assimilate
     from sys import modules as sys_modules
 
     if "pytest" not in sys_modules:
@@ -188,13 +225,39 @@ def main(mir_db: MIRDatabase = None):
 
     auto_pkg = AutoPkg()
     task_tuple = asyncio.run(auto_pkg.detect_tasks(mir_db))
-    pipe_tuple = asyncio.run(auto_pkg.detect_pipes(mir_db))
-    nfo(task_tuple)
-    nfo(pipe_tuple)
+    # nfo(task_tuple)
+
     assimilate(mir_db, [task for task in task_tuple])
+
+    mir_db.write_to_disk()
+
+
+def pipe(mir_db: MIRDatabase = None):
+    import argparse
+    import asyncio
+    from sys import modules as sys_modules
+    # from pprint import pprint
+
+    if "pytest" not in sys_modules:
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
+            usage="mir-tasks",
+            epilog="Should be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+        )
+        parser.parse_args()
+
+    from nnll.mir.automata import assimilate
+
+    if not mir_db:
+        mir_db = MIRDatabase()
+
+    auto_pkg = AutoPkg()
+    pipe_tuple = asyncio.run(auto_pkg.detect_pipes(mir_db))
+    # pprint(pipe_tuple)
     assimilate(mir_db, [pipe for pipe in pipe_tuple])
     mir_db.write_to_disk()
 
 
 if __name__ == "__main__":
-    main()
+    pipe()
