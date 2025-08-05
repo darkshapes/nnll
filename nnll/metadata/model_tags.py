@@ -8,6 +8,7 @@
 # pylint: disable=import-outside-toplevel
 from pathlib import Path
 from typing import Dict
+import os
 from nnll.configure.constants import ExtensionType
 from nnll.metadata.json_io import write_json_file
 from nnll.monitor.console import nfo
@@ -364,9 +365,8 @@ class ReadModelTags:
                 return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
 
 
-def main(folder_path_named: str = None, save_location: str = None, separate_desc: bool = False) -> None:
+def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(), separate_desc: bool = True, unsafe: bool = False) -> None:
     import argparse
-    import os
     from sys import modules as sys_modules
 
     from nnll.integrity import ensure_path
@@ -376,19 +376,29 @@ def main(folder_path_named: str = None, save_location: str = None, separate_desc
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,
             description="Scan the state dict metadata from a folder of files at [path] to the console, then write to a json file at [save]\nOffline function.",
-            usage="nnll-autometa ~/Downloads/models/images ~Downloads/models/metadata",
+            usage="nnll-meta ~/Downloads/models/images -s ~Downloads/models/metadata",
             epilog=f"Valid input formats: {[*ExtensionType.MODEL]}",
         )
-        parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=".")
-        parser.add_argument("-s", "--save_to_folder_path", required=False, help="Path where output should be stored. (default: '.')", type=str, default=".")
+        parser.add_argument("path", help="Path to directory where files should be analyzed. (default .)", default=os.getcwd())
+        parser.add_argument("-s", "--save_to_folder_path", required=False, help="Path where output should be stored. (default: '.')", type=str, default=os.getcwd())
         parser.add_argument("-d", "--separate_desc", required=False, action="store_true", help="Ignore the metadata from the header. (default: False)", default=False)
+        parser.add_argument("-u", "--unsafe", action="store_true", help="Try to read non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)")
         args = parser.parse_args()
 
         folder_path_named = args.path
         separate_desc = args.separate_desc
         save_location = args.save_to_folder_path
+        unsafe = args.unsafe
+
     model_tool = ReadModelTags()
-    meta_data = model_tool.read_metadata_from(folder_path_named, separate_desc=separate_desc)
-    file_name = f"{os.path.basename(folder_path_named)}.json"
-    folder_path_named = ensure_path(save_location)
-    write_json_file(folder_path_named=folder_path_named, file_name=file_name, data=meta_data)
+    if folder_path_named is not None:
+        for root, folders, files in os.walk(folder_path_named):
+            for file_name in files:
+                file_path_named = os.path.join(root, file_name)
+                if not unsafe:
+                    metadata = model_tool.read_metadata_from(file_path_named, separate_desc=separate_desc)
+                else:
+                    metadata = model_tool.attempt_all_open(file_path_named, separate_desc=separate_desc)
+                if metadata is not None:
+                    save_location = ensure_path(save_location)
+                    write_json_file(save_location, f"{file_name}.json", metadata)

@@ -18,7 +18,8 @@ def get_code_names(
 ) -> Union[List[str], str]:
     """Reveal code names for class names from Diffusers or Transformers\n
     :param class_name: To return only one class, defaults to None
-    :param library: optional field for library, defaults to "transformers"
+    :param pkg_name: optional field for library, defaults to "transformers"
+    :param path_format: Retrieve just the code name, or the full module path and code name within the package
     :return: A list of all code names, or the one corresponding to the provided class"""
 
     package_map = {
@@ -33,6 +34,26 @@ def get_code_names(
         code_name = next(iter(key for key, value in MAPPING_NAMES.items() if class_name in str(value)), "")
         return class_parent(code_name, pkg_name) if path_format else code_name.replace("_", "-")
     return list(MAPPING_NAMES)
+
+
+def code_name_to_class_name(
+    code_name: Optional[Union[str, Type]] = None,
+    pkg_name: Optional[str] = "transformers",
+) -> Union[List[str], str]:
+    """Fetch class names from code names from Diffusers or Transformers\n
+    :param class_name: To return only one class, defaults to None
+    :param pkg_name: optional field for library, defaults to "transformers"
+    :return: A list of all code names, or the one corresponding to the provided class"""
+
+    package_map = {
+        "diffusers": ("_import_structure", "diffusers.pipelines"),
+        "transformers": ("MODEL_MAPPING_NAMES", "transformers.models.auto.modeling_auto"),
+    }
+    pkg_name = pkg_name.lower()
+    MAPPING_NAMES = make_callable(*package_map[pkg_name])
+    if code_name:
+        return MAPPING_NAMES.get(code_name)
+    return list(MAPPING_NAMES.keys())
 
 
 def show_addons_for(model_class: Union[Callable, str], pkg_name: Optional[str] = None) -> Optional[Dict[str, List[str]]]:

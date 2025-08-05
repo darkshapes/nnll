@@ -172,7 +172,7 @@ Output:
 
 ### nnll-meta
 ```
-usage: nnll-meta ~/Downloads/models/images ~Downloads/models/metadata
+usage: nnll-meta ~/Downloads/models/images -s ~Downloads/models/metadata
 
 Scan the state dict metadata from a folder of files at [path] to the console, then write to a json file at [save]
 Offline function.
@@ -185,8 +185,9 @@ options:
   -s, --save_to_folder_path SAVE_TO_FOLDER_PATH
                         Path where output should be stored. (default: '.')
   -d, --separate_desc   Ignore the metadata from the header. (default: False)
+  -u, --unsafe          Try to read non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)
 
-Valid input formats: ['.pth', '.onnx', '.pt', '.pickletensor', '.sft', '.ckpt', '.gguf', '.safetensors']
+Valid input formats: ['.pth', '.ckpt', '.onnx', '.pt', '.pickletensor', '.safetensors', '.sft', '.gguf']
 ```
 [A link to example output of the `nnll-meta` command](https://huggingface.co/darkshapes/MIR/blob/main/layer_data/chroma-unlocked-v46.safetensors.json)
 

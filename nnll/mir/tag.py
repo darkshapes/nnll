@@ -15,6 +15,8 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     :return: The assembled mir tag with compatibility pre-separated"""
     import re
 
+    # print(repo_title)
+
     root = "decoder" if decoder else "*"
     repo_title = repo_title.split(":latest")[0]
     repo_title = repo_title.split(":Q")[0]
@@ -27,9 +29,15 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     parts = repo_title.replace(".", "").split("-")
     if len(parts) == 1:
         parts = repo_title.split("_")
+    subtraction_prefixes = r"\d.b-|\-rl|tiny|large|mlx|onnx|gguf|medium|base|multimodal|mini|instruct|full|:latest|preview|small|pro|beta|hybrid|plus|dpo|community"
 
-    clean_parts = [re.sub(PARAMETERS_SUFFIX, "", segment.lower()) for segment in parts]
+    pattern_2 = re.compile(PARAMETERS_SUFFIX)
+    clean_parts = [re.sub(pattern_2, "", segment.lower()) for segment in parts]
     cleaned_string = "-".join([x for x in clean_parts if x])
+    cleaned_string = re.sub(subtraction_prefixes, "", cleaned_string)
+    cleaned_string = re.sub("-it", "", cleaned_string.replace("-bit", "")).replace("--", "-")
+    cleaned_string = cleaned_string.replace("-b-", "")
+    # print(cleaned_string)
     suffix_match = re.findall(BREAKING_SUFFIX, cleaned_string)  # Check for breaking suffixes first
     if suffix_match:
         suffix = next(iter(suffix for suffix in suffix_match[0] if suffix))
@@ -74,7 +82,7 @@ def tag_base_model(repo_path: str, class_name: str, addendum: dict | None = None
 def tag_pipe(repo_path: str, class_name: str, addendum: dict) -> tuple:
     """Convert model repo pipes to MIR tags, classifying by feature\n
     :param name: Repo path
-    :param class_name: The HF diffusers class for the model
+    :param class_name: The HF Diffusers class for the model
     :return: A segmented MIR tag useful for appending index entries"""
 
     from nnll.mir.indexers import create_pipe_entry
@@ -85,10 +93,10 @@ def tag_pipe(repo_path: str, class_name: str, addendum: dict) -> tuple:
     return mir_prefix, mir_series, {mir_comp: addendum}
 
 
-def class_to_mir_tag(mir_db: Dict[str, str], id_tag: str) -> Optional[str]:
+def class_to_mir_tag(mir_db: Dict[str, str], code_name: str) -> Optional[str]:
     """Converts a class identifier to its corresponding MIR tag.\n
     :param mir_db: A dictionary mapping series-compatibility pairs to their respective data.
-    :param id_tag: The class identifier to convert.
+    :param code_name: The Transformers class identifier to convert.
     :return: An optional list containing the series and compatibility if found, otherwise None."""
     from transformers.models.auto.modeling_auto import MODEL_MAPPING_NAMES
 
@@ -100,10 +108,10 @@ def class_to_mir_tag(mir_db: Dict[str, str], id_tag: str) -> Optional[str]:
     for series, compatibility_data in mir_db.database.items():
         if any([template for template in template_data if template in series.split(".")[1]]):
             for compatibility, field_data in compatibility_data.items():
-                if id_tag == series.split(".")[2]:
+                if code_name == series.split(".")[2]:
                     return [series, compatibility]
 
-                class_name = MODEL_MAPPING_NAMES.get(id_tag, False)
+                class_name = MODEL_MAPPING_NAMES.get(code_name, False)
                 if not class_name:
                     return None
                 pkg_data = field_data.get("pkg")
@@ -113,8 +121,3 @@ def class_to_mir_tag(mir_db: Dict[str, str], id_tag: str) -> Optional[str]:
                         if maybe_class == class_name:
                             return [series, compatibility]
     return None
-
-
-def mir_package(mir_db: Dict[str, str]):
-    mir_db.find_tag()
-    pass

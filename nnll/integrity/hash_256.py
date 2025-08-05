@@ -174,7 +174,7 @@ def main():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         description="""Output hashes of each model file state dict in [path] to console and .JSON \n Offline function.""",
-        usage="nnll-localhash '~/Downloads/models/'",
+        usage="nnll-hash '~/Downloads/models/'",
     )
     parser.add_argument("path", default=".", help="Path to the directory where files should be analyzed. (default '.'')")
 

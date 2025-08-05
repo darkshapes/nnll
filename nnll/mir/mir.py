@@ -325,8 +325,8 @@ def main():
     parser.add_argument("-d", "--domain", type=str, help=" Broad name of the type of data (model/ops/info/dev)")
     parser.add_argument("-a", "--arch", type=str, help=" Common name of the neural network structure being referenced")
     parser.add_argument("-s", "--series", type=str, help="Specific release title or technique")
-    parser.add_argument("-c", "--compatibility", type=str, help="Details about purpose, tasks")
-    parser.add_argument("-k", "--kwargs", type=dict[str | int, str | int | dict | list], help="Keyword arguments to pass to function constructors (default: NOne)")
+    parser.add_argument("-c", "--comp", "--compatibility", type=str, help="Details about purpose, tasks")
+    parser.add_argument("-k", "--kwargs", "--keyword-arguments", type=dict[str | int, str | int | dict | list], help="Keyword arguments to pass to function constructors (default: NOne)")
 
     args = parser.parse_args()
 
@@ -334,6 +334,7 @@ def main():
     mir_db.add(
         mir_entry(domain=args.domain, arch=args.arch, series=args.series, comp=args.compatibility, **args.kwargs),
     )
+    mir_db.write_to_disk()
 
 
 if __name__ == "__main__":

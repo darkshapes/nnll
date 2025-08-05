@@ -169,12 +169,12 @@ Documentation = "https://github.com/darkshapes/sdbx/wiki"
 mir-add       = "nnll.mir.mir:main"
 mir-maid      = "nnll.mir.maid:main"
 mir-tasks     = "nnll.mir.tasks:main"
+mir-pipe      = "nnll.mir.tasks:pipe"
 nnll-autocard = "nnll.metadata.autocard:main"
 nnll-autohash = "nnll.download.hub_cache:main"
 nnll-hash     = "nnll.integrity.hash_256:main"
 nnll-layer    = "nnll.model_detect.layer_compare:main"
 nnll-meta     = "nnll.metadata.model_tags:main"
-nnll-parse    = "nnll.model_detect.state_dict_json:main"
 
 [tool.uv]
 preview = true
