@@ -915,9 +915,6 @@ def auto_detail(mir_db: MIRDatabase):
             "microsoft/Phi-4-multimodal-instruct",
             "Phi4MultimodalModel",
             {
-                "pkg": {
-                    "0": {"transformers": "Phi4MultimodalModel"},
-                },
                 "file_256": [
                     "bc703090b63eda16f639fa4de7ac54635c23105ab1da2f6ec4d3403151d38ee6",  # mini
                 ],

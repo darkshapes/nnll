@@ -134,7 +134,7 @@ class MIRDatabase:
         import re
 
         parameters = r"-gguf|-exl2|-exl3|-onnx|-awq|-mlx|-ov"  #
-        target = target.lower()
+        target = target.lower().strip("-")
         target = re.sub(parameters, "", target)
         self.matches = None
         self.matches = []
