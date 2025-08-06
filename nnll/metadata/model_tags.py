@@ -18,8 +18,6 @@ from nnll.monitor.file import dbug
 class ReadModelTags:
     """Output state dict from a model file"""
 
-    """Output state dict from a model file"""
-
     GGUF_MAGIC_NUMBER = b"GGUF"
 
     def __init__(self):
@@ -31,6 +29,8 @@ class ReadModelTags:
         :param file_path_named: The full path to the file being opened
         :param separate_desc: Include `__metadata__` tag, or exclude and return only tensor layer names and shapes
         :return: A `dict` with the header data prepared to read, or `None`"""
+        from sys import modules as sys_modules
+
         meta_gguf = (
             self.create_gguf_reader,
             self.create_llama_parser,
@@ -54,7 +54,7 @@ class ReadModelTags:
                 metadata = read_method(file_path_named)
             if metadata and len(metadata) > 1:
                 return metadata
-        if file_extension not in [*ExtensionType.GGUF, *ExtensionType.ONNX, *ExtensionType.PICK, *ExtensionType.MEDIA, ".py"]:
+        if file_extension not in [*ExtensionType.GGUF, *ExtensionType.ONNX, *ExtensionType.PICK, *ExtensionType.MEDIA, ".py"] and "pytest" not in sys_modules:
             for read_method in meta_safe:
                 metadata = read_method(file_path_named, separate_desc)
                 if metadata and len(metadata) > 1:
@@ -79,6 +79,7 @@ class ReadModelTags:
         :type separate_desc str
         :return: A `dict` with the header data prepared to read
         """
+        from sys import modules as sys_modules
 
         def attempt_metadata(extraction_func, fallback_func=None):
             """Attempt to extract metadata using extraction_func.
@@ -107,7 +108,7 @@ class ReadModelTags:
                 lambda: self.meta_load_pickletensor(file_path_named),
                 lambda: self.meta_load_pickletensor(file_path_named),
             )
-        elif file_extension in ExtensionType.ONNX:
+        elif file_extension in ExtensionType.ONNX and "pytest" not in sys_modules:
             attempt_metadata(
                 lambda: self.metadata_from_onnx(file_path_named, separate_desc),
                 lambda: self.metadata_from_onnx_rt(file_path_named, separate_desc),
@@ -245,18 +246,18 @@ class ReadModelTags:
 
             return llama_data
 
-    # def metadata_from_pickletensor(self, file_path_named: str) -> dict:
-    #     """Collect metadata from a pickletensor file header\n
-    #     :param file_path: `str` the full path to the file being opened
-    #     :return: `dict` the key value pair structure found in the file"""
-    #     import pickle
-    #     from mmap import mmap
+    def metadata_from_pickletensor(self, file_path_named: str) -> dict:
+        """Collect metadata from a pickletensor file header\n
+        :param file_path: `str` the full path to the file being opened
+        :return: `dict` the key value pair structure found in the file"""
+        import pickle
+        from mmap import mmap
 
-    #     # separate_desc not implemented here yet
-    #     with open(file_path_named, "r+b") as file_contents_to:
-    #         mem_map_data = mmap(file_contents_to.fileno(), 0)
-    #         view = memoryview(mem_map_data)
-    #         return pickle.loads(view)
+        # separate_desc not implemented here yet
+        with open(file_path_named, "r+b") as file_contents_to:
+            mem_map_data = mmap(file_contents_to.fileno(), 0)
+            view = memoryview(mem_map_data)
+            return pickle.loads(view)
 
     def meta_load_pickletensor(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """Load metadata from a pickled tensor file.\n
@@ -267,14 +268,23 @@ class ReadModelTags:
         :rtype: dict"""
 
         import torch
+        from _pickle import UnpicklingError
 
-        metadata = torch.load(file_path_named, map_location="meta")
-        if separate_desc:  # in this case we leave the rest of the dict behind
-            meta_copy = metadata.copy()
-            meta_key = next(iter(metadata))
-            metadata = {meta_key: {"dtype": tensor.dtype, "shape": tensor.size, "data_offsets": tensor.storage_offset} for meta_key, tensor in meta_copy[meta_key].items()}
-
-        return metadata
+        try:
+            metadata = torch.load(file_path_named, map_location="meta")
+        except UnpicklingError:
+            return
+        else:
+            if separate_desc:  # in this case we leave the rest of the dict behind
+                meta_copy = metadata.copy()
+                meta_key = next(iter(metadata))
+                if isinstance(meta_copy.get(meta_key), dict):
+                    try:
+                        metadata = {meta_key: {"dtype": tensor.dtype, "shape": tensor.size, "data_offsets": tensor.storage_offset} for meta_key, tensor in meta_copy.get(meta_key).items()}
+                    except AttributeError:
+                        pass
+                    else:
+                        return metadata
 
     def metadata_from_safetensors(self, file_path_named: str, separate_desc: bool = True) -> dict:
         """
@@ -330,12 +340,12 @@ class ReadModelTags:
         :return: A mapping of metadata about the model
         """
         from onnxruntime import InferenceSession  # , get_available_providers
-        from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf
+        from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf, NotImplemented, Fail, RuntimeException
 
         try:
             onnx_sess = InferenceSession(file_path_named)
             meta = onnx_sess.get_modelmeta()
-        except InvalidProtobuf as error_log:
+        except (InvalidProtobuf, NotImplemented, Fail, RuntimeException) as error_log:
             dbug(error_log)
             pass
         else:
@@ -352,12 +362,13 @@ class ReadModelTags:
         """
         from onnxruntime.datasets import get_example
         from onnx import load as onnx_load
+        from google.protobuf.message import DecodeError
         from onnxruntime.capi.onnxruntime_pybind11_state import InvalidProtobuf
 
         try:
             example = get_example(file_path_named)
             model = onnx_load(example)
-        except InvalidProtobuf as error_log:
+        except (InvalidProtobuf, DecodeError) as error_log:
             dbug(error_log)
             pass
         else:
@@ -367,7 +378,12 @@ class ReadModelTags:
                 return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
 
 
-def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(), separate_desc: bool = True, unsafe: bool = False) -> None:
+def main(
+    folder_path_named: str | None = None,
+    save_location: str | None = None,
+    separate_desc: bool | None = None,
+    unsafe: bool | None = None,
+) -> None:
     import argparse
     from sys import modules as sys_modules
 
@@ -377,7 +393,8 @@ def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(),
         # Set up argument parser
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,
-            description="Scan the state dict metadata from a folder of files at [path] to the console, then write to a json file at [save]\nOffline function.",
+            description="Scan the state dict metadata from a folder of files at [path] to the console,\
+                 then write to a json file at [save]\nOffline function.",
             usage="nnll-meta ~/Downloads/models/images -s ~Downloads/models/metadata",
             epilog=f"Valid input formats: {[*ExtensionType.MODEL]}",
         )
@@ -386,12 +403,13 @@ def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(),
         parser.add_argument("-d", "--separate_desc", required=False, action="store_true", help="Ignore the metadata from the header. (default: False)", default=False)
         parser.add_argument("-u", "--unsafe", action="store_true", help="Try to read non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)")
         args = parser.parse_args()
+    else:
+        args = None
 
-        folder_path_named = args.path
-        separate_desc = args.separate_desc
-        save_location = args.save_to_folder_path
-        unsafe = args.unsafe
-
+    folder_path_named = os.getcwd() if not args else args.path
+    separate_desc = True if not args else args.separate_desc
+    save_location = os.getcwd() if not args else args.save_to_folder_path
+    unsafe = False if not args else args.unsafe
     model_tool = ReadModelTags()
     if folder_path_named is not None:
         for root, folders, files in os.walk(folder_path_named):
@@ -403,4 +421,4 @@ def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(),
                     metadata = model_tool.attempt_all_open(file_path_named, separate_desc=separate_desc)
                 if metadata is not None:
                     save_location = ensure_path(save_location)
-                    write_json_file(save_location, f"{file_name}.json", metadata)
+                    write_json_file(save_location, f"{os.path.basename(root)}_{file_name}.json", metadata)

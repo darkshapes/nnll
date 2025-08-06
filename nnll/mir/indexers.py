@@ -110,6 +110,8 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
             mir_prefix = "info.unet"
         elif class_name == "MotionAdapter":
             mir_prefix = "info.lora"
+        elif class_name == "WanPipeline":
+            mir_prefix = "info.dit"
         else:
             mir_prefix = flag_config(**sub_segments)
             if mir_prefix is None and class_name not in ["AutoPipelineForImage2Image", "DiffusionPipeline"]:
@@ -140,8 +142,9 @@ def transformers_index():
     import transformers
 
     from nnll.mir.mappers import stock_llm_data
+    from transformers.models.auto.tokenization_auto import tokenizer_class_from_name
 
-    corrections: dict[dict[str, str | dict[str, list[str]]]] = {
+    corrections: dict[dict[str, str | dict[str, list[str]]]] = {  # models with incorrect repos or config
         "BarkModel": {
             "repo_path": "suno/bark",
             "sub_segments": {"n_head": [""]},
@@ -149,6 +152,9 @@ def transformers_index():
         "GraniteSpeechForConditionalGeneration": {
             "repo_path": "ibm-granite/granite-speech-3.3-8b",
             "sub_segments": {"encoder_layers": [""], "decoder_layers": [""]},
+        },
+        "GptOssModel": {
+            "repo_path": "openai/gpt-oss",
         },
         "GraniteModel": {
             "repo_path": "ibm-granite/granite-3.3-2b-base",
@@ -168,6 +174,12 @@ def transformers_index():
         },
         "GraniteMoeHybridModel": {
             "repo_path": "ibm-research/PowerMoE-3b",
+        },
+        "BertForMaskedLM": {
+            "repo_path": "google-bert/bert-base-uncased",
+        },
+        "DistilBertModel": {
+            "repo_path": "distilbert-base-uncased",
         },
         "GraniteMoeModel": {
             "repo_path": "ibm-research/PowerMoE-3b",
@@ -215,15 +227,27 @@ def transformers_index():
                 continue
             else:
                 mir_prefix = "info." + mir_prefix
-            mir_series, mir_comp = list(make_mir_tag(repo_path))
-            mir_series = mir_prefix + "." + mir_series
+            mir_suffix, mir_comp = list(make_mir_tag(repo_path))
+            mir_series = mir_prefix + "." + mir_suffix
+            tokenizer_class = tokenizer_class_from_name(class_name)
+            mir_data.get("info.encoder.tokenizer", mir_data.setdefault("info.encoder.tokenizer", {})).update(
+                {
+                    mir_suffix: {
+                        "pkg": {
+                            0: {
+                                "transformers": f"{tokenizer_class.__module__}.{tokenizer_class.__name__}",
+                            },
+                        }
+                    }
+                },
+            )
             mir_data.setdefault(
                 mir_series,
                 {
                     mir_comp: {
                         "repo": repo_path,
                         "pkg": {0: {"transformers": class_name}},
-                    }
+                    },
                 },
             )
     return mir_data

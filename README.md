@@ -77,6 +77,24 @@ Output:
 ```
 [A link to example output of the `mir-maid` command](nnll/mir/config/mir.json)
 
+### mir-pipe
+
+```
+usage: mir-pipe
+
+Infer pipe components from Diffusers library and attach them to an existing MIR database.
+Offline function.
+
+options:
+  -h, --help  show this help message and exit
+
+Should be used after `mir-tasks`.
+
+Output:
+    INFO     ('Wrote #### lines to MIR database file.',)
+```
+[A link to example output of the `mir-pipe` command](nnll/mir/config/mir.json)
+
 ### mir-tasks
 ```
 usage: mir-tasks

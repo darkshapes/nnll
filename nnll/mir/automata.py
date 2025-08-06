@@ -614,6 +614,111 @@ def auto_detail(mir_db: MIRDatabase):
                 "identifiers": ["0.2.channelwise", "clip_mapper.bias", ".12.self_attn.k_proj.weight"],
             },
         ),
+        (
+            "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
+            "WanImageToVideoPipeline",
+            {
+                "file_256": [
+                    "b4602c35fa0519750a42c03e3f296c02d542291e344c4d702522cddbd1711f13",  # 480 diffusers
+                    "6d7a34b63b70eb608324e546d979167a5e787ac6bca3528e63f54a11572d66aa",  # 720 fp8 scaled sai
+                    "b2051cd29d6b2f0c924fa7a3e78a4772f0134d7b059f21590dcce416f4f6cbe8",  # 720 fp8 sai
+                    "7664fe075b3c82dcecf89012ad3429eee41ee9f10d476f60bc2d2ae3c4ca986c",  # 720 fp16 sai
+                    "8ef7ea5bf9eea636b9b3ebd84c40671b4a18ae2704cb4c8595cb5b25c1d8e8b9",  # 720 bf16 sai
+                    "b2de21b99b2e72cb0ff15253b07e926f26e7cf1b7e229efc32f94ad1f1ed9395",  # 480 fp8e4m scaled sai
+                    "0ca75338e7a47ca7cacddb7e626647e65829c497387f718ecb6ea0bae456944a",  # 480 fp8 scaled
+                    "c058a4ac5363c35d1ab4dd3bdec788c23b267fa42a0d7c68aba599f2f74600c9",  # 480 bf16 sai
+                    "27988f6b510eb8d5fdd7485671b54897f8683f2bba7a772c5671be21d3491253",  # 480 fp16 sai
+                ],
+                "layer_b3": [
+                    "4b6c3354c9ee5694e00a78f5658fdf14129f159c3b78a57f82fb18e0f265a83d",
+                    "c36c783559a40d22504f6c4bfb4f5aae760f3f46bbb3a595be79880935122175",  # fp8 scaled
+                    "ac62f7d5583fd2e85b738fafaf233e2cde6e2857e04351135bb9ded45f9082ce",  # fp8
+                    "215e89e855b5e9456af9aa68bc67567dc2269002aaa6b01d849ffec425fc628d",  # fp16
+                    "324b8b6c2d512547a2c31bafa12e20acf313fd3aad587b293334f9f629edeec6",  # bf16
+                ],
+                "layer_256": [
+                    "137881dad8c00063bc8bf05f93067736e419173cd171acc22f77b730db688a19",
+                    "8c5952fd3d333d3a4b719bf7d8ce6b12d1d2e78caaa7e42d713788cfdcadd244",  # fp8 scaled
+                    "86c58bc4864c97f394ea6bccb2ecedc4aab7166f5b9bfeb313edfdcb2918164a",
+                    "cac45f7d8f1a0628cb0738bd308689e439b1cc6206e5f887d60d5b37d30138f2",
+                    "60e4f71a0961b1346b6f6b5ebe4c8cc93219239c5e13b4c0f1e19e9b8e1324d5",
+                ],
+            },
+        ),
+        (
+            "Qwen/Qwen-Image",
+            "QwenImagePipeline",
+            {
+                "file_256": [
+                    "9f33a59093af3abcc2836d4cf4b7bd122c238ca70a26c70f34fdde64646b3bcd",
+                ],
+                "layer_b3": [
+                    "c87eedda853c12844a8deb3592a90bbcbd4dff2f7a850c28755e4aa171432150",  # diffusers
+                ],
+                "layer_256": [
+                    "fda2472d8ef6587a4c979021a2390eeb7c8fc2bcf565330ab8dc6b22f5348ec9",  # diffusers
+                ],
+            },
+        ),
+        (
+            "Wan-AI/Wan2.1-VACE-1.3B-diffusers",
+            "WanVACEPipeline",
+            {
+                "file_256": [
+                    "bd8bbb8834a274525ab65cbb063f21aa58973a054bfd1638bfe395504c9d9b99",  # diffusers 14
+                    "192804a4e10b5bb0a13f5c224bc4ec9707b3b8cc0def8eea005dbce7c9d6752a",  # diffusers 1.3
+                    "f202a5c59b8a91ada1862c46a038214f1f7f216c61ec8350d25f69b919da4307",  # 14 fp16 sai
+                    "654693bf2a93a27cd67c3bcee238bc1d0cbb0dd9a74928ed7155fb21a2a1900a",  # 1.3 preview fp16 sai
+                    "640ccc0577e6a5d4bb15cd91b11b699ef914fc55f126c5a1c544e152130784f2",  # 1.3 fp16 sai
+                ],
+                "layer_b3": [
+                    "5357d78799a61cd2d72a8a2824c919d63f718eb3fba624af63689e9c657db032",  # diffusers 14
+                    "7ae67b7ccf79d1c3f4531ae138e1eb63d52dd97a66b3fcbe1d68fded8df4d5b1",  # diffusers 1.3
+                    "ee63ecdfb3da6901853a59ec950f3e7c3f6595ac46347a03881a4a9c71425377",  # 14 fp16 sai
+                    "82762df3539021d3c0342e0da04137ddbe95ef37ea933cd0a68c09c2c650f2ac",  # 1.3 fp16 sai
+                ],
+                "layer_256": [
+                    "2684413479030170fb3f08c1069c02957ffc386a59168d23b55d579d5c675269",  # diffusers 14
+                    "d527680fa735e5f30ef8852aabf8a49f02a094bc4718f0787c5b85710a13c026",  # diffusers 1.3
+                    "9677492a107b3ed827c7285db3393f5321d451cc6d922a4d0488d2a67e939446",  # 14 fp16 sai
+                    "aaef66a4f65ecf852888d160b2122753fe4c6d642b5d41db29e4ce9e6855b5a0",  # 1.3 fp16 sai
+                ],
+            },
+        ),
+        (
+            "Wan-AI/Wan2.1-T2V-14B-Diffusers",
+            "WanPipeline",
+            {
+                "file_256": [
+                    "299e6304544f2783896372fa919e755a8bb9ab8caf898ce08a678dae391e1179",  # diffusers
+                    "a9278e6e9c82d174e6c67b3c97d8b97fef30af51dcf59160f2fc241f6819f5dc",  # diffusers 2
+                    "be531024cd9018cb5b48c40cfbb6a6191645b1c792eb8bf4f8c1c6e10f924dc5",  # fp16 sai 1.3
+                    "6f999b0d6cb9a72b3d98ac386ed96f57f8cecae13994a69232514ea4974ad5fd",  # bf16 sai 1.3
+                    "2e39adde59c5e0e90edbb35873126b0d67928b5c11c501e384e976d6dc597cce",  # fp8 scaled sai
+                    "2ee88ab18d7ed7691c5b7f8bdc3d0a9815e6efe75499287564830fd209d3cdfb",  # fp8 sai
+                    "46c27d3693bf2475990a912e08bf67fc6e6cd5396eab87b5e8dd1fcd3651364a",  # fp16 sai
+                    "193535c6450045f718df5f011de6d94d49bd9b13f37ca0412500f050dbbb01a8",  # bf16 sai
+                ],
+                "layer_b3": [
+                    "32266d1c79b518adb9d21837e6a427f6ae55b68cfdd673a7dadb38820fddeb48",  # diff
+                    "3b6989856f4f05368524c1852d8660b73c84cfbe44460af017d7139c2a4641b8",  # fp16 sai 1.3
+                    "f4d6cee3c112db93b3c9137ad102ec0e79ec7ab68b9bbc59004fbc268ccd5ddb",  # bf16 sai
+                    "e627144f41055619eb5407699c46e69ac0d87cf8873721e3e48c9e842656abf8",  # fp8 scaled sai
+                    "6c00f3fadedacb841c4b9b4321b94a11ef85a08c9dd9253e5f9ba95856715579",  # fp8 sai
+                    "a0c339253c714b05877c8fbab649ed631cf021930978f3696a46f685a07c9092",  # fp16 sai
+                    "6435da89a870fd0e88680d31de75b9a40c408a4768eff384ce9b9e99481e8e66",
+                ],
+                "layer_256": [
+                    "52493c23c5fc1d087a283bc4eabb151421b7ae09affa12a5bb059d62656c5766",
+                    "058dedb3d2683a9a5b671c6302690e22722c93f6ed92281d5fa74ab190e632a1",
+                    "5fbed4b95e7196d3626003ea9e0fbbffd074b4297ca406e01b5b6c5d881a6080",
+                    "3a2335c8e7a4359c071b50333b5c00eef6f42a1d5206915e2ee99464a8c5eae7",
+                    "0542780670dd75d4cd9deda123d2e150730646c0a1a8d34582460991498a77a6",
+                    "e925b8222774905c8fbf10af77811fde7870e563eedcde2c94bd5c727e952d49",
+                    "3d915854976284347efa7aa0a117c0fc3b415c4208e1a6c94beb4ccb9720743d",
+                ],
+            },
+        ),
     ]
 
     alt_details = [
@@ -621,7 +726,68 @@ def auto_detail(mir_db: MIRDatabase):
             "google-t5/t5-small",
             "T5Model",
             {
-                "identifiers": ["encoder.block.0.layer.1.DenseReluDense.wi.weight"],
+                "identifiers": [
+                    [4096],
+                    "encoder.embed_tokens.weight",
+                    "text_encoders.t5xxl.transformer.shared.weight",
+                    "t5xxl",
+                    "encoder.block.0.layer.1.DenseReluDense.wi.weight",  # small\
+                ],
+                "file_256": [
+                    "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # shuttle/flux diffusers
+                    "565cb2487351282e8e4dbeb88e63f4ad28217ce0439f5a8e6525a924807d2d9b",  # bf16 modelspec sai
+                    "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",  # fp16 modelspec sai
+                    "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",  # fp16 diffusers
+                    "83690f3cc37cecb5e907f41ab0f7abb0855ef24a0a8aab9259f2888ce85a34e2",  # flux diffusers
+                    "7d330da4816157540d6bb7838bf63a0f02f573fc48ca4d8de34bb0cbfd514f09",  # fp8_e4m3fn
+                    "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34n
+                    "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34
+                    "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",  # q5 k m gguf
+                    "d8720addef2596fef86b1b22e4b62875c9118779ba8723759a75dfcbc649ffd5",  # mystic mlx
+                    "7d0eac95abe8daae454bcd3d166b8bfc6a35fe68278f97479d62dbb6850f38c0",  # mlx flex2
+                    "ceabd6f71c7112cfaa4dfca8711dda97b79fb9b25983f1c95532de226045f1f8",  # mlx jaguar q8
+                    "49e139f50824fef40908ef4307c851e7adaa8b91bed44054c4829600dbedfdda",  # mlx shuttle 3 q4
+                    "211ade1d474f5dc83190aec8be5c4baf52643777790d64de0cbd84f63613e5e9",  # mlx flex1 q8
+                    "7894547154ba3fd6e364e66e2951ee82b4c3fc1ae0f95df6a4f9d1c5a4e98f17",  # DeepFloyd/t5-v1_1-xxl sft
+                    "eb529f693f4b17773a24e787fcba29486d5e1700dadcc20bb91e4c8b00212d08",  # pixart a
+                    "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # flux dev
+                ],
+                "layer_b3": [
+                    "ca94e03b7b1fdcb0d6ff5205eac56f145d2dff8a9c489faf80935bfec8387f18",  # bf16
+                    "c0e2b054bedd782909191b05748a88c28d1538fa91789fec63f036ba01dcc001",  # fp16 sd35
+                    "672de9b79d14001de7d1109ffc52e4d0cccc3bfee6f45648fa347703b58e2b99",  # fp16 sd35 diffusers
+                    "abdb187a996c51cb0469630c124b14eeb0bb8f5f635aca6c71dea264f8bd61ae",  # shuttle 3 aesthetic diffusers
+                    "8926f862b7763fd9688af317eba7809aa71a478484be0c738c269de368ace4a7",  # diffusers
+                    "e616b754cf55e55b3f9f17ab7e1fff95f0607c81782822fc1223ae22fb1e9f36",  # fp8 e4m3fn
+                    "b79e5f1878a62cd726bb4f9fc1415cacb071d278440e9026290c7b36cb41e1d4",  # fp8 e4m3fn sd35
+                    "3f4e51dec6d542759cdea49b3bec14c090a4908f953fa3e182e2ea43b5b05402",  #  q5 k m gguf
+                    "77619d5278d9f547ddac17d4d99df56cb6a3a9e660ae31b2f896a4297907e62e",  # mlx t5 jaguar
+                    "c87c9d3cc7becc46ee34821299cf8551a6df5541582a45469a031bccdc4bd340",  # mlx shuttle t5 q8
+                    "7e6c32c01c89fc5d1610c410135aa9708e77a7444510e5e479fa677ff2b53643",  # mlx jaguar q8
+                    "a49c2bc301733967ddff113790e301773dc5dd71368b657af4141458de593ced",  # mlx flex2 preview
+                    "c2ea94030ea362e03d73d448fa5353ace0a449dc38c51a4a49fb148444ebb8ef",  # mlx shuttle3 diff q4
+                    "4a90463350f08ef41479da1d561ab41b8f8b792f1603a092226a838156aebfb0",  # mlx flex1 alpha q8
+                    "f86cd0324eebbffb81b15ad47dc8b63fedfa51dc222e44e1a958a7becce2bcb0",  # df safetensors
+                    "48c54c61c5f14e42761c6177539b2da3a22222516dab053952ca8d8e92f93d65",  # pixart a
+                    "311332d9738773669128814d944b1e860a8e3176b37abf43370bc06b43b454d0",  # flux
+                ],
+                "layer_256": [
+                    "bb20f7805209379aea4d6548f17e551cf27d0f8426ca169e4df8234f718ed5ef",
+                    "431580c2d86f9a9ed3500f776a4c997223e5644aed211f965354869ccfa4d76e",
+                    "2ccd548c4ffe34168c60779ebd497b9b410981a2fda813c8723a24a805c94ea0",
+                    "a608fc4e1cc9762e46187a1ce66e98e8ba4bc3a604cbfd96174bd876baea0fa1",
+                    "dc9e74cdf535e0b7a17e1335d0d8b38a00f94facf0cb01363baee09945a25278",
+                    "f07409710a69b2247aa4723a9b40d2225d5e5bfba7b60c51f0ea901fc2ef5ad9",
+                    "ed28f8b6cc472f352fc840b5a9f841ff17d76ae6918f0676464dca20529aa92b",
+                    "97c1a08f87c59b4c55ad4672841977cfce43ca7730bcd11d8c178a9330de1855",
+                    "968972839b859a9c4457f190fad2e17e8585ce27d9ef318df4f5b4e902143944",
+                    "4dbdeadc957c898c327197a3d8770188535672e9208beb29bbf48dfdf51c8955",
+                    "669172c2b5e8b97774d9dd0227ede40c4d25cae3adae97d9f281d03531e7e137",
+                    "39fff130b9ee240102c28a78ee1c4a643e9f800b734ff133f3ab2ad1357bd2f6",
+                    "6e047ed8cb7007034ff15840dd53c92096f0e7ed5befa07808de8afa35d35874",  # safetensors
+                    "adbd0baa059074501b7686db2b0c01715f3a317275c2657c5dfbfd6ee92389b7",
+                    "eb63790fb32b5660de34fa42c2e608df58f7aa3680b4984f0ee9008fe613729c",
+                ],
             },
         ),
         (
@@ -630,16 +796,28 @@ def auto_detail(mir_db: MIRDatabase):
             {
                 "identifiers": ["encoder.block.1.layer.0.SelfAttention.relative_attention_bias.weight"],
                 "file_256": [
+                    "a8e861969c7433e707cc5a74065d795d36cca07ec96eb6763eb4083df7248f58",  # wan t2i diffusers
                     "decf9b70814ed5e9965bfca9fbd0483462e2bf743790663025b7742f8c014c72",  # fp16
                     "0a07449cf1141c0ec86e653c00465f6f0d79c6e58a2c60c8bcf4203d0e4ec4f6",
+                    "c0ef3a140898e228a3520c9adec60743d2e8e5b3d229651bb37f1a3921919f99",  # wan
+                    "7b8850f1961e1cf8a77cca4c964a358d303f490833c6c087d0cff4b2f99db2af",  # wan i2ixxl sai fp16
+                    "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68",  # wan i2i xxl sai fp8_e4m3fn scaled sai
                 ],
                 "layer_b3": [
+                    "cd92b29c9099a640e3f5d4a76e64b3467f87f6c056119e0defdff94d311ad6de",  # wan t2i diff
                     "1c943dbcb8b328a7c6c852921ddaefbd84c9df8c83bc51fe303c1f06cb734102",  # fp16
                     "1639a6467af0db1e15828d33b878e568cba1335947eeadd481170bcdc9ba8e33",
+                    "72a0329740dee29a2c099eec3c320b3945590a74293356014c30249fe69652e5",  # wan
+                    "0374cba03c607ffe8ab8f04994d82f82e80901dc7578f1a9a6cb2637608be5d5",
+                    "d75a407f873e1cfa1a0a36214b53b14bfebe9253ea263465151c07f0d57f3f29",
                 ],
                 "layer_256": [
+                    "467916d35f3053dce1d40d998fcaf6aa03feda75aa578d964dd61461e23641a3",  # wan i2i diff
                     "58deeef888d4ded4ffababfbf8da27227a4a6ff8adfa42016e12c0180f713816",  # fp16
                     "178ebd3fa3418d33a2e45a80d8b9d3662ff4a8e75f3de3f0332f82c505d8152a",
+                    "8700dcb651465fe6c925b7ad6068b58b32951832fff0ed19819510f8d0713ee5",  # wan
+                    "954f2129ba166e746c71433f717b572d8869ec14b32b7f214d1701d3b1120047",
+                    "32f5fc1daea014b6488b96c2a1330e0aad87e074844fa3e2e3f20b9e58440395",
                 ],
             },
         ),
@@ -684,15 +862,18 @@ def auto_detail(mir_db: MIRDatabase):
                 "file_256": [
                     "1f48ac458d6fbd0aec53a116065a7ee3f1d34bddde544e25c16a05c9d5392b78",  # orsta 32
                     "0e85c7111ce849293e97aa09ce1172352ecece023a3ecea7ac8311e326b47f3a",  # orsta 7
+                    "d725335e4ea2399be706469e4b8807716a8fa64bd03468252e9f7acf2415fee4",  # qwen img
+                    "",
                 ],
                 "layer_b3": [
                     "e4f681bde70a753f30f83495a2aa340d251bf3d818eb5a1cbe58f85fd6ea0d40",  # orsta 32
                     "47b062ce8ddb14845fb1a71d2fd88fd52a82e26561ba3eb05be057915a867775",  # orsta 7
-                    "b52807536902cabbf84f99e4fa2f8713fb4ef77e739f06367ee0d486e3222faa",
+                    "b6386f70b528ffa9e09fdd8db8a7b91a7c462ed97b06963576c6139e25fdcf31",  # qwen img
                 ],
                 "layer_256": [
                     "ed36a4a11c4ebebb10d1e010cb93e2e43fcaf975cd42bb6c9958537593d0d44d",  # orsta 32
                     "f7f6f64e7b6d7826400a2fc0eef942a47c47bd5914e051ad0c8cd9ff5ff7982b",  # orsta 7
+                    "f341ed0f792cf0570ceb21d3b64ed14bf9875e9fcb90116851364eeed683a6ca",  # qwen img
                 ],
             },
         ),
@@ -712,12 +893,28 @@ def auto_detail(mir_db: MIRDatabase):
             },
         ),
         (
+            "openai/gpt-oss",
+            "GptOssModel",
+            {
+                "file_256": [
+                    "68a8dc1f8e2e5996cb702f14332a25ddf3463daeab2df68e21ca09ef181203c3"  # original model
+                    "a881aa5f561b26a22b14a8262aa61849ace349ffd73d74769e030ac90a1fcf8a",  # diffusers
+                ],
+                "layer_b3": [
+                    "b52807536902cabbf84f99e4fa2f8713fb4ef77e739f06367ee0d486e3222faa",  # gguf
+                    "43c618018db1fd6e915dead610652da261d9058b73bc5355c85c6ac69af4d913",  # "original model"
+                    "ab27ce7391b7fbd6ce3c319faa119afdac68f746af6a0ce2c3400a132f36f6ac",  # diffusers
+                ],
+                "layer_256": [
+                    "de5dcad822be5ed6196f0f3f6965739993118d14db97b33a94a269f4f1b7a363",  # "original model"
+                    "575f1977ed42d95a050e13dadaafc05a6d94c8aadca8364dca8a62aa4f2b146c",  # diffusers
+                ],
+            },
+        ),
+        (
             "microsoft/Phi-4-multimodal-instruct",
             "Phi4MultimodalModel",
             {
-                "pkg": {
-                    "0": {"transformers": "Phi4MultimodalModel"},
-                },
                 "file_256": [
                     "bc703090b63eda16f639fa4de7ac54635c23105ab1da2f6ec4d3403151d38ee6",  # mini
                 ],
@@ -1212,6 +1409,25 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         ),
     )
+    repo = "Wan-AI/Wan2.1-FLF2V-14B-720P-Diffusers"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series=series,
+            comp=comp,
+            repo=repo,
+            file_256=[
+                "",
+                "",
+            ],
+            layer_b3=[
+                "",
+            ],
+            layer_256=[""],
+        ),
+    )
     mir_db.add(
         mir_entry(
             domain="ops",
@@ -1274,74 +1490,6 @@ def auto_text(mir_db: MIRDatabase):
             layer_b3=["6cd6b3caaea270feb5aff8e9fec205a27da4f48a1e740e63dc9a08f16e70a656"],
             layer_256=["eaa882db6a69cf8ed0104a15b2cdbbb570a23a06ab8c8f65f4c6c21719c6ba25"],
         ),
-    )
-    repo = "google/t5-v1_1-xxl"
-    series, comp = make_mir_tag(repo)
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="stst",
-            series=series,
-            comp=comp,
-            repo=repo,
-            pkg={0: {"transformers": "T5EncoderModel"}},
-            identifiers=[[4096], "encoder.embed_tokens.weight", "text_encoders.t5xxl.transformer.shared.weight", "t5xxl"],
-            file_256=[
-                "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # shuttle/flux diffusers
-                "565cb2487351282e8e4dbeb88e63f4ad28217ce0439f5a8e6525a924807d2d9b",  # bf16 modelspec sai
-                "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",  # fp16 modelspec sai
-                "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",  # fp16 diffusers
-                "83690f3cc37cecb5e907f41ab0f7abb0855ef24a0a8aab9259f2888ce85a34e2",  # flux diffusers
-                "7d330da4816157540d6bb7838bf63a0f02f573fc48ca4d8de34bb0cbfd514f09",  # fp8_e4m3fn
-                "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34n
-                "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34
-                "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",  # q5 k m gguf
-                "d8720addef2596fef86b1b22e4b62875c9118779ba8723759a75dfcbc649ffd5",  # mystic mlx
-                "7d0eac95abe8daae454bcd3d166b8bfc6a35fe68278f97479d62dbb6850f38c0",  # mlx flex2
-                "ceabd6f71c7112cfaa4dfca8711dda97b79fb9b25983f1c95532de226045f1f8",  # mlx jaguar q8
-                "49e139f50824fef40908ef4307c851e7adaa8b91bed44054c4829600dbedfdda",  # mlx shuttle 3 q4
-                "211ade1d474f5dc83190aec8be5c4baf52643777790d64de0cbd84f63613e5e9",  # mlx flex1 q8
-                "7894547154ba3fd6e364e66e2951ee82b4c3fc1ae0f95df6a4f9d1c5a4e98f17",  # DeepFloyd/t5-v1_1-xxl sft
-                "eb529f693f4b17773a24e787fcba29486d5e1700dadcc20bb91e4c8b00212d08",  # pixart a
-                "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # flux dev
-            ],
-            layer_b3=[
-                "ca94e03b7b1fdcb0d6ff5205eac56f145d2dff8a9c489faf80935bfec8387f18",  # bf16
-                "c0e2b054bedd782909191b05748a88c28d1538fa91789fec63f036ba01dcc001",  # fp16 sd35
-                "672de9b79d14001de7d1109ffc52e4d0cccc3bfee6f45648fa347703b58e2b99",  # fp16 sd35 diffusers
-                "abdb187a996c51cb0469630c124b14eeb0bb8f5f635aca6c71dea264f8bd61ae",  # shuttle 3 aesthetic diffusers
-                "8926f862b7763fd9688af317eba7809aa71a478484be0c738c269de368ace4a7",  # diffusers
-                "e616b754cf55e55b3f9f17ab7e1fff95f0607c81782822fc1223ae22fb1e9f36",  # fp8 e4m3fn
-                "b79e5f1878a62cd726bb4f9fc1415cacb071d278440e9026290c7b36cb41e1d4",  # fp8 e4m3fn sd35
-                "3f4e51dec6d542759cdea49b3bec14c090a4908f953fa3e182e2ea43b5b05402",  #  q5 k m gguf
-                "77619d5278d9f547ddac17d4d99df56cb6a3a9e660ae31b2f896a4297907e62e",  # mlx t5 jaguar
-                "c87c9d3cc7becc46ee34821299cf8551a6df5541582a45469a031bccdc4bd340",  # mlx shuttle t5 q8
-                "7e6c32c01c89fc5d1610c410135aa9708e77a7444510e5e479fa677ff2b53643"  # mlx jaguar q8
-                "a49c2bc301733967ddff113790e301773dc5dd71368b657af4141458de593ced",  # mlx flex2 preview
-                "c2ea94030ea362e03d73d448fa5353ace0a449dc38c51a4a49fb148444ebb8ef",  # mlx shuttle3 diff q4
-                "4a90463350f08ef41479da1d561ab41b8f8b792f1603a092226a838156aebfb0",  # mlx flex1 alpha q8
-                "f86cd0324eebbffb81b15ad47dc8b63fedfa51dc222e44e1a958a7becce2bcb0",  # df safetensors
-                "48c54c61c5f14e42761c6177539b2da3a22222516dab053952ca8d8e92f93d65",  # pixart a
-                "311332d9738773669128814d944b1e860a8e3176b37abf43370bc06b43b454d0",  # flux
-            ],
-            layer_256=[
-                "bb20f7805209379aea4d6548f17e551cf27d0f8426ca169e4df8234f718ed5ef",
-                "431580c2d86f9a9ed3500f776a4c997223e5644aed211f965354869ccfa4d76e",
-                "2ccd548c4ffe34168c60779ebd497b9b410981a2fda813c8723a24a805c94ea0",
-                "a608fc4e1cc9762e46187a1ce66e98e8ba4bc3a604cbfd96174bd876baea0fa1",
-                "dc9e74cdf535e0b7a17e1335d0d8b38a00f94facf0cb01363baee09945a25278",
-                "f07409710a69b2247aa4723a9b40d2225d5e5bfba7b60c51f0ea901fc2ef5ad9",
-                "ed28f8b6cc472f352fc840b5a9f841ff17d76ae6918f0676464dca20529aa92b",
-                "97c1a08f87c59b4c55ad4672841977cfce43ca7730bcd11d8c178a9330de1855",
-                "968972839b859a9c4457f190fad2e17e8585ce27d9ef318df4f5b4e902143944",
-                "4dbdeadc957c898c327197a3d8770188535672e9208beb29bbf48dfdf51c8955",
-                "669172c2b5e8b97774d9dd0227ede40c4d25cae3adae97d9f281d03531e7e137",
-                "39fff130b9ee240102c28a78ee1c4a643e9f800b734ff133f3ab2ad1357bd2f6",
-                "6e047ed8cb7007034ff15840dd53c92096f0e7ed5befa07808de8afa35d35874",  # safetensors
-                "adbd0baa059074501b7686db2b0c01715f3a317275c2657c5dfbfd6ee92389b7",
-                "eb63790fb32b5660de34fa42c2e608df58f7aa3680b4984f0ee9008fe613729c",
-            ],
-        )
     )
     repo = "openai/clip-vit-large-patch14"
     series, comp = make_mir_tag(repo)
@@ -1436,6 +1584,35 @@ def auto_text(mir_db: MIRDatabase):
                 "f7fc81d8b5ae91ec28a5106ecc0d067be9a94fd3f394c4aa4686ed131ce5a5b3",  # ssd1b fp16
                 "61ab42bd5c0fcb9fd3db1d4014cb844ccae8dc17fd69a108cf077a573d092946",  # vega
                 "6c64e36cdda3bec7067e94b05619f882f5d31070792acaadac60ddbef580453a",  # vega fp16
+            ],
+        )
+    )
+    repo = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vit",
+            series=series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {"transformers": "CLIPModel", "stage_2": {"transformers": "AutoTokenizer"}},
+            },
+            file_256=[
+                "036e6e2bd49697511f4f8b8cb5ee465f93025f7a69a145eadeb9a881ace9b18d",
+                "0084e75319a50ad85ef45377bad5bc38f2f58824459eb690048d51c9f8863be5",  # open clip
+                "64a7ef761bfccbadbaa3da77366aac4185a6c58fa5de5f589b42a65bcc21f161",  # wan sai
+            ],
+            layer_b3=[
+                "227f26ed63120b9034f4a0c90b6b37eede721a8260f2c1e8f7ea3ccc0d109e7e",
+                "3a38ffd1b60499cf2f451f3065079ff26efb9190a86f23ad1c8d993bbeb9af05",  # open clip
+                "ce06cf1fd684269ee96631b2bf9334c6ecde6a84a55760dfa0d9d2a6411f28e4",  # wan sai
+            ],
+            layer_256=[
+                "130a94ed12569e099196a6ca27388181922e20148dee5bcb58c5e309acfc2352",
+                "cfdbd3fd2b90b64ba12d395a62dd7c3c3ea3e811f0a54593e91bae6516ca5061",  # open clip
+                "9125ce5970c649d6f9368c25493d3aaa6b41e224d4cc427e955115f7b7e53d1c",  # wan sai
             ],
         )
     )
@@ -2127,6 +2304,268 @@ def auto_taesd(mir_db: MIRDatabase):
 
 
 def auto_vae(mir_db: MIRDatabase):
+    from nnll.mir.tag import make_mir_tag
+
+    series, comp = make_mir_tag("Qwen/Qwen-Image")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLQwenImage"},
+            },
+            file_256=[
+                "0c8bc8b758c649abef9ea407b95408389a3b2f610d0d10fcb054fe171d0a8344",  # diffusers
+            ],
+            layer_b3=[
+                "64af8fb08d2054c81ad2aef94965be8fb1366fcc6136cb9222ae046550af014b",  # diffusers
+            ],
+            layer_256=[
+                "42f255440ef1d379a8a731456bc44312a73a8568716caa6100803990cd5ea7dc",  # diffusers
+            ],
+        )
+    )
+
+    series, comp = make_mir_tag("Wan-AI/Wan2.1-I2V-14B-480P-Diffusers")
+    sr_series_t2v, _ = make_mir_tag("Skywork/SkyReels-V2-T2V-14B-720P-Diffusers")
+    sr_series_i2v, _ = make_mir_tag("Skywork/SkyReels-V2-I2V-14B-720P-Diffusers")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLWan"},
+            },
+            file_256=[
+                "d6e524b3fffede1787a74e81b30976dce5400c4439ba64222168e607ed19e793",  # diffusers
+                "2fc39d31359a4b0a64f55876d8ff7fa8d780956ae2cb13463b0223e15148976b",  # sai
+            ],
+            layer_b3=[
+                "f867543d636029ebfc05b8075e572be0b313a83b0470e56bcf4bbad07a6db010",  # diffusers
+                "6b5b229727a2d4e37993687c62c94ff8519a371ab4103c699ff1f5969ca0b433",  # sai
+            ],
+            layer_256=[
+                "121b3974b39263dcca9d644d1b5c9b9251a911b6a8a8e307fcb21ca778e78ed2",
+                "364be43a8959012d798d3f98e17d8b5c4b99ba1e70077008dd19acca3ced395e",
+            ],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=sr_series_t2v,
+            # no repo here, may conflict
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=sr_series_i2v,
+            # no repo here, may conflict
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("Lightricks/LTX-Video")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLLTXVideo"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("rhymes-ai/Allegro")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLAllegro"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("THUDM/CogVideoX-5b-I2V")
+    series_fun, _ = make_mir_tag("alibaba-pai/CogVideoX-Fun-V1.1-5b-Pose")
+    series_wish, _ = make_mir_tag("BestWishYsh/ConsisID-preview")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLCogVideoX"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=series_fun,
+            # no repo here, may conflict
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=series_wish,
+            # no repo here, may conflict
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("nvidia/Cosmos-1.0-Diffusion-7B-Video2World")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLCosmos"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("alibaba-pai/EasyAnimateV5.1-7b-zh-diffusers")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLMagvit"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("hunyuanvideo-community/HunyuanVideo-I2V")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLHunyuanVideo"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("genmo/mochi-1-preview")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLMochi"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("Efficient-Large-Model/Sana_1600M_1024px_BF16_diffusers")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderDC"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("stabilityai/stable-audio-open-1.0")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderOobleck"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
+    series, comp = make_mir_tag("stable-video-diffusion-img2vid-xt")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series=series,
+            comp=comp,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKLTemporalDecoder"},
+            },
+            file_256=[],
+            layer_b3=[],
+            layer_256=[],
+        )
+    )
     mir_db.add(
         mir_entry(
             domain="info",
@@ -2170,7 +2609,9 @@ def auto_vae(mir_db: MIRDatabase):
             pkg={
                 0: {"diffusers": "AutoencoderKL"},
             },
-            file_256=["6fdfa2add4f04d94f36157cbb0197f97966b612e3f8eff4095315aefea74b904"],  # q8,
+            file_256=[
+                "6fdfa2add4f04d94f36157cbb0197f97966b612e3f8eff4095315aefea74b904",
+            ],  # q8,
             layer_b3=[
                 "0ebf9b7010accc44e219e355dd24bf1e3128004093c0c1dfc06f88c0a39fdbdd",
                 "d0e7ef3c4af06fa08b4c0485a073e2df55f7b1e9e3ba8f7b261688bc562568f0",  # q8
@@ -2180,28 +2621,30 @@ def auto_vae(mir_db: MIRDatabase):
             ],
         )
     )
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="vae",
-            series=dev_series,
-            comp=dev_comp,
-            # no repo here, may conflict
-            pkg={
-                0: {"diffusers": "AutoencoderKL"},
-            },
-            file_256=[
-                "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",  # dev
-                "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",  # dev diffusers
-            ],
-            layer_b3=[
-                "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
-                "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
-            ],
-            layer_256=[
-                "7950e4f3897c75affaa5f9f3c51c88b4d9a27bfd9b05ad41c3f71d8c1c620b89",
-                "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # diffusers
-                "8f084dc91fd5b481875bc9c86a4ef05e5f176896b7d31c6a5c2ce45c2e174004",  # dev diffusers
-            ],
-        )
+    (
+        mir_db.add(
+            mir_entry(
+                domain="info",
+                arch="vae",
+                series=dev_series,
+                comp=dev_comp,
+                # no repo here, may conflict
+                pkg={
+                    0: {"diffusers": "AutoencoderKL"},
+                },
+                file_256=[
+                    "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",  # dev
+                    "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",  # dev diffusers
+                ],
+                layer_b3=[
+                    "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
+                    "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
+                ],
+                layer_256=[
+                    "7950e4f3897c75affaa5f9f3c51c88b4d9a27bfd9b05ad41c3f71d8c1c620b89",
+                    "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # diffusers
+                    "8f084dc91fd5b481875bc9c86a4ef05e5f176896b7d31c6a5c2ce45c2e174004",  # dev diffusers
+                ],
+            )
+        ),
     )

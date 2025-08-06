@@ -99,7 +99,6 @@ class MIRDatabase:
         for match in matches:
             option, series, compatibility, _ = match
             option = option.replace("_", "").replace("-", "").replace(".", "").lower()
-            target = target.replace("_", "").replace("-", "").replace(".", "").lower()
             if target in option or option in target:
                 max_len = len(os.path.commonprefix([option, target]))
                 gap = Decimal(str(abs(len(option) - len(target)) + (len(option) - max_len))) * Decimal("0.1")
@@ -135,7 +134,7 @@ class MIRDatabase:
         import re
 
         parameters = r"-gguf|-exl2|-exl3|-onnx|-awq|-mlx|-ov"  #
-        target = target.lower()
+        target = target.lower().strip("-")
         target = re.sub(parameters, "", target)
         self.matches = None
         self.matches = []
@@ -198,7 +197,7 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
     except (FileNotFoundError, OSError) as error_log:
         nfo(f"MIR file not found before write, regenerating... {error_log}")
     ensure_path(folder_path_named=os.path.dirname(MIR_PATH_NAMED), file_name=os.path.basename(MIR_PATH_NAMED))
-
+    mir_db.database = {}
     auto_hub(mir_db)
     auto_dtype(mir_db)
     auto_schedulers(mir_db)
