@@ -165,11 +165,9 @@ async def write_to_file(program: FunctionType | str, folder_path_named: str, has
 
 
 def main():
-def main():
     """Parse arguments to feed to dict header reader"""
     import argparse
     from sys import argv
-    import asyncio
     import asyncio
 
     # Set up argument parser
@@ -184,17 +182,9 @@ def main():
     parser.add_argument("-s", "--sha", action="store_true", help="Change algorithm from BLAKE3 to SHA256 (default: False)")
     parser.add_argument("-d", "--describe", "--describe-process", action="store_true", help="Include processing metadata in the output (default: True)", default=True)
     parser.add_argument("-u", "--unsafe", action="store_true", help="Try to hash non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)")
-    parser.add_argument("path", default=".", help="Path to the directory where files should be analyzed. (default '.'')")
-
-    parser.add_argument("-f", "--file", action="store_true", help="Change mode to calculate hash for the whole file instead of state dict layers (default: False)")
-    parser.add_argument("-s", "--sha", action="store_true", help="Change algorithm from BLAKE3 to SHA256 (default: False)")
-    parser.add_argument("-d", "--describe", "--describe-process", action="store_true", help="Include processing metadata in the output (default: True)", default=True)
-    parser.add_argument("-u", "--unsafe", action="store_true", help="Try to hash non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)")
 
     args = parser.parse_args()
 
-    hash_values = asyncio.run(hash_layers_or_files(path_named=args.path, layer=not args.file, b3=not args.sha, desc_process=args.describe, unsafe=args.unsafe))
-    asyncio.run(write_to_file(program=str(parser.prog), folder_path_named=args.path, hash_values=hash_values, write_path=argv[1].split(os.sep)[-2]))
     hash_values = asyncio.run(hash_layers_or_files(path_named=args.path, layer=not args.file, b3=not args.sha, desc_process=args.describe, unsafe=args.unsafe))
     asyncio.run(write_to_file(program=str(parser.prog), folder_path_named=args.path, hash_values=hash_values, write_path=argv[1].split(os.sep)[-2]))
 

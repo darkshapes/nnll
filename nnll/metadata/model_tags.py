@@ -367,7 +367,12 @@ class ReadModelTags:
                 return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
 
 
-def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(), separate_desc: bool = True, unsafe: bool = False) -> None:
+def main(
+    folder_path_named: str | None = None,
+    save_location: str | None = None,
+    separate_desc: bool | None = None,
+    unsafe: bool | None = None,
+) -> None:
     import argparse
     from sys import modules as sys_modules
 
@@ -377,7 +382,8 @@ def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(),
         # Set up argument parser
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,
-            description="Scan the state dict metadata from a folder of files at [path] to the console, then write to a json file at [save]\nOffline function.",
+            description="Scan the state dict metadata from a folder of files at [path] to the console,\
+                 then write to a json file at [save]\nOffline function.",
             usage="nnll-meta ~/Downloads/models/images -s ~Downloads/models/metadata",
             epilog=f"Valid input formats: {[*ExtensionType.MODEL]}",
         )
@@ -387,11 +393,10 @@ def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(),
         parser.add_argument("-u", "--unsafe", action="store_true", help="Try to read non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)")
         args = parser.parse_args()
 
-        folder_path_named = args.path
-        separate_desc = args.separate_desc
-        save_location = args.save_to_folder_path
-        unsafe = args.unsafe
-
+    folder_path_named = os.getcwd() if not args else args.path
+    separate_desc = True if not args else args.separate_desc
+    save_location = os.getcwd() if not args else args.save_to_folder_path
+    unsafe = False if not args else args.unsafe
     model_tool = ReadModelTags()
     if folder_path_named is not None:
         for root, folders, files in os.walk(folder_path_named):
@@ -403,4 +408,4 @@ def main(folder_path_named: str = os.getcwd(), save_location: str = os.getcwd(),
                     metadata = model_tool.attempt_all_open(file_path_named, separate_desc=separate_desc)
                 if metadata is not None:
                     save_location = ensure_path(save_location)
-                    write_json_file(save_location, f"{file_name}.json", metadata)
+                    write_json_file(save_location, f"{os.path.basename(root)}_{file_name}.json", metadata)

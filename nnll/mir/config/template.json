@@ -67,6 +67,9 @@
             "dpt": [
                 "fusion_hidden_size"
             ],
+            "moe": [
+                "num_experts_per_tok"
+            ],
             "aet": [
                 "classifier_proj_size",
                 "position_embedding_type",

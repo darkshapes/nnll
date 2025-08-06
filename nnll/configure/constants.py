@@ -262,13 +262,6 @@ class ListOfDelineatedStr(BaseModel):
         return regex_match
 
 
-BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*[_-](\d{3,4}px)"
+BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*[_-](\d{3,4}px|-T2V$|-I2V$)"
 PARAMETERS_SUFFIX = r"(\d{1,3}[KkMmBb]|[._-]\d+[\._-]\d+[Bb][._-]).*?$"
-
-# r"^(\d+[KkMmBb]|[Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|.*\d+[bB]|-\bpro|tiny|large|mlx|onnx|gguf|medium|base|multimodal|mini|instruct|full|:latest|preview|small||pro|beta|hybrid|rl|plus|dpo|community|-\d+bit|-it)$"
-
-# r"^(\d+[._-]?\d{1,2}[BbMmKk])|([\d+]bit)|([Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|.*[^\d][bB]$|tiny|large|mlx|onnx|gguf|medium|base|multimodal|mini|[iI]nstruct|full|:latest|preview|small|it|pro|beta|hybrid|rl|plus|dpo|community|--)$"
-
-# (\d+bit?|\d+[KkMmBb])
-# r"(?:[/:-](?P<size>\d+[._-]?\d+[BbMm]k](bit)?))?|.*\d+bit|.*\d+BIT|"  # ^(\d+[._-]?\d{1,2}[BbMmKk](bit)?|[Ii]?[Qq]\d+_[Kk0][_]?[MmSsVv]|.*\d+[bB]$|tiny|large|mlx|onnx|gguf|medium|base|multimodal|mini|[iI]nstruct|full|:latest|preview|small|it|pro|beta|hybrid|rl|plus|dpo|community|--)"
 SEARCH_SUFFIX = r"\d+[._-]?\d+[BbMmKk](it)?|[._-]\d+[BbMmKk](it)?"
