@@ -11,13 +11,12 @@ from nnll.mir.doc_parser import parse_docs
 from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
 from nnll.mir.mappers import cut_docs
 from nnll.mir.tag import make_mir_tag
-from nnll.tensor_pipe.deconstructors import root_class
-from nnll.monitor.file import dbug
+from nnll.tensor_pipe.deconstructors import get_code_names, root_class
+from nnll.monitor.file import dbug  # as nfo
 
 if "pytest" in sys.modules:
     import diffusers  # noqa # pyright:ignore[reportMissingImports] # pylint:disable=unused-import
-
-nfo = print
+from nnll.monitor.console import nfo
 
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
 
@@ -40,58 +39,6 @@ def flag_config(transformers: bool = False, data: dict = None, **kwargs):
     # nfo(f"Unrecognized model type with {kwargs}\n" )
 
 
-def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
-    """Generate diffusion model data for MIR index\n
-    :return: Dictionary ready to be applied to MIR data fields
-    """
-    special_cases = {
-        "black-forest-labs/FLUX.1-schnell": "black-forest-labs/FLUX.1-dev",
-        "stabilityai/stable-diffusion-3-medium": "stabilityai/stable-diffusion-3.5-medium",
-    }
-    special_classes = {
-        "StableDiffusion3Pipeline": "stabilityai/stable-diffusion-3.5-medium",  # NOT sd3
-        "HunyuanDiTPipeline": "tencent-hunyuan/hunyuandiT-v1.2-diffusers",  #  NOT hyd .ckpt
-        "ChromaPipeline": "lodestones/Chroma",
-    }
-
-    extracted_docs = list(cut_docs())
-    pipe_data = {}  # pipeline_stable_diffusion_xl_inpaint
-    for code_name, file_name, docs in extracted_docs:
-        parse_result = parse_docs(docs)
-
-        if parse_result:
-            pipe_class = parse_result.pipe_class
-            pipe_repo = parse_result.pipe_repo
-            staged_class = parse_result.staged_class
-            staged_repo = parse_result.staged_repo
-            for class_name, swap_repo in special_classes.items():
-                if pipe_class == class_name:
-                    pipe_repo = swap_repo
-                    break
-            model_class_obj = make_callable(pipe_class, f"diffusers.pipelines.{code_name}.{file_name}")
-            root_class(model_class_obj)
-            try:
-                series, comp_data = create_pipe_entry(pipe_repo, pipe_class)
-            except TypeError:
-                pass  # Attempt 1
-            if pipe_data.get(series):
-                exclude_list = ["Img2Img", "Control", "Controlnet"]  # causes issues with main repo resolution
-                if any(maybe for maybe in exclude_list if maybe.lower() in pipe_class.lower()):
-                    continue
-            pipe_data.setdefault(series, {}).update(comp_data)
-            if staged_class or pipe_repo in special_cases:
-                test = special_cases.get(pipe_repo)
-                if test:
-                    staged_repo = test
-                    staged_class = pipe_class
-                try:
-                    series, comp_data = create_pipe_entry(staged_repo or pipe_repo, staged_class or pipe_class)
-                except TypeError:
-                    continue  # Attempt 2,
-                pipe_data.setdefault(series, {}).update(comp_data)
-    return dict(pipe_data)
-
-
 def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional[Callable] = None) -> tuple[str, Dict[str, Dict[Any, Any]]]:
     """Create a pipeline article and generate corresponding information according to the provided repo path and pipeline category\n
     :param repo_path (str): Repository path.
@@ -101,6 +48,7 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
     """
     import diffusers  # pyright: ignore[reportMissingImports] # pylint:disable=redefined-outer-name
 
+    control_net = ["Control", "Controlnet"]  #
     mir_prefix = "info"
     if hasattr(diffusers, class_name):
         model_class_obj = getattr(diffusers, class_name)
@@ -112,6 +60,8 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
             mir_prefix = "info.lora"
         elif class_name == "WanPipeline":
             mir_prefix = "info.dit"
+        elif any(maybe for maybe in control_net if maybe.lower() in class_name.lower()):
+            mir_prefix = "info.controlnet"
         else:
             mir_prefix = flag_config(**sub_segments)
             if mir_prefix is None and class_name not in ["AutoPipelineForImage2Image", "DiffusionPipeline"]:
@@ -133,6 +83,56 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
         return mir_series, {mir_comp: prefixed_data}
 
 
+def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
+    """Generate diffusion model data for MIR index\n
+    :return: Dictionary ready to be applied to MIR data fields
+    """
+    special_cases = {
+        "black-forest-labs/FLUX.1-schnell": "black-forest-labs/FLUX.1-dev",
+        "stabilityai/stable-diffusion-3-medium": "stabilityai/stable-diffusion-3.5-medium",
+    }
+    special_classes = {
+        "StableDiffusion3Pipeline": "stabilityai/stable-diffusion-3.5-medium",  # NOT sd3
+        "HunyuanDiTPipeline": "tencent-hunyuan/hunyuandiT-v1.2-diffusers",  #  NOT hyd .ckpt
+        "ChromaPipeline": "lodestones/Chroma",
+    }
+    extracted_docs = list(cut_docs())
+    pipe_data = {}  # pipeline_stable_diffusion_xl_inpaint
+    for code_name, file_name, docs in extracted_docs:
+        parse_result = parse_docs(docs)
+
+        if parse_result:
+            pipe_class = parse_result.pipe_class
+            pipe_repo = parse_result.pipe_repo
+            staged_class = parse_result.staged_class
+            staged_repo = parse_result.staged_repo
+            for class_name, swap_repo in special_classes.items():
+                if pipe_class == class_name:
+                    pipe_repo = swap_repo
+                    break
+            model_class_obj = make_callable(pipe_class, f"diffusers.pipelines.{code_name}.{file_name}")
+            root_class(model_class_obj)
+            try:
+                series, comp_data = create_pipe_entry(pipe_repo, pipe_class)
+            except TypeError:
+                pass  # Attempt 1
+            if pipe_data.get(series):
+                if "Img2Img" in pipe_class.lower():
+                    continue
+            pipe_data.setdefault(series, {}).update(comp_data)
+            if staged_class or pipe_repo in special_cases:
+                test = special_cases.get(pipe_repo)
+                if test:
+                    staged_repo = test
+                    staged_class = pipe_class
+                try:
+                    series, comp_data = create_pipe_entry(staged_repo or pipe_repo, staged_class or pipe_class)
+                except TypeError:
+                    continue  # Attempt 2,
+                pipe_data.setdefault(series, {}).update(comp_data)
+    return dict(pipe_data)
+
+
 def transformers_index():
     """Generate LLM model data for MIR index\n
     :return: Dictionary ready to be applied to MIR data fields"""
@@ -142,7 +142,7 @@ def transformers_index():
     import transformers
 
     from nnll.mir.mappers import stock_llm_data
-    from transformers.models.auto.tokenization_auto import tokenizer_class_from_name
+    from transformers.models.auto.tokenization_auto import TOKENIZER_MAPPING_NAMES
 
     corrections: dict[dict[str, str | dict[str, list[str]]]] = {  # models with incorrect repos or config
         "BarkModel": {
@@ -190,9 +190,11 @@ def transformers_index():
         },
         "TimmWrapperModel": {
             "repo_path": "timm/resnet18.a1_in1k",
-            "sub_segments": {
-                "_resnet_": [""],
-            },
+            "sub_segments": {"_resnet_": [""]},
+        },
+        "FunnelModel": {
+            "repo_path": "funnel-transformer/small",
+            "sub_segments": {"separate_cls": [""]},
         },
     }
 
@@ -227,20 +229,27 @@ def transformers_index():
                 continue
             else:
                 mir_prefix = "info." + mir_prefix
-            mir_suffix, mir_comp = list(make_mir_tag(repo_path))
+            code_name = get_code_names(class_name)
+            # if the repo == "small" then it gets stripped from the title in this very old model
+            mir_suffix, mir_comp = list(make_mir_tag(repo_path)) if code_name != "funnel" else ["funnel", "*"]
             mir_series = mir_prefix + "." + mir_suffix
-            tokenizer_class = tokenizer_class_from_name(class_name)
-            mir_data.get("info.encoder.tokenizer", mir_data.setdefault("info.encoder.tokenizer", {})).update(
-                {
-                    mir_suffix: {
-                        "pkg": {
-                            0: {
-                                "transformers": f"{tokenizer_class.__module__}.{tokenizer_class.__name__}",
-                            },
-                        }
-                    }
-                },
-            )
+            tokenizer_classes = TOKENIZER_MAPPING_NAMES.get(code_name)
+            tk_pkg = {}
+            if tokenizer_classes:
+                index = 0
+                for tokenizer in tokenizer_classes:
+                    if tokenizer:
+                        tokenizer_class = make_callable(tokenizer, "transformers")
+                        tk_pkg.setdefault(index, {"transformers": f"{tokenizer_class.__module__}.{tokenizer_class.__name__}"})
+                        index += 1
+                if tk_pkg:
+                    mir_data.get("info.encoder.tokenizer", mir_data.setdefault("info.encoder.tokenizer", {})).update(
+                        {
+                            mir_suffix: {
+                                "pkg": tk_pkg,
+                            }
+                        },
+                    )
             mir_data.setdefault(
                 mir_series,
                 {

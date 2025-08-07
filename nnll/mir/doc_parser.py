@@ -4,6 +4,7 @@
 from typing import List, Optional, Tuple
 
 from pydantic import BaseModel, field_validator
+from nnll.monitor.file import dbuq
 
 nfo = print
 
@@ -34,6 +35,7 @@ class DocParser(BaseModel):
     pipe_prefixes: List[str] = [
         ">>> motion_adapter = ",
         ">>> adapter = ",  # if this moves, also change motion_adapter check
+        ">>> controlnet = ",
         ">>> pipe_prior = ",
         ">>> pipe = ",
         ">>> pipeline = ",
@@ -42,6 +44,8 @@ class DocParser(BaseModel):
         ">>> gen_pipe = ",
     ]
     repo_variables: List[str] = [
+        "controlnet_model",
+        "controlnet_id",
         "base_model",
         "model_id_or_path",
         "model_ckpt",
@@ -80,7 +84,7 @@ class DocParser(BaseModel):
                 call_types=self.call_types,
                 prior_text=prior_candidate,
             )
-            motion_adapter = "motion_adapter=" in candidate
+            motion_adapter = "motion_adapter" in candidate or "adapter" in candidate
             if motion_adapter and pipe_repo:
                 staged, prior_candidate, _ = self.doc_match(self.pipe_prefixes[2:])  # skip the adapter statements
             staged_class, staged_repo = (
@@ -99,7 +103,7 @@ class DocParser(BaseModel):
                 staged_class = None
 
             if pipe_class:
-                # nfo(f"{pipe_class}, {pipe_repo}, {staged_class}, {staged_repo} \n")
+                dbuq(f"class :{pipe_class}, repo : {pipe_repo}, staged_class: {staged_class}, staged_repo:{staged_repo} \n")
                 return DocParseData(pipe_class=pipe_class, pipe_repo=pipe_repo, staged_class=staged_class, staged_repo=staged_repo)
 
     def _extract_class_and_repo(

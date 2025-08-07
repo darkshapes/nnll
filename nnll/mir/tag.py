@@ -14,6 +14,7 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     :param repo_path: Typical remote source repo path, A URL without domain
     :return: The assembled mir tag with compatibility pre-separated"""
     import re
+    import os
 
     # print(repo_title)
 
@@ -45,8 +46,29 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     else:
         suffix = root
     cleaned_string = re.sub(r"[._]+", "-", cleaned_string.lower()).strip("-_")
-
     return (cleaned_string, suffix)
+
+
+def make_scheduler_tag(series_name: str) -> tuple[str]:
+    """_summary_
+
+    :param series_name: _description_
+    :return: _description_
+    """
+    import re
+
+    comp_name = None
+    patterns = [r"Multistep", r"Solver", r"Discrete", r"Scheduler"]
+    for scheduler in patterns:
+        compiled = re.compile(scheduler)
+        match = re.search(compiled, series_name)
+        if match:
+            comp_name = match.group()
+            break
+    for pattern in patterns:
+        series_name = re.sub(pattern, "", series_name)
+    series_name.lower()
+    return series_name, comp_name
 
 
 # def tag_mlx_model(repo_path: str, class_name: str, addendum: dict) -> tuple[str]:

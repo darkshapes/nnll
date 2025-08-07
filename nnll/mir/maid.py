@@ -179,16 +179,15 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
 
     from nnll.integrity import ensure_path
     from nnll.mir.automata import (
-        auto_audio,
-        auto_detail,
-        auto_dtype,
-        auto_hub,
-        auto_lora,
-        auto_schedulers,
-        auto_supplement,
-        auto_taesd,
-        auto_text,
-        auto_vae,
+        add_mir_audio,
+        mir_update,
+        add_mir_dtype,
+        hf_pkg_to_mir,
+        add_mir_lora,
+        add_mir_schedulers,
+        add_mir_diffusion,
+        add_mir_llm,
+        add_mir_vae,
     )
     from nnll.monitor.console import nfo
 
@@ -198,16 +197,15 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
         nfo(f"MIR file not found before write, regenerating... {error_log}")
     ensure_path(folder_path_named=os.path.dirname(MIR_PATH_NAMED), file_name=os.path.basename(MIR_PATH_NAMED))
     mir_db.database = {}
-    auto_hub(mir_db)
-    auto_dtype(mir_db)
-    auto_schedulers(mir_db)
-    auto_lora(mir_db)
-    auto_audio(mir_db)
-    auto_supplement(mir_db)
-    auto_text(mir_db)
-    auto_detail(mir_db)
-    auto_taesd(mir_db)
-    auto_vae(mir_db)
+    hf_pkg_to_mir(mir_db)
+    add_mir_dtype(mir_db)
+    add_mir_schedulers(mir_db)
+    add_mir_lora(mir_db)
+    add_mir_audio(mir_db)
+    add_mir_diffusion(mir_db)
+    add_mir_llm(mir_db)
+    mir_update(mir_db)
+    add_mir_vae(mir_db)
     mir_db.write_to_disk()
 
 
