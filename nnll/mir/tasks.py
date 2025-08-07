@@ -188,9 +188,9 @@ class AutoPkg:
             sub_field = pipe_class.__module__.split(".")[0]
             mir_comp = series.rsplit(".", 1)[-1]
             dbuq(mir_comp)
-            vae_tag = [mir_id for mir_id, comp_data in mir_db.database.items() if "info.vae" in mir_id and next(iter(comp_data)) == mir_comp]
-            if vae_tag:
-                mir_tag = [vae_tag, mir_comp]
+            mir_tag = [mir_id for mir_id, comp_data in mir_db.database.items() if "info.vae" in mir_id and next(iter(comp_data)) == mir_comp]
+            if mir_tag:
+                mir_tag.append(mir_comp)  # keep mir tag as single list
             elif class_name != "AutoencoderKL":
                 dbuq(pipe_class)
                 mir_tag = mir_db.find_tag(field="pkg", target=class_name, sub_field=sub_field, domain="info.vae")
@@ -208,7 +208,7 @@ class AutoPkg:
 
         preformatted_task_data = None
         filtered_tasks = None
-        snip_words: set[str] = {"load_tf_weights_in"}  # "PreTrained", "ForConditionalGeneration",
+        snip_words: set[str] = {"load_tf_weights_in"}
         package_name = next(iter(pkg_tree))
         class_name = pkg_tree[package_name]
         dbuq(f"{package_name}, {class_name}")
