@@ -32,9 +32,9 @@ class DocParser(BaseModel):
     doc_string: str
 
     pipe_prefixes: List[str] = [
-        ">>> controlnet = ",
         ">>> motion_adapter = ",
         ">>> adapter = ",  # if this moves, also change motion_adapter check
+        ">>> controlnet = ",
         ">>> pipe_prior = ",
         ">>> pipe = ",
         ">>> pipeline = ",
@@ -83,7 +83,7 @@ class DocParser(BaseModel):
                 call_types=self.call_types,
                 prior_text=prior_candidate,
             )
-            motion_adapter = "motion_adapter=" in candidate
+            motion_adapter = "motion_adapter" in candidate or "adapter" in candidate
             if motion_adapter and pipe_repo:
                 staged, prior_candidate, _ = self.doc_match(self.pipe_prefixes[2:])  # skip the adapter statements
             staged_class, staged_repo = (
@@ -102,7 +102,7 @@ class DocParser(BaseModel):
                 staged_class = None
 
             if pipe_class:
-                # nfo(f"{pipe_class}, {pipe_repo}, {staged_class}, {staged_repo} \n")
+                nfo(f"class :{pipe_class}, repo : {pipe_repo}, staged_class: {staged_class}, staged_repo:{staged_repo} \n")
                 return DocParseData(pipe_class=pipe_class, pipe_repo=pipe_repo, staged_class=staged_class, staged_repo=staged_repo)
 
     def _extract_class_and_repo(
