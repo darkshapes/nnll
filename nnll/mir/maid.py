@@ -68,9 +68,12 @@ class MIRDatabase:
         if isinstance(maybe_match, str):
             maybe_match = [maybe_match]
         elif isinstance(maybe_match, dict):
-            maybe_match = list(maybe_match.values())
-        # print(maybe_match)
+            if isinstance(next(iter(maybe_match)), int):
+                maybe_match = list(maybe_match.values())
+            else:
+                maybe_match = list(maybe_match.keys())
         for option in maybe_match:
+            # print(option, target)
             option_lower = re.sub(SEARCH_SUFFIX, "", option.lower())
             target = re.sub(SEARCH_SUFFIX, "", target.lower())
             if option_lower:
