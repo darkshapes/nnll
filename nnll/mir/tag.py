@@ -49,6 +49,28 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     return (cleaned_string, suffix)
 
 
+def make_scheduler_tag(series_name: str) -> tuple[str]:
+    """_summary_
+
+    :param series_name: _description_
+    :return: _description_
+    """
+    import re
+
+    comp_name = None
+    patterns = [r"Multistep", r"Solver", r"Discrete", r"Scheduler"]
+    for scheduler in patterns:
+        compiled = re.compile(scheduler)
+        match = re.search(compiled, series_name)
+        if match:
+            comp_name = match.group()
+            break
+    for pattern in patterns:
+        series_name = re.sub(pattern, "", series_name)
+    series_name.lower()
+    return series_name, comp_name
+
+
 # def tag_mlx_model(repo_path: str, class_name: str, addendum: dict) -> tuple[str]:
 #     dev_series, dev_comp = make_mir_tag("black-forest-labs/FLUX.1-dev")
 #     schnell_series, schnell_comp = make_mir_tag("black-forest-labs/FLUX.1-schnell")

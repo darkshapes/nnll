@@ -32,6 +32,7 @@ class DocParser(BaseModel):
     doc_string: str
 
     pipe_prefixes: List[str] = [
+        ">>> controlnet = ",
         ">>> motion_adapter = ",
         ">>> adapter = ",  # if this moves, also change motion_adapter check
         ">>> pipe_prior = ",
@@ -42,6 +43,8 @@ class DocParser(BaseModel):
         ">>> gen_pipe = ",
     ]
     repo_variables: List[str] = [
+        "controlnet_model",
+        "controlnet_id",
         "base_model",
         "model_id_or_path",
         "model_ckpt",

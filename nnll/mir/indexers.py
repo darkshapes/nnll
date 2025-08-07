@@ -40,6 +40,50 @@ def flag_config(transformers: bool = False, data: dict = None, **kwargs):
     # nfo(f"Unrecognized model type with {kwargs}\n" )
 
 
+def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional[Callable] = None) -> tuple[str, Dict[str, Dict[Any, Any]]]:
+    """Create a pipeline article and generate corresponding information according to the provided repo path and pipeline category\n
+    :param repo_path (str): Repository path.
+    :param model_class_obj (str): The model class function
+    :raises TypeError: If 'repo_path' or 'class_name' are not set.
+    :return: Tuple: The data structure containing mir_series and mir_comp is used for subsequent processing.
+    """
+    import diffusers  # pyright: ignore[reportMissingImports] # pylint:disable=redefined-outer-name
+
+    control_net = ["Control", "Controlnet"]  #
+    mir_prefix = "info"
+    if hasattr(diffusers, class_name):
+        model_class_obj = getattr(diffusers, class_name)
+        sub_segments = root_class(model_class_obj, "diffusers")
+        decoder = "decoder" in sub_segments
+        if repo_path in ["openai/shap-e", "kandinsky-community/kandinsky-3"]:
+            mir_prefix = "info.unet"
+        elif class_name == "MotionAdapter":
+            mir_prefix = "info.lora"
+        elif class_name == "WanPipeline":
+            mir_prefix = "info.dit"
+        elif any(maybe for maybe in control_net if maybe.lower() in class_name.lower()):
+            mir_prefix = "info.controlnet"
+        else:
+            mir_prefix = flag_config(**sub_segments)
+            if mir_prefix is None and class_name not in ["AutoPipelineForImage2Image", "DiffusionPipeline"]:
+                nfo(f"Failed to detect type for {class_name} {list(sub_segments)}\n")
+            else:
+                mir_prefix = "info." + mir_prefix
+        mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
+        mir_series = mir_prefix + "." + mir_series
+        prefixed_data = {
+            "repo": repo_path,
+            "pkg": {0: {"diffusers": class_name}},
+        }
+        if class_name == "FluxPipeline":
+            class_name = {1: {"mflux.flux.flux": "Flux1"}}
+            prefixed_data["pkg"].update(class_name)
+        elif class_name == "ChromaPipeline":
+            class_name = {1: {"chroma": "ChromaPipeline"}}
+            prefixed_data["pkg"].update(class_name)
+        return mir_series, {mir_comp: prefixed_data}
+
+
 def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
     """Generate diffusion model data for MIR index\n
     :return: Dictionary ready to be applied to MIR data fields
@@ -53,7 +97,6 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
         "HunyuanDiTPipeline": "tencent-hunyuan/hunyuandiT-v1.2-diffusers",  #  NOT hyd .ckpt
         "ChromaPipeline": "lodestones/Chroma",
     }
-
     extracted_docs = list(cut_docs())
     pipe_data = {}  # pipeline_stable_diffusion_xl_inpaint
     for code_name, file_name, docs in extracted_docs:
@@ -75,8 +118,7 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
             except TypeError:
                 pass  # Attempt 1
             if pipe_data.get(series):
-                exclude_list = ["Img2Img", "Control", "Controlnet"]  # causes issues with main repo resolution
-                if any(maybe for maybe in exclude_list if maybe.lower() in pipe_class.lower()):
+                if "Img2Img" in pipe_class.lower():
                     continue
             pipe_data.setdefault(series, {}).update(comp_data)
             if staged_class or pipe_repo in special_cases:
@@ -90,47 +132,6 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
                     continue  # Attempt 2,
                 pipe_data.setdefault(series, {}).update(comp_data)
     return dict(pipe_data)
-
-
-def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional[Callable] = None) -> tuple[str, Dict[str, Dict[Any, Any]]]:
-    """Create a pipeline article and generate corresponding information according to the provided repo path and pipeline category\n
-    :param repo_path (str): Repository path.
-    :param model_class_obj (str): The model class function
-    :raises TypeError: If 'repo_path' or 'class_name' are not set.
-    :return: Tuple: The data structure containing mir_series and mir_comp is used for subsequent processing.
-    """
-    import diffusers  # pyright: ignore[reportMissingImports] # pylint:disable=redefined-outer-name
-
-    mir_prefix = "info"
-    if hasattr(diffusers, class_name):
-        model_class_obj = getattr(diffusers, class_name)
-        sub_segments = root_class(model_class_obj, "diffusers")
-        decoder = "decoder" in sub_segments
-        if repo_path in ["openai/shap-e", "kandinsky-community/kandinsky-3"]:
-            mir_prefix = "info.unet"
-        elif class_name == "MotionAdapter":
-            mir_prefix = "info.lora"
-        elif class_name == "WanPipeline":
-            mir_prefix = "info.dit"
-        else:
-            mir_prefix = flag_config(**sub_segments)
-            if mir_prefix is None and class_name not in ["AutoPipelineForImage2Image", "DiffusionPipeline"]:
-                nfo(f"Failed to detect type for {class_name} {list(sub_segments)}\n")
-            else:
-                mir_prefix = "info." + mir_prefix
-        mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
-        mir_series = mir_prefix + "." + mir_series
-        prefixed_data = {
-            "repo": repo_path,
-            "pkg": {0: {"diffusers": class_name}},
-        }
-        if class_name == "FluxPipeline":
-            class_name = {1: {"mflux.flux.flux": "Flux1"}}
-            prefixed_data["pkg"].update(class_name)
-        elif class_name == "ChromaPipeline":
-            class_name = {1: {"chroma": "ChromaPipeline"}}
-            prefixed_data["pkg"].update(class_name)
-        return mir_series, {mir_comp: prefixed_data}
 
 
 def transformers_index():

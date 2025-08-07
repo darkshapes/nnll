@@ -15,7 +15,18 @@ flatten_map.__annotations__ = {"nested": List[str], "unpack": str}
 
 class AutoPkg:
     def __init__(self) -> None:
-        pass
+        self.skip_series = [
+            "info.lora",
+            "info.vae",
+            "ops.precision",
+            "ops.scheduler",
+            "info.encoder.tokenizer",
+            "info.controlnet",
+        ]
+        self.skip_classes = [".gligen", "imagenet64"]
+        self.skip_auto = ["AutoTokenizer", "AutoModel", "AutoencoderTiny", "AutoencoderKL", "AutoPipelineForImage2Image"]
+        self.skip_types = ["int", "bool", "float", "Optional", "NoneType", "List", "UNet2DConditionModel"]
+        self.mflux_tasks = ["Image", "Redux", "Kontext", "Depth", "Fill", "ConceptAttention", "ControlNet", "CavTon", "IC-Edit"]
 
     @staticmethod
     def show_diffusers_tasks(code_name: str, class_name: str | None = None) -> list[str]:
@@ -68,14 +79,12 @@ class AutoPkg:
         :return:A dictionary mapping series names to their respective compatibility and traced tasks.
         :rtype: dict"""
 
-        avoid_classes = [".gligen", "imagenet64"]
-        avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler", "info.encoder.tokenizer"]
         data_tuple = []
         for series, compatibility_data in mir_db.database.items():
             if (
                 series.startswith("info.")  # formatting comment
-                and not any(tag for tag in avoid_series if series.startswith(tag))
-                and not any(tag for tag in avoid_classes if tag in series)
+                and not any(tag for tag in self.skip_series if series.startswith(tag))
+                and not any(tag for tag in self.skip_classes if tag in series)
             ):
                 for compatibility, field_data in compatibility_data.items():
                     if field_data and field_data.get(field_name, {}).get("0"):
@@ -101,14 +110,12 @@ class AutoPkg:
         :rtype: dict"""
         from nnll.metadata.helpers import make_callable
 
-        avoid_classes = [".gligen", "imagenet64"]
-        avoid_series = ["info.lora", "info.vae", "ops.precision", "ops.scheduler"]
         data_tuple = []
         for series, compatibility_data in mir_db.database.items():
             if (
                 series.startswith("info.")  # formatting comment
-                and not any(series.startswith(tag) for tag in avoid_series)
-                and not any(tag for tag in avoid_classes if tag in series)
+                and not any(series.startswith(tag) for tag in self.skip_series)
+                and not any(tag for tag in self.skip_classes if tag in series)
             ):
                 for compatibility, field_data in compatibility_data.items():
                     if field_data and field_data.get(field_name, {}).get("0"):
@@ -129,14 +136,14 @@ class AutoPkg:
         :param mir_db: _description_
         :return: _description_"""
 
-        excluded_types = ["int", "bool", "float", "Optional", "NoneType", "List", "UNet2DConditionModel"]
         mir_tag: None | list[str] = None
         detected_links: dict[str, dict] = {"pipe_names": dict()}
         for pipe_role, pipe_class in pipe_args.items():
             if pipe_role in ["tokenizer", "tokenizer_2", "tokenizer_3", "tokenizer_4"]:
                 detected_links["pipe_names"].setdefault(pipe_role, ["info.encoder.tokenizer", series.rsplit(".", 1)[-1]])
                 continue
-            if not any(segment for segment in excluded_types if pipe_class.__name__ == segment):
+            if not any(segment for segment in self.skip_types if pipe_class.__name__ == segment):
+                mir_tag = None
                 detected_links["pipe_names"][pipe_role] = []
                 dbuq(f"pipe_class.__name__ {pipe_class.__name__} {pipe_class}")
                 if pipe_class.__name__ in ["Union"]:
@@ -144,32 +151,53 @@ class AutoPkg:
                     for union_class in pipe_class.__args__:
                         mir_tag = None
                         class_name = union_class.__name__
-                        if not any(segment for segment in excluded_types if class_name == segment):
-                            mir_tag = mir_db.find_tag(field="tasks", target=class_name)
-                            dbuq(f"{mir_tag} {class_name}")
+                        if not any(segment for segment in self.skip_types if class_name == segment):
+                            mir_tag, class_name = await self.tag_class(pipe_class=union_class, pipe_role=pipe_role, series=series, mir_db=mir_db)
+                            # mir_tag = mir_db.find_tag(field="tasks", target=class_name)
+                            # dbuq(f"{mir_tag} {class_name}")
                             tags_or_classes.append(mir_tag if mir_tag else class_name)
                     detected_links["pipe_names"][pipe_role].extend(tags_or_classes)
                 else:
-                    class_name = pipe_class.__name__
-                    if pipe_role == "scheduler":
-                        sub_field = pipe_class.__module__.split(".")[0]
-                        mir_tag = mir_db.find_tag(field="pkg", target=class_name, sub_field=sub_field, domain="ops.scheduler")
-                        dbuq(f"scheduler {mir_tag} {class_name} {sub_field} ")
-                    elif pipe_role == "vae":
-                        sub_field = pipe_class.__module__.split(".")[0]
-                        vae_tag = f"info.vae.{series}"
-                        if mir_db.database.get("vae_tag"):
-                            vae_suffix = next(iter(list(mir_db.database[vae_tag])))
-                            mir_tag = [vae_tag, vae_suffix]
-                        elif class_name != "AutoencoderKL":
-                            mir_tag = mir_db.find_tag(field="pkg", target=class_name, sub_field=sub_field, domain="info.vae")
-                        dbuq(f"vae {mir_tag} {class_name} {sub_field} ")
-                    else:
-                        mir_tag = mir_db.find_tag(field="tasks", target=class_name)
+                    mir_tag, class_name = await self.tag_class(pipe_class=pipe_class, pipe_role=pipe_role, series=series, mir_db=mir_db)
                     detected_links["pipe_names"][pipe_role] = mir_tag if mir_tag else [class_name]
                     mir_tag = None
                     class_name = None
         return detected_links
+
+    async def tag_class(self, pipe_class: Callable, pipe_role: str, series: str, mir_db: MIRDatabase) -> tuple[str | None]:
+        """_summary_
+
+        :param pipe_class: _description_
+        :param pipe_role: _description_
+        :param series: _description_
+        :param mir_db: _description_
+        :return: _description_
+        """
+        from nnll.mir.tag import make_scheduler_tag
+
+        mir_tag = None
+        class_name = pipe_class.__name__
+        if pipe_role == "scheduler":
+            sub_field = pipe_class.__module__.split(".")[0]
+            scheduler_series, scheduler_comp = make_scheduler_tag(class_name)
+            mir_tag = [f"ops.scheduler.{scheduler_series}", scheduler_comp]
+            if not mir_db.database.get(mir_tag[0], {}).get(mir_tag[1]):
+                mir_tag = mir_db.find_tag(field="pkg", target=class_name, sub_field=sub_field, domain="ops.scheduler")
+            dbuq(f"scheduler {mir_tag} {class_name} {sub_field} ")
+        elif pipe_role == "vae":
+            sub_field = pipe_class.__module__.split(".")[0]
+            mir_comp = series.rsplit(".", 1)[-1]
+            # print(mir_comp)
+            vae_tag = [mir_id for mir_id, comp_data in mir_db.database.items() if "info.vae" in mir_id and next(iter(comp_data)) == mir_comp]
+            if vae_tag:
+                mir_tag = [vae_tag, mir_comp]
+            elif class_name != "AutoencoderKL":
+                print(pipe_class)
+                mir_tag = mir_db.find_tag(field="pkg", target=class_name, sub_field=sub_field, domain="info.vae")
+            dbuq(f"vae {mir_tag} {class_name} {sub_field} ")
+        else:
+            mir_tag = mir_db.find_tag(field="tasks", target=class_name)
+        return mir_tag, class_name
 
     async def trace_tasks(self, pkg_tree: dict[str, str | int | list[str | int]]) -> List[str]:
         """Trace tasks for a given MIR entry.\n
@@ -184,7 +212,7 @@ class AutoPkg:
         package_name = next(iter(pkg_tree))
         class_name = pkg_tree[package_name]
         dbuq(f"{package_name}, {class_name}")
-        if class_name not in ["AutoTokenizer", "AutoModel", "AutoencoderTiny", "AutoencoderKL", "AutoPipelineForImage2Image"]:
+        if class_name not in self.skip_auto:
             if isinstance(class_name, dict):
                 class_name = next(iter(list(class_name)))
             if package_name == "transformers":
@@ -194,7 +222,7 @@ class AutoPkg:
                 preformatted_task_data = self.show_diffusers_tasks(code_name=code_name, class_name=class_name)
                 preformatted_task_data.sort()
             elif package_name == "mflux":
-                preformatted_task_data = ["Image", "Redux", "Kontext", "Depth", "Fill", "ConceptAttention", "ControlNet", "CavTon", "IC-Edit"]
+                preformatted_task_data = self.mflux_tasks
             if preformatted_task_data:
                 filtered_tasks = [task for task in preformatted_task_data for snip in snip_words if snip not in task]
                 return package_name, class_name, filtered_tasks

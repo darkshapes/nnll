@@ -137,7 +137,7 @@ def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> 
             # dbuq(f"{arch}.{series} : {comp}")
             update_nested_dict(mir_data.setdefault(comp, {}), field_data)
 
-            if series == "stable-diffusion-xl-1":
+            if series == sdxl_series:
                 for field, field_data in field_data.items():
                     if isinstance(field_data, dict):
                         for definition, sub_def_data in field_data.items():
@@ -147,7 +147,7 @@ def assimilate(mir_db: MIRDatabase, data_tuple: List[Tuple[Dict[str, any]]]) -> 
                                 update_nested_dict(mir_data[comp][field][definition], sub_def_data)
 
 
-def auto_hub(mir_db: MIRDatabase):
+def hf_pkg_to_mir(mir_db: MIRDatabase):
     """Generate MIR HF Hub model database"""
 
     from nnll.mir.indexers import diffusers_index, transformers_index
@@ -172,7 +172,7 @@ def auto_hub(mir_db: MIRDatabase):
                 # dbug(error_log)
 
 
-def auto_dtype(mir_db: MIRDatabase):
+def add_mir_dtype(mir_db: MIRDatabase):
     """Create mir info database"""
     import re
 
@@ -211,9 +211,9 @@ def auto_dtype(mir_db: MIRDatabase):
         )
 
 
-def auto_schedulers(mir_db: MIRDatabase):
+def add_mir_schedulers(mir_db: MIRDatabase):
     """Create mir info database"""
-    import re
+    from nnll.mir.tag import make_scheduler_tag
 
     try:
         from diffusers import _import_structure
@@ -221,16 +221,7 @@ def auto_schedulers(mir_db: MIRDatabase):
         for series_name in _import_structure["schedulers"]:
             if series_name != "SchedulerMixin":
                 class_name = series_name
-                patterns = [r"Multistep", r"Solver", r"Discrete", r"Scheduler"]
-                for scheduler in patterns:
-                    compiled = re.compile(scheduler)
-                    match = re.search(compiled, series_name)
-                    if match:
-                        comp_name = match.group()
-                        break
-                for pattern in patterns:
-                    series_name = re.sub(pattern, "", series_name)
-                series_name.lower()
+                series_name, comp_name = make_scheduler_tag(series_name)
                 mir_db.add(
                     mir_entry(
                         domain="ops",
@@ -248,7 +239,7 @@ def auto_schedulers(mir_db: MIRDatabase):
 # ai-forever/Real-ESRGAN
 
 
-def auto_detail(mir_db: MIRDatabase):
+def mir_update(mir_db: MIRDatabase):
     """Create mir unet info database"""
     from nnll.mir.tag import tag_pipe, tag_base_model
 
@@ -286,6 +277,34 @@ def auto_detail(mir_db: MIRDatabase):
                     "adfa260098d87616d748e3cf9c10bb2c90ff8890a84abbb2853d4aa69664070b",  # diffusers fp16
                 ],
                 "identifiers": ["logit_scale", "conditioner.embedders.0.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight", "add_embedding.linear_2.bias"],
+            },
+        ),
+        (
+            "stabilityai/stable-diffusion-xl-refiner-1.0",
+            "StableDiffusionXLImg2ImgPipeline",
+            {
+                "pkg": {
+                    1: {
+                        "diffusers": "DiffusionPipeline",
+                        "generation": {"num_inference_steps": 40, "denoising_end": 0.8},
+                    }
+                },
+                "identifiers": ["r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'"],
+                "file_256": [
+                    "54f9cd2f2daf3aeec0b2708fa3dbc0e84e4f8ddd1ddead42e5bc60c6572c989f",  # diffusers
+                    "7440042bbdc8a24813002c09b6b69b64dc90fded4472613437b7f55f9b7d9c5f",  # modelspec sai
+                    "3ea0376dcf065eaefd27806394a90e310001b1a71d4f1cf1f655e86c0e566ffe",  # fp16 diffusers
+                ],
+                "layer_b3": [
+                    "6281355dbb37e5769c9460ae0ac75506d89932e2f97b09d9ade32ecf191e75ba",
+                    "afb0639aae2eb65577c12d4a30cf7c9b3620ae63ba64a8fa632b58608c8a7a2e",
+                    "669046014b69d98ab0f6fbb59547644436e0275f8b638f467ce2a873c3313683",
+                ],
+                "layer_256": [
+                    "bb9eadbfabb52c0d8645783525a3fa70b59e9d7d09d5290d742a303262e793a2",
+                    "c5adb56fe51343af2c3d493eb9f41515c204bd91eb9f40b983d45f70a1fa3b6d",
+                    "1f838e39ed6e916258aee6990b72c09b34aa8eb3b5342234a497b8852b3df1c6",
+                ],
             },
         ),
         (
@@ -512,6 +531,7 @@ def auto_detail(mir_db: MIRDatabase):
                     "1b2170ac37156d4cf91909eb6834bb8adac84bc1fce8098a29cfb03738df84ad",  # krea diffusers
                     "4610115bb0c89560703c892c59ac2742fa821e60ef5871b33493ba544683abd7",  # modelspec sai
                     "d86a3038eacaa720682cb9b1da3c49fecf8a3ded605af4def6061eaa18903eb8",  # diffusers
+                    "b7d840eef01c27dfd72ae9143c261355a51bab3b2662263a6cb0059d55347c3d",  # qwen2
                 ],
                 "layer_b3": [
                     "261559c8eaccae558f72621804a9ee188d338e45e2c622a58db709ac190198ba",
@@ -863,17 +883,19 @@ def auto_detail(mir_db: MIRDatabase):
                     "1f48ac458d6fbd0aec53a116065a7ee3f1d34bddde544e25c16a05c9d5392b78",  # orsta 32
                     "0e85c7111ce849293e97aa09ce1172352ecece023a3ecea7ac8311e326b47f3a",  # orsta 7
                     "d725335e4ea2399be706469e4b8807716a8fa64bd03468252e9f7acf2415fee4",  # qwen img
-                    "",
+                    "e10bd9583a77250376d9134cd6b46799029dfa3b4d7989c1050b3ec149cc7cf5",  # qwen flux
                 ],
                 "layer_b3": [
                     "e4f681bde70a753f30f83495a2aa340d251bf3d818eb5a1cbe58f85fd6ea0d40",  # orsta 32
                     "47b062ce8ddb14845fb1a71d2fd88fd52a82e26561ba3eb05be057915a867775",  # orsta 7
                     "b6386f70b528ffa9e09fdd8db8a7b91a7c462ed97b06963576c6139e25fdcf31",  # qwen img
+                    "4cd449df9f9004a7e53005583a7e4cfa6de42912f03647d2ea799d489e9c1406",  # qwen flux
                 ],
                 "layer_256": [
                     "ed36a4a11c4ebebb10d1e010cb93e2e43fcaf975cd42bb6c9958537593d0d44d",  # orsta 32
                     "f7f6f64e7b6d7826400a2fc0eef942a47c47bd5914e051ad0c8cd9ff5ff7982b",  # orsta 7
                     "f341ed0f792cf0570ceb21d3b64ed14bf9875e9fcb90116851364eeed683a6ca",  # qwen img
+                    "ba031d0da78afe24ae63558ad29b8028244a7bd4750a5615dab9079fe32a5fd7",  # qwen flux
                 ],
             },
         ),
@@ -931,41 +953,9 @@ def auto_detail(mir_db: MIRDatabase):
     assimilate(mir_db, [tag_base_model(*entry) for entry in alt_details])
 
 
-def auto_supplement(mir_db: MIRDatabase):
+def add_mir_diffusion(mir_db: MIRDatabase):
     """Create MIR entries missing from the database"""
-    repo = "stabilityai/stable-diffusion-xl-refiner-1.0"
-    tag = make_mir_tag(repo)
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="unet",
-            series=tag[0],
-            comp=tag[1],
-            repo=repo,
-            file_256=[
-                "54f9cd2f2daf3aeec0b2708fa3dbc0e84e4f8ddd1ddead42e5bc60c6572c989f",  # diffusers
-                "7440042bbdc8a24813002c09b6b69b64dc90fded4472613437b7f55f9b7d9c5f",  # modelspec sai
-                "3ea0376dcf065eaefd27806394a90e310001b1a71d4f1cf1f655e86c0e566ffe",  # fp16 diffusers
-            ],
-            layer_b3=[
-                "6281355dbb37e5769c9460ae0ac75506d89932e2f97b09d9ade32ecf191e75ba",
-                "afb0639aae2eb65577c12d4a30cf7c9b3620ae63ba64a8fa632b58608c8a7a2e",
-                "669046014b69d98ab0f6fbb59547644436e0275f8b638f467ce2a873c3313683",
-            ],
-            layer_256=[
-                "bb9eadbfabb52c0d8645783525a3fa70b59e9d7d09d5290d742a303262e793a2",
-                "c5adb56fe51343af2c3d493eb9f41515c204bd91eb9f40b983d45f70a1fa3b6d",
-                "1f838e39ed6e916258aee6990b72c09b34aa8eb3b5342234a497b8852b3df1c6",
-            ],
-            identifiers=["r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'"],
-            pkg={
-                0: {
-                    "diffusers": "DiffusionPipeline",
-                    "generation": {"num_inference_steps": 40, "denoising_end": 0.8},
-                }
-            },
-        )
-    )
+
     mir_db.add(
         mir_entry(
             domain="info",
@@ -1056,28 +1046,6 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
-    repo = "OnomaAIResearch/Illustrious-Lumina-v0.03"
-    mir_db.add(
-        mir_entry(
-            domain="info",
-            arch="dit",
-            series=make_mir_tag("Alpha-VLLM/Lumina-Image-2.0")[0],
-            comp=make_mir_tag(repo)[0],
-            repo=repo,
-            file_256=[
-                "dc6cffcfb0ccfca6332ddb5d2fe25bcb5f496f44b481627f48c42626156fa6a8",  # 2b 22100 ema unified fp32
-                "2ac549741fa1c6de2d6cd8be06abcdce52d472eeae2439f948e285258b66a214",  # 0.03 ema
-            ],
-            layer_b3=[
-                "a97b4a63e1e7678e8e7154fae55252267bd1f0ba76b03dba622d801644e657ac",
-                "aa6c1b2d1971cea3c4ed0963c8d68d4c50db683f8eab9f77f60ea2d04ed6ce5c",
-            ],
-            layer_256=[
-                "39086c199b9ac296dcba53461ba1e113906d91fbc1b12556d92f5cc77ca11f9f",
-                "e51ba2ded40f1af5ca6f78c46eed8305fbd87cd6401e9d439837e10d35cc5828",
-            ],
-        )
-    )
     repo = "playgroundai/playground-v2.5-1024px-aesthetic"
     mir_db.add(
         mir_entry(
@@ -1117,7 +1085,7 @@ def auto_supplement(mir_db: MIRDatabase):
             domain="info",
             arch="unet",
             series=sdxl_series,
-            comp=vega_comp,
+            comp=make_mir_tag(repo)[0],
             repo=repo,
             file_256=[
                 "94762e983e5942056be73c5c1d4464b8ffa1ada500b4fef1267550e2447953ce",  # modelspec sai
@@ -1136,39 +1104,37 @@ def auto_supplement(mir_db: MIRDatabase):
             ],
         )
     )
-
     repo = "segmind/Segmind-SSD-1B"
-    (
-        mir_db.add(
-            mir_entry(
-                domain="info",
-                arch="unet",
-                series=sdxl_series,
-                comp=ssd_series,
-                repo=repo,
-                file_256=[
-                    "7cb406ec0662e91570a79f3c4fb8f0ea5325bffe6af5d9382edae838698f72bd",  # modelspec sai
-                    "1895a00bfc769a00b0c0c43a95e433e79e9db8a85402b45a33e8448785bde94d",  # a1111 aio
-                    "0bf1ce6b065a6b969ab02dc8e8fa21eb20ee189b10935c49ce68c77a7e432c1c",
-                    "02ed8ebd0ed55aec686fcf20946d7a1659a31f9f8d9c3798cd254ba6b67434ca",  # diffusers
-                    "40d8ea9159f3e875278dacc7879442d58c45850cf13c62f5e26681061c51829a",  # diffusers fp16
-                ],
-                layer_b3=[
-                    "c074dc38e8ec836816b91cbcc2ca17f80d6106de8d196d416ef9a27c8837ee45",  # modelspec sai
-                    "1d6c0216da57fe98e7ad29e9653566725f5b2a87845fdbdcda257b3be817b5f4",  # a1111 aio
-                    "c074dc38e8ec836816b91cbcc2ca17f80d6106de8d196d416ef9a27c8837ee45",
-                    "89f86d9c846495870416b4945b6a46a517f28405e5bab666feb4057f012340be",
-                    "535b47e9b70da6494878ca6d45af3f2e201b7f17748432911c12232e586855e6",
-                ],
-                layer_256=[
-                    "52267d5d327a2ba92c7a14261a9d081df621b8366819b1bb3a47d130523a813c",
-                    "b365a3631c6c74532f3a571c84c68e088be35496d35be1e932031713ddd2a2f4",
-                    "52267d5d327a2ba92c7a14261a9d081df621b8366819b1bb3a47d130523a813c",
-                    "89f86d9c846495870416b4945b6a46a517f28405e5bab666feb4057f012340be",
-                    "535b47e9b70da6494878ca6d45af3f2e201b7f17748432911c12232e586855e6",
-                ],
-            )
-        ),
+
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="unet",
+            series=sdxl_series,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            file_256=[
+                "7cb406ec0662e91570a79f3c4fb8f0ea5325bffe6af5d9382edae838698f72bd",  # modelspec sai
+                "1895a00bfc769a00b0c0c43a95e433e79e9db8a85402b45a33e8448785bde94d",  # a1111 aio
+                "0bf1ce6b065a6b969ab02dc8e8fa21eb20ee189b10935c49ce68c77a7e432c1c",
+                "02ed8ebd0ed55aec686fcf20946d7a1659a31f9f8d9c3798cd254ba6b67434ca",  # diffusers
+                "40d8ea9159f3e875278dacc7879442d58c45850cf13c62f5e26681061c51829a",  # diffusers fp16
+            ],
+            layer_b3=[
+                "c074dc38e8ec836816b91cbcc2ca17f80d6106de8d196d416ef9a27c8837ee45",  # modelspec sai
+                "1d6c0216da57fe98e7ad29e9653566725f5b2a87845fdbdcda257b3be817b5f4",  # a1111 aio
+                "c074dc38e8ec836816b91cbcc2ca17f80d6106de8d196d416ef9a27c8837ee45",
+                "89f86d9c846495870416b4945b6a46a517f28405e5bab666feb4057f012340be",
+                "535b47e9b70da6494878ca6d45af3f2e201b7f17748432911c12232e586855e6",
+            ],
+            layer_256=[
+                "52267d5d327a2ba92c7a14261a9d081df621b8366819b1bb3a47d130523a813c",
+                "b365a3631c6c74532f3a571c84c68e088be35496d35be1e932031713ddd2a2f4",
+                "52267d5d327a2ba92c7a14261a9d081df621b8366819b1bb3a47d130523a813c",
+                "89f86d9c846495870416b4945b6a46a517f28405e5bab666feb4057f012340be",
+                "535b47e9b70da6494878ca6d45af3f2e201b7f17748432911c12232e586855e6",
+            ],
+        )
     )
     repo = "shuttleai/shuttle-3.1-aesthetic"
     mir_db.add(
@@ -1250,30 +1216,6 @@ def auto_supplement(mir_db: MIRDatabase):
                 "3942e6a52dbb0abaf63b031d9c4eda0df47576b51d4c81361978a3dc27b1309e",  # mlx 0
             ],
         )
-    )
-    repo = "Zuellni/snac-24khz-ST"
-    series, comp = make_mir_tag(repo)
-    (
-        mir_db.add(
-            mir_entry(
-                domain="info",
-                arch="gan",
-                series=series,
-                comp=comp,
-                repo=repo,
-                pkg={
-                    0: {
-                        "snac": "SNAC",
-                    },
-                    "1": {
-                        "mlx_audio": "tts.generate.generate_audio",
-                    },
-                },
-                file_256=["e61ae2f638f56ee07a37592cd5a6a9e7d642560ddc78a76ee4a7f96d6922f1be", "973ee1be4032319fd9685ec54eee1b93e79c7bc98c786e67f17c04669714f11d"],
-                layer_b3=["18307b00460a64cc4893f9061592ce8d7e15b70fc54065cc8ae0f0155381ec46", "d599b1bb36dee3cee4674b7922fcd69e5ec05b74413f611d21cfdfdf8f9b6119"],
-                layer_256=["35ba9aa1feb931010559a178fcac243673d2efdd1396a4b69d406c9853a88300", "5a22c4707ed6c928043f23b59f2d102a579db3a9af41cf6e60d7c3958f182841"],
-            )
-        ),
     )
     repo = "shuttleai/shuttle-jaguar"
     mir_db.add(
@@ -1428,6 +1370,28 @@ def auto_supplement(mir_db: MIRDatabase):
             layer_256=[""],
         ),
     )
+    repo = "OnomaAIResearch/Illustrious-Lumina-v0.03"
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series=make_mir_tag("Alpha-VLLM/Lumina-Image-2.0")[0],
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            file_256=[
+                "dc6cffcfb0ccfca6332ddb5d2fe25bcb5f496f44b481627f48c42626156fa6a8",  # 2b 22100 ema unified fp32
+                "2ac549741fa1c6de2d6cd8be06abcdce52d472eeae2439f948e285258b66a214",  # 0.03 ema
+            ],
+            layer_b3=[
+                "a97b4a63e1e7678e8e7154fae55252267bd1f0ba76b03dba622d801644e657ac",
+                "aa6c1b2d1971cea3c4ed0963c8d68d4c50db683f8eab9f77f60ea2d04ed6ce5c",
+            ],
+            layer_256=[
+                "39086c199b9ac296dcba53461ba1e113906d91fbc1b12556d92f5cc77ca11f9f",
+                "e51ba2ded40f1af5ca6f78c46eed8305fbd87cd6401e9d439837e10d35cc5828",
+            ],
+        )
+    )
     mir_db.add(
         mir_entry(
             domain="ops",
@@ -1460,7 +1424,7 @@ def auto_supplement(mir_db: MIRDatabase):
     # fusion / united / universal
 
 
-def auto_text(mir_db: MIRDatabase):
+def add_mir_llm(mir_db: MIRDatabase):
     from nnll.mir.tag import make_mir_tag, tag_base_model
 
     mir_prefix, base_series, base_comp = tag_base_model(repo_path="meta/chameleon-7B", class_name="ChameleonModel")
@@ -1655,7 +1619,7 @@ def auto_text(mir_db: MIRDatabase):
     )
 
 
-def auto_audio(mir_db: MIRDatabase):
+def add_mir_audio(mir_db: MIRDatabase):
     """Create MIR audio modality entries"""
     repo = "facebook/audiogen-medium"
     series, comp = make_mir_tag(repo)
@@ -1697,6 +1661,30 @@ def auto_audio(mir_db: MIRDatabase):
                 },
             },
         )
+    )
+    repo = "Zuellni/snac-24khz-ST"
+    series, comp = make_mir_tag(repo)
+    (
+        mir_db.add(
+            mir_entry(
+                domain="info",
+                arch="gan",
+                series=series,
+                comp=comp,
+                repo=repo,
+                pkg={
+                    0: {
+                        "snac": "SNAC",
+                    },
+                    "1": {
+                        "mlx_audio": "tts.generate.generate_audio",
+                    },
+                },
+                file_256=["e61ae2f638f56ee07a37592cd5a6a9e7d642560ddc78a76ee4a7f96d6922f1be", "973ee1be4032319fd9685ec54eee1b93e79c7bc98c786e67f17c04669714f11d"],
+                layer_b3=["18307b00460a64cc4893f9061592ce8d7e15b70fc54065cc8ae0f0155381ec46", "d599b1bb36dee3cee4674b7922fcd69e5ec05b74413f611d21cfdfdf8f9b6119"],
+                layer_256=["35ba9aa1feb931010559a178fcac243673d2efdd1396a4b69d406c9853a88300", "5a22c4707ed6c928043f23b59f2d102a579db3a9af41cf6e60d7c3958f182841"],
+            )
+        ),
     )
     repo = "parler-tts/parler-tts-large-v1"
     series, comp = make_mir_tag(repo)
@@ -1842,7 +1830,7 @@ def auto_audio(mir_db: MIRDatabase):
     )
 
 
-def auto_lora(mir_db: MIRDatabase):
+def add_mir_lora(mir_db: MIRDatabase):
     """Create MIR lora entries"""
     mir_db.add(
         mir_entry(
@@ -2255,13 +2243,15 @@ def auto_lora(mir_db: MIRDatabase):
     )
 
 
-def auto_taesd(mir_db: MIRDatabase):
-    """Create MIR VAE missing from the dtabase"""
+def add_mir_vae(mir_db: MIRDatabase):
+    from nnll.mir.tag import make_mir_tag
+
+    """Create MIR VAE missing from the database"""
     mir_db.add(
         mir_entry(
             domain="info",
             arch="vae",
-            series="taesd",
+            series="tae",
             comp=sd3_series,
             repo="madebyollin/taesd3",
             pkg={0: {"diffusers": "AutoencoderTiny"}},
@@ -2272,7 +2262,7 @@ def auto_taesd(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series="taesd",
+            series="tae",
             comp=sdxl_series,
             repo="madebyollin/taesdxl",
             pkg={0: {"diffusers": "AutoencoderTiny"}},
@@ -2283,7 +2273,7 @@ def auto_taesd(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series="taesd",
+            series="tae",
             comp=sd1_series,
             repo="madebyollin/taesd",
             pkg={0: {"diffusers": "AutoencoderTiny"}},
@@ -2294,25 +2284,20 @@ def auto_taesd(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series="taesd",
-            comp=dev_comp,
+            series="tae",
+            comp=dev_series,
             repo="madebyollin/taef1 ",
             pkg={0: {"diffusers": "AutoencoderTiny"}},
             file_256=["927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"],
         )
     )
-
-
-def auto_vae(mir_db: MIRDatabase):
-    from nnll.mir.tag import make_mir_tag
-
     series, comp = make_mir_tag("Qwen/Qwen-Image")
     mir_db.add(
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLQwenImage"},
@@ -2328,7 +2313,6 @@ def auto_vae(mir_db: MIRDatabase):
             ],
         )
     )
-
     series, comp = make_mir_tag("Wan-AI/Wan2.1-I2V-14B-480P-Diffusers")
     sr_series_t2v, _ = make_mir_tag("Skywork/SkyReels-V2-T2V-14B-720P-Diffusers")
     sr_series_i2v, _ = make_mir_tag("Skywork/SkyReels-V2-I2V-14B-720P-Diffusers")
@@ -2336,8 +2320,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="wan",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLWan"},
@@ -2360,7 +2344,7 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
+            series="wan",
             comp=sr_series_t2v,
             # no repo here, may conflict
             file_256=[],
@@ -2372,7 +2356,7 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
+            series="wan",
             comp=sr_series_i2v,
             # no repo here, may conflict
             file_256=[],
@@ -2385,8 +2369,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLLTXVideo"},
@@ -2401,8 +2385,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLAllegro"},
@@ -2419,8 +2403,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="cogvideox",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLCogVideoX"},
@@ -2434,7 +2418,7 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
+            series="cogvideox",
             comp=series_fun,
             # no repo here, may conflict
             file_256=[],
@@ -2446,7 +2430,7 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
+            series="cogvideox",
             comp=series_wish,
             # no repo here, may conflict
             file_256=[],
@@ -2459,8 +2443,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLCosmos"},
@@ -2475,8 +2459,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLMagvit"},
@@ -2491,13 +2475,15 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLHunyuanVideo"},
             },
-            file_256=[],
+            file_256=[
+                "95d1fc707c1421ccd88ea542838ab4c5d45a5babb48205bac9ce0985525f9818",  # pt,
+            ],
             layer_b3=[],
             layer_256=[],
         )
@@ -2507,8 +2493,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLMochi"},
@@ -2523,8 +2509,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="dc",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderDC"},
@@ -2539,8 +2525,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="oobleck",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderOobleck"},
@@ -2555,8 +2541,8 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=series,
-            comp=comp,
+            series="kl",
+            comp=series,
             # no repo here, may conflict
             pkg={
                 0: {"diffusers": "AutoencoderKLTemporalDecoder"},
@@ -2570,7 +2556,7 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=sdxl_series,
+            series="kl",
             comp=sdxl_series,
             repo="madebyollin/sdxl-vae-fp16-fix",
             pkg={
@@ -2603,7 +2589,7 @@ def auto_vae(mir_db: MIRDatabase):
         mir_entry(
             domain="info",
             arch="vae",
-            series=dev_series,
+            series="kl",
             comp=make_mir_tag(repo)[0],
             # no repo here, may conflict
             pkg={
@@ -2621,30 +2607,59 @@ def auto_vae(mir_db: MIRDatabase):
             ],
         )
     )
-    (
-        mir_db.add(
-            mir_entry(
-                domain="info",
-                arch="vae",
-                series=dev_series,
-                comp=dev_comp,
-                # no repo here, may conflict
-                pkg={
-                    0: {"diffusers": "AutoencoderKL"},
-                },
-                file_256=[
-                    "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",  # dev
-                    "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",  # dev diffusers
-                ],
-                layer_b3=[
-                    "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
-                    "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
-                ],
-                layer_256=[
-                    "7950e4f3897c75affaa5f9f3c51c88b4d9a27bfd9b05ad41c3f71d8c1c620b89",
-                    "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # diffusers
-                    "8f084dc91fd5b481875bc9c86a4ef05e5f176896b7d31c6a5c2ce45c2e174004",  # dev diffusers
-                ],
-            )
-        ),
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="kl",
+            comp=dev_series,
+            # no repo here, may conflict
+            pkg={
+                0: {"diffusers": "AutoencoderKL"},
+            },
+            file_256=[
+                "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",  # dev
+                "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",  # dev diffusers
+            ],
+            layer_b3=[
+                "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
+                "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
+            ],
+            layer_256=[
+                "7950e4f3897c75affaa5f9f3c51c88b4d9a27bfd9b05ad41c3f71d8c1c620b89",
+                "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # diffusers
+                "8f084dc91fd5b481875bc9c86a4ef05e5f176896b7d31c6a5c2ce45c2e174004",  # dev diffusers
+            ],
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="kl",
+            comp=sd1_series,
+            pkg={
+                0: {"diffusers": "AutoencoderKL"},
+            },
+            file_256=[
+                "0b204ad0cae549e0a7e298d803d57e36363760dec71c63109c1da3e1147ec520",  # ckpt ema original ema pruned
+                "95f26a5ab04779d5467d1fcecaf93160ffa523afe399b835b3e1bb77ff2d937a",  # safetensors ema original ema pruned
+                "32db726da04f06c1b6b14c0043ce115cc87a501482945c5add89a40d838fcb46",  # safetensors ema diffusers
+                "c6a580b13a5bc05a5e16e4dbb80608ff2ec251a162311590c1f34c013d7f3dab",  # ckpt mse original ema pruned
+                "735e4c3a447a3255760d7f86845f09f937809baa529c17370d83e4c3758f3c75",  # safetensors mse original ema pruned
+                "a1d993488569e928462932c8c38a0760b874d166399b14414135bd9c42df5815",  # safetensors mse diffusers
+            ],
+            layer_b3=[
+                "82e2dc440a23d78bb91df8c9fce069a8512da51f8f54ea29e3431f545808171e",  # safetensors ema original ema pruned
+                "2230487833925a104bee96e7ecfebaa4c3c43cc426c7a5b863f2584313dd4833",  # safetensors ema diffusers
+                "82e2dc440a23d78bb91df8c9fce069a8512da51f8f54ea29e3431f545808171e",  # safetensors mse original ema pruned
+                "2230487833925a104bee96e7ecfebaa4c3c43cc426c7a5b863f2584313dd4833",  # safetensors mse diffusers
+            ],
+            layer_256=[
+                "e43f3a227b5ecb43a6272fa92ed6011d2e9abcadadd1032dfa7ea7f875f9d5bd",  # safetensors ema original ema pruned
+                "2494154245becf98891be884f943276aa3f54e9b3f0ea1042903fc15fba488f3",  # safetensors ema diffusers
+                "e43f3a227b5ecb43a6272fa92ed6011d2e9abcadadd1032dfa7ea7f875f9d5bd",  # safetensors mse original  ema pruned
+                "2494154245becf98891be884f943276aa3f54e9b3f0ea1042903fc15fba488f3",  # safetensors mse diffusers
+            ],
+        )
     )
