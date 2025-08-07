@@ -4,6 +4,7 @@
 from typing import List, Optional, Tuple
 
 from pydantic import BaseModel, field_validator
+from nnll.monitor.file import dbuq
 
 nfo = print
 
@@ -102,7 +103,7 @@ class DocParser(BaseModel):
                 staged_class = None
 
             if pipe_class:
-                nfo(f"class :{pipe_class}, repo : {pipe_repo}, staged_class: {staged_class}, staged_repo:{staged_repo} \n")
+                dbuq(f"class :{pipe_class}, repo : {pipe_repo}, staged_class: {staged_class}, staged_repo:{staged_repo} \n")
                 return DocParseData(pipe_class=pipe_class, pipe_repo=pipe_repo, staged_class=staged_class, staged_repo=staged_repo)
 
     def _extract_class_and_repo(

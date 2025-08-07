@@ -27,7 +27,6 @@ license_name: MPL-2.0 + Commons Clause 1.0
 * :shipit: <br><br>
 
 [![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](nnll/actions/workflows/nnll.yml) <br>
-[![Python application test status](https://github.com/darkshapes/nnll/actions/workflows/nnll.yml/badge.svg)](nnll/actions/workflows/nnll.yml) <br>
 ![commits per month](https://img.shields.io/github/commit-activity/m/darkshapes/nnll?color=indigo)<br>
 ![code size](https://img.shields.io/github/languages/code-size/darkshapes/nnll?color=navy)<br>
 [<img src="https://img.shields.io/discord/1266757128249675867?color=5865F2">](https://discord.gg/VVn9Ku74Dk)<br>
@@ -36,7 +35,11 @@ license_name: MPL-2.0 + Commons Clause 1.0
 
 ## Quick Guide
 
-### mir-add
+### Install
+
+### Run
+
+#### mir-add
 ```
 usage: mir-add --domain info --arch lora --series slam --compatibility sd1_series \
         -k {'repo':'alimama-creative/slam-sd1.5', 'pkg':{0: {'diffusers': 'load_lora_weights'}}}
@@ -61,7 +64,7 @@ MIR Class attributes:
 ```
 [A link to example output of the `mir-add` command](nnll/mir/config/mir.json)
 
-### mir-maid
+#### mir-maid
 ```
 usage: mir-maid
 
@@ -77,7 +80,7 @@ Output:
 ```
 [A link to example output of the `mir-maid` command](nnll/mir/config/mir.json)
 
-### mir-pipe
+#### mir-pipe
 
 ```
 usage: mir-pipe
@@ -95,7 +98,7 @@ Output:
 ```
 [A link to example output of the `mir-pipe` command](nnll/mir/config/mir.json)
 
-### mir-tasks
+#### mir-tasks
 ```
 usage: mir-tasks
 
@@ -112,7 +115,7 @@ Output:
 ```
 [A link to example output of the `mir-tasks` command](nnll/mir/config/mir.json)
 
-### nnll-autocard
+#### nnll-autocard
 ```
 usage: nnll-autocard black-forest-labs/FLUX.1-Krea-dev -u exdysa -f FLUX.1-Krea-dev-MLX -l mlx -q 8
 
@@ -142,7 +145,7 @@ options:
 ```
 [A link to example output of the `nnll-autocard` command](https://huggingface.co/exdysa/shuttle-3.1-aesthetic-MLX-Q8/blob/main/README.md)
 
-### nnll-autohash
+#### nnll-autohash
 ```
 usage: nnll-autohash [-h] repo
 
@@ -156,7 +159,7 @@ options:
 ```
 [A link to example output of the `nnll-autohash` command](https://huggingface.co/darkshapes/MIR/blob/main/layer_hash/b3_layerPhi-4-mini-instruct_20250727154025.json)
 
-### nnll-hash
+#### nnll-hash
 ```
 usage: nnll-hash '~/Downloads/models/'
 
@@ -176,7 +179,7 @@ options:
 ```
 [A link to an output of the `nnll-hash` command](https://huggingface.co/darkshapes/MIR/blob/main/layer_hash/b3_layer_0725.json)
 
-### nnll-layer
+#### nnll-layer
 ```
 usage: nnll-layer adaln
 
@@ -196,7 +199,7 @@ Output:
                     INFO     ('./flash-pixart-a.safetensors.json', {'shape': [64, 256], 'tensors': 587})
 ```
 
-### nnll-meta
+#### nnll-meta
 ```
 usage: nnll-meta ~/Downloads/models/images -s ~Downloads/models/metadata
 
@@ -217,17 +220,10 @@ Valid input formats: ['.pth', '.ckpt', '.onnx', '.pt', '.pickletensor', '.safete
 ```
 [A link to example output of the `nnll-meta` command](https://huggingface.co/darkshapes/MIR/blob/main/layer_data/chroma-unlocked-v46.safetensors.json)
 
-
-Each module contains 1-5 functions or 1-2 classes and its own test routines. There are multiple ways to integrate nnll into a project (sorted by level of involvement)
-
-    Install the entire project as a dependency via nnll @ git+https://github.com/darkshapes/nnll
-    Basic clone or fork of the project
-    Use a submodule
-    Filter a clone of the project to a single subfolder and include it in your own
+### [Detailed instructions :](https://github.com/darkshapes/sdbx/wiki/Develop)
 
 Discussion topics, issue requests, reviews, and code updates are encouraged. Build with us! Talk to us in [our Discord](https://discord.gg/VVn9Ku74Dk)!
 
-### [installation instructions link](https://github.com/darkshapes/sdbx/wiki/Develop)
 <br>
 <!--
 ![Alt](https://repobeats.axiom.co/api/embed/13fd2c53953a777ae8583f620fa8bd014baadef1.svg "Repobeats analytics image") -->

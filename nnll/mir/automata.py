@@ -876,8 +876,23 @@ def mir_update(mir_db: MIRDatabase):
             },
         ),
         (
+            "Qwen/Qwen3-15B-A2B",
+            "Qwen3MoeModel",
+            {
+                "file_256": [
+                    "c56947057481fb5e7cdf766e442da81717b34addc88bbe8f3728fd25bd03cbae",  # qwen3 coder 53 a35
+                ],
+                "layer_b3": [
+                    "d2d1e0875202f5c9c84c781a2105620250733bd01832f67b2c17bc981d1eb508"  # qwen3 coder 53 a35
+                ],
+                "layer_256": [
+                    "408c01da57c4968b7b0e36d98a74e321153e7aeb058fea63ffd140e323526476",  # qwen3 coder 53 a35
+                ],
+            },
+        ),
+        (
             "Qwen/Qwen2-VL-7B-Instruct",
-            "Qwen2_5_VLModel",
+            "Qwen2VLTextModel",
             {
                 "file_256": [
                     "1f48ac458d6fbd0aec53a116065a7ee3f1d34bddde544e25c16a05c9d5392b78",  # orsta 32
@@ -896,21 +911,6 @@ def mir_update(mir_db: MIRDatabase):
                     "f7f6f64e7b6d7826400a2fc0eef942a47c47bd5914e051ad0c8cd9ff5ff7982b",  # orsta 7
                     "f341ed0f792cf0570ceb21d3b64ed14bf9875e9fcb90116851364eeed683a6ca",  # qwen img
                     "ba031d0da78afe24ae63558ad29b8028244a7bd4750a5615dab9079fe32a5fd7",  # qwen flux
-                ],
-            },
-        ),
-        (
-            "Qwen/Qwen3-8B",
-            "Qwen3Model",
-            {
-                "file_256": [
-                    "c56947057481fb5e7cdf766e442da81717b34addc88bbe8f3728fd25bd03cbae",  # qwen3 coder 53 a35
-                ],
-                "layer_b3": [
-                    "d2d1e0875202f5c9c84c781a2105620250733bd01832f67b2c17bc981d1eb508"  # qwen3 coder 53 a35
-                ],
-                "layer_256": [
-                    "408c01da57c4968b7b0e36d98a74e321153e7aeb058fea63ffd140e323526476",  # qwen3 coder 53 a35
                 ],
             },
         ),
@@ -1427,13 +1427,13 @@ def add_mir_diffusion(mir_db: MIRDatabase):
 def add_mir_llm(mir_db: MIRDatabase):
     from nnll.mir.tag import make_mir_tag, tag_base_model
 
-    mir_prefix, base_series, base_comp = tag_base_model(repo_path="meta/chameleon-7B", class_name="ChameleonModel")
+    base_arch, base_series, base_comp = tag_base_model(repo_path="meta/chameleon-7B", class_name="ChameleonModel")
     repo = "Alpha-VLLM/Lumina-mGPT-7B-1024"
     series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
             domain="info",
-            arch=mir_prefix,
+            arch=base_arch,
             series=base_series,
             comp=series,
             repo=repo,
@@ -1604,13 +1604,13 @@ def add_mir_llm(mir_db: MIRDatabase):
             ],
         )
     )
-    mir_prefix, base_series, base_comp = tag_base_model(repo_path="Qwen/Qwen2-7B-beta", class_name="Qwen2Model")
+    base_arch, base_series, base_comp = tag_base_model(repo_path="Qwen/Qwen2-7B-beta", class_name="Qwen2Model")
     repo = "ByteDance-Seed/BAGEL-7B-MoT"
     series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
             domain="info",
-            arch="aet",
+            arch=base_arch,
             series=base_series,
             comp=series,
             repo=repo,

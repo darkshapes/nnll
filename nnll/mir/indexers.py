@@ -11,13 +11,12 @@ from nnll.mir.doc_parser import parse_docs
 from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
 from nnll.mir.mappers import cut_docs
 from nnll.mir.tag import make_mir_tag
-from nnll.tensor_pipe.deconstructors import root_class
-from nnll.monitor.file import dbug
+from nnll.tensor_pipe.deconstructors import get_code_names, root_class
+from nnll.monitor.file import dbug  # as nfo
 
 if "pytest" in sys.modules:
     import diffusers  # noqa # pyright:ignore[reportMissingImports] # pylint:disable=unused-import
-
-nfo = print
+from nnll.monitor.console import nfo
 
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
 
@@ -143,7 +142,7 @@ def transformers_index():
     import transformers
 
     from nnll.mir.mappers import stock_llm_data
-    from transformers.models.auto.tokenization_auto import tokenizer_class_from_name
+    from transformers.models.auto.tokenization_auto import TOKENIZER_MAPPING_NAMES
 
     corrections: dict[dict[str, str | dict[str, list[str]]]] = {  # models with incorrect repos or config
         "BarkModel": {
@@ -191,9 +190,11 @@ def transformers_index():
         },
         "TimmWrapperModel": {
             "repo_path": "timm/resnet18.a1_in1k",
-            "sub_segments": {
-                "_resnet_": [""],
-            },
+            "sub_segments": {"_resnet_": [""]},
+        },
+        "FunnelModel": {
+            "repo_path": "funnel-transformer/small",
+            "sub_segments": {"separate_cls": [""]},
         },
     }
 
@@ -228,20 +229,27 @@ def transformers_index():
                 continue
             else:
                 mir_prefix = "info." + mir_prefix
-            mir_suffix, mir_comp = list(make_mir_tag(repo_path))
+            code_name = get_code_names(class_name)
+            # if the repo == "small" then it gets stripped from the title in this very old model
+            mir_suffix, mir_comp = list(make_mir_tag(repo_path)) if code_name != "funnel" else ["funnel", "*"]
             mir_series = mir_prefix + "." + mir_suffix
-            tokenizer_class = tokenizer_class_from_name(class_name)
-            mir_data.get("info.encoder.tokenizer", mir_data.setdefault("info.encoder.tokenizer", {})).update(
-                {
-                    mir_suffix: {
-                        "pkg": {
-                            0: {
-                                "transformers": f"{tokenizer_class.__module__}.{tokenizer_class.__name__}",
-                            },
-                        }
-                    }
-                },
-            )
+            tokenizer_classes = TOKENIZER_MAPPING_NAMES.get(code_name)
+            tk_pkg = {}
+            if tokenizer_classes:
+                index = 0
+                for tokenizer in tokenizer_classes:
+                    if tokenizer:
+                        tokenizer_class = make_callable(tokenizer, "transformers")
+                        tk_pkg.setdefault(index, {"transformers": f"{tokenizer_class.__module__}.{tokenizer_class.__name__}"})
+                        index += 1
+                if tk_pkg:
+                    mir_data.get("info.encoder.tokenizer", mir_data.setdefault("info.encoder.tokenizer", {})).update(
+                        {
+                            mir_suffix: {
+                                "pkg": tk_pkg,
+                            }
+                        },
+                    )
             mir_data.setdefault(
                 mir_series,
                 {

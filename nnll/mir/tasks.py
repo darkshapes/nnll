@@ -187,12 +187,12 @@ class AutoPkg:
         elif pipe_role == "vae":
             sub_field = pipe_class.__module__.split(".")[0]
             mir_comp = series.rsplit(".", 1)[-1]
-            # print(mir_comp)
+            dbuq(mir_comp)
             vae_tag = [mir_id for mir_id, comp_data in mir_db.database.items() if "info.vae" in mir_id and next(iter(comp_data)) == mir_comp]
             if vae_tag:
                 mir_tag = [vae_tag, mir_comp]
             elif class_name != "AutoencoderKL":
-                print(pipe_class)
+                dbuq(pipe_class)
                 mir_tag = mir_db.find_tag(field="pkg", target=class_name, sub_field=sub_field, domain="info.vae")
             dbuq(f"vae {mir_tag} {class_name} {sub_field} ")
         else:
