@@ -134,11 +134,14 @@ def class_to_mir_tag(mir_db: Dict[str, str], code_name: str) -> Optional[str]:
                     return [series, compatibility]
 
                 class_name = MODEL_MAPPING_NAMES.get(code_name, False)
-                if not class_name:
-                    return None
+                if not class_name:  # second pass without separators
+                    recoded_mapping = {code.replace("-", "").replace("_", ""): model for code, model in MODEL_MAPPING_NAMES.items()}
+                    class_name = recoded_mapping.get(code_name, False)
+                    if not class_name:
+                        return None
                 pkg_data = field_data.get("pkg")
                 if pkg_data:
-                    for index_num, pkg_type_data in pkg_data.items():
+                    for _, pkg_type_data in pkg_data.items():
                         maybe_class = pkg_type_data.get("transformers")
                         if maybe_class == class_name:
                             return [series, compatibility]
