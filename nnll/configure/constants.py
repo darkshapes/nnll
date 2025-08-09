@@ -263,5 +263,5 @@ class ListOfDelineatedStr(BaseModel):
 
 
 BREAKING_SUFFIX = r".*(?:-)(prior)$|.*(?:-)(diffusers)$|.*[_-](\d{3,4}px|-T2V$|-I2V$)"
-PARAMETERS_SUFFIX = r"(\d{1,3}[KkMmBb]|[._-]\d+[\._-]\d+[Bb][._-]).*?$"
+PARAMETERS_SUFFIX = r"(\d{1,4}[KkMmBb]|[._-]\d+[\._-]\d+[Bb][._-]).*?$"
 SEARCH_SUFFIX = r"\d+[._-]?\d+[BbMmKk](it)?|[._-]\d+[BbMmKk](it)?"

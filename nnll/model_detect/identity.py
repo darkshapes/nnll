@@ -83,17 +83,22 @@ class ModelIdentity:
         :return: A list of found tags; if no matches are found, returns None"""
 
         from nnll.mir.tag import class_to_mir_tag
+        from nnll.monitor.file import dbuq
 
-        print(repo_id)
+        dbuq(repo_id)
+        if any(char for char in [":", "\\", "/"] if char in repo_id):
+            repo_folder = os.path.basename(repo_id).lower().rsplit(":", 1)[0]
         match_order = {  # ordered by most likely to match
             "HUB": [
                 lambda: self.label_model_layers(repo_id, cue_type, repo_obj),
                 lambda: self.find_tag(field="repo", target=repo_id),
                 lambda: class_to_mir_tag(self.mir_db, base_model) if base_model else None,
+                lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,
                 lambda: self.label_model_class(repo_id),
             ],
             "OLLAMA": [
                 lambda: class_to_mir_tag(self.mir_db, base_model) if base_model else None,
+                lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,
                 lambda: self.label_model_class(repo_id),
                 lambda: self.label_model_layers(repo_id, cue_type, repo_obj),
                 lambda: self.find_tag(field="repo", target=repo_id),

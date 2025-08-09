@@ -14,7 +14,6 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
     :param repo_path: Typical remote source repo path, A URL without domain
     :return: The assembled mir tag with compatibility pre-separated"""
     import re
-    import os
 
     # print(repo_title)
 
@@ -50,24 +49,26 @@ def make_mir_tag(repo_title: str, decoder=False, data: dict = None) -> List[str]
 
 
 def make_scheduler_tag(series_name: str) -> tuple[str]:
-    """_summary_
+    """Create a mir label from a scheduler operation\n
+    :param class_name: Known period-separated prefix and model type
+    :return: The assembled mir tag with compatibility pre-separated"""
 
-    :param series_name: _description_
-    :return: _description_
-    """
     import re
 
     comp_name = None
-    patterns = [r"Multistep", r"Solver", r"Discrete", r"Scheduler"]
+    patterns = [r"Schedulers", r"Multistep", r"Solver", r"Discrete", r"Scheduler"]
     for scheduler in patterns:
         compiled = re.compile(scheduler)
         match = re.search(compiled, series_name)
         if match:
             comp_name = match.group()
+            comp_name = comp_name.lower()
             break
     for pattern in patterns:
         series_name = re.sub(pattern, "", series_name)
     series_name.lower()
+    # if not comp_name:
+    #     comp_name = "*"
     return series_name, comp_name
 
 
@@ -134,11 +135,14 @@ def class_to_mir_tag(mir_db: Dict[str, str], code_name: str) -> Optional[str]:
                     return [series, compatibility]
 
                 class_name = MODEL_MAPPING_NAMES.get(code_name, False)
-                if not class_name:
-                    return None
+                if not class_name:  # second pass without separators
+                    recoded_mapping = {code.replace("-", "").replace("_", ""): model for code, model in MODEL_MAPPING_NAMES.items()}
+                    class_name = recoded_mapping.get(code_name, False)
+                    if not class_name:
+                        return None
                 pkg_data = field_data.get("pkg")
                 if pkg_data:
-                    for index_num, pkg_type_data in pkg_data.items():
+                    for _, pkg_type_data in pkg_data.items():
                         maybe_class = pkg_type_data.get("transformers")
                         if maybe_class == class_name:
                             return [series, compatibility]

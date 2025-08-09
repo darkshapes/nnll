@@ -167,6 +167,7 @@ Documentation = "https://github.com/darkshapes/sdbx/wiki"
 
 [project.scripts]
 mir-add       = "nnll.mir.mir:main"
+mir-autopipe  = "nnll.download.autopipe:main"
 mir-maid      = "nnll.mir.maid:main"
 mir-tasks     = "nnll.mir.tasks:main"
 mir-pipe      = "nnll.mir.tasks:pipe"

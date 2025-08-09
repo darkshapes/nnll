@@ -131,15 +131,15 @@ class AutoPkg:
         return data_tuple
 
     async def hyperlink_to_mir(self, pipe_args: dict, series: str, mir_db: MIRDatabase):
-        """_summary_\n
-        :param pipe_args: _description_
-        :param mir_db: _description_
-        :return: _description_"""
+        """Maps pipeline components to MIR tags/IDs based on class names and roles.\n
+        :param pipe_args: Dictionary of pipeline roles to their corresponding classes
+        :param mir_db: MIRDatabase instance for querying tags/IDs
+        :return: Dictionary mapping pipeline roles to associated MIR tags/IDs"""
 
         mir_tag: None | list[str] = None
         detected_links: dict[str, dict] = {"pipe_names": dict()}
         for pipe_role, pipe_class in pipe_args.items():
-            if pipe_role in ["tokenizer", "tokenizer_2", "tokenizer_3", "tokenizer_4"]:
+            if pipe_role in ["tokenizer", "tokenizer_2", "tokenizer_3", "tokenizer_4", "prior_tokenizer"]:
                 detected_links["pipe_names"].setdefault(pipe_role, ["info.encoder.tokenizer", series.rsplit(".", 1)[-1]])
                 continue
             if not any(segment for segment in self.skip_types if pipe_class.__name__ == segment):
@@ -165,19 +165,18 @@ class AutoPkg:
         return detected_links
 
     async def tag_class(self, pipe_class: Callable, pipe_role: str, series: str, mir_db: MIRDatabase) -> tuple[str | None]:
-        """_summary_
+        """Maps a class to MIR tags/IDs based on its name and role.\n
+        :param pipe_class: Class to be mapped
+        :param pipe_role: Role of the class in the pipeline
+        :param series: Series identifier for the component
+        :param mir_db: MIRDatabase instance for querying tags/IDs
+        :return: Tuple containing MIR tag and class name"""
 
-        :param pipe_class: _description_
-        :param pipe_role: _description_
-        :param series: _description_
-        :param mir_db: _description_
-        :return: _description_
-        """
         from nnll.mir.tag import make_scheduler_tag
 
         mir_tag = None
         class_name = pipe_class.__name__
-        if pipe_role == "scheduler":
+        if pipe_role in ["scheduler", "image_noising_scheduler", "prior_scheduler"]:
             sub_field = pipe_class.__module__.split(".")[0]
             scheduler_series, scheduler_comp = make_scheduler_tag(class_name)
             mir_tag = [f"ops.scheduler.{scheduler_series}", scheduler_comp]
@@ -240,7 +239,7 @@ def main(mir_db: MIRDatabase = None):
             formatter_class=argparse.RawTextHelpFormatter,
             description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
             usage="mir-tasks",
-            epilog="Should be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+            epilog="Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
         )
         parser.parse_args()
 
@@ -265,7 +264,7 @@ def pipe(mir_db: MIRDatabase = None):
             formatter_class=argparse.RawTextHelpFormatter,
             description="Infer pipe components from Diffusers library and attach them to an existing MIR database.\nOffline function.",
             usage="mir-pipe",
-            epilog="Should be used after `mir-tasks`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+            epilog="Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
         )
         parser.parse_args()
 

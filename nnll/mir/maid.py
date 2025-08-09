@@ -162,23 +162,8 @@ class MIRDatabase:
             return None
 
 
-def main(mir_db: Callable = MIRDatabase()) -> None:
+def main(mir_db: Callable = MIRDatabase(), remake_off: bool = False) -> None:
     """Build the database"""
-    from sys import modules as sys_modules
-
-    if "pytest" not in sys_modules:  #
-        import argparse
-
-        nfo = print
-        parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawTextHelpFormatter,
-            description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
-            usage="mir-maid",
-            epilog="""Output:
-            2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
-            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
-        )
-        parser.parse_args()
 
     from nnll.integrity import ensure_path
     from nnll.mir.automata import (
@@ -193,13 +178,37 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
         add_mir_vae,
     )
     from nnll.monitor.console import nfo
+    from sys import modules as sys_modules
 
+    if __name__ != "__main__" and "pytest" not in sys_modules:  #
+        import argparse
+        from nnll.monitor.console import nfo
+
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
+            usage="mir-maid",
+            epilog="""Includes `mir-task` and `mir-pipe` by default. Output:
+            2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
+            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
+        )
+        parser.add_argument(
+            "-r",
+            "--remake_off",
+            action="store_true",
+            default=False,
+            help="Don't erase and remake the MIR database (default: False)",
+        )
+
+        args = parser.parse_args()
+        remake_off = args.remake_off
     try:
         os.remove(MIR_PATH_NAMED)
     except (FileNotFoundError, OSError) as error_log:
         nfo(f"MIR file not found before write, regenerating... {error_log}")
     ensure_path(folder_path_named=os.path.dirname(MIR_PATH_NAMED), file_name=os.path.basename(MIR_PATH_NAMED))
-    mir_db.database = {}
+    if not remake_off:
+        mir_db.database = {}
     hf_pkg_to_mir(mir_db)
     add_mir_dtype(mir_db)
     add_mir_schedulers(mir_db)
@@ -214,6 +223,57 @@ def main(mir_db: Callable = MIRDatabase()) -> None:
 
 if __name__ == "__main__":
     import sys
+    from sys import modules as sys_modules
+
+    remake_off = False
+    tasks_off = False
+    pipes_off = False
+    if "pytest" not in sys_modules:  #
+        import argparse
+        from nnll.monitor.console import nfo
+
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
+            usage="mir-maid",
+            epilog="""Includes `mir-task` and `mir-pipe` by default. Output:
+            2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
+            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
+        )
+        parser.add_argument(
+            "-r",
+            "--remake_off",
+            action="store_true",
+            default=False,
+            help="Don't erase and remake the MIR database (default: False)",
+        )
+        parser.add_argument(
+            "-t",
+            "--tasks_off",
+            action="store_true",
+            default=False,
+            help="Don't append task information to the MIR database (default: False)",
+        )
+        parser.add_argument(
+            "-p",
+            "--pipes_off",
+            action="store_true",
+            default=False,
+            help="Don't append pipeline information to the MIR database (default: False)",
+        )
+
+        args = parser.parse_args()
+        remake_off = args.remake_off
+        tasks_off = args.tasks_off
+        pipes_off = args.tasks_off
 
     sys.path.append(os.getcwd())
-    main()
+    main(remake_off=remake_off)
+    if not tasks_off:
+        from nnll.mir.tasks import main
+
+        main()
+    if not pipes_off:
+        from nnll.mir.tasks import pipe
+
+        pipe()

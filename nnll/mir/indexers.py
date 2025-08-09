@@ -11,8 +11,8 @@ from nnll.mir.doc_parser import parse_docs
 from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
 from nnll.mir.mappers import cut_docs
 from nnll.mir.tag import make_mir_tag
-from nnll.tensor_pipe.deconstructors import get_code_names, root_class
 from nnll.monitor.file import dbug  # as nfo
+from nnll.tensor_pipe.deconstructors import get_code_names, root_class
 
 if "pytest" in sys.modules:
     import diffusers  # noqa # pyright:ignore[reportMissingImports] # pylint:disable=unused-import
@@ -21,12 +21,52 @@ from nnll.monitor.console import nfo
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
 
 
+def check_migrations(repo_path: str):
+    """Replaces old organization names in repository paths with new ones.\n
+    :param repo_path: Original repository path containing old organization names
+    :return: Updated repository path with new organization names"""
+    org_migration: dict[str, str] = {
+        "/helium-2b": "/helium-1-2b",
+        "allenai/Olmo2-7B-1124-hf": "allenai/Olmo-2-1124-7B",
+        "apple/mobilevitv2-1.0": "apple/mobilevitv2-1.0-imagenet1k-256",
+        "caidas/swin2SR-classical-sr-x2-64": "caidas/swin2SR-classical-sr-x2-64",
+        "facebook/hiera-base-224": "facebook/hiera-base-224-hf",
+        "facebook/sam_hq-vit-huge": "syscv-community/sam-hq-vit-huge",
+        "facebook/vit_msn_base": "facebook/vit-msn-base",
+        "facebook/wav2vec2-bert-rel-pos-large": "facebook/w2v-bert-2.0",
+        "google/gemma-3-4b": "google/gemma-3-4b-it",
+        "google/gemma2-7b": "google/gemma-2-9b",
+        "google/gemma3_text-7b": " google/gemma-3-12b-it",
+        "IDEA-Research/dab_detr-base": "IDEA-Research/dab-detr-resnet-50",
+        "LGAI-EXAONE/EXAONE-4.0-Instruct": "LGAI-EXAONE/EXAONE-4.0-32B",
+        "meta/chameleon-7B'": "facebook/chameleon-7b",
+        "mixtralai/Mixtral-8x7B": "mistralai/Mixtral-8x7B-v0.1",
+        "paligemma-hf/paligemma-2b": "google/paligemma2-3b-mix-224",
+        "pixtral-hf/pixtral-9b": "mistralai/Pixtral-12B-Base-2409",
+        "Qwen/Qwen2-7B-beta": "Qwen/Qwen2-7B",
+        "Qwen/Qwen3-15B-A2B": "Qwen/Qwen3-30B-A3B",
+        "s-JoL/Open-Llama-V1": "openlm-research/open_llama_3b",
+        "Salesforce/instruct-blip-flan-t5": "Salesforce/instructblip-flan-t5-xl",
+        "state-spaces/mamba2-2.8b": "AntonV/mamba2-2.7b-hf",
+        "ibm-fms/FalconH1-9.8b-2.2T-hf": "tiiuae/Falcon-H1-34B-Instruct",
+        "nvidia/nemotron-3-8b-base-4k-hf": "mgoin/nemotron-3-8b-chat-4k-sft-hf",
+        "THUDM/": "zai-org/",
+        "THUDM/GLM-4-100B-A10B": "zai-org/GLM-4.5-Air",
+        "zai-org/GLM-4-100B-A10B": "zai-org/GLM-4.5-Air",
+    }
+    for old_name, new_name in org_migration.items():
+        if old_name in repo_path:
+            repo_path = repo_path.replace(old_name, new_name)
+    # print(repo_path)
+    return repo_path
+
+
 @TEMPLATE_FILE.decorator
 def flag_config(transformers: bool = False, data: dict = None, **kwargs):
     """Set type of MIR prefix depending on model type\n
     :param transformers: Use transformers data instead of diffusers data, defaults to False
     :raises ValueError: Model type not detected
-    :return: _description_"""
+    :return: MIR prefix based on model configuration"""
 
     if transformers:
         flags = data["arch"]["transformer"]  # pylint:disable=unsubscriptable-object
@@ -54,8 +94,11 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
         model_class_obj = getattr(diffusers, class_name)
         sub_segments = root_class(model_class_obj, "diffusers")
         decoder = "decoder" in sub_segments
-        if repo_path in ["openai/shap-e", "kandinsky-community/kandinsky-3"]:
+        if repo_path in ["kandinsky-community/kandinsky-3"]:
             mir_prefix = "info.unet"
+        if repo_path in ["openai/shap-e"]:
+            mir_prefix = "info.unet"
+            class_name = "ShapEPipeline"
         elif class_name == "MotionAdapter":
             mir_prefix = "info.lora"
         elif class_name == "WanPipeline":
@@ -70,6 +113,7 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
                 mir_prefix = "info." + mir_prefix
         mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
         mir_series = mir_prefix + "." + mir_series
+        repo_path = check_migrations(repo_path)
         prefixed_data = {
             "repo": repo_path,
             "pkg": {0: {"diffusers": class_name}},
@@ -140,9 +184,9 @@ def transformers_index():
     import re
 
     import transformers
+    from transformers.models.auto.tokenization_auto import TOKENIZER_MAPPING_NAMES
 
     from nnll.mir.mappers import stock_llm_data
-    from transformers.models.auto.tokenization_auto import TOKENIZER_MAPPING_NAMES
 
     corrections: dict[dict[str, str | dict[str, list[str]]]] = {  # models with incorrect repos or config
         "BarkModel": {
@@ -154,7 +198,7 @@ def transformers_index():
             "sub_segments": {"encoder_layers": [""], "decoder_layers": [""]},
         },
         "GptOssModel": {
-            "repo_path": "openai/gpt-oss",
+            "repo_path": "openai/gpt-oss-120b",
         },
         "GraniteModel": {
             "repo_path": "ibm-granite/granite-3.3-2b-base",
@@ -231,6 +275,7 @@ def transformers_index():
                 mir_prefix = "info." + mir_prefix
             code_name = get_code_names(class_name)
             # if the repo == "small" then it gets stripped from the title in this very old model
+            repo_path = check_migrations(repo_path)
             mir_suffix, mir_comp = list(make_mir_tag(repo_path)) if code_name != "funnel" else ["funnel", "*"]
             mir_series = mir_prefix + "." + mir_suffix
             tokenizer_classes = TOKENIZER_MAPPING_NAMES.get(code_name)
@@ -255,7 +300,10 @@ def transformers_index():
                 {
                     mir_comp: {
                         "repo": repo_path,
-                        "pkg": {0: {"transformers": class_name}},
+                        "pkg": {
+                            0: {"transformers": class_name},
+                            1: {"mlx_lm": "load"},
+                        },
                     },
                 },
             )
@@ -265,6 +313,7 @@ def transformers_index():
 def mlx_repo_capture(base_repo: str = "mlx-community"):
     import os
     import re
+
     import mlx_audio
 
     result = {}

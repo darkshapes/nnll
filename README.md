@@ -37,7 +37,38 @@ license_name: MPL-2.0 + Commons Clause 1.0
 
 ### Install
 
-### Run
+Install [uv](https://github.com/astral-sh/uv#installation), then run these terminal commands
+- >
+  >```
+  > git clone https://github.com/darkshapes/nnll
+  > cd nnll
+  > uv sync --group dev
+  > ```
+
+### Use
+
+Enter a terminal and activate the python environment in
+- >
+  > Linux/Macos:
+  > ```
+  > source .venv/bin/activate
+  > ```
+
+  > Windows Powershell:
+  > ```
+  > Set-ExecutionPolicy Bypass -Scope Process -Force; .venv\Scripts\Activate.ps1
+  > ```
+
+Available terminal commands:<br>
+- <A href="#mir-add">`mir-add`</a>
+- <A href="#mir-maid">`mir-maid`</a>
+- <A href="#mir-tasks">`mir-tasks`</a>
+- <A href="#mir-pipe">`mir-pipe`</a>
+- <A href="#nnll-autocard">`nnll-autocard`</a>
+- <A href="#nnll-autohash">`nnll-autohash`</a>
+- <A href="#nnll-hash">`nnll-hash`</a>
+- <A href="#nnll-layer">`nnll-layer`</a>
+- <A href="#nnll-meta">`nnll-meta`</a>
 
 #### mir-add
 ```
@@ -72,13 +103,31 @@ Build a custom MIR model database from the currently installed system environmen
 Offline function.
 
 options:
-  -h, --help  show this help message and exit
+  -h, --help        show this help message and exit
+  -r, --remake_off  Don't erase and remake the MIR database (default: False)
 
-Output:
-        2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
-        2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)
+Includes `mir-task` and `mir-pipe` if ran using `python -m nnll.mir.maid` . Output:
+            2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
+            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)
 ```
 [A link to example output of the `mir-maid` command](nnll/mir/config/mir.json)
+
+#### mir-tasks
+```
+usage: mir-tasks
+
+Scrape the task classes from currently installed libraries and attach them to an existing MIR database.
+Offline function.
+
+options:
+  -h, --help  show this help message and exit
+
+Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.
+
+Output:
+    INFO     ('Wrote #### lines to MIR database file.',)
+```
+[A link to example output of the `mir-tasks` command](nnll/mir/config/mir.json)
 
 #### mir-pipe
 
@@ -91,29 +140,12 @@ Offline function.
 options:
   -h, --help  show this help message and exit
 
-Should be used after `mir-tasks`.
+Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.
 
 Output:
     INFO     ('Wrote #### lines to MIR database file.',)
 ```
 [A link to example output of the `mir-pipe` command](nnll/mir/config/mir.json)
-
-#### mir-tasks
-```
-usage: mir-tasks
-
-Scrape the task classes from currently installed libraries and attach them to an existing MIR database.
-Offline function.
-
-options:
-  -h, --help  show this help message and exit
-
-Should be used after `mir-maid`.
-
-Output:
-    INFO     ('Wrote #### lines to MIR database file.',)
-```
-[A link to example output of the `mir-tasks` command](nnll/mir/config/mir.json)
 
 #### nnll-autocard
 ```

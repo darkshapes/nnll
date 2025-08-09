@@ -79,15 +79,20 @@ def test_find_tag_truncated_6(mock_test_database):
 
 
 def test_find_qwen_2_vl(mock_test_database):
-    result = mock_test_database.find_tag(field="repo", target="Qwen/Qwen2-VL-7B-Instruct")
+    result = mock_test_database.find_tag(field="repo", target="Qwen/Qwen2-VL-7B-Instruct", domain="info.vit")
     assert result == ["info.vit.qwen2-vl", "*"]
 
 
 def test_find_qwen_2_vl_2(mock_test_database):
-    result = mock_test_database.find_tag(field="repo", target="Qwen/Qwen2-VL-Instruct".lower(), domain="info.")
-    assert result == ["info.vit.qwen2-vl", "*"]  # would prefer to be this
+    result = mock_test_database.find_tag(field="repo", target="Qwen/Qwen2-VL-Instruct".lower(), domain="info.vit")
+    assert result == ["info.vit.qwen2-vl", "*"]
 
 
 def test_grade_similar_fail_again(mock_test_database):
     result = mock_test_database.find_tag(field="task", target="UMT5EncoderModel")
     assert result is None
+
+
+def test_find_gpt_oss(mock_test_database):
+    result = mock_test_database.find_tag(field="repo", target="openai/gpt-oss-120b".lower(), domain="info.moe")
+    assert result == ["info.moe.gpt-oss", "*"]
