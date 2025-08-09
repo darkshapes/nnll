@@ -8,7 +8,9 @@ from typing import Any, Callable, Dict, List, Optional
 
 from nnll.metadata.helpers import make_callable
 from nnll.mir.doc_parser import parse_docs
-from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
+from nnll.mir.json_cache import TEMPLATE_PATH_NAMED, JSONCache, MODES_PATH_NAMED
+
+# pylint:disable=no-name-in-module
 from nnll.mir.mappers import cut_docs
 from nnll.mir.tag import make_mir_tag
 from nnll.monitor.file import dbug  # as nfo
@@ -19,6 +21,7 @@ if "pytest" in sys.modules:
 from nnll.monitor.console import nfo
 
 TEMPLATE_FILE = JSONCache(TEMPLATE_PATH_NAMED)
+MODE_DATA = JSONCache(MODES_PATH_NAMED)
 
 
 def check_migrations(repo_path: str):
@@ -36,7 +39,7 @@ def check_migrations(repo_path: str):
         "facebook/wav2vec2-bert-rel-pos-large": "facebook/w2v-bert-2.0",
         "google/gemma-3-4b": "google/gemma-3-4b-it",
         "google/gemma2-7b": "google/gemma-2-9b",
-        "google/gemma3_text-7b": " google/gemma-3-12b-it",
+        "google/gemma3_text-7b": "google/gemma-3-12b-it",
         "IDEA-Research/dab_detr-base": "IDEA-Research/dab-detr-resnet-50",
         "LGAI-EXAONE/EXAONE-4.0-Instruct": "LGAI-EXAONE/EXAONE-4.0-32B",
         "meta/chameleon-7B'": "facebook/chameleon-7b",
@@ -59,6 +62,22 @@ def check_migrations(repo_path: str):
             repo_path = repo_path.replace(old_name, new_name)
     # print(repo_path)
     return repo_path
+
+
+# @MODE_DATA.decorator
+# def add_mode_types(mir_tag: list[str], data: dict | None = None) -> dict[str, list[str] | str]:
+#     """_summary_\n
+#     :param mir_tag: _description_
+#     :param data: _description_, defaults to None
+#     :return: _description_"""
+#     fused_tag = ".".join(mir_tag)
+
+#     mir_details = {
+#         "mode": data.get(fused_tag, {}).get("pipeline_tag"),
+#         "pkg_type": data.get(fused_tag, {}).get("library_type"),
+#         "tags": data.get(fused_tag, {}).get("tags"),
+#     }
+#     return mir_details
 
 
 @TEMPLATE_FILE.decorator
@@ -114,16 +133,12 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
         mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
         mir_series = mir_prefix + "." + mir_series
         repo_path = check_migrations(repo_path)
+        # modalities = add_mode_types(mir_tag=[mir_series, mir_comp])
         prefixed_data = {
             "repo": repo_path,
             "pkg": {0: {"diffusers": class_name}},
+            # "mode": modalities.get("mode"),
         }
-        if class_name == "FluxPipeline":
-            class_name = {1: {"mflux.flux.flux": "Flux1"}}
-            prefixed_data["pkg"].update(class_name)
-        elif class_name == "ChromaPipeline":
-            class_name = {1: {"chroma": "ChromaPipeline"}}
-            prefixed_data["pkg"].update(class_name)
         return mir_series, {mir_comp: prefixed_data}
 
 
@@ -274,12 +289,16 @@ def transformers_index():
             else:
                 mir_prefix = "info." + mir_prefix
             code_name = get_code_names(class_name)
-            # if the repo == "small" then it gets stripped from the title in this very old model
-            repo_path = check_migrations(repo_path)
-            mir_suffix, mir_comp = list(make_mir_tag(repo_path)) if code_name != "funnel" else ["funnel", "*"]
+            if code_name != "funnel":
+                mir_suffix, mir_comp = list(make_mir_tag(repo_path))
+            else:
+                mir_suffix, mir_comp = ["funnel", "*"]
             mir_series = mir_prefix + "." + mir_suffix
-            tokenizer_classes = TOKENIZER_MAPPING_NAMES.get(code_name)
+            # modalities = add_mode_types(mir_tag=[mir_series, mir_comp])
+            repo_path = check_migrations(repo_path)
             tk_pkg = {}
+            tokenizer_classes = TOKENIZER_MAPPING_NAMES.get(code_name)
+            # mode = modalities.get("mode")
             if tokenizer_classes:
                 index = 0
                 for tokenizer in tokenizer_classes:
@@ -302,8 +321,8 @@ def transformers_index():
                         "repo": repo_path,
                         "pkg": {
                             0: {"transformers": class_name},
-                            1: {"mlx_lm": "load"},
                         },
+                        # "mode": mode,
                     },
                 },
             )
