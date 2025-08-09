@@ -20,7 +20,7 @@ sd1_series, sd1_comp = make_mir_tag("stable-diffusion-v1-5/stable-diffusion-v1-5
 sdxl_series, sdxl_comp = make_mir_tag("stabilityai/stable-diffusion-xl-base-1.0")
 dev_series, dev_comp = make_mir_tag("black-forest-labs/FLUX.1-dev")
 schnell_series, schnell_comp = make_mir_tag("black-forest-labs/FLUX.1-schnell")
-ssd_series, ssd_comp = make_mir_tag("segmind/Segmind-SSD-1B")
+ssd_series, ssd_comp = make_mir_tag("segmind/SSD-1B")
 vega_series, vega_comp = make_mir_tag("segmind/Segmind-Vega")
 sd3_series, sd3_comp = make_mir_tag("stable-diffusion-3")
 
@@ -215,24 +215,42 @@ def add_mir_schedulers(mir_db: MIRDatabase):
     """Create mir info database"""
     from nnll.mir.tag import make_scheduler_tag
 
-    try:
-        from diffusers import _import_structure
+    # from nnll.tensor_pipe.parenting import seek_class_path
+    from importlib import import_module
 
-        for series_name in _import_structure["schedulers"]:
-            if series_name != "SchedulerMixin":
-                class_name = series_name
-                series_name, comp_name = make_scheduler_tag(series_name)
-                mir_db.add(
-                    mir_entry(
-                        domain="ops",
-                        arch="scheduler",
-                        series=series_name,
-                        comp=comp_name.lower(),
-                        pkg={0: {"diffusers": class_name}},
-                    )
+    from diffusers import _import_structure
+
+    for class_name in _import_structure["schedulers"]:
+        if class_name != "SchedulerMixin":
+            series_name, comp_name = make_scheduler_tag(class_name)
+            class_obj = import_module("diffusers.schedulers")
+            class_path = getattr(class_obj, class_name).__module__
+            class_path = class_obj.__module__
+            mir_db.add(
+                mir_entry(
+                    domain="ops",
+                    arch="scheduler",
+                    series=series_name,
+                    comp=comp_name.lower(),
+                    pkg={0: {"diffusers": class_name}},
                 )
-    except (ImportError, ModuleNotFoundError):  # as error_log:
-        pass  # dbug(error_log)
+            )
+
+    class_name = "KarrasDiffusionSchedulers"
+    series_name, comp_name = make_scheduler_tag(class_name)
+    class_obj = import_module("diffusers.schedulers.scheduling_utils")
+    class_path = getattr(class_obj, class_name).__module__
+    mir_db.add(
+        mir_entry(
+            domain="ops",
+            arch="scheduler",
+            series=series_name,
+            comp=comp_name,
+            pkg={
+                0: {"diffusers": class_name},
+            },
+        ),
+    )
 
 
 # def auto_gan etc etc
@@ -740,7 +758,6 @@ def mir_update(mir_db: MIRDatabase):
             },
         ),
     ]
-
     alt_details = [
         (
             "google-t5/t5-small",
@@ -915,7 +932,7 @@ def mir_update(mir_db: MIRDatabase):
             },
         ),
         (
-            "openai/gpt-oss",
+            "openai/gpt-oss-120b",
             "GptOssModel",
             {
                 "file_256": [
@@ -1104,7 +1121,7 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             ],
         )
     )
-    repo = "segmind/Segmind-SSD-1B"
+    repo = "segmind/SSD-1B"
 
     mir_db.add(
         mir_entry(
@@ -1145,7 +1162,7 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             comp=make_mir_tag(repo)[0],
             repo=repo,
             pkg={
-                0: {
+                2: {
                     "diffusers": "DiffusionPipeline",
                     "generation": {"guidance_scale": 3.5, "num_inference_steps": 4},
                 }
@@ -1173,7 +1190,7 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             comp=make_mir_tag(repo)[0],
             repo=repo,
             pkg={
-                0: {
+                2: {
                     "diffusers": "DiffusionPipeline",
                     "generation": {"guidance_scale": 3.5, "num_inference_steps": 4},
                 }
@@ -1226,7 +1243,7 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             comp=make_mir_tag(repo)[0],
             repo=repo,
             pkg={
-                0: {
+                2: {
                     "diffusers": "DiffusionPipeline",
                     "generation": {"guidance_scale": 3.5, "num_inference_steps": 4},
                 }
@@ -1427,7 +1444,7 @@ def add_mir_diffusion(mir_db: MIRDatabase):
 def add_mir_llm(mir_db: MIRDatabase):
     from nnll.mir.tag import make_mir_tag, tag_base_model
 
-    base_arch, base_series, base_comp = tag_base_model(repo_path="meta/chameleon-7B", class_name="ChameleonModel")
+    base_arch, base_series, base_comp = tag_base_model(repo_path="facebook/chameleon-7b", class_name="ChameleonModel")
     repo = "Alpha-VLLM/Lumina-mGPT-7B-1024"
     series, comp = make_mir_tag(repo)
     mir_db.add(
@@ -1561,7 +1578,7 @@ def add_mir_llm(mir_db: MIRDatabase):
             comp=comp,
             repo=repo,
             pkg={
-                0: {"transformers": "CLIPModel", "stage_2": {"transformers": "AutoTokenizer"}},
+                0: {"transformers": "CLIPModel"},
             },
             file_256=[
                 "036e6e2bd49697511f4f8b8cb5ee465f93025f7a69a145eadeb9a881ace9b18d",
@@ -1590,7 +1607,7 @@ def add_mir_llm(mir_db: MIRDatabase):
             comp=comp,
             repo=repo,
             pkg={
-                0: {"transformers": "AutoModel", "stage_2": {"transformers": "AutoTokenizer"}},
+                0: {"transformers": "AutoModel"},
             },
             file_256=[
                 "0054d03310248928fdabdeef3fdc753170218dc49a1e9eb5f98323e27683f654",  # kolors
@@ -1654,10 +1671,7 @@ def add_mir_audio(mir_db: MIRDatabase):
             pkg={
                 0: {
                     "parler_tts": "ParlerTTSForConditionalGeneration",
-                    "stage_2": {
-                        "transformers": "AutoTokenizer",
-                        "generation": {"return_tensors": "pt"},
-                    },
+                    "generation": {"return_tensors": "pt"},
                 },
             },
         )
@@ -1698,11 +1712,8 @@ def add_mir_audio(mir_db: MIRDatabase):
             pkg={
                 0: {
                     "parler_tts": "ParlerTTSForConditionalGeneration",
-                    "stage_2": {
-                        "transformers": "AutoTokenizer",
-                        "generation": {"return_tensors": "pt"},
-                    },
-                }
+                    "generation": {"return_tensors": "pt"},
+                },
             },
         )
     )
@@ -2286,7 +2297,7 @@ def add_mir_vae(mir_db: MIRDatabase):
             arch="vae",
             series="tae",
             comp=dev_series,
-            repo="madebyollin/taef1 ",
+            repo="madebyollin/taef1",
             pkg={0: {"diffusers": "AutoencoderTiny"}},
             file_256=["927f7de7f11bbd3b2d5ce402e608d97a7649e0921a9601995b044e8efc81e449"],
         )

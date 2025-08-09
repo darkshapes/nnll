@@ -135,8 +135,7 @@ def identify_model(database: dict[dict | list | str | int], unknown: str) -> str
 async def compare_hash_values(hash_values: dict):
     """Orchestrate process to determine model identifiers.\n
     :param hash_values: known hash values
-    :param data: _description_
-    :return: _description_"""
+    :return: a MIR tag of the model with the given hash, or None if not found"""
     from tqdm.auto import tqdm
 
     data = read_json_file(os.path.join(os.path.dirname(__file__), "hashes.json"))
@@ -190,5 +189,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
     main()

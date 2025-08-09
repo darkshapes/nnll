@@ -108,9 +108,9 @@ def first_available(processor: str = None, assign: bool = True, clean: bool = Fa
     :param processor: Name of an existing processing device, defaults to None (autodetect)
     :param assign: Direct torch to use the detected device, defaults to True
     :param clean: Clear any previous cache, defaults to False
-    :param init: _description_, defaults to True
+    :param init: Initialize the device with a test tensor and discard, defaults to True\n
     :return: The torch device handler, or the name of the processor
-    :return: _description_
+
     """
     from functools import reduce
 

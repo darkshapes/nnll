@@ -91,3 +91,8 @@ def test_find_qwen_2_vl_2(mock_test_database):
 def test_grade_similar_fail_again(mock_test_database):
     result = mock_test_database.find_tag(field="task", target="UMT5EncoderModel")
     assert result is None
+
+
+def test_find_gpt_oss(mock_test_database):
+    result = mock_test_database.find_tag(field="repo", target="openai/gpt-oss-120b".lower(), domain="info.moe")
+    assert result == ["info.moe.gpt-oss", "*"]

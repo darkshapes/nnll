@@ -4,6 +4,47 @@
 from nnll.metadata.save_generation import write_to_disk
 
 
+def generate_mlx_lm():
+    from mlx_lm import load, generate
+    import mlx.core as mx  # vlm
+    from mlx_vlm import load, generate  # vlm
+    from mlx_vlm.prompt_utils import apply_chat_template  # vlm
+    from mlx_vlm.utils import load_config  # vlm
+
+    model_path = ""
+    model, processor = load(model_path)  # vl
+    config = load_config(model_path)  # vlm_vision
+    config = model.config  # vlm audio
+
+    # image = ["http://images.cocodataset.org/val2017/000000039769.jpg"]  # vlm
+    # audio = ["/path/to/audio1.wav", "/path/to/audio2.mp3"]  # vlm audio
+    # image = [Image.open("...")] can also be used with PIL.Image.Image objects
+    prompt = ""
+
+    messages = [{"role": "user", "content": prompt}]  # lm
+    prompt = processor.apply_chat_template(
+        messages,
+    )  # lm
+    formatted_prompt = apply_chat_template(
+        prompt,
+        # add_generation_prompt=True lm
+        # processor, vlm
+        # config, vlm
+        # num_images=len(image), #vision
+        # num_audios = len(audio) #audio
+    )
+
+    output = generate(
+        model,
+        processor,
+        formatted_prompt,
+        # image,
+        # audio=audio,
+        verbose=False,
+    )
+    print(output)
+
+
 def generate_mflux():
     from mflux.flux.flux import Flux1
     from mflux.config.config import Config
