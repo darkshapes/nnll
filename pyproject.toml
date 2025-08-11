@@ -92,15 +92,15 @@ dev = [
 mps = [
     "nnll[openai]", # , chroma]",
     # most of these version specifics a direct result of mlx-audio reqs
-    "mlx-vlm<=0.1.26",
-    "mlx-lm<=0.24.1",
-    "mlx-audio;  sys_platform == 'darwin'",
+    "mlx-vlm<=0.1.26 ; sys_platform == 'darwin'",
+    "mlx-lm<=0.24.1 ; sys_platform == 'darwin'",
+    "mlx-audio; sys_platform == 'darwin'",
     "numpy<=2.2",
     "misaki>=0.8.2 ; python_version < '3.13' and sys_platform == 'darwin'",
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version > '3.12' and sys_platform == 'darwin'",
     "pip>=25.0.1",
     #the exceptions
-    "mflux>=0.2.1",
+    "mflux>=0.2.1 ; sys_platform == 'darwin'",
 ]
 cu126 = ["nnll[triton]"]
 cu128 = ["nnll[triton,attention]"]

@@ -2585,7 +2585,7 @@ def add_mir_vae(mir_db: MIRDatabase):
             layer_b3=[
                 "bd5b356b509814025a9cf692710b87116d4fcd0e30a8232ed1db133e908d0e74",  # modelspec sai
                 "9106380403dee83238af63ff1738396d2fdff9f6d78d0d9c1d0bf770ae4294d0",  # diffusers
-                "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
+                # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
                 "50e65a628b5fe379798d8956e4a4e1d4b105c84b329f088d577f7f28c22abc49",  # diffusers fp16
             ],
             layer_256=[
@@ -2633,7 +2633,7 @@ def add_mir_vae(mir_db: MIRDatabase):
                 "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",  # dev diffusers
             ],
             layer_b3=[
-                "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
+                # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
                 "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
             ],
             layer_256=[
@@ -2688,16 +2688,12 @@ def add_mir_vae(mir_db: MIRDatabase):
                 "a1d993488569e928462932c8c38a0760b874d166399b14414135bd9c42df5815",  # safetensors mse diffusers
             ],
             layer_b3=[
-                "82e2dc440a23d78bb91df8c9fce069a8512da51f8f54ea29e3431f545808171e",  # safetensors ema original ema pruned
-                "2230487833925a104bee96e7ecfebaa4c3c43cc426c7a5b863f2584313dd4833",  # safetensors ema diffusers
-                "82e2dc440a23d78bb91df8c9fce069a8512da51f8f54ea29e3431f545808171e",  # safetensors mse original ema pruned
-                "2230487833925a104bee96e7ecfebaa4c3c43cc426c7a5b863f2584313dd4833",  # safetensors mse diffusers
+                "82e2dc440a23d78bb91df8c9fce069a8512da51f8f54ea29e3431f545808171e",  # safetensors original
+                "2230487833925a104bee96e7ecfebaa4c3c43cc426c7a5b863f2584313dd4833",  # safetensors diffusers
             ],
             layer_256=[
-                "e43f3a227b5ecb43a6272fa92ed6011d2e9abcadadd1032dfa7ea7f875f9d5bd",  # safetensors ema original ema pruned
-                "2494154245becf98891be884f943276aa3f54e9b3f0ea1042903fc15fba488f3",  # safetensors ema diffusers
-                "e43f3a227b5ecb43a6272fa92ed6011d2e9abcadadd1032dfa7ea7f875f9d5bd",  # safetensors mse original  ema pruned
-                "2494154245becf98891be884f943276aa3f54e9b3f0ea1042903fc15fba488f3",  # safetensors mse diffusers
+                "e43f3a227b5ecb43a6272fa92ed6011d2e9abcadadd1032dfa7ea7f875f9d5bd",  # safetensors original
+                "2494154245becf98891be884f943276aa3f54e9b3f0ea1042903fc15fba488f3",  # safetensors diffusers
             ],
         )
     )
