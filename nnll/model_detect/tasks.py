@@ -56,8 +56,8 @@ class AutoPkg:
         :param class_name: The name of the transformer class to inspect.
         :param pkg_type: The dependency for the module
         :param alt_method: Use an alternate method to return the classes
-        :return: A list of task classes associated with the specified transformer.
-        """
+        :return: A list of task classes associated with the specified transformer."""
+
         if not code_name:
             from nnll.metadata.helpers import make_callable
 
@@ -76,7 +76,7 @@ class AutoPkg:
         :type mir_db: MIRDatabase
         :param field_name:  The name of the field in compatibility data to process for task detection, defaults to "pkg".
         :type field_name: str, optional
-        :return:A dictionary mapping series names to their respective compatibility and traced tasks.
+        :return: A dictionary mapping series names to their respective compatibility and traced tasks.
         :rtype: dict"""
 
         data_tuple = []
@@ -89,10 +89,9 @@ class AutoPkg:
                 for compatibility, field_data in compatibility_data.items():
                     if field_data and field_data.get(field_name, {}).get("0"):
                         tasks_for_class = {"tasks": []}
-                        for index, pkg_tree in field_data[field_name].items():
-                            task_data = await self.trace_tasks(pkg_tree=pkg_tree)
-                            if task_data:
-                                package_name, class_name, detected_tasks = task_data
+                        for _, pkg_tree in field_data[field_name].items():
+                            detected_tasks = await self.trace_tasks(pkg_tree=pkg_tree)
+                            if detected_tasks:
                                 for task in detected_tasks:
                                     if task not in tasks_for_class["tasks"]:
                                         tasks_for_class["tasks"].append(task)
@@ -224,7 +223,7 @@ class AutoPkg:
                 preformatted_task_data = self.mflux_tasks
             if preformatted_task_data:
                 filtered_tasks = [task for task in preformatted_task_data for snip in snip_words if snip not in task]
-                return package_name, class_name, filtered_tasks
+                return filtered_tasks  # package_name, class_name
 
 
 def main(mir_db: MIRDatabase = None):

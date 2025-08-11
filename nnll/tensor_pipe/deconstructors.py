@@ -83,7 +83,7 @@ def trace_classes(pipe_class: str, pkg_name: str) -> Dict[str, List[str]]:
     :param pipe_class: Origin pipe
     :param pkg_name: Dependency package
     :return: A dictionary of pipelines"""
-    from nnll.mir.tasks import AutoPkg
+    from nnll.model_detect.tasks import AutoPkg
 
     related_pipes = []
     code_name = get_code_names(pipe_class, pkg_name)

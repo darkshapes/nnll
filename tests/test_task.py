@@ -2,7 +2,7 @@
 # <!-- // /*  d a r k s h a p e s */ -->
 
 
-from nnll.mir.tasks import main
+from nnll.model_detect.tasks import main
 from nnll.mir.maid import MIRDatabase
 
 

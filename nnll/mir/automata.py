@@ -936,7 +936,7 @@ def mir_update(mir_db: MIRDatabase):
             "GptOssModel",
             {
                 "file_256": [
-                    "68a8dc1f8e2e5996cb702f14332a25ddf3463daeab2df68e21ca09ef181203c3"  # original model
+                    "68a8dc1f8e2e5996cb702f14332a25ddf3463daeab2df68e21ca09ef181203c3",  # original model
                     "a881aa5f561b26a22b14a8262aa61849ace349ffd73d74769e030ac90a1fcf8a",  # diffusers
                 ],
                 "layer_b3": [
@@ -2643,6 +2643,33 @@ def add_mir_vae(mir_db: MIRDatabase):
             ],
         )
     )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="eq",
+            comp=sdxl_series,
+            repo="KBlueLeaf/EQ-SDXL-VAE",
+            pkg={
+                0: {"diffusers": "AutoencoderKL"},
+            },
+        )
+    )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="ms-lc-eq",
+            comp=sdxl_series,
+            repo="Anzhc/MS-LC-EQ-D-VR_VAE",
+            pkg={
+                0: {
+                    "diffusers": "AutoencoderKL",
+                },
+            },
+        )
+    )
+
     mir_db.add(
         mir_entry(
             domain="info",
