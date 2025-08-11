@@ -4,6 +4,7 @@
 from typing import Callable, Awaitable
 from functools import lru_cache
 import os
+from nnll.monitor.file import dbuq
 
 
 class ModelIdentity:
@@ -48,8 +49,10 @@ class ModelIdentity:
         async def scan_folder_hashes(folder_path_named: str) -> list[list[str]]:
             for root, folders, files in os.walk(folder_path_named):
                 for folder_path_named in folders:
-                    hashes: dict[tuple[str, str]] = await hash_layers_or_files(path_named=folder_path_named, layer=True, b3=True, unsafe=False)
+                    folder_path_absolute = os.path.join(root, folder_path_named)
+                    hashes: dict[tuple[str, str]] = await hash_layers_or_files(path_named=folder_path_absolute, layer=True, b3=True, unsafe=False)
                     for file_name, hex_value in hashes.items():
+                        mir_tag = []
                         file_path_named = os.path.join(folder_path_named, file_name)
                         mir_tag = self.find_tag(field="layer_b3", target=hex_value)
                         if mir_tag:
@@ -62,7 +65,7 @@ class ModelIdentity:
         mir_tags = []
         model_path_named = await self.get_cache_path(file_name=repo_id, repo_obj=repo_obj)
         if os.path.isdir(model_path_named):
-            nfo(f"{os.path.join(model_path_named)}")
+            dbuq(f"{os.path.join(model_path_named)}")
             mir_tags = await scan_folder_hashes(model_path_named)
         else:
             hash_data = await hash_layers_or_files(path_named=model_path_named, layer=True, b3=True, unsafe=False)

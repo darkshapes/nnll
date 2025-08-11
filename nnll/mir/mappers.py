@@ -45,7 +45,7 @@ def stock_llm_data() -> Dict[str, List[str]]:
     import transformers
     from transformers.models.auto.modeling_auto import CONFIG_MAPPING_NAMES, MODEL_MAPPING_NAMES
 
-    from nnll.mir.tasks import AutoPkg
+    from nnll.model_detect.tasks import AutoPkg
 
     model_data = None
     task_pipe = None

@@ -270,10 +270,10 @@ if __name__ == "__main__":
     sys.path.append(os.getcwd())
     main(remake_off=remake_off)
     if not tasks_off:
-        from nnll.mir.tasks import main
+        from nnll.model_detect.tasks import main
 
         main()
     if not pipes_off:
-        from nnll.mir.tasks import pipe
+        from nnll.model_detect.tasks import pipe
 
         pipe()

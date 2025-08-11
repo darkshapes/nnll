@@ -95,7 +95,12 @@ def generate_model_card(conditions: tuple, full_tags: dict) -> None:
 > ```
     """
     ]
-    model_card_elements = tag_block + model_field + content + tag_block + link_block + code_block + model_field + content + code_block + mlx_blurb
+
+    model_card_elements = tag_block + model_field + content + tag_block + link_block + code_block + model_field + content + code_block
+    if conditions["library"] == "mlx":
+        model_card_elements += mlx_blurb
+    else:
+        model_card_elements += blurb
     model_card = "\n".join(model_card_elements)
     validate = input(f"""Generated_card:\n\n{model_card}\n\n  saving to {conditions["folder_path_named"]} Correct? (y and enter to submit, any other entry and enter to quit) """)
 
@@ -128,7 +133,7 @@ def autocard(conditions: tuple) -> None:  # pylint:disable=redefined-outer-name
         "co2_emitted": None,
         "thumbnail": None,
     }
-    if not conditions["library"] == "gguf":
+    if not conditions["library"] == "gguf" or conditions["library"] == "safetensors":
         optional_tags.setdefault(
             "get_started_code",
             f"uv{conditions['example']} --prompt 'Test prompt'",
@@ -167,9 +172,10 @@ def main():
         "schnell": "",
         "dev": "",
         "mlx": "",
+        "safetensors": "",
     }
     parser.add_argument("repo", type=str, help="Relative path to HF repository")
-    parser.add_argument("-l", "--library", type=str, choices=list(example), default="mlx", help="Output model type [gguf,mlx,dev,schnell] (optional, default: 'mlx') NOTE: dev/schnell use MFLUX.")
+    parser.add_argument("-l", "--library", type=str, choices=list(example), default="mlx", help="Output model type [gguf,mlx,dev,schnell,safetensors] (optional, default: 'mlx') NOTE: dev/schnell use MFLUX. Safetensors is for dry run only")
     parser.add_argument("-q", "--quantization", type=int, choices=[8, 6, 4, 3, 2], required=False, help="Set quantization level (optional, default: None)")
     parser.add_argument("-d", "--dry_run", action="store_true", help="Perform a dry run, reading and generating a repo card without converting the model (optional, default: False)")
     parser.add_argument("-u", "--user", type=str, default="darkshapes", help="User for generated repo card (optional)")
@@ -183,7 +189,7 @@ def main():
     conditions = {
         "repo": args.repo,
         "library": args.library,
-        "model_name": os.path.basename(f"{args.repo}-{'GGUF' if args.library == 'gguf' else 'MLX'}"),
+        "model_name": os.path.basename(f"{args.repo}-{args.library.upper() if args.library in ['gguf', 'safetensors'] else 'MLX'}"),
         "quantization": args.quantization,
     }
     if args.quantization:
@@ -195,6 +201,7 @@ def main():
     example.update({"schnell": f"x --from mflux mflux-generate {universal_arguments} --base-model schnell --steps 4 {flux_arguments} "})
     example.update({"dev": f"x --from mflux mflux-generate {universal_arguments} --base-model dev --steps 50 --guidance 4.0 {flux_arguments} "})
     example.update({"mlx": f"x --from mlx-lm mlx_lm.generate --model {universal_arguments}"})
+    example.update({"safetensors": ""})
     conditions.setdefault("example", example.get(args.library))
     conditions.setdefault("folder_path_named", os.path.join(args.folder, conditions["model_name"]))
 
