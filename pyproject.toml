@@ -104,7 +104,7 @@ mps = [
 ]
 cu126 = ["nnll[triton]"]
 cu128 = ["nnll[triton,attention]"]
-rocm = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform != 'darwin'"]
+rocm = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform == 'Linux'"]
 
 # -- frameworks --
 torch = ["torch", "torchvision", "torchaudio"]
