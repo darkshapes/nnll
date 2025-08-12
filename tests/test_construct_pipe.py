@@ -3,38 +3,48 @@
 
 
 import unittest
-from unittest.mock import patch, MagicMock
-from nnll.monitor.console import nfo
+from unittest.mock import patch
 from nnll.tensor_pipe.construct_pipe import ConstructPipeline  # , pipe_call
-
+from enum import Enum
 # todo - mock MIR db entry
 
 arch_data = {
-    "dep_alt": {"diffusers": ["DiffusionPipeline"]},
-    "gen_kwargs": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
-    "init_kwargs": {"use_safetensors": True},
+    "pkg": {"diffusers": "DiffusionPipeline"},
+    "generation": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
     "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
     "repo": ["stabilityai/stable-diffusion-xl-base-1.0"],
     "weight_map": "weight_maps/model.unet.stable-diffusion-xl:base.json",
 }
 
 
-arch_data = {
-    "dep_alt": {"diffusers": ["DiffusionPipeline"]},
-    "gen_kwargs": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
-    "init_kwargs": {"use_safetensors": True},
-    "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
-    "repo": ["stabilityai/stable-diffusion-xl-base-1.0"],
-    "weight_map": "weight_maps/model.unet.stable-diffusion-xl:base.json",
-}
-lcm = {"dep_pkg": {"diffusers": ["LCMScheduler"]}}
-lora_name = ["info.lora.lcm", "stable-diffusion-xl"]
-lora_repo = "latent-consistency/lcm-lora-sdxl"
+class MockEntry:
+    model = "stabilityai/stable-diffusion-xl-base-1.0"
+    pkg = {
+        0: {
+            "diffusers": "DiffusionPipeline",
+            "generation": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
+        },
+    }
 
-scheduler_kwargs = {"timestep_spacing": "trailing"}
 
-init_kwargs = {"fuse": 1.0}
-kwargs = {"scheduler_name": lcm, "scheduler_kwargs": scheduler_kwargs}
+class MockKolors:
+    model = "Kwai-Kolors/Kolors-diffusers"
+    pkg = {
+        "0": {
+            "diffusers": "KolorsImg2ImgPipeline",
+            "precision": "ops.precision.float.f16",
+            "generation": {"negative_prompt": "", "guidance_scale": 5.0, "num_inference_steps": 50, "width": 1024, "height": 1024},
+        }
+    }
+
+
+class MockWan:
+    model = "Wan-AI/Wan2.1-T2V-1.3B-Diffusers"
+    pkg = {"0": {"diffusers": "WanTextToVideoPipeline"}}
+
+
+class MockType(Enum):
+    DIFFUSERS: tuple = (True, "DIFFUSERS", [])
 
 
 class TestPipeCallDecorator(unittest.TestCase):
@@ -63,75 +73,6 @@ class TestPipeCallDecorator(unittest.TestCase):
 
 
 class TestConstructPipeline(unittest.TestCase):
-    # async def setUp(self):
-    #     self.pipeline = ConstructPipeline()
-
-    def test_get_module(self):
-        pipeline = ConstructPipeline()
-        module = pipeline._get_module({"diffusers": ["StableDiffusionXLPipeline"]})
-        from diffusers import StableDiffusionXLPipeline
-
-        assert module == [StableDiffusionXLPipeline]
-
-    def test_get_several_module(self):
-        pipeline = ConstructPipeline()
-        module_1, module_2 = pipeline._get_module({"diffusers": ["StableDiffusionXLPipeline"], "transformers": ["CLIPModel"]})
-        from diffusers import StableDiffusionXLPipeline
-        from transformers import CLIPModel
-
-        assert module_1 == StableDiffusionXLPipeline
-        assert module_2 == CLIPModel
-
-    def test_sub_cls_locs(self):
-        pipeline = ConstructPipeline()
-        module = pipeline._get_module({"diffusers": ["StableDiffusionXLPipeline"]})
-        class_sig = pipeline._get_sub_cls_locs(module[-1])
-        expected_output = {
-            "vae": ["diffusers", "models", "autoencoders", "autoencoder_kl", "AutoencoderKL"],
-            "text_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModel"],
-            "text_encoder_2": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModelWithProjection"],
-            "tokenizer": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
-            "tokenizer_2": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
-            "unet": ["diffusers", "models", "unets", "unet_2d_condition", "UNet2DConditionModel"],
-            "scheduler": ["KarrasDiffusionSchedulers"],
-            "image_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPVisionModelWithProjection"],
-            "feature_extractor": ["transformers", "models", "clip", "image_processing_clip", "CLIPImageProcessor"],
-        }
-        assert class_sig == expected_output
-
-    def test_sub_cls_load(self):
-        pipeline = ConstructPipeline()
-        prev_output = {
-            "vae": ["diffusers", "models", "autoencoders", "autoencoder_kl", "AutoencoderKL"],
-            "text_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModel"],
-            "text_encoder_2": ["transformers", "models", "clip", "modeling_clip", "CLIPTextModelWithProjection"],
-            "tokenizer": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
-            "tokenizer_2": ["transformers", "models", "clip", "tokenization_clip", "CLIPTokenizer"],
-            "unet": ["diffusers", "models", "unets", "unet_2d_condition", "UNet2DConditionModel"],
-            "scheduler": ["KarrasDiffusionSchedulers"],
-            "image_encoder": ["transformers", "models", "clip", "modeling_clip", "CLIPVisionModelWithProjection"],
-            "feature_extractor": ["transformers", "models", "clip", "image_processing_clip", "CLIPImageProcessor"],
-        }
-
-        for _, package in prev_output.items():
-            import_map = {package[0]: package[-1:]}
-            print(package)
-            print(import_map)
-            # current_import = pipeline._get_module(import_map)
-            # # from importlib import import_module
-            # # # import diffusers
-
-            # path = ".".join(package[1:])
-            # path_alt = package[-1]
-            # mod = package[0]
-            # print(f"{path}.{mod}")
-            # print(f"{path_alt}")
-            # # expected_import = import_module(mod)
-            # expected_import = __import__(".".join(package[0:-1]))
-            # # __import__()
-
-            # assert current_import == expected_import
-
     @patch("os.path.isfile", return_value=True)
     @patch("diffusers.StableDiffusionXLPipeline.from_single_file")
     def test_create_pipeline_from_single_file(self, mock_from_single_file, mock_isfile):
@@ -140,10 +81,11 @@ class TestConstructPipeline(unittest.TestCase):
         pipeline = ConstructPipeline()
 
         pipe, repo, import_pkg, settings = pipeline.create_pipeline(
-            arch_data=arch_data,
-            init_modules={"dep_pkg": {"diffusers": ["StableDiffusionXLPipeline"]}},
+            registry_entry=MockEntry,
+            pkg_data=("StableDiffusionXLPipeline", MockType.DIFFUSERS),
+            mir_db={},
         )
-        mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
+        mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0")
         self.assertEqual(pipe, "mock_pipe")
         self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
         self.assertEqual(
@@ -158,67 +100,46 @@ class TestConstructPipeline(unittest.TestCase):
         mock_from_pretrained.return_value = "mock_pipe"
 
         pipeline = ConstructPipeline()
-        # with self.assertRaises(NotImplementedError):
-        # with patch("huggingface_hub.hf_hub_download", autospec=True):
-        #     with patch("huggingface_hub.snapshot_download", autospec=True):
         pipe, repo, import_pkg, settings = pipeline.create_pipeline(
-            arch_data=arch_data,
-            init_modules={"dep_pkg": {"diffusers": ["StableDiffusionXLPipeline"]}},
+            registry_entry=MockEntry,
+            pkg_data=("StableDiffusionXLPipeline", MockType.DIFFUSERS),
+            mir_db={},
         )
 
-        mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0", use_safetensors=True)
+        mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0")
 
     @patch("os.path.isfile", return_value=False)
-    @patch("diffusers.loaders.StableDiffusionXLLoraLoaderMixin.load_lora_weights")
-    @patch("diffusers.StableDiffusionXLPipeline.from_pretrained")
-    @patch("os.path.basename", return_value="mock_adapter")
-    def test_add_lora(self, mock_basename, mock_from_pretrained, mock_lora_weights, mock_isfile):
-        """Test add_lora method in ConstructPipeline."""
-        mock_pipe = MagicMock()
-        mock_lora = MagicMock()
-        mock_from_pretrained.return_value = mock_pipe
-        mock_lora_weights.return_value = mock_lora
-        pipeline = ConstructPipeline()
-        # with self.assertRaises(NotImplementedError):
-        # with patch("huggingface_hub.hf_hub_download", autospec=True):
-        #     with patch("huggingface_hub.snapshot_download", autospec=True):
+    @patch("diffusers.KolorsPipeline.from_pretrained")
+    def test_create_kolors_pipe(self, mock_from_pretrained, mock_isfile):
+        """Test pipeline creation from a pre-trained model"""
+        from nnll.mir.maid import MIRDatabase
 
-        with patch("diffusers.LCMScheduler") as mock_scheduler_class:
-            mock_scheduler_instance = MagicMock()
-            mock_scheduler_class.return_value = mock_scheduler_instance
-            pipe = pipeline.add_lora(mock_pipe, lora_repo=lora_repo, init_kwargs=init_kwargs, scheduler_data=lcm, scheduler_kwargs=scheduler_kwargs)
-            mock_scheduler_class.assert_called_once_with({"timestep_spacing": "trailing"})
-            self.assertEqual(mock_pipe.scheduler, mock_scheduler_instance)
-            pipe.load_lora_weights.assert_called_once_with("latent-consistency/lcm-lora-sdxl", adapter_name="mock_adapter")
-            pipe.fuse_lora.assert_called_once_with(adapter_name="mock_adapter", lora_scale=1.0)
+        mock_from_pretrained.return_value = "mock_pipe"
+
+        pipeline = ConstructPipeline()
+        pipe, repo, import_pkg, settings = pipeline.create_pipeline(
+            registry_entry=MockKolors,
+            pkg_data=("KolorsPipeline", MockType.DIFFUSERS),
+            mir_db=MIRDatabase(),
+        )
+        import torch
+
+        mock_from_pretrained.assert_called_once_with("Kwai-Kolors/Kolors-diffusers", torch_dtype=torch.float16, variant="fp16")
 
     @patch("os.path.isfile", return_value=False)
-    @patch("diffusers.loaders.StableDiffusionXLLoraLoaderMixin.load_lora_weights")
-    @patch("diffusers.StableDiffusionXLPipeline.from_pretrained")
-    @patch("os.path.basename", return_value="mock_adapter")
-    def test_add_lora_with_no_solver_end_to_end(self, mock_adapter, mock_from_pretrained, mock_lora_weights, mock_isfile):
-        """Test add_lora when no solver or fuse is provided, complete run with mocked model"""
-        mock_pipe = MagicMock()
-        mock_lora = MagicMock()
+    @patch("diffusers.WanPipeline.from_pretrained")
+    def test_create_wan_pipe(self, mock_from_pretrained, mock_isfile):
+        """Test pipeline creation from a pre-trained model"""
+        mock_from_pretrained.return_value = "mock_pipe"
 
-        lora_data = {
-            "file_256": ["0b9896f30d29daa5eedcfc9e7ad03304df6efc5114508f6ca9c328c0b4f057df"],
-            "gen_kwargs": {"guidance_scale": 5.0},
-            "repo": ["SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA"],
-        }
-        init_data = {
-            "dep_pkg": {"diffusers": ["diffusers"]},
-        }
-        mock_from_pretrained.return_value = mock_pipe
-        mock_lora_weights.return_value = mock_lora
-        mock_lora = MagicMock()
         pipeline = ConstructPipeline()
-        pipe = pipeline.add_lora(mock_pipe, lora_repo=next(iter(lora_data["repo"])), init_kwargs=init_data)
+        pipe, repo, import_pkg, settings = pipeline.create_pipeline(
+            registry_entry=MockWan,
+            pkg_data=("WanPipeline", MockType.DIFFUSERS),
+            mir_db={},
+        )
 
-        # self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
-        pipe.load_lora_weights.assert_called_once_with("SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep_LoRA", adapter_name="mock_adapter")
-        nfo(kwargs)
-        # self.assertEqual(kwargs, {"denoising_end": 0.8, "num_inference_steps": 40, "output_type": "latent", "safety_checker": False})
+        mock_from_pretrained.assert_called_once_with("Wan-AI/Wan2.1-T2V-1.3B-Diffusers")
 
 
 if __name__ == "__main__":

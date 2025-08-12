@@ -77,7 +77,7 @@ sd3_series, sd3_comp = make_mir_tag("stable-diffusion-3")
 #         "combined": {
 #             "pkg": {
 #                 0: {  # decoder=decoder_unet
-#                     "precision": "ops.precision.bfloat.b16",
+#                     "precision": "ops.precision.bfloat.B16",
 #                     "generation": {
 #                         "negative_prompt": "",
 #                         "num_inference_steps": 20,
@@ -472,7 +472,7 @@ def mir_update(mir_db: MIRDatabase):
             {
                 "pkg": {
                     0: {
-                        "precision": "ops.precision.float.f16",
+                        "precision": "ops.precision.float.F16",
                         "generation": {
                             "negative_prompt": "",
                             "guidance_scale": 5.0,
@@ -501,7 +501,7 @@ def mir_update(mir_db: MIRDatabase):
             {
                 "pkg": {
                     0: {
-                        "precision": "ops.precision.bfloat.b16",
+                        "precision": "ops.precision.bfloat.B16",
                         "generation": {
                             "negative_prompt": "",
                             "num_images_per_prompt": 1,
@@ -545,7 +545,7 @@ def mir_update(mir_db: MIRDatabase):
             {
                 "pkg": {
                     0: {
-                        "precision": "ops.precision.bfloat.b16",
+                        "precision": "ops.precision.bfloat.B16",
                         "generation": {
                             "height": 1024,
                             "width": 1024,
@@ -594,7 +594,7 @@ def mir_update(mir_db: MIRDatabase):
             {
                 "pkg": {
                     0: {
-                        "precision": "ops.precision.bfloat.b16",
+                        "precision": "ops.precision.bfloat.B16",
                         "generation": {
                             "height": 1024,
                             "width": 1024,
@@ -645,7 +645,7 @@ def mir_update(mir_db: MIRDatabase):
                             "output_type": "pil",
                             "num_inference_steps": 10,
                         },
-                        "precision": "ops.precision.bfloat.b16",
+                        "precision": "ops.precision.bfloat.B16",
                     },
                 },
                 "file_256": [
@@ -1105,7 +1105,7 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             ],
             pkg={
                 0: {
-                    "precision": "ops.precision.float.f16",
+                    "precision": "ops.precision.float.F16",
                     "generation": {"num_inference_steps": 50, "guidance_scale": 3},
                 }
             },
