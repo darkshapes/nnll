@@ -93,8 +93,8 @@ class ModelIdentity:
             repo_folder = os.path.basename(repo_id).lower().rsplit(":", 1)[0]
         match_order = {  # ordered by most likely to match
             "HUB": [
-                lambda: self.label_model_layers(repo_id, cue_type, repo_obj),
                 lambda: self.find_tag(field="repo", target=repo_id),
+                lambda: self.label_model_layers(repo_id, cue_type, repo_obj),  # more sensitive, skip for now
                 lambda: class_to_mir_tag(self.mir_db, base_model) if base_model else None,
                 lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,
                 lambda: self.label_model_class(repo_id),

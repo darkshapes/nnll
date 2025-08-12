@@ -441,9 +441,29 @@ def mir_update(mir_db: MIRDatabase):
             "StableDiffusionPipeline",
             {
                 "identifiers": ["up_blocks.3.attentions.0.transformer_blocks.0.norm3.weight"],
-                "file_256": ["6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"],
-                "layer_b3": ["909c6ff3192ab2767e789a6125865bc23163db467ab78b1c633bad46a4293fad"],
-                "layer_256": ["ece771354ad470a82d56eda413ae3dd6c00d2de28ab3c56a88201d08d4424b4b"],
+                "file_256": [
+                    "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa",  # pruned ema only original safetensors
+                    "1a189f0be69d6106a48548e7626207dddd7042a418dbf372cefd05e0cdba61b6",  # pruned original safetensors
+                    "e1441589a6f3c5a53f5f54d0975a18a7feb7cdf0b0dee276dfc3331ae376a053",  # ema pruned original ckpt
+                    "cc6cb27103417325ff94f52b7a5d2dde45a7515b25c255d8e396c90014281516",  # pruned ema original ckpt
+                    "19da7aaa4b880e59d56843f1fcb4dd9b599c28a1d9d9af7c1143057c8ffae9f1",  # diffusers safetensors
+                    "cd1b6db09a81cb1d39fbd245a89c1e3db9da9fe8eba5e8f9098ea6c4994221d3",  # diffusers non ema safetensors
+                    "c83908253f9a64d08c25fc90874c9c8aef9a329ce1ca5fb909d73b0c83d1ea21",  # diffusers fp16
+                ],
+                "layer_b3": [
+                    "909c6ff3192ab2767e789a6125865bc23163db467ab78b1c633bad46a4293fad",
+                    "b52807536902cabbf84f99e4fa2f8713fb4ef77e739f06367ee0d486e3222faa",  # ckpt
+                    "d31382d71a1044b636d80d861a2b4dbca51826bed34d34b5c14608b7679ccefd",  # safetensors ema pruned
+                    "5fd8b28013b7e5a64c7c235f0a93d93e48bc19a0e5dde7b646a87b429219643a",  # safetensors pruned
+                    "731f552f29edcb4f86112cc94d296377f3533a9633ccf83e202d9e1785d94a00",  # diffusers
+                    "2d2f97574a161cf01a6f6d476b141c7be06f940d94b695ffc12c4e74eca2de1c",  # diffusers fp16
+                ],
+                "layer_256": [
+                    "ece771354ad470a82d56eda413ae3dd6c00d2de28ab3c56a88201d08d4424b4b",
+                    "65b084dada803461ab9ca9be9b892d211870a121dd6c555a111eea470b951c54",  # st
+                    "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91",  # ckpt
+                    "92565dec90f7c8412dc872e820f66cd0c56263bbbc392439645b6fee270f41bb",  # st fp16
+                ],
             },
         ),
         (
@@ -1498,6 +1518,8 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "92b998a9a64549bfa05c019bde114be6681549a0c79caee903fe30c9444d08b9",  # vega
                 "1e090d6a828fd92401be5f83e615fd7b4fb1f4a22e9af9040a38f602e839317c",  # vega fp16
                 "11807cb2522cfe99240e5ee2bbeb1ccb42cecca2215102ee872567c7773b28b9",  # flux
+                "d008943c017f0092921106440254dbbe00b6a285f7883ec8ba160c3faad88334",  # sd1
+                "77795e2023adcf39bc29a884661950380bd093cf0750a966d473d1718dc9ef4e",  # sd1 fp16
             ],
             layer_b3=[
                 "f58a22a381f79985b6d38782f6110a52c2f319b40fdedd3b88b24945dfcbdf64",
@@ -1507,8 +1529,8 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "f285e9b7b70745df81adc8b558ec74b536b79b6fc02a453ecc61ea9d13f25f1a",
                 "7ab17bfa06ab8d65840997ef641f3f593d096860e20141f1eeb0169d131c1c23",
                 "2737d3f327e8176dbb549b9c5c4994821430a6c3b07e3bbc925d97511c802636",  # jaguar mlx q8
-                "58a826a4a5fe555b4df188a1ebc0d8d9c96cedae3a26ce84c247861dbb93388f",
-                "1540fd8844898960e18ce8fd153e5f21a8c446bd8c4d6f536a7cf11418f02bf3",
+                "58a826a4a5fe555b4df188a1ebc0d8d9c96cedae3a26ce84c247861dbb93388f",  # sd1
+                "1540fd8844898960e18ce8fd153e5f21a8c446bd8c4d6f536a7cf11418f02bf3",  # sd1
                 "c4c9caccdbec12b965d93688c521893f75e0bf9a5e0aad70a6a962b669e7b9d5",  # vega
                 "e43fae8d5fd1e562607da172369cc0c5ec99b834e42502e682287ff7d12baacc",  # vega fp16
                 "c6f79f7416a882891957b815fbdfd6edfaa253c43970b1a25ef14e217599c7bc",  # flux
@@ -2586,12 +2608,12 @@ def add_mir_vae(mir_db: MIRDatabase):
                 "bd5b356b509814025a9cf692710b87116d4fcd0e30a8232ed1db133e908d0e74",  # modelspec sai
                 "9106380403dee83238af63ff1738396d2fdff9f6d78d0d9c1d0bf770ae4294d0",  # diffusers
                 # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
-                "50e65a628b5fe379798d8956e4a4e1d4b105c84b329f088d577f7f28c22abc49",  # diffusers fp16
+                # "50e65a628b5fe379798d8956e4a4e1d4b105c84b329f088d577f7f28c22abc49",  # diffusers fp16 matches sd1
             ],
             layer_256=[
                 "c9399a4cd39a180a0bb2af96a8297b9330541e090c21e83317cebb2f7cc651da",  # modelspec sai
                 "2240ae134a3b983abf45200c198f07e3d8068012fbbd2f658bbaa1fd6a0629c0",  # diffusers
-                "35641f65ad7ea600cb931dcab556f7503279f1d8d99eda170fe7976d48502a2a",  # diffusers fp16
+                # "35641f65ad7ea600cb931dcab556f7503279f1d8d99eda170fe7976d48502a2a",  # diffusers fp16 matches sd1
             ],
         )
     )
@@ -2686,6 +2708,8 @@ def add_mir_vae(mir_db: MIRDatabase):
                 "c6a580b13a5bc05a5e16e4dbb80608ff2ec251a162311590c1f34c013d7f3dab",  # ckpt mse original ema pruned
                 "735e4c3a447a3255760d7f86845f09f937809baa529c17370d83e4c3758f3c75",  # safetensors mse original ema pruned
                 "a1d993488569e928462932c8c38a0760b874d166399b14414135bd9c42df5815",  # safetensors mse diffusers
+                "a2b5134f4dbc140d9c11f11cba3233099e00af40f262f136c691fb7d38d2194c",  # safetensors diffusers
+                "4fbcf0ebe55a0984f5a5e00d8c4521d52359af7229bb4d81890039d2aa16dd7c",  # safetensors fp16 diffusers
             ],
             layer_b3=[
                 "82e2dc440a23d78bb91df8c9fce069a8512da51f8f54ea29e3431f545808171e",  # safetensors original
