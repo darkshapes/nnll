@@ -64,22 +64,6 @@ def check_migrations(repo_path: str):
     return repo_path
 
 
-# @MODE_DATA.decorator
-# def add_mode_types(mir_tag: list[str], data: dict | None = None) -> dict[str, list[str] | str]:
-#     """_summary_\n
-#     :param mir_tag: _description_
-#     :param data: _description_, defaults to None
-#     :return: _description_"""
-#     fused_tag = ".".join(mir_tag)
-
-#     mir_details = {
-#         "mode": data.get(fused_tag, {}).get("pipeline_tag"),
-#         "pkg_type": data.get(fused_tag, {}).get("library_type"),
-#         "tags": data.get(fused_tag, {}).get("tags"),
-#     }
-#     return mir_details
-
-
 @TEMPLATE_FILE.decorator
 def flag_config(transformers: bool = False, data: dict = None, **kwargs):
     """Set type of MIR prefix depending on model type\n
@@ -176,7 +160,7 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
             except TypeError:
                 pass  # Attempt 1
             if pipe_data.get(series):
-                if "Img2Img" in pipe_class.lower():
+                if "img2img" in pipe_class.lower():
                     continue
             pipe_data.setdefault(series, {}).update(comp_data)
             if staged_class or pipe_repo in special_cases:
@@ -417,3 +401,19 @@ def mlx_repo_capture(base_repo: str = "mlx-community"):
 #                                     matches = re.search(r"(\w+)\.", previous_data, re.MULTILINE)
 #                                     result_2[match] = {f"{base_repo}/{match}": [*matches]}
 #     return result_2
+
+
+# @MODE_DATA.decorator
+# def add_mode_types(mir_tag: list[str], data: dict | None = None) -> dict[str, list[str] | str]:
+#     """_summary_\n
+#     :param mir_tag: _description_
+#     :param data: _description_, defaults to None
+#     :return: _description_"""
+#     fused_tag = ".".join(mir_tag)
+
+#     mir_details = {
+#         "mode": data.get(fused_tag, {}).get("pipeline_tag"),
+#         "pkg_type": data.get(fused_tag, {}).get("library_type"),
+#         "tags": data.get(fused_tag, {}).get("tags"),
+#     }
+#     return mir_details
