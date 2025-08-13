@@ -90,21 +90,20 @@ dev = [
 [project.optional-dependencies]
 # -- platforms --
 mps = [
-    "nnll[openai]", # , chroma]",
-    # most of these version specifics a direct result of mlx-audio reqs
-    "mlx-vlm<=0.1.26 ; sys_platform == 'darwin'",
+    "mlx-vlm<=0.1.26 ; sys_platform == 'darwin'",                                                                 # most of these version specifics as a direct result of mlx-audio reqs
     "mlx-lm<=0.24.1 ; sys_platform == 'darwin'",
     "mlx-audio; sys_platform == 'darwin'",
     "numpy<=2.2",
     "misaki>=0.8.2 ; python_version < '3.13' and sys_platform == 'darwin'",
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version >= '3.13' and sys_platform == 'darwin'",
     "pip>=25.0.1",
-    #the exceptions
-    "mflux>=0.2.1 ; sys_platform == 'darwin'",
+    "nnll[openai]",                                                                                               # , chroma]",
+    "mflux>=0.2.1 ; sys_platform == 'darwin'",                                                                    # flux
 ]
+
 cu126 = ["nnll[triton]"]
 cu128 = ["nnll[triton,attention]"]
-rocm = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform == 'Linux'"]
+rocm  = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform == 'linux'"]
 
 # -- frameworks --
 torch = ["torch", "torchvision", "torchaudio"]
@@ -114,46 +113,36 @@ jax   = ["flax>=0.10.7", "jax>=0.6.2"]
 # -- techniques --
 attention = [
     "sageattention; sys_platform != 'darwin'",
-    "flash_attn ; sys_platform == 'Linux'",
+    "flash_attn ; sys_platform == 'linux'",
 ]
 triton = [
-    "triton ; sys_platform == 'Linux'",
-    "triton-windows ; sys_platform == 'win32'",
+    "triton ; sys_platform == 'linux'",
+    "triton-windows ; sys_platform == 'windows'",
 ]
 hidiffusion = ["hidiffusion>=0.1.10"]
-
-# probably should be installed by sdbx
-# audiocraft = [
-# "audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev",
-# ]
-# bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
-# chroma = ["mlx-chroma @ git+https://github.com/exdysa/jack813-mlx-chroma.git"]
-
-# orpheus_tts = ["orpheus_tts @ git+https://github.com/canopyai/Orpheus-TTS.git"]
-# parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
-# xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
-# tts = [ "nnll[audiocraft, bagel, parler_tts]", "nnll[audiocraft, bagel, parler_tts,vllm] ; platform_system != 'darwin'",]
 
 # -- providers --
 ollama   = ["ollama>=0.5.1"]
 lmstudio = ["lmstudio>=1.3.1"]
-# vllm = ["vllm>=0.9.0.1 ; sys_platform != 'darwin'"]
+vllm     = ["vllm>=0.9.0.1 ; sys_platform != 'darwin'"]
 
 openai = [
     "openai>=1.84.0",
-    "openai-whisper @ git+https://github.com/openai/whisper.git ; python_version >'3.12'",
-    "openai-whisper @ git+https://github.com/openai/whisper.git ; python_version <'3.13'",
+    "openai-whisper @ git+https://github.com/openai/whisper.git",
     "llvmlite>=0.44 ; python_version > '3.12'",
     "llvmlite>=0.36 ; python_version < '3.13'",
     "numba>=0.61.2 ; python_version > '3.12'",
     "numba>=0.47.0 ; python_version < '3.13'",
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
+
 full = [
-    "nnll[torch,lmstudio,ollama,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin'",
-    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,rocm,cu126,cu128,flax,jax,onnx,outetts]; sys_platform =='Linux'",
-    "nnll[torch,lmstudio,ollama,hidiffusion,cu126,cu128,mps,flax,jax,onnx]; sys_platform =='Windows' and python_version <'3.13'",
-    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,cu126,cu128,mps,flax,jax,onnx]; sys_platform =='Windows' and python_version >'3.12'",
+    "nnll[torch,lmstudio,ollama,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin' and python_version < '3.13'",
+    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin' and python_version > '3.12'",
+    "nnll[torch,lmstudio,ollama,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='linux' and python_version  < '3.13'",
+    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='linux' and python_version  > '3.12'",
+    "nnll[torch,lmstudio,ollama,vllm,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='windows' and python_version < '3.13'",
+    "nnll[torch,lmstudio,ollama,vllm,outetts,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='windows' and python_version > '3.12'",
 
 ]
 dev = [
@@ -166,6 +155,18 @@ dev = [
     "pytest-trio>=0.8.0",
     "ruff>=0.12.0",
 ]
+
+# probably should be installed by sdbx
+# audiocraft = [
+# "audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev",
+# ]
+# bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
+# chroma = ["mlx-chroma @ git+https://github.com/exdysa/jack813-mlx-chroma.git"]
+
+# orpheus_tts = ["orpheus_tts @ git+https://github.com/canopyai/Orpheus-TTS.git"]
+# parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
+# xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
+# tts = [ "nnll[audiocraft, bagel, parler_tts]", "nnll[audiocraft, bagel, parler_tts] ; platform_system != 'darwin'",]
 
 
 [project.urls]
