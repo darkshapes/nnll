@@ -122,7 +122,10 @@ triton = [
 ]
 hidiffusion = ["hidiffusion>=0.1.10"]
 
-# audiocraft = ["audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev"]
+# probably should be installed by sdbx
+# audiocraft = [
+# "audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev",
+# ]
 # bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
 # chroma = ["mlx-chroma @ git+https://github.com/exdysa/jack813-mlx-chroma.git"]
 
@@ -147,7 +150,11 @@ openai = [
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 full = [
-    "nnll[torch,lmstudio,ollama,hidiffusion,cu126,cu128,mps,flax,jax,onnx]; sys_platform !='windows' and python_version < '3.13'",
+    "nnll[torch,lmstudio,ollama,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin'",
+    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,rocm,cu126,cu128,flax,jax,onnx,outetts]; sys_platform =='Linux'",
+    "nnll[torch,lmstudio,ollama,hidiffusion,cu126,cu128,mps,flax,jax,onnx]; sys_platform =='Windows' and python_version <'3.13'",
+    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,cu126,cu128,mps,flax,jax,onnx]; sys_platform =='Windows' and python_version >'3.12'",
+
 ]
 dev = [
     "nnll[full]",
