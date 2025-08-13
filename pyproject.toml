@@ -90,14 +90,14 @@ dev = [
 [project.optional-dependencies]
 # -- platforms --
 mps = [
-    "mlx-vlm<=0.1.26 ; sys_platform == 'darwin'",                                                                 # most of these version specifics as a direct result of mlx-audio reqs
-    "mlx-lm<=0.24.1 ; sys_platform == 'darwin'",
-    "mlx-audio; sys_platform == 'darwin'",
+    "mlx-vlm<=0.1.26 ; sys_platform == 'darwin'",                                                                 # all specifc due to mlx-audio
+    "mlx-lm<=0.24.1 ; sys_platform == 'darwin'",                                                                  # ...
+    "mlx-audio; sys_platform == 'darwin'",                                                                        # ... etc
     "numpy<=2.2; sys_platform == 'darwin'",
     "misaki>=0.8.2 ; python_version < '3.13' and sys_platform == 'darwin'",
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version >= '3.13' and sys_platform == 'darwin'",
     "pip>=25.0.1",
-    "nnll[openai]",                                                                                               # , chroma]",
+    "nnll[openai]",                                                                                               # chroma",
     "mflux>=0.2.1 ; sys_platform == 'darwin'",                                                                    # flux
 ]
 
@@ -137,7 +137,7 @@ openai = [
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 
 full = [
-    "nnll[torch,lmstudio,ollama,vllm,hidiffusion,cu126,cu128,mps,rocm,flax,jax,onnx]",
+    "nnll[torch,lmstudio,ollama,openai,vllm,hidiffusion,cu126,cu128,mps,rocm,flax,jax,onnx]",
 ]
 dev = [
     "nnll[full]",
