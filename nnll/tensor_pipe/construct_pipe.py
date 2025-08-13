@@ -114,11 +114,11 @@ class ConstructPipeline:
             pipe_obj = getattr(pkg_obj, pkg_data[0])
 
         model_id = registry_entry.model
-        package_keys = registry_entry.pkg.keys()
+        package_keys = registry_entry.modules.keys()
         pipe_call = {"pipe_obj": pipe_obj, "model": model_id, "pkg_name": pkg_name} | kwargs
-        pkg_index = [i for i in package_keys if pkg_name in registry_entry.pkg[i]]
+        pkg_index = [i for i in package_keys if pkg_name in registry_entry.modules[i]]
 
-        if precision := registry_entry.pkg[pkg_index[0]].get("precision"):
+        if precision := registry_entry.modules[pkg_index[0]].get("precision"):
             precision = precision.rsplit(".", 1)
             dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]
             precision = next(iter(dtype["torch"]))
@@ -126,7 +126,7 @@ class ConstructPipeline:
             variant = dtype["torch"][precision]
             if variant:
                 pipe_call.setdefault(*variant.keys(), *variant.values())
-        generation = registry_entry.pkg[pkg_index[0]].get("generation")
+        generation = registry_entry.modules[pkg_index[0]].get("generation",{})
 
         nfo(f"status mid-pipe: {model_id}, {pipe_obj}, {pipe_call}, {generation} ")
         dbug(f"status mid-pipe: {model_id}, {pipe_obj}, {pipe_call}, {generation}, ")

@@ -13,7 +13,6 @@ from typing import Any, Dict, Literal, Optional
 import PIL.Image
 
 from nnll.configure import HOME_FOLDER_PATH, USER_PATH_NAMED
-from nnll.integrity.hashing import collect_hashes
 from nnll.metadata.read_tags import MetadataFileReader
 from nnll.monitor.file import debug_monitor
 
@@ -39,33 +38,8 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
     file_path_absolute = os.path.join(save_folder_path_absolute, file_name)
     return file_path_absolute
 
-
 # do not log here
-def add_to_metadata(**kwargs: dict) -> Dict:  #  negative_prompt=None
-    """Create metadata from active hf inference pipes\n
-    :param pipe: Active HuggingFace pipe from diffusers/transformers
-    :param model: Generative model filename/path
-    :param prompt: Input for genereation
-    :param kwargs: Arguments passed to constructors
-    :return: Dictionary of attributes"""
-
-    model_data = {}
-    model_data.setdefault(kwargs["model"], collect_hashes(kwargs["model"]))  # adapt for cache repo locations
-
-    gen_data = {
-        "parameters": {
-            "Prompt": kwargs["prompt"],
-            # "\nNegative prompt": negative_prompt if negative_prompt else "\n",
-            "\nData": kwargs,
-            "\nPipe": kwargs["pipe"],
-            "\nModels": model_data,
-        }
-    }
-    return gen_data
-
-
-# do not log here
-def write_to_disk(content: Any, pipe_data: dict[str], extension: str = None, library: Optional[str] = None) -> None:
+def write_to_disk(content: Any, metadata: dict[str], extension: str = None, library: Optional[str] = None) -> None:
     """Save Image to File\n
     :param content: File data in memory
     :param pipe_data: Pipe metadata to write into the file
@@ -81,7 +55,6 @@ def write_to_disk(content: Any, pipe_data: dict[str], extension: str = None, lib
     :param extension: Type of Image file to write, defaults to None
     :param library: Originating library, defaults to None\n\n"""
 
-    metadata = add_to_metadata(pipe_data)
     if isinstance(content, PIL.Image.Image):
         from PIL import PngImagePlugin
 
