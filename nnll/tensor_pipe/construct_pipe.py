@@ -97,9 +97,9 @@ class ConstructPipeline:
     def create_pipeline(self, registry_entry: Callable, pkg_data: tuple[str], mir_db: MIRDatabase, **kwargs):
         """
         Build an inference pipe based on model type\n
-        :param arch_data: Identifier of model architecture
-        :param init_modules: Parameters for initialiing the pipeline
-        :return: `tuple` constructed pipe, model/repo name `str`, and a `dict` of default settings
+        :param registry_entry: Data for the model
+        :param pkg_data: Predetermined best package to run for this system
+        :return: `tuple` constructed pipe, model/repo name `str`, arguments used in the pipe, and a `dict` of default settings
         """
         from importlib import import_module
 
@@ -135,7 +135,6 @@ class ConstructPipeline:
         )
         return (pipe, model_id, pipe_call, generation)
 
-        # current_kwargs = init_kwargs.get(pipe, init_kwargs) #
 
     # def add_lora(self, pipe: Callable, lora_repo: str, init_kwargs: dict, scheduler_data=None, scheduler_kwargs=None):
     #     if scheduler_data:
