@@ -1,0 +1,47 @@
+[
+    null,
+    {
+        "dtype": "uint8",
+        "types": "",
+        "tensor_0": {
+            "shape": "[10  4  9]",
+            "dtype": "F32"
+        },
+        "tensor_1": {
+            "shape": "[5]",
+            "dtype": "F32"
+        },
+        "tensor_2": {
+            "shape": "[ 4 10]",
+            "dtype": "F32"
+        },
+        "tensor_3": {
+            "shape": "[3 3]",
+            "dtype": "F32"
+        },
+        "tensor_4": {
+            "shape": "[ 4  8 10]",
+            "dtype": "F32"
+        },
+        "tensor_5": {
+            "shape": "[4]",
+            "dtype": "F32"
+        },
+        "tensor_6": {
+            "shape": "[10  8]",
+            "dtype": "F32"
+        },
+        "tensor_7": {
+            "shape": "[4]",
+            "dtype": "F32"
+        },
+        "tensor_8": {
+            "shape": "[9 7 6 8]",
+            "dtype": "F32"
+        },
+        "tensor_9": {
+            "shape": "[3 8]",
+            "dtype": "F32"
+        }
+    }
+]

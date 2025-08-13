@@ -79,21 +79,25 @@ class ConstructPipeline:
     #     return [task_pipe]
 
     def _load_pipe(self, pipe_obj: str, model: str, pkg_name: str, **kwargs) -> Callable:
+        model = model.model
         if pkg_name in ["diffusers", "transformers", "parler-tts"]:
             if os.path.isfile(model):
-                pipe = pipe_obj.from_single_file(model, **kwargs)
-                return pipe
+                return pipe_obj.from_single_file(model, **kwargs)
             else:
-                pipe = pipe_obj.from_pretrained(model, **kwargs)
-                return pipe
+                return pipe_obj.from_pretrained(model, **kwargs)
         elif pkg_name == "audiogen":
-            pipe = pipe_obj.get_pretrained(model, **kwargs)
-            return pipe
-        # elif pkg_name == "mflux":
+            return pipe_obj.get_pretrained(model, **kwargs)
+        elif pkg_name == "mflux":
+            from mflux import ModelConfig
 
+            return pipe_obj(
+                model_config=ModelConfig.from_alias(
+                    kwargs["alias"],
+                    local_path=kwargs["path"],
+                )
+            )
         elif pkg_name == "chroma":
-            pipe = pipe_obj(**kwargs)
-            return pipe
+            return pipe_obj(**kwargs)
 
         if pipe_obj is None:
             raise TypeError("Pipe should be Callable `class` object, not `None`")
@@ -120,15 +124,18 @@ class ConstructPipeline:
             pipe_obj = getattr(pkg_obj, pkg_data[1])
 
         model_id = registry_entry.model
-        pipe_call = {"pipe_obj": pipe_obj, "model": model_id, "pkg_name": pkg_name} | kwargs
+        pipe_call = {"pipe_obj": pipe_obj, "model": registry_entry, "pkg_name": pkg_name} | kwargs
         if precision := registry_entry.modules[pkg_data[0]].get("precision"):
             precision = precision.rsplit(".", 1)
-            dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]
+            dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]  # get the precision class, currently assumed to be torch
             precision = next(iter(dtype["torch"]))
             pipe_call.setdefault("torch_dtype", getattr(import_module("torch"), precision))
             variant = dtype["torch"][precision]
             if variant:
                 pipe_call.setdefault(*variant.keys(), *variant.values())
+        if isinstance(registry_entry.modules[pkg_data[0]].get(pkg_name), dict):
+            if extra_kwargs := registry_entry.modules[pkg_data[0]][pkg_name].get(pipe_obj):
+                pipe_call = pipe_call | extra_kwargs | {"path": registry_entry.path}
         generation = registry_entry.modules[pkg_data[0]].get("generation", {})
 
         nfo(f"status mid-pipe: {model_id}, {pipe_obj}, {pipe_call}, {generation} ")

@@ -9,8 +9,12 @@ from enum import Enum
 # todo - mock MIR db entry
 
 arch_data = {
-    "modules": {"diffusers": "DiffusionPipeline"},
-    "generation": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
+    "modules": {
+        0: {
+            "diffusers": "DiffusionPipeline",
+            "generation": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
+        }
+    },
     "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
     "repo": ["stabilityai/stable-diffusion-xl-base-1.0"],
     "weight_map": "weight_maps/model.unet.stable-diffusion-xl:base.json",
@@ -30,7 +34,7 @@ class MockEntry:
 class MockKolors:
     model = "Kwai-Kolors/Kolors-diffusers"
     modules = {
-        "0": {
+        0: {
             "diffusers": "KolorsImg2ImgPipeline",
             "precision": "ops.precision.float.f16",
             "generation": {"negative_prompt": "", "guidance_scale": 5.0, "num_inference_steps": 50, "width": 1024, "height": 1024},
@@ -40,7 +44,11 @@ class MockKolors:
 
 class MockWan:
     model = "Wan-AI/Wan2.1-T2V-1.3B-Diffusers"
-    modules = {"0": {"diffusers": "WanTextToVideoPipeline"}}
+    modules = {
+        0: {
+            "diffusers": "WanTextToVideoPipeline",
+        },
+    }
 
 
 class MockType(Enum):
@@ -82,7 +90,7 @@ class TestConstructPipeline(unittest.TestCase):
 
         pipe, repo, import_pkg, settings = pipeline.create_pipeline(
             registry_entry=MockEntry,
-            pkg_data=("StableDiffusionXLPipeline", MockType.DIFFUSERS),
+            pkg_data=(0, "StableDiffusionXLPipeline", MockType.DIFFUSERS),
             mir_db={},
         )
         mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0")
@@ -102,7 +110,7 @@ class TestConstructPipeline(unittest.TestCase):
         pipeline = ConstructPipeline()
         pipe, repo, import_pkg, settings = pipeline.create_pipeline(
             registry_entry=MockEntry,
-            pkg_data=("StableDiffusionXLPipeline", MockType.DIFFUSERS),
+            pkg_data=(0, "StableDiffusionXLPipeline", MockType.DIFFUSERS),
             mir_db={},
         )
 
@@ -119,7 +127,7 @@ class TestConstructPipeline(unittest.TestCase):
         pipeline = ConstructPipeline()
         pipe, repo, import_pkg, settings = pipeline.create_pipeline(
             registry_entry=MockKolors,
-            pkg_data=("KolorsPipeline", MockType.DIFFUSERS),
+            pkg_data=(0, "KolorsPipeline", MockType.DIFFUSERS),
             mir_db=MIRDatabase(),
         )
         import torch
@@ -135,7 +143,7 @@ class TestConstructPipeline(unittest.TestCase):
         pipeline = ConstructPipeline()
         pipe, repo, import_pkg, settings = pipeline.create_pipeline(
             registry_entry=MockWan,
-            pkg_data=("WanPipeline", MockType.DIFFUSERS),
+            pkg_data=(0, "WanPipeline", MockType.DIFFUSERS),
             mir_db={},
         )
 
