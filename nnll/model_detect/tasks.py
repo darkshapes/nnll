@@ -251,6 +251,7 @@ def main(mir_db: MIRDatabase = None):
     assimilate(mir_db, [task for task in task_tuple])
 
     mir_db.write_to_disk()
+    return mir_db
 
 
 def pipe(mir_db: MIRDatabase = None):
@@ -276,6 +277,7 @@ def pipe(mir_db: MIRDatabase = None):
     pipe_tuple = asyncio.run(auto_pkg.detect_pipes(mir_db))
     assimilate(mir_db, [pipe for pipe in pipe_tuple])
     mir_db.write_to_disk()
+    return mir_db
 
 
 if __name__ == "__main__":

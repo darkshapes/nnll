@@ -53,6 +53,7 @@ def generate_mflux():
     flux = Flux1.from_name(
         model_name="schnell",  # "schnell" or "dev"
         quantize=8,  # 4 or 8
+
     )
 
     # Generate an image
