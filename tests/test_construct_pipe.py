@@ -9,7 +9,7 @@ from enum import Enum
 # todo - mock MIR db entry
 
 arch_data = {
-    "pkg": {"diffusers": "DiffusionPipeline"},
+    "modules": {"diffusers": "DiffusionPipeline"},
     "generation": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
     "layer_256": ["62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef"],
     "repo": ["stabilityai/stable-diffusion-xl-base-1.0"],
@@ -19,7 +19,7 @@ arch_data = {
 
 class MockEntry:
     model = "stabilityai/stable-diffusion-xl-base-1.0"
-    pkg = {
+    modules = {
         0: {
             "diffusers": "DiffusionPipeline",
             "generation": {"num_inference_steps": 40, "denoising_end": 0.8, "output_type": "latent", "safety_checker": False},
@@ -29,7 +29,7 @@ class MockEntry:
 
 class MockKolors:
     model = "Kwai-Kolors/Kolors-diffusers"
-    pkg = {
+    modules = {
         "0": {
             "diffusers": "KolorsImg2ImgPipeline",
             "precision": "ops.precision.float.f16",
@@ -40,7 +40,7 @@ class MockKolors:
 
 class MockWan:
     model = "Wan-AI/Wan2.1-T2V-1.3B-Diffusers"
-    pkg = {"0": {"diffusers": "WanTextToVideoPipeline"}}
+    modules = {"0": {"diffusers": "WanTextToVideoPipeline"}}
 
 
 class MockType(Enum):

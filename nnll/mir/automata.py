@@ -2429,7 +2429,7 @@ def add_mir_vae(mir_db: MIRDatabase):
             layer_256=[],
         )
     )
-    series, comp = make_mir_tag("THUDM/CogVideoX-5b-I2V")
+    series, comp = make_mir_tag("zai-org/CogVideoX-5b-I2V")
     series_fun, _ = make_mir_tag("alibaba-pai/CogVideoX-Fun-V1.1-5b-Pose")
     series_wish, _ = make_mir_tag("BestWishYsh/ConsisID-preview")
     mir_db.add(
