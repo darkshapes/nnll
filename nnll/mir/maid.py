@@ -219,6 +219,7 @@ def main(mir_db: Callable = MIRDatabase(), remake_off: bool = False) -> None:
     mir_update(mir_db)
     add_mir_vae(mir_db)
     mir_db.write_to_disk()
+    return mir_db
 
 
 if __name__ == "__main__":
@@ -268,12 +269,13 @@ if __name__ == "__main__":
         pipes_off = args.tasks_off
 
     sys.path.append(os.getcwd())
-    main(remake_off=remake_off)
+    mir_db = main(remake_off=remake_off)
     if not tasks_off:
         from nnll.model_detect.tasks import main
 
-        main()
+    mir_db = main()
     if not pipes_off:
         from nnll.model_detect.tasks import pipe
 
-        pipe()
+    mir_db = pipe()
+    mir_db.write_to_disk()

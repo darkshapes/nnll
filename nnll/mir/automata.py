@@ -11,7 +11,7 @@ from typing import Dict, List, Tuple
 from nnll.mir.maid import MIRDatabase
 from nnll.mir.mir import mir_entry
 from nnll.mir.tag import make_mir_tag
-from nnll.monitor.file import dbug
+from nnll.monitor.file import dbug, dbuq
 
 nfo_obj = Logger(INFO)
 nfo = nfo_obj.info
@@ -190,8 +190,8 @@ def add_mir_dtype(mir_db: MIRDatabase):
                 comp_name = comp_name[:-2]
         else:
             comp_name = class_name[0].upper() + str(slice_number(class_name))
-        variant_name = class_name.replace("bfloat", "bf")
-        variant_name = class_name.replace("float", "fp")
+        variant_name = class_name.replace("bfloat", "bf").replace("float", "fp")
+        dbuq(variant_name)
         patterns = [r"complex", r"bits", r"quint", r"uint", r"int", r"bfloat", r"float", r"bool"]
         for precision_name in patterns:
             compiled = re.compile(precision_name)
@@ -268,13 +268,7 @@ def mir_update(mir_db: MIRDatabase):
             {
                 "pkg": {
                     0: {
-                        "generation": {
-                            "denoising_end": 0.8,
-                            "output_type": "latent",
-                            "safety_checker": False,
-                            "width": 1024,
-                            "height": 1024,
-                        },
+                        "generation": {"denoising_end": 0.8, "output_type": "latent", "safety_checker": False, "width": 1024, "height": 1024},
                     },
                     1: {"diffusers": "DiffusionPipeline"},
                 },
@@ -331,11 +325,7 @@ def mir_update(mir_db: MIRDatabase):
             {
                 "pkg": {
                     1: {
-                        "generation": {
-                            "neg_text": "",
-                            "num_steps": "28",
-                            "latent_size": [64, 64],
-                        },
+                        "generation": {"neg_text": "", "num_steps": "28", "latent_size": [64, 64]},
                     }
                 },
                 "file_256": [
@@ -434,6 +424,23 @@ def mir_update(mir_db: MIRDatabase):
                     "13c982a6dc82d21c9f459e837d8c6f6d4696fd6e7e7b5783bdd2250b1f4fec61",
                     "6ee79050373337bf63ac20916596df778bb22022bb38af986128a7459eda1463",  # med
                 ],
+            },
+        ),
+        (
+            "Efficient-Large-Model/Sana-1600M-1024px-BF16-diffusers",
+            "SanaPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "generation": {
+                            "height": 1024,
+                            "width": 1024,
+                            "guidance_scale": 4.5,
+                            "num_inference_steps": 20,
+                        },
+                        "precision": "ops.precision.bfloat.B16",
+                    },
+                },
             },
         ),
         (

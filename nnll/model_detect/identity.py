@@ -91,10 +91,11 @@ class ModelIdentity:
         dbuq(repo_id)
         if any(char for char in [":", "\\", "/"] if char in repo_id):
             repo_folder = os.path.basename(repo_id).lower().rsplit(":", 1)[0]
+            print(repo_id)
         match_order = {  # ordered by most likely to match
             "HUB": [
                 lambda: self.find_tag(field="repo", target=repo_id),
-                lambda: self.label_model_layers(repo_id, cue_type, repo_obj),  # more sensitive, skip for now
+                lambda: self.label_model_layers(repo_id, cue_type, repo_obj),
                 lambda: class_to_mir_tag(self.mir_db, base_model) if base_model else None,
                 lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,
                 lambda: self.label_model_class(repo_id),
@@ -107,7 +108,6 @@ class ModelIdentity:
                 lambda: self.find_tag(field="repo", target=repo_id),
             ],
         }
-
         for labeler in match_order[cue_type]:
             mir_tag = labeler()
             if isinstance(mir_tag, Awaitable):

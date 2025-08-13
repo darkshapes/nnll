@@ -79,17 +79,27 @@ class ConstructPipeline:
     #     return [task_pipe]
 
     def _load_pipe(self, pipe_obj: str, model: str, pkg_name: str, **kwargs) -> Callable:
+        model = model.model
         if pkg_name in ["diffusers", "transformers", "parler-tts"]:
             if os.path.isfile(model):
-                pipe = pipe_obj.from_single_file(model, **kwargs)
-                return pipe
+                return pipe_obj.from_single_file(model, **kwargs)
             else:
-                pipe = pipe_obj.from_pretrained(model, **kwargs)
-                return pipe
+                return pipe_obj.from_pretrained(model, **kwargs)
         elif pkg_name == "audiogen":
-            pipe_class = pipe_obj.get_pretrained(model, **kwargs)
-            return pipe
-        if pipe_class is None:
+            return pipe_obj.get_pretrained(model, **kwargs)
+        elif pkg_name == "mflux":
+            from mflux import ModelConfig
+
+            return pipe_obj(
+                model_config=ModelConfig.from_alias(
+                    kwargs["alias"],
+                    local_path=kwargs["path"],
+                )
+            )
+        elif pkg_name == "chroma":
+            return pipe_obj(**kwargs)
+
+        if pipe_obj is None:
             raise TypeError("Pipe should be Callable `class` object, not `None`")
 
     @debug_monitor
@@ -105,28 +115,28 @@ class ConstructPipeline:
 
         from nnll.metadata.helpers import make_callable
 
-        pkg_name = pkg_data[1].value[1].lower()
+        pkg_name = pkg_data[-1].value[1].lower()
         pkg_obj = import_module(pkg_name)
         if "." in pkg_data:
-            split_pkg_data = pkg_data[0].rsplit(".", 1)
+            split_pkg_data = pkg_data[1].rsplit(".", 1)
             pipe_obj = make_callable(split_pkg_data[-1], f"{pkg_name}.{split_pkg_data[0]}")
         else:
-            pipe_obj = getattr(pkg_obj, pkg_data[0])
+            pipe_obj = getattr(pkg_obj, pkg_data[1])
 
         model_id = registry_entry.model
-        package_keys = registry_entry.modules.keys()
-        pipe_call = {"pipe_obj": pipe_obj, "model": model_id, "pkg_name": pkg_name} | kwargs
-        pkg_index = [i for i in package_keys if pkg_name in registry_entry.modules[i]]
-
-        if precision := registry_entry.modules[pkg_index[0]].get("precision"):
+        pipe_call = {"pipe_obj": pipe_obj, "model": registry_entry, "pkg_name": pkg_name} | kwargs
+        if precision := registry_entry.modules[pkg_data[0]].get("precision"):
             precision = precision.rsplit(".", 1)
-            dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]
+            dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]  # get the precision class, currently assumed to be torch
             precision = next(iter(dtype["torch"]))
             pipe_call.setdefault("torch_dtype", getattr(import_module("torch"), precision))
             variant = dtype["torch"][precision]
             if variant:
                 pipe_call.setdefault(*variant.keys(), *variant.values())
-        generation = registry_entry.modules[pkg_index[0]].get("generation",{})
+        if isinstance(registry_entry.modules[pkg_data[0]].get(pkg_name), dict):
+            if extra_kwargs := registry_entry.modules[pkg_data[0]][pkg_name].get(pipe_obj):
+                pipe_call = pipe_call | extra_kwargs | {"path": registry_entry.path}
+        generation = registry_entry.modules[pkg_data[0]].get("generation", {})
 
         nfo(f"status mid-pipe: {model_id}, {pipe_obj}, {pipe_call}, {generation} ")
         dbug(f"status mid-pipe: {model_id}, {pipe_obj}, {pipe_call}, {generation}, ")
@@ -134,7 +144,6 @@ class ConstructPipeline:
             **pipe_call,
         )
         return (pipe, model_id, pipe_call, generation)
-
 
     # def add_lora(self, pipe: Callable, lora_repo: str, init_kwargs: dict, scheduler_data=None, scheduler_kwargs=None):
     #     if scheduler_data:
