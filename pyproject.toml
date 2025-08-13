@@ -103,7 +103,7 @@ mps = [
 
 cu126 = ["nnll[triton]"]
 cu128 = ["nnll[triton,attention]"]
-rocm  = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform == 'linux'"]
+rocm  = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform == 'Linux'"]
 
 # -- frameworks --
 torch = ["torch", "torchvision", "torchaudio"]
@@ -113,10 +113,10 @@ jax   = ["flax>=0.10.7", "jax>=0.6.2"]
 # -- techniques --
 attention = [
     "sageattention; sys_platform != 'darwin'",
-    "flash_attn ; sys_platform == 'linux'",
+    "flash_attn ; sys_platform == 'Linux'",
 ]
 triton = [
-    "triton ; sys_platform == 'linux'",
+    "triton ; sys_platform == 'Linux'",
     "triton-windows ; sys_platform == 'windows'",
 ]
 hidiffusion = ["hidiffusion>=0.1.10"]
@@ -139,10 +139,10 @@ outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 full = [
     "nnll[torch,lmstudio,ollama,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin' and python_version < '3.13'",
     "nnll[torch,lmstudio,ollama,outetts,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin' and python_version > '3.12'",
-    "nnll[torch,lmstudio,ollama,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='linux' and python_version  < '3.13'",
-    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='linux' and python_version  > '3.12'",
-    "nnll[torch,lmstudio,ollama,vllm,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='windows' and python_version < '3.13'",
-    "nnll[torch,lmstudio,ollama,vllm,outetts,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='windows' and python_version > '3.12'",
+    "nnll[torch,lmstudio,ollama,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='Linux' and python_version  < '3.13'",
+    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='Linux' and python_version  > '3.12'",
+    "nnll[torch,lmstudio,ollama,vllm,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform == 'windows' and python_version < '3.13'",
+    "nnll[torch,lmstudio,ollama,vllm,outetts,hidiffusion,cu126,cu128,flax,jax,onnx] ; sys_platform == 'windows' and python_version > '3.12'",
 
 ]
 dev = [
