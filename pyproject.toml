@@ -137,13 +137,7 @@ openai = [
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 
 full = [
-    "nnll[torch,lmstudio,ollama,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin' and python_version < '3.13'",
-    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,mps,flax,jax,onnx]; sys_platform =='darwin' and python_version > '3.12'",
-    "nnll[torch,lmstudio,ollama,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='Linux' and python_version  < '3.13'",
-    "nnll[torch,lmstudio,ollama,outetts,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform =='Linux' and python_version  > '3.12'",
-    "nnll[torch,lmstudio,ollama,vllm,openai,hidiffusion,cu126,cu128,flax,jax,onnx]; sys_platform == 'windows' and python_version < '3.13'",
-    "nnll[torch,lmstudio,ollama,vllm,outetts,hidiffusion,cu126,cu128,flax,jax,onnx] ; sys_platform == 'windows' and python_version > '3.12'",
-
+    "nnll[torch,lmstudio,ollama,vllm,openai,hidiffusion,cu126,cu128,rocm,flax,jax,onnx]",
 ]
 dev = [
     "nnll[full]",
