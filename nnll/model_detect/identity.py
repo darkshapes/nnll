@@ -9,6 +9,8 @@ from nnll.monitor.file import dbuq
 
 
 class ModelIdentity:
+    arches_with_bundles = [".unet.", ".dit."]
+
     def __init__(self):
         from nnll.metadata.model_tags import ReadModelTags
         from nnll.mir.maid import MIRDatabase
@@ -36,6 +38,15 @@ class ModelIdentity:
         for name in class_names:
             if mir_tag := self.find_tag(field="pkg", target=name, sub_field="0"):
                 return mir_tag
+
+    async def bundled_check(self, folder_path_named: str, file_name: str) -> str | None:
+        mir_tags = []
+        metadata = self.reader.attempt_all_open(os.path.join(folder_path_named, file_name))
+        for series, comp in self.database.items():
+            if comp.get("identifiers", {}) and any(identifier for identifier in comp.get("identifiers") for layer_name in metadata if identifier in layer_name):
+                mir_tags.append([series, next(iter(comp))])
+        if mir_tags:
+            return [tag for tag in mir_tags if tag is not None]
 
     @lru_cache
     async def check_hex_tags(self, folder_path_named: str, file_name: str, hex_value: str) -> list[str] | None:
@@ -76,7 +87,7 @@ class ModelIdentity:
         :param repo_id: The identifier of the model repository whose layers are to be analyzed.
         :return:Found MIR tags for each model found within a directory; or None"""
 
-        from nnll.integrity.hash_256 import hash_layers_or_files
+        from nnll.integrity.hash_256 import HexSum
         from nnll.monitor.file import dbug as nfo
 
         @lru_cache
@@ -84,23 +95,30 @@ class ModelIdentity:
             for root, folders, files in os.walk(folder_path_named):
                 for folder_path_named in folders:
                     folder_path_absolute = os.path.join(root, folder_path_named)
-                    hashes: dict[tuple[str, str]] = await hash_layers_or_files(path_named=folder_path_absolute, layer=True, b3=True, unsafe=False)
+                    hashes: dict[tuple[str, str]] = await hex_sum.hash_layers_or_files(path_named=folder_path_absolute, layer=True, sha=False, unsafe=False)
                     for file_name, hex_value in hashes.items():
                         mir_tag = []
-                        dbuq(os.path.dirname(folder_path_absolute), file_name)
-                        mir_tag = await self.check_hex_tags(os.path.dirname(folder_path_absolute), file_name, hex_value)
+                        path_to_model = os.path.dirname(folder_path_absolute)
+                        dbuq(path_to_model, file_name)
+                        mir_tag = await self.check_hex_tags(path_to_model, file_name, hex_value)
                         if mir_tag and mir_tag not in mir_tags:
                             mir_tags.append(mir_tag)
+                            if any(arch for arch in self.arches_with_bundles if arch in mir_tag[0]):
+                                if bundle_tags := await self.bundled_check(path_to_model, file_name):
+                                    for tag in bundle_tags:
+                                        if tag not in mir_tags:
+                                            mir_tags.append(tag)
 
             return mir_tags
 
+        hex_sum = HexSum()
         mir_tags = []
         model_path_named = await self.get_cache_path(file_name=repo_id, repo_obj=repo_obj)
         if os.path.isdir(model_path_named):
             dbuq(f"{os.path.join(model_path_named)}")
             mir_tags = await scan_folder_hashes(model_path_named)
         else:
-            hash_data = await hash_layers_or_files(path_named=model_path_named, layer=True, b3=True, unsafe=False)
+            hash_data = await hex_sum.hash_layers_or_files(path_named=model_path_named, layer=True, sha=False, unsafe=False)
             if mir_tag := self.find_tag(field="layer_b3", target=next(iter(hash_data))):
                 return [mir_tag]
             sha_sum = os.path.basename(model_path_named).replace("sha256-", "")
@@ -129,12 +147,12 @@ class ModelIdentity:
                 lambda: self.label_model_layers(repo_id, cue_type, repo_obj),
                 lambda: self.find_tag(field="repo", target=repo_id),
                 lambda: class_to_mir_tag(self.mir_db, base_model) if base_model else None,
-                lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,
+                lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,  # what if no repo_folder? needs test
                 lambda: self.label_model_class(repo_id),
             ],
             "OLLAMA": [
                 lambda: class_to_mir_tag(self.mir_db, base_model) if base_model else None,
-                lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,
+                lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,  # what if no repo_folder? needs test
                 lambda: self.label_model_class(repo_id),
                 lambda: self.label_model_layers(repo_id, cue_type, repo_obj),
                 lambda: self.find_tag(field="repo", target=repo_id),

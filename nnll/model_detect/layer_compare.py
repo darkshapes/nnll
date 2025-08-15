@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
+# admittedly use of `grep` here is lazy, but native code should always be faster anyway
+# 誠然，在這裡使用「grep」是懶惰的，但無論如何，本機程式應該總是更快
+
 
 def compare_layers(query: str, file_path: str) -> None:
     """
@@ -53,7 +56,7 @@ def main() -> None:
         description="""Recursively search for layer name metadata in state dict .JSON files of the current folder. \n\
 Print filenames with matching layers to console along with the first matching layer's corresponding shape, and tensor counts.
 Offline function.""",
-        usage="nnll-find adaln",
+        usage="nnll-layer adaln",
         epilog="""Output:\n\
 2025-08-03 14:57:10 INFO     ('./Pixart-Sigma-XL-2-2k-ms.diffusers.safetensors.json', {'shape': [1152], 'tensors': 604})\
                              console.py:84

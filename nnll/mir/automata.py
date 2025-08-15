@@ -2,7 +2,9 @@
 # <!-- // /*  d a r k s h a p e s */ -->
 
 """自動化索引"""
-
+# regex to remove \[[^\]]*\]
+# (?m)^\s*"[^"]+"(?=\s*:)
+# (?m)^\s*"[^"]+"\s?:
 # modelspec sai https://github.com/Stability-AI/ModelSpec
 
 from logging import INFO, Logger
@@ -301,7 +303,7 @@ def mir_update(mir_db: MIRDatabase):
                         "generation": {"num_inference_steps": 40, "denoising_end": 0.8},
                     }
                 },
-                "identifiers": ["r'conditioner.embedders.0.model.transformer.resblocks.d+.mlp.c_proj.bias'"],
+                "identifiers": ["conditioner.embedders.0.model.transformer.resblocks.9.mlp.c_proj.bias"],
                 "file_256": [
                     "54f9cd2f2daf3aeec0b2708fa3dbc0e84e4f8ddd1ddead42e5bc60c6572c989f",  # diffusers
                     "7440042bbdc8a24813002c09b6b69b64dc90fded4472613437b7f55f9b7d9c5f",  # modelspec sai
@@ -815,7 +817,6 @@ def mir_update(mir_db: MIRDatabase):
                     "7d330da4816157540d6bb7838bf63a0f02f573fc48ca4d8de34bb0cbfd514f09",  # fp8_e4m3fn
                     "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34n
                     "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34
-                    "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",  # q5 k m gguf
                     "d8720addef2596fef86b1b22e4b62875c9118779ba8723759a75dfcbc649ffd5",  # mystic mlx
                     "7d0eac95abe8daae454bcd3d166b8bfc6a35fe68278f97479d62dbb6850f38c0",  # mlx flex2
                     "ceabd6f71c7112cfaa4dfca8711dda97b79fb9b25983f1c95532de226045f1f8",  # mlx jaguar q8
@@ -824,6 +825,17 @@ def mir_update(mir_db: MIRDatabase):
                     "7894547154ba3fd6e364e66e2951ee82b4c3fc1ae0f95df6a4f9d1c5a4e98f17",  # DeepFloyd/t5-v1_1-xxl sft
                     "eb529f693f4b17773a24e787fcba29486d5e1700dadcc20bb91e4c8b00212d08",  # pixart a
                     "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # flux dev
+                    "d80116f6fc39801e4eef425a584e7a7a41cbe5119797bef2dad67299909fe2ae",  # Q6K
+                    "31ebe18e901bfb6e5709a20ec1c95fce29bce2b9545073231e0f909a53239f5c",  # Q3 KS
+                    "6be2b0b7e2de7cf2919340c88cb802a103a997ce46c53131cec91958c1db1af4",  # Q4 KM
+                    "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",  # q5 k m gguf
+                    "9ec60f6028534b7fe5af439fcb535d75a68592a9ca3fcdeb175ef89e3ee99825",  # q8 0
+                    "8f5ab879234384235d56732f0cda07bf8801f30a49645248c5bfdeeb1665f64b",  # q3 kl
+                    "86427a1f4dba48940e45bf78d6db5bf0d48fce8b4656f5aba27955f06af9628e",  # q5ks
+                    "88b696cfae098f03bb078cc5944ef03aec1e91ec020a6b016b723a0f0532558c",  # q4ks
+                    "1dc600961d3c5ed081f6700485cdc7ed9cfb4631f2dc385b7ac6bd3c80846d0d",  # f16 gguf
+                    "f28631189911f8d7931e8fe642a4cb2a3c51f50da7cabbfa06b89bafc19c00d0",  # q3km
+                    "de9dfdd19d7ba6859993cadec5100665dc7a4fb71e1c6c8970959cbdaf4366e3",  # f32gguf
                 ],
                 "layer_b3": [
                     "ca94e03b7b1fdcb0d6ff5205eac56f145d2dff8a9c489faf80935bfec8387f18",  # bf16
@@ -833,7 +845,6 @@ def mir_update(mir_db: MIRDatabase):
                     "8926f862b7763fd9688af317eba7809aa71a478484be0c738c269de368ace4a7",  # diffusers
                     "e616b754cf55e55b3f9f17ab7e1fff95f0607c81782822fc1223ae22fb1e9f36",  # fp8 e4m3fn
                     "b79e5f1878a62cd726bb4f9fc1415cacb071d278440e9026290c7b36cb41e1d4",  # fp8 e4m3fn sd35
-                    "3f4e51dec6d542759cdea49b3bec14c090a4908f953fa3e182e2ea43b5b05402",  #  q5 k m gguf
                     "77619d5278d9f547ddac17d4d99df56cb6a3a9e660ae31b2f896a4297907e62e",  # mlx t5 jaguar
                     "c87c9d3cc7becc46ee34821299cf8551a6df5541582a45469a031bccdc4bd340",  # mlx shuttle t5 q8
                     "7e6c32c01c89fc5d1610c410135aa9708e77a7444510e5e479fa677ff2b53643",  # mlx jaguar q8
@@ -843,6 +854,17 @@ def mir_update(mir_db: MIRDatabase):
                     "f86cd0324eebbffb81b15ad47dc8b63fedfa51dc222e44e1a958a7becce2bcb0",  # df safetensors
                     "48c54c61c5f14e42761c6177539b2da3a22222516dab053952ca8d8e92f93d65",  # pixart a
                     "311332d9738773669128814d944b1e860a8e3176b37abf43370bc06b43b454d0",  # flux
+                    "3f4e51dec6d542759cdea49b3bec14c090a4908f953fa3e182e2ea43b5b05402",  #  q5 k m gguf
+                    "beb25461e168359108add77263ea5cc121b7584cc4aa304ffc4e134783bb1d88",  # ggufs
+                    "43313f90a359c8c1c787a7a833b1ab9f7a38204ba36d0ba587c658d0d9bf0852",
+                    "fa9e97cdad26f55fedab83a3f114e0338c9cca3ea2bf8f1b168a6dfc5919bf8e",
+                    "93108d67f8829a7e1e8f3773e9ce53c67f365889c2acfd69816ac80fd43f8e08",
+                    "fc65a6cc55e89394d7bc0fa4ee952d63ce3bdc143b84b5aa4bb3edf7722a6b83",
+                    "8163bc781a7e013dfeb806bbb828a36913cf119363ea5fcd9071d87a0c227cda",
+                    "ad2ba63e1134bad1b15ee339313bc130708b2995e8b4b76fb44d727f28c26ad9",
+                    "4a844772638ffed2f61d45eaac984094b92540fa1391a4098608fc73a6cd4fd8",
+                    "76c31e1fd35da7de7cee97c1e7c5ccde640e6fac3e17a62e115ecf484c7196c3",
+                    "a4d672e22b5bdd8f8b0885cec4a173d0466bb1dcbfbf8400cedcc41c2494f16c",  # ggufs
                 ],
                 "layer_256": [
                     "bb20f7805209379aea4d6548f17e551cf27d0f8426ca169e4df8234f718ed5ef",
@@ -860,6 +882,16 @@ def mir_update(mir_db: MIRDatabase):
                     "6e047ed8cb7007034ff15840dd53c92096f0e7ed5befa07808de8afa35d35874",  # safetensors
                     "adbd0baa059074501b7686db2b0c01715f3a317275c2657c5dfbfd6ee92389b7",
                     "eb63790fb32b5660de34fa42c2e608df58f7aa3680b4984f0ee9008fe613729c",
+                    "f125c20a33b0ff2dbd4e8ad9acebc34383cb2ef98668169ef79a8c06655ced35",
+                    "e64e0ac83a785ef584a0e86b347fae8f9e2bd84324a49396ca8a9fe7532a947b",  # GGUF
+                    "70001b3ac1b66522142bb86e4c3e87e20c2bbd07276c763878e0838ef6184aad",
+                    "f46fd1e2b5fef3b9f7ae80d183cc77f7be181117a72a0bb933bdef0bc6cd679e",
+                    "83676d73726d101325a47c7f8a60cedf10bab99ea79a6bedad7761220cb4a625",
+                    "a621a907586e5e270e7c7873b167364d8a935ff347d8240fa9bab319678da690",
+                    "f0af1a089f40d8611db5c59469314f1547e2df23c6eff24860359b37ea9bd966",
+                    "72478320b8dbfd9aeaea010dcf0896e3116fa5ab940f3b472882d9f9d2d7333f",
+                    "9c1a88e36334a48d8482fec54b14ea1d5fd31f0dbb65d13cc616e63dc7c42be5",
+                    "d0689f727e8ac4fef3ec4b1f29e8a3bd12e1116559eeefb2a1a457cd4e676d1e",
                 ],
             },
         ),
@@ -875,6 +907,16 @@ def mir_update(mir_db: MIRDatabase):
                     "c0ef3a140898e228a3520c9adec60743d2e8e5b3d229651bb37f1a3921919f99",  # wan
                     "7b8850f1961e1cf8a77cca4c964a358d303f490833c6c087d0cff4b2f99db2af",  # wan i2ixxl sai fp16
                     "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68",  # wan i2i xxl sai fp8_e4m3fn scaled sai
+                    "fa1d36fd54f171ae60fea915c23bd77986b330bbed9729f0d2f8ecbe9168bc48",  # gguf
+                    "4a3176f32fd70c0a335b4419fcbf8c86cc875e23498c0fc06f5b4aa0930889e0",
+                    "adbc782b9145a27e15d63dfa25057efca0ac75e2db7d372c901ddaa130ca2def",
+                    "b7e2ca4c493c9d51fa951005e8ceba2f4b6b6877cfb4c36a8955c6cd68a1dba7",
+                    "2521d4de0bf9e1cc6549866463ceae85e4ec3239bc6063f7488810be39033bbc",
+                    "9209b4c77b34ad8cf3f06b04c6eaa27e7beeebb348a31f85e3b38a1d719b09ed",
+                    "8bc12d80bc0413573fa58a93626117440b4528f640dd9cb310732e05fa9e6c3e",
+                    "f64f8d6dc4d8a24276df69d0ccea789aae686f7417950a41e6568c30cb478a5c",
+                    "17cf97a5bbbc60a646d6105b832b6f657ce904a8a1ad970e4b59df0c67584a40",
+                    "eaea358bb438c5d211721a4feecc162000e3636e9cb96f51e216f1f44ebd12ce",
                 ],
                 "layer_b3": [
                     "cd92b29c9099a640e3f5d4a76e64b3467f87f6c056119e0defdff94d311ad6de",  # wan t2i diff
@@ -883,6 +925,16 @@ def mir_update(mir_db: MIRDatabase):
                     "72a0329740dee29a2c099eec3c320b3945590a74293356014c30249fe69652e5",  # wan
                     "0374cba03c607ffe8ab8f04994d82f82e80901dc7578f1a9a6cb2637608be5d5",
                     "d75a407f873e1cfa1a0a36214b53b14bfebe9253ea263465151c07f0d57f3f29",
+                    "621153502b985c143d304318c91dc3d10296d24268c81e3538fc336fdc84c915",  # gguf
+                    "43bb052945d38a68bec27c3d26162e88e306e6074d027d3b4b2b8ae2b1851691",
+                    "98f50ea5d55e61c1478df47e567e48bdd036d240b9129e64d53a826406900adc",
+                    "9400313b8eae31699473daa5f840d25a4ef660f68de9a7894f1a28f214f23384",
+                    "9f13826b8e4ddde24d80de6a947a7868e26cea25dda52790ee6ed695ff72b9bb",
+                    "475773ab108a537ff904b84e7f3a80129ba4983deb7170b6b52c922ece6069ce",
+                    "5ef27b3c1eddb08cfe41b452cf9529d86dff811645d40c165bae324486d19e96",
+                    "e170559d8551cfe651344594e54c0a9a90c0068b00f3866f6e9a3737e20925cb",
+                    "e8dc7442a20bcdc7b6e5dd0265939d88896eab5ddd33ee16f1f09537e65914b8",
+                    "4d3d5049857d01741780daf01e96617092973305637b435f4895499a26bbaede",
                 ],
                 "layer_256": [
                     "467916d35f3053dce1d40d998fcaf6aa03feda75aa578d964dd61461e23641a3",  # wan i2i diff
@@ -891,6 +943,16 @@ def mir_update(mir_db: MIRDatabase):
                     "8700dcb651465fe6c925b7ad6068b58b32951832fff0ed19819510f8d0713ee5",  # wan
                     "954f2129ba166e746c71433f717b572d8869ec14b32b7f214d1701d3b1120047",
                     "32f5fc1daea014b6488b96c2a1330e0aad87e074844fa3e2e3f20b9e58440395",
+                    "9245abaf6df8a4b5fcc828ecbcd7b21a1b19bf5f3c4388fb5c8eabc140276dce",
+                    "172d0fbbd379ae014a7008e148813818494e9e645db802fd000d443369df9d17",  # gguf
+                    "2fa68a26b0386aaf9123d2b4067dafc8631ee724602197dd353f3ea5a61dac8a",
+                    "16f0054014e6d07b86b0526d5bcfed7d2aa3aebe3e44e6758933d90cbd3da46e",
+                    "fd62047f5d27ff43210c117dc0f253c101e694a5331d6b684688606c92c65ccf",
+                    "ddc4f38db9f132fb1b736c1d693b5c039a2d6fe83bdf4f1c1e7a2745b5d79124",
+                    "9e9ab11b3ea059b84ae2bcc5be76ab3f730a486d92a16f1fd2a959bdc2ede08f",
+                    "bfb178b1ce27f00e122d2328c662fdef6cc239c07efc749aa61ae2d395441b02",
+                    "50addf6a911b90194a75b0212429d1af55eb2f9d24715479b9ccc4a40adc299b",
+                    "2e46e9f1b714d72160d3b3b775a845b3049a01396fab935f1278d9e8de2ef0c6",
                 ],
             },
         ),
