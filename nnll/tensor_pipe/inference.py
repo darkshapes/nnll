@@ -2,7 +2,7 @@
 # <!-- // /*  d a r k s h a p e s */ -->
 
 
-def run_inference(pipe_data: tuple,  prompts: dict, **user_set) -> None:
+def run_inference(pipe_data: tuple, prompts: dict, **user_set) -> None:
     """Dynamially build diffusion process based on model architecture\n
     :param constructor_data: Preassembled pipe
     :param prompt: Instructions to the generative model, defaults to ''
@@ -27,20 +27,24 @@ def run_inference(pipe_data: tuple,  prompts: dict, **user_set) -> None:
     generation.update(user_set)
     metadata = None
     content = None
-    gen_data = {"parameters": {}}
     device = first_available()
-    if "diffusers" in pipe_call.get('pkg_name').lower():
+    pkg_name = pipe_call.get("pkg_name").lower()
+    if "diffusers" in pkg_name:
         pipe.to(device)
         pipe = add_generator(pipe=pipe, noise_seed=noise_seed)
         content = pipe(prompt=prompt, **generation).images[0]
         # may also be video or audio!!
-    elif "audiogen"in pipe_call.get('pkg_name').lower():
+    elif "mflux" in pkg_name:
+        from mflux.config.config import Config
+
+        content = pipe.generate_image(seed=noise_seed, prompt=prompt, config=Config(**generation))
+    elif "audiogen" in pkg_name:
         pipe = next(iter(pipe))
         metadata = pipe.sample_rate
         pipe.to(device)
         content = pipe.generate([prompt])
         generation.update({"sample_rate": pipe.config.sampling_rate})
-    elif "parler_tts" in pipe_call.get('pkg_name').lower():
+    elif "parler_tts" in pkg_name:
         input_ids = pipe[1](prompt).input_ids.to(device)
         prompt_input_ids = pipe[1](prompt).input_ids.to(device)
         pipe = pipe[0]
@@ -50,6 +54,6 @@ def run_inference(pipe_data: tuple,  prompts: dict, **user_set) -> None:
         generation.update({"sampling_rate": pipe.config.sampling_rate})
     if content:
         # from nnll.integrity.hashing import collect_hashescollect_hashes(kwargs["model"]
-        metadata = {"parameters": {"pipe":pipe, "model":model, "prompt":prompts, "kwargs":generation}}
+        metadata = {"parameters": {"pipe": pipe, "model": model, "prompt": prompts, "kwargs": generation}}
         nfo(f"content type output {content}, {type(content)}")
         disk.write_to_disk(content, metadata)

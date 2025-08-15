@@ -85,17 +85,10 @@ class ConstructPipeline:
                 return pipe_obj.from_single_file(model, **kwargs)
             else:
                 return pipe_obj.from_pretrained(model, **kwargs)
+        elif pkg_name == "mflux":
+            return pipe_obj(model_name="model", **kwargs)
         elif pkg_name == "audiogen":
             return pipe_obj.get_pretrained(model, **kwargs)
-        elif pkg_name == "mflux":
-            from mflux import ModelConfig
-
-            return pipe_obj(
-                model_config=ModelConfig.from_alias(
-                    kwargs["alias"],
-                    local_path=kwargs["path"],
-                )
-            )
         elif pkg_name == "chroma":
             return pipe_obj(**kwargs)
 

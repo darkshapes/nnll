@@ -268,14 +268,13 @@ if __name__ == "__main__":
         tasks_off = args.tasks_off
         pipes_off = args.tasks_off
 
+    # mir_db = MIRDatabase()
     sys.path.append(os.getcwd())
     mir_db = main(remake_off=remake_off)
     if not tasks_off:
         from nnll.model_detect.tasks import main
-
     mir_db = main()
     if not pipes_off:
         from nnll.model_detect.tasks import pipe
-
     mir_db = pipe()
     mir_db.write_to_disk()
