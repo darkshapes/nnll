@@ -208,6 +208,7 @@ class AutoPkg:
         filtered_tasks = None
         snip_words: set[str] = {"load_tf_weights_in"}
         package_name = next(iter(pkg_tree))
+        dbuq(pkg_tree)
         class_name = pkg_tree[package_name]
         dbuq(f"{package_name}, {class_name}")
         if class_name not in self.skip_auto:

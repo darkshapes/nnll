@@ -154,9 +154,9 @@ async def test_label_model_hub_ordering(model_identity):
     )
     assert result == ["layer_tag_hub"]
 
-    # with pytest.raises(AssertionError) as exc_info: # To ensure later strategies were never called (higher precision identity check on)
-    model_identity.find_tag.assert_called_once()  # This gets called first now
-    # assert type(exc_info.value) is AssertionError
+    with pytest.raises(AssertionError) as exc_info:  # To ensure later strategies are never called (higher precision identity check on)
+        model_identity.find_tag.assert_called_once()  # This does not get called first
+    assert type(exc_info.value) is AssertionError
 
     # model_identity.label_model_class.__wrapped__
     # print(pytest.CallInfo(model_identity.label_model_class.__wrapped__))

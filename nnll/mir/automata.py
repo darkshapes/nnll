@@ -441,6 +441,15 @@ def mir_update(mir_db: MIRDatabase):
                         "precision": "ops.precision.bfloat.B16",
                     },
                 },
+                "file_256": [
+                    "b0b50c33be8758713459aa3c760feef6315d4bea31521fb5b8c3e8fdd9841ffe",
+                ],
+                "layer_b3": [
+                    "461e3d83dfa7e075ef21e2138ef153922ecfadde3db464b03dff92819f3e86dd",
+                ],
+                "layer_256": [
+                    "b928bbcc2ce99d55d21c189e2b1c57498bc313ef5b1457036e356107d567fc4e",
+                ],
             },
         ),
         (
@@ -882,6 +891,21 @@ def mir_update(mir_db: MIRDatabase):
                     "8700dcb651465fe6c925b7ad6068b58b32951832fff0ed19819510f8d0713ee5",  # wan
                     "954f2129ba166e746c71433f717b572d8869ec14b32b7f214d1701d3b1120047",
                     "32f5fc1daea014b6488b96c2a1330e0aad87e074844fa3e2e3f20b9e58440395",
+                ],
+            },
+        ),
+        (
+            "google/gemma2-9b",
+            "Gemma2Model",
+            {
+                "file_256": [
+                    "e909230aabafad02d097c7dc02f2ae062b4e6b0593477c1f07679d277e09ce71",  # sana bf16
+                ],
+                "layer_b3": [
+                    "55a3c812ac0832d154867f5927365bcc776926e48e65f7f35a81fc11f4bb81da",
+                ],
+                "layer_256": [
+                    "a0d820c39578cf888f398579d9a00d69b31c81e049795ba70008dad8fe5b3a33",
                 ],
             },
         ),
@@ -2555,9 +2579,9 @@ def add_mir_vae(mir_db: MIRDatabase):
             pkg={
                 0: {"diffusers": "AutoencoderDC"},
             },
-            file_256=[],
-            layer_b3=[],
-            layer_256=[],
+            file_256=["15a4b09e56d95b768a0ec9da50b702e21d920333fc9b3480d66bb5c7fad9d87f"],
+            layer_b3=["cf4ecc6697d18b0663e4eac58203f1dd6d9fb689cf99adfeadbc0019de0c73d0"],
+            layer_256=["abfc39d1a6d71f03dde7bc40fec4a90478a97d17ae1688be9aad00e0512b9bde"],
         )
     )
     series, comp = make_mir_tag("stabilityai/stable-audio-open-1.0")

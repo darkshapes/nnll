@@ -45,30 +45,6 @@ def generate_mlx_lm():
     print(output)
 
 
-def generate_mflux():
-    from mflux.flux.flux import Flux1
-    from mflux.config.config import Config
-
-    # Load the model
-    flux = Flux1.from_name(
-        model_name="schnell",  # "schnell" or "dev"
-        quantize=8,  # 4 or 8
-
-    )
-
-    # Generate an image
-    image = flux.generate_image(
-        seed=2,
-        prompt="Luxury food photograph",
-        config=Config(
-            num_inference_steps=2,  # "schnell" works well with 2-4 steps, "dev" works well with 20-25 steps
-            height=1024,
-            width=1024,
-        ),
-    )
-    write_to_disk(content=image)
-
-
 def generate_chroma():
     import sys
     import mlx.core as mx

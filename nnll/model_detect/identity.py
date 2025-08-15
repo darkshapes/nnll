@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
-from typing import Callable, Awaitable
-from functools import lru_cache
 import os
+from functools import lru_cache
+from typing import Awaitable, Callable
+
 from nnll.monitor.file import dbuq
 
 
@@ -37,6 +38,39 @@ class ModelIdentity:
                 return mir_tag
 
     @lru_cache
+    async def check_hex_tags(self, folder_path_named: str, file_name: str, hex_value: str) -> list[str] | None:
+        """Run a series of checks against known hex values of files, minimizing calculation while ensuring accuracy\n
+        :param folder_path_named: Folder path to a model
+        :param file_name: File name of the model
+        :param hex_value: BLAKE3 of the file layers
+        :return: A MIR tag linking the model information to the file, or None if not matched"""
+        from pathlib import Path
+
+        from nnll.integrity.hashing import compute_hash_for
+
+        file_path_absolute = os.path.join(folder_path_named, file_name)
+        linked_file_path = None
+        if os.path.islink(file_path_absolute):  # if the file is linked its likely from hf cache
+            linked_file_path = os.readlink(file_path_absolute)
+        linked_file_name = os.path.basename(linked_file_path) if linked_file_path else file_name
+        if not Path(linked_file_name).suffix:  # the file may be named its 256 hash, saving computation while improving accuracy
+            try:
+                int(linked_file_name.strip("sha256-"), 16)  # check to be sure its hexadecimal
+            except (TypeError, ValueError):
+                pass
+            else:
+                if mir_tag := self.find_tag(field="file_256", target=linked_file_name):
+                    return mir_tag
+        else:
+            mir_tag = self.find_tag(field="layer_b3", target=hex_value)  # ok well forget that
+            if mir_tag and not any(mir_tag[0].startswith(prefix) for prefix in ["info.lora", "info.vae"]):  # b3 unreliable for lora/vae
+                return mir_tag
+            else:
+                if os.path.getsize(file_path_absolute) / 1024e3 < 500:  # dont bother hashing if the file is too large, this routine runs boot after all
+                    if mir_tag := self.find_tag(field="file_256", target=compute_hash_for(file_path_named=file_path_absolute)):  # a slow 256 calc
+                        return mir_tag
+
+    @lru_cache
     async def label_model_layers(self, repo_id: str, cue_type: str, repo_obj: Callable | None = None) -> list[str] | None:
         """Identifies and returns MIR tags associated with the layers of a model folder from disk cache.\n
         :param repo_id: The identifier of the model repository whose layers are to be analyzed.
@@ -53,13 +87,11 @@ class ModelIdentity:
                     hashes: dict[tuple[str, str]] = await hash_layers_or_files(path_named=folder_path_absolute, layer=True, b3=True, unsafe=False)
                     for file_name, hex_value in hashes.items():
                         mir_tag = []
-                        file_path_named = os.path.join(folder_path_named, file_name)
-                        mir_tag = self.find_tag(field="layer_b3", target=hex_value)
-                        if mir_tag:
-                            mir_tags.insert(0, mir_tag)
-                        elif os.path.islink(file_path_named) and os.readlink(file_path_named):  # check huggingface symlinks
-                            if mir_tag := self.find_tag(field="file_256", target=os.path.basename(file_path_named)):
-                                mir_tags.insert(0, mir_tag)
+                        dbuq(os.path.dirname(folder_path_absolute), file_name)
+                        mir_tag = await self.check_hex_tags(os.path.dirname(folder_path_absolute), file_name, hex_value)
+                        if mir_tag and mir_tag not in mir_tags:
+                            mir_tags.append(mir_tag)
+
             return mir_tags
 
         mir_tags = []
@@ -75,7 +107,7 @@ class ModelIdentity:
             if mir_tag := self.find_tag(field="file_256", target=sha_sum):
                 return [mir_tag]
 
-        return mir_tags
+        return [*mir_tags]
 
     @lru_cache
     async def label_model(self, repo_id: str, base_model: str | None, cue_type: str, repo_obj: Callable | None = None) -> list[str] | list[list[str]] | None:
@@ -91,11 +123,11 @@ class ModelIdentity:
         dbuq(repo_id)
         if any(char for char in [":", "\\", "/"] if char in repo_id):
             repo_folder = os.path.basename(repo_id).lower().rsplit(":", 1)[0]
-            print(repo_id)
+            dbuq(repo_id)
         match_order = {  # ordered by most likely to match
             "HUB": [
-                lambda: self.find_tag(field="repo", target=repo_id),
                 lambda: self.label_model_layers(repo_id, cue_type, repo_obj),
+                lambda: self.find_tag(field="repo", target=repo_id),
                 lambda: class_to_mir_tag(self.mir_db, base_model) if base_model else None,
                 lambda: class_to_mir_tag(self.mir_db, repo_folder) if base_model else None,
                 lambda: self.label_model_class(repo_id),

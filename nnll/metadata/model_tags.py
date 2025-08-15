@@ -421,4 +421,4 @@ def main(
                     metadata = model_tool.attempt_all_open(file_path_named, separate_desc=separate_desc)
                 if metadata is not None:
                     save_location = ensure_path(save_location)
-                    write_json_file(save_location, f"{os.path.basename(root)}_{file_name}.json", metadata)
+                    write_json_file(save_location, f"{os.path.dirname(root)}_{os.path.basename(root)}_{file_name}.json", metadata)
