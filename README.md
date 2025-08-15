@@ -52,20 +52,42 @@ Enter a terminal and activate the python environment in
   > Set-ExecutionPolicy Bypass -Scope Process -Force; .venv\Scripts\Activate.ps1
   > ```
 
-Available terminal commands:<br>
-- <A href="#mir-add">`mir-add`</a>
-- <A href="#mir-maid">`mir-maid`</a>
-- <A href="#mir-tasks">`mir-tasks`</a>
-- <A href="#mir-pipe">`mir-pipe`</a>
-- <A href="#nnll-autocard">`nnll-autocard`</a>
-- <A href="#nnll-autohash">`nnll-autohash`</a>
-- <A href="#nnll-hash">`nnll-hash`</a>
-- <A href="#nnll-layer">`nnll-layer`</a>
-- <A href="#nnll-meta">`nnll-meta`</a>
+> [!IMPORTANT]
+> ## Classes, Methods & Constants :
+> ```
+> HexSum
+>      `--------------------------------------Model/State dict hashing
+> ReadModelTag
+>           `---------------------------------Universal model tag reader
+> ExtensionType
+>           `---------------------------------Model extension constants
+> JSONCache
+>        `------------------------------------Json read operations
+> Domain/Architecture/Series/Compatibility
+>                                       `-----MIR URI classes
+> Info/Model/Ops/Dev
+>                  `--------------------------MIR Domain sub-classes
+> MIRDatabase
+>           `---------------------------------Create MIR ID, Add/Query MIR database, database disk I/O
+> Automata
+>       `-------------------------------------MIR DB generation functions
+> ModelIdentity
+>            `--------------------------------Processor to tag MIR ID
+> ```
+> ## Available terminal commands:<br>
+> - <A href="#mir-add">`mir-add`</a>
+> - <A href="#mir-maid">`mir-maid`</a>
+> - <A href="#mir-tasks">`mir-tasks`</a>
+> - <A href="#mir-pipe">`mir-pipe`</a>
+> - <A href="#nnll-autocard">`nnll-autocard`</a>
+> - <A href="#nnll-autohash">`nnll-autohash`</a>
+> - <A href="#nnll-hash">`nnll-hash`</a>
+> - <A href="#nnll-layer">`nnll-layer`</a>
+> - <A href="#nnll-meta">`nnll-meta`</a>
 
 #### mir-add
 ```
-usage: mir-add --domain info --arch lora --series slam --compatibility sd1_series \
+sage: mir-add --domain info --arch lora --series slam --compatibility sd1_series \
         -k {'repo':'alimama-creative/slam-sd1.5', 'pkg':{0: {'diffusers': 'load_lora_weights'}}}
 
 Manually add entries to MIR database.
@@ -76,9 +98,10 @@ options:
   -d, --domain DOMAIN   Broad name of the type of data (model/ops/info/dev)
   -a, --arch ARCH       Common name of the neural network structure being referenced
   -s, --series SERIES   Specific release title or technique
-  -c, --compatibility COMPATIBILITY
+  -c, --comp, --compatibility COMP
                         Details about purpose, tasks
-  -k, --kwargs KWARGS   Keyword arguments to pass to function constructors (default: NOne)
+  -k, --kwargs, --keyword-arguments KWARGS
+                        Keyword arguments to pass to function constructors (default: NOne)
 
 MIR Class attributes:
          Domain: ['dev', 'info', 'model', 'ops']
@@ -99,7 +122,7 @@ options:
   -h, --help        show this help message and exit
   -r, --remake_off  Don't erase and remake the MIR database (default: False)
 
-Includes `mir-task` and `mir-pipe` if ran using `python -m nnll.mir.maid` . Output:
+Includes `mir-task` and `mir-pipe` by default. Output:
             2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
             2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)
 ```
@@ -115,7 +138,7 @@ Offline function.
 options:
   -h, --help  show this help message and exit
 
-Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.
+Can be run automatically with `python -m nnll.mir.maid` Should only be used after `mir-maid`.
 
 Output:
     INFO     ('Wrote #### lines to MIR database file.',)
@@ -133,7 +156,7 @@ Offline function.
 options:
   -h, --help  show this help message and exit
 
-Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.
+Can be run automatically with `python -m nnll.mir.maid` Should only be used after `mir-maid`.
 
 Output:
     INFO     ('Wrote #### lines to MIR database file.',)
@@ -172,9 +195,11 @@ options:
 
 #### nnll-autohash
 ```
-usage: nnll-autohash [-h] repo
+usage: nnll-autohash zai-org/GLM-4.5
 
-Generate hashes for files or state dicts located remotely or in a cached repo
+Generate a set of BLAKE3 and SHA356 hashes for files and state dicts in a cached or remote repo (ie: downloads)
+
+        Online function.
 
 positional arguments:
   repo        Relative path to repository
@@ -228,7 +253,7 @@ Output:
 ```
 usage: nnll-meta ~/Downloads/models/images -s ~Downloads/models/metadata
 
-Scan the state dict metadata from a folder of files at [path] to the console, then write to a json file at [save]
+Scan the state dict metadata from a folder of files at [path] to the console,                 then write to a json file at [save]
 Offline function.
 
 positional arguments:
@@ -241,7 +266,7 @@ options:
   -d, --separate_desc   Ignore the metadata from the header. (default: False)
   -u, --unsafe          Try to read non-standard type model files. MAY INCLUDE NON-MODEL FILES. (default: False)
 
-Valid input formats: ['.pth', '.ckpt', '.onnx', '.pt', '.pickletensor', '.safetensors', '.sft', '.gguf']
+Valid input formats: ['.sft', '.gguf', '.safetensors', '.pickletensor', '.ckpt', '.pt', '.pth', '.onnx']
 ```
 [A link to example output of the `nnll-meta` command](https://huggingface.co/darkshapes/MIR/blob/main/layer_data/chroma-unlocked-v46.safetensors.json)
 

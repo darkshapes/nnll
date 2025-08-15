@@ -239,7 +239,7 @@ def main(mir_db: MIRDatabase = None):
             formatter_class=argparse.RawTextHelpFormatter,
             description="Scrape the task classes from currently installed libraries and attach them to an existing MIR database.\nOffline function.",
             usage="mir-tasks",
-            epilog="Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+            epilog="Can be run automatically with `python -m nnll.mir.maid` Should only be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
         )
         parser.parse_args()
 
@@ -265,7 +265,7 @@ def pipe(mir_db: MIRDatabase = None):
             formatter_class=argparse.RawTextHelpFormatter,
             description="Infer pipe components from Diffusers library and attach them to an existing MIR database.\nOffline function.",
             usage="mir-pipe",
-            epilog="Can be run automatically with 'mir-maid' Should only be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
+            epilog="Can be run automatically with `python -m nnll.mir.maid` Should only be used after `mir-maid`.\n\nOutput:\n    INFO     ('Wrote #### lines to MIR database file.',)",
         )
         parser.parse_args()
 

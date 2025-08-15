@@ -176,7 +176,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
-        description="""Generate hashes for files or state dicts located remotely or in a cached repo\n
+        description="""Generate a set of BLAKE3 and SHA356 hashes for files and state dicts in a cached or remote repo (ie: downloads)\n
         Online function.""",
         usage="nnll-autohash zai-org/GLM-4.5",
     )
@@ -188,28 +188,28 @@ def main() -> None:
     contents = download_hub_file(repo_id=repo_id, source="huggingface")
 
     hash_kwargs = [
-        {"layer": False, "b3": False},
-        {"layer": True, "b3": False},
-        {"layer": True, "b3": True},
+        {"layer": False, "sha": True},
+        {"layer": True, "sha": True},
+        {"layer": True, "sha": False},
     ]
-    from nnll.integrity.hash_256 import hash_layers_or_files, write_to_file
+    from nnll.integrity.hash_256 import HexSum
+
+    hex_sum = HexSum()
 
     if contents:
         nfo(contents)
         for kwarg_set in hash_kwargs:
             hashes = {}
             for root, folders, files in os.walk(contents[0]):
-                hashed_layers = asyncio.run(hash_layers_or_files(path_named=root, **kwarg_set))
+                hashed_layers = asyncio.run(hex_sum.hash_layers_or_files(path_named=root, **kwarg_set))
                 for file_path in hashed_layers:
                     hashes.setdefault(file_path, hashed_layers[file_path])
-            file_name_prefix = "b3_" if kwarg_set["b3"] else "sha256_"
+            file_name_prefix = "sha256_" if kwarg_set["sha"] else "b3_"
             file_name_suffix = (f"layer_{os.path.basename(repo_id)}" if kwarg_set["layer"] else f"file_{os.path.basename(repo_id)}",)
             asyncio.run(
-                write_to_file(
+                hex_sum.write_to_file(
                     program=f"{file_name_prefix}{file_name_suffix}",
-                    folder_path_named=root,
                     hash_values=hashes,
-                    write_path=".",
                 )
             )
 

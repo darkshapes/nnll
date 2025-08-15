@@ -380,7 +380,7 @@ class ReadModelTags:
 
 def main(
     folder_path_named: str | None = None,
-    save_location: str | None = None,
+    save_location: str | None = os.getcwd(),
     separate_desc: bool | None = None,
     unsafe: bool | None = None,
 ) -> None:
@@ -408,17 +408,17 @@ def main(
 
     folder_path_named = os.getcwd() if not args else args.path
     separate_desc = True if not args else args.separate_desc
-    save_location = os.getcwd() if not args else args.save_to_folder_path
+    save_location = save_location if not args else args.save_to_folder_path
     unsafe = False if not args else args.unsafe
-    model_tool = ReadModelTags()
+    reader = ReadModelTags()
     if folder_path_named is not None:
         for root, folders, files in os.walk(folder_path_named):
             for file_name in files:
                 file_path_named = os.path.join(root, file_name)
                 if not unsafe:
-                    metadata = model_tool.read_metadata_from(file_path_named, separate_desc=separate_desc)
+                    metadata = reader.read_metadata_from(file_path_named, separate_desc=separate_desc)
                 else:
-                    metadata = model_tool.attempt_all_open(file_path_named, separate_desc=separate_desc)
+                    metadata = reader.attempt_all_open(file_path_named, separate_desc=separate_desc)
                 if metadata is not None:
                     save_location = ensure_path(save_location)
                     write_json_file(save_location, f"{os.path.dirname(root)}_{os.path.basename(root)}_{file_name}.json", metadata)
