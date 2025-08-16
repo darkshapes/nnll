@@ -124,7 +124,7 @@ hidiffusion = ["hidiffusion>=0.1.10"]
 # -- providers --
 ollama   = ["ollama>=0.5.1"]
 lmstudio = ["lmstudio>=1.3.1"]
-vllm     = ["vllm>=0.9.0.1 ; sys_platform == 'win32'"]
+vllm     = ["vllm>=0.9.0.1 ; sys_platform == 'Linux'"]
 
 openai = [
     "openai>=1.84.0",
