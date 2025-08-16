@@ -10,15 +10,18 @@ from nnll.monitor.file import dbuq
 
 class ModelIdentity:
     arches_with_bundles = [".unet.", ".dit."]
+    arches_low_tolerance = ["info.lora", "info.vae"]
 
     def __init__(self):
         from nnll.metadata.model_tags import ReadModelTags
         from nnll.mir.maid import MIRDatabase
+        from nnll.integrity.hash_256 import HexSum
 
         self.mir_db = MIRDatabase()
         self.database = self.mir_db.database
         self.find_tag = self.mir_db.find_tag
         self.reader = ReadModelTags()
+        self.hex_sum = HexSum()
 
     @lru_cache
     async def label_model_class(self, base_model: str) -> str | None:
@@ -39,27 +42,39 @@ class ModelIdentity:
             if mir_tag := self.find_tag(field="pkg", target=name, sub_field="0"):
                 return mir_tag
 
-    async def bundled_check(self, folder_path_named: str, file_name: str) -> str | None:
-        mir_tags = []
-        metadata = self.reader.attempt_all_open(os.path.join(folder_path_named, file_name))
-        for series, comp in self.database.items():
-            if comp.get("identifiers", {}) and any(identifier for identifier in comp.get("identifiers") for layer_name in metadata if identifier in layer_name):
-                mir_tags.append([series, next(iter(comp))])
-        if mir_tags:
-            return [tag for tag in mir_tags if tag is not None]
-
     @lru_cache
-    async def check_hex_tags(self, folder_path_named: str, file_name: str, hex_value: str) -> list[str] | None:
+    async def check_hex_tags(self, file_path_absolute: str) -> list[str] | None:
         """Run a series of checks against known hex values of files, minimizing calculation while ensuring accuracy\n
-        :param folder_path_named: Folder path to a model
+        :param folder_path_named: Folder path to models
         :param file_name: File name of the model
         :param hex_value: BLAKE3 of the file layers
         :return: A MIR tag linking the model information to the file, or None if not matched"""
+
+        hex_value = await self.hex_sum.hash_layers_or_files(path_named=file_path_absolute, sha=False, layer=True, desc_process=False)
+        if hex_value:
+            hex_value = hex_value[next(iter(hex_value))]
+            mir_tag = self.find_tag(
+                field="layer_b3",
+                target=hex_value,
+            )
+            if mir_tag and not any(mir_tag[0].startswith(prefix) for prefix in self.arches_low_tolerance):  # b3 unreliable for lora/vae
+                return mir_tag
+        if os.path.getsize(file_path_absolute) / 1024e3 < 500:  # dont hash large files; this segment will be slow
+            hex_value = await self.hex_sum.hash_layers_or_files(path_named=file_path_absolute, sha=True, layer=False, desc_process=False)
+            if hex_value:
+                hex_value = hex_value[next(iter(hex_value))]
+                if mir_tag := self.find_tag(field="file_256", target=hex_value):  # compare with the sha256 calc of the file
+                    return mir_tag
+
+    @lru_cache
+    async def check_hex_names(self, file_path_absolute: str) -> list[str] | None:
+        """Run a check against known hex values of files using filenames\n
+        :param folder_path_named: Folder path to a model
+        :param file_name: File name of the model
+        :return: A MIR tag linking the model information to the file, or None if not matched"""
         from pathlib import Path
 
-        from nnll.integrity.hashing import compute_hash_for
-
-        file_path_absolute = os.path.join(folder_path_named, file_name)
+        file_name = os.path.basename(file_path_absolute)
         linked_file_path = None
         if os.path.islink(file_path_absolute):  # if the file is linked its likely from hf cache
             linked_file_path = os.readlink(file_path_absolute)
@@ -72,14 +87,6 @@ class ModelIdentity:
             else:
                 if mir_tag := self.find_tag(field="file_256", target=linked_file_name):
                     return mir_tag
-        else:
-            mir_tag = self.find_tag(field="layer_b3", target=hex_value)  # ok well forget that
-            if mir_tag and not any(mir_tag[0].startswith(prefix) for prefix in ["info.lora", "info.vae"]):  # b3 unreliable for lora/vae
-                return mir_tag
-            else:
-                if os.path.getsize(file_path_absolute) / 1024e3 < 500:  # dont bother hashing if the file is too large, this routine runs boot after all
-                    if mir_tag := self.find_tag(field="file_256", target=compute_hash_for(file_path_named=file_path_absolute)):  # a slow 256 calc
-                        return mir_tag
 
     @lru_cache
     async def label_model_layers(self, repo_id: str, cue_type: str, repo_obj: Callable | None = None) -> list[str] | None:
@@ -87,44 +94,30 @@ class ModelIdentity:
         :param repo_id: The identifier of the model repository whose layers are to be analyzed.
         :return:Found MIR tags for each model found within a directory; or None"""
 
-        from nnll.integrity.hash_256 import HexSum
-        from nnll.monitor.file import dbug as nfo
-
         @lru_cache
         async def scan_folder_hashes(folder_path_named: str) -> list[list[str]]:
-            for root, folders, files in os.walk(folder_path_named):
-                for folder_path_named in folders:
-                    folder_path_absolute = os.path.join(root, folder_path_named)
-                    hashes: dict[tuple[str, str]] = await hex_sum.hash_layers_or_files(path_named=folder_path_absolute, layer=True, sha=False, unsafe=False)
-                    for file_name, hex_value in hashes.items():
-                        mir_tag = []
-                        path_to_model = os.path.dirname(folder_path_absolute)
-                        dbuq(path_to_model, file_name)
-                        mir_tag = await self.check_hex_tags(path_to_model, file_name, hex_value)
+            if os.path.isfile(folder_path_named):
+                folder_path_named = os.path.dirname(folder_path_named)
+            for root, _, files in os.walk(folder_path_named):
+                for file_name in files:
+                    file_path_absolute = os.path.join(root, file_name)
+                    mir_tag = []
+                    mir_tag = await self.check_hex_names(file_path_absolute)
+                    if mir_tag and mir_tag not in mir_tags:
+                        mir_tags.append(mir_tag)
+                    if not mir_tag:
+                        mir_tag = await self.check_hex_tags(file_path_absolute)
                         if mir_tag and mir_tag not in mir_tags:
                             mir_tags.append(mir_tag)
-                            if any(arch for arch in self.arches_with_bundles if arch in mir_tag[0]):
-                                if bundle_tags := await self.bundled_check(path_to_model, file_name):
-                                    for tag in bundle_tags:
-                                        if tag not in mir_tags:
-                                            mir_tags.append(tag)
 
             return mir_tags
 
-        hex_sum = HexSum()
         mir_tags = []
         model_path_named = await self.get_cache_path(file_name=repo_id, repo_obj=repo_obj)
-        if os.path.isdir(model_path_named):
-            dbuq(f"{os.path.join(model_path_named)}")
-            mir_tags = await scan_folder_hashes(model_path_named)
-        else:
-            hash_data = await hex_sum.hash_layers_or_files(path_named=model_path_named, layer=True, sha=False, unsafe=False)
-            if mir_tag := self.find_tag(field="layer_b3", target=next(iter(hash_data))):
-                return [mir_tag]
-            sha_sum = os.path.basename(model_path_named).replace("sha256-", "")
-            if mir_tag := self.find_tag(field="file_256", target=sha_sum):
-                return [mir_tag]
-
+        dbuq(f"{os.path.join(model_path_named)}")
+        mir_tags = await scan_folder_hashes(model_path_named)
+        if mir_tag_search := self.find_tag(field="repo", target=repo_id):
+            mir_tags.append(mir_tag_search)
         return [*mir_tags]
 
     @lru_cache
@@ -136,7 +129,6 @@ class ModelIdentity:
         :return: A list of found tags; if no matches are found, returns None"""
 
         from nnll.mir.tag import class_to_mir_tag
-        from nnll.monitor.file import dbuq
 
         dbuq(repo_id)
         if any(char for char in [":", "\\", "/"] if char in repo_id):

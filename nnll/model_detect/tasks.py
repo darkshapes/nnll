@@ -146,7 +146,6 @@ class AutoPkg:
                 detected_links["pipe_names"][pipe_role] = []
                 dbuq(f"pipe_class.__name__ {pipe_class.__name__} {pipe_class}")
                 if pipe_class.__name__ in ["Union"]:
-                    tags_or_classes = []
                     for union_class in pipe_class.__args__:
                         mir_tag = None
                         class_name = union_class.__name__
@@ -154,8 +153,7 @@ class AutoPkg:
                             mir_tag, class_name = await self.tag_class(pipe_class=union_class, pipe_role=pipe_role, series=series, mir_db=mir_db)
                             # mir_tag = mir_db.find_tag(field="tasks", target=class_name)
                             # dbuq(f"{mir_tag} {class_name}")
-                            tags_or_classes.append(mir_tag if mir_tag else class_name)
-                    detected_links["pipe_names"][pipe_role].extend(tags_or_classes)
+                        detected_links["pipe_names"][pipe_role].append(mir_tag if mir_tag else class_name)
                 else:
                     mir_tag, class_name = await self.tag_class(pipe_class=pipe_class, pipe_role=pipe_role, series=series, mir_db=mir_db)
                     detected_links["pipe_names"][pipe_role] = mir_tag if mir_tag else [class_name]

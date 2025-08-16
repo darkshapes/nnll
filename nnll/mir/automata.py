@@ -270,7 +270,14 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             {
                 "pkg": {
                     0: {
-                        "generation": {"denoising_end": 0.8, "output_type": "latent", "safety_checker": False, "width": 1024, "height": 1024},
+                        "generation": {
+                            "denoising_end": 0.8,
+                            "num_inference_steps": 40,
+                            "output_type": "latent",
+                            "safety_checker": False,
+                            "width": 1024,
+                            "height": 1024,
+                        },
                     },
                     1: {"diffusers": "DiffusionPipeline"},
                 },
@@ -1247,19 +1254,32 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             comp=make_mir_tag(repo)[0],
             repo=repo,
             file_256=[
-                "bcaa7dd6780974f000b17b5a6c63e6f867a75c51ffa85c67d6b196882c69b992",  # fp16
-                "956dca99114aaa5c3eb526381309d37ee96737e78ed64c8ae613409f47c3f65a",
+                "11b6d7bce65674659cc6b7ea960658436edfd80e566cb240ebd4bfbc3e2076c8",  # 2.5 diffusers
+                "bcaa7dd6780974f000b17b5a6c63e6f867a75c51ffa85c67d6b196882c69b992",  # 2.5 aes sai fp16
+                "956dca99114aaa5c3eb526381309d37ee96737e78ed64c8ae613409f47c3f65a",  # 2.5 aes sai
+                "933778ce76c1fc0ca918b37e1488411b8a99bbd3279c12f527a3ac995a340864",  # 2.5 fp16 diffusers
+                "5c7d38880d0940e6795158b7608ccef89217272b1f2a9331c5b0a2adffcd82c4",  # v2 sai
+                "0411e988479884b1a3ecd184123efe38d051d8d0ef24270585a7d1d57499464a",  # v2 sai fp16
             ],
             layer_b3=[
-                "7e9be9bd9a3aed1ad7207e2f77c98c24c3a75f6adcc9b53514033c6c3365d289",
-                "5c6dfcc8d01dfb64723f8f5785caa080e2987859c0a050470bfdbe5312be9efc",
+                "d55b22740da2d5b98020ad2390cdc0a7ee08cf9e0d98c11957f16cc20c49815b",  # 2.5 diffusers
+                "7e9be9bd9a3aed1ad7207e2f77c98c24c3a75f6adcc9b53514033c6c3365d289",  # 2.5 aes sai fp16
+                "5c6dfcc8d01dfb64723f8f5785caa080e2987859c0a050470bfdbe5312be9efc",  # 2.5 aes sai
+                "703f775c6e48ed5b0eba6e847414f047bcd4adc677dbc1bf221b3ef05b2ac471",  # 2.5 diffusers fp16
+                "72d4ebe4af61f8a7add8fe36b8acd16602894279fb5a744ad50b5b5bac7067b8",  # v2 sai
+                "acb757b851db12cdf9d4365a45ee0d6e64afa77ac95583bb82711baf7c4125fd",  # v2 sai fp16
             ],
             layer_256=[
+                "adb7be228d4ee6e583c3e5ae4ddb579fef64c3987617ce4d4aff3eb7f8d6a3f7",
+                "d4813e9f984aa76cb4ac9bf0972d55442923292d276e97e95cb2f49a57227843",  # 2.5 aes sai fp16
                 "fe2e9edf7e3923a80e64c2552139d8bae926cc3b028ca4773573a6ba60e67c20",
-                "d4813e9f984aa76cb4ac9bf0972d55442923292d276e97e95cb2f49a57227843",
+                "bc7021473a04a6de3fe0d0fed600875d852ad1ad9d47c445278f66ce9e8ec7a0"  # 2.5 fp16 diffusers
+                "fc94481f0c52b21c5ac1fdade8d9c5b210f7239253f86ef21e6198fe393ed60e",  # v2 sai
+                "a6f31493ceeb51c88c5239188b9078dc64ba66d3fc5958ad48c119115b06120c",  # v2 sai fp16
             ],
             pkg={
                 0: {
+                    "diffusers": "DiffusionPipeline",
                     "precision": "ops.precision.float.F16",
                     "generation": {"num_inference_steps": 50, "guidance_scale": 3},
                 }
