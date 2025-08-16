@@ -76,7 +76,7 @@ Enter a terminal and activate the python environment in
 > ```
 > ## Available terminal commands:<br>
 > - <A href="#mir-add">`mir-add`</a>
-> - <A href="#mir-maid">`mir-maid`</a>
+> - <A href="#mir-maid">`mir-maid`/`python -m nnll.mir-maid`</a>
 > - <A href="#mir-tasks">`mir-tasks`</a>
 > - <A href="#mir-pipe">`mir-pipe`</a>
 > - <A href="#nnll-autocard">`nnll-autocard`</a>
@@ -112,6 +112,11 @@ MIR Class attributes:
 [A link to example output of the `mir-add` command](nnll/mir/config/mir.json)
 
 #### mir-maid
+
+> [!TIP]
+> Using `python -m nnll.mir-maid` instead of mir-maid includes mir-task and mir-pipe
+>
+
 ```
 usage: mir-maid
 
@@ -120,7 +125,7 @@ Offline function.
 
 options:
   -h, --help        show this help message and exit
-  -r, --remake_off  Don't erase and remake the MIR database (default: False)
+  -r, --remake_off  Prevent erasing and remaking the MIR database file (default: False, always start from a completely empty MIR file)
 
 Includes `mir-task` and `mir-pipe` by default. Output:
             2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)

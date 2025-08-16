@@ -162,10 +162,33 @@ class MIRDatabase:
             return None
 
 
-def main(mir_db: Callable = MIRDatabase(), remake_off: bool = False) -> None:
+def main(mir_db: Callable = MIRDatabase(), remake: bool = True) -> None:
     """Build the database"""
+    from sys import modules as sys_modules
 
-    from nnll.integrity import ensure_path
+    if __name__ != "__main__" and "pytest" not in sys_modules:  #
+        import argparse
+        from nnll.monitor.console import nfo
+
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawTextHelpFormatter,
+            description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
+            usage="mir-maid",
+            epilog="""Does NOT include results of `mir-task` and `mir-pipe`. These commands should be run separately. Output:
+            2025-08-03 14:22:47 INFO     ('Wrote 0 lines to MIR database file.',)
+            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
+        )
+        parser.add_argument(
+            "-r",
+            "--remake_off",
+            action="store_true",
+            default=False,
+            help="Prevent erasing and remaking the MIR database file (default: False, always start from a completely empty MIR file)",
+        )
+
+        args = parser.parse_args()
+        remake = not args.remake_off
+
     from nnll.mir.automata import (
         add_mir_audio,
         mir_update,
@@ -177,38 +200,19 @@ def main(mir_db: Callable = MIRDatabase(), remake_off: bool = False) -> None:
         add_mir_llm,
         add_mir_vae,
     )
+    from nnll.integrity import ensure_path
     from nnll.monitor.console import nfo
-    from sys import modules as sys_modules
 
-    if __name__ != "__main__" and "pytest" not in sys_modules:  #
-        import argparse
-        from nnll.monitor.console import nfo
-
-        parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawTextHelpFormatter,
-            description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
-            usage="mir-maid",
-            epilog="""Includes `mir-task` and `mir-pipe` by default. Output:
-            2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
-            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
-        )
-        parser.add_argument(
-            "-r",
-            "--remake_off",
-            action="store_true",
-            default=False,
-            help="Don't erase and remake the MIR database (default: False)",
-        )
-
-        args = parser.parse_args()
-        remake_off = args.remake_off
     try:
         os.remove(MIR_PATH_NAMED)
     except (FileNotFoundError, OSError) as error_log:
         nfo(f"MIR file not found before write, regenerating... {error_log}")
     ensure_path(folder_path_named=os.path.dirname(MIR_PATH_NAMED), file_name=os.path.basename(MIR_PATH_NAMED))
-    if not remake_off:
+
+    mir_db = MIRDatabase()
+    if remake:
         mir_db.database = {}
+        mir_db.write_to_disk()
     hf_pkg_to_mir(mir_db)
     add_mir_dtype(mir_db)
     add_mir_schedulers(mir_db)
@@ -216,19 +220,17 @@ def main(mir_db: Callable = MIRDatabase(), remake_off: bool = False) -> None:
     add_mir_audio(mir_db)
     add_mir_diffusion(mir_db)
     add_mir_llm(mir_db)
-    mir_update(mir_db)
     add_mir_vae(mir_db)
+    mir_update(mir_db)
     mir_db.write_to_disk()
-    return mir_db
 
 
 if __name__ == "__main__":
-    import sys
+    remake: bool = True
+    tasks = True
+    pipes = True
     from sys import modules as sys_modules
 
-    remake_off = False
-    tasks_off = False
-    pipes_off = False
     if "pytest" not in sys_modules:  #
         import argparse
         from nnll.monitor.console import nfo
@@ -236,10 +238,12 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,
             description="Build a custom MIR model database from the currently installed system environment.\nOffline function.",
-            usage="mir-maid",
+            usage="python -m nnll.mir.maid",
             epilog="""Includes `mir-task` and `mir-pipe` by default. Output:
-            2025-08-03 14:22:47 INFO     ('Available torch devices: mps',)
-            2025-08-03 14:22:47 INFO     ('Wrote #### lines to MIR database file.',)""",
+            2025-08-15 19:41:18 INFO     ('Wrote 0 lines to MIR database file.',)
+            2025-08-15 19:38:48 INFO     ('Wrote ### lines to MIR database file.',)
+                                INFO     ('Wrote ### lines to MIR database file.',)
+                                INFO     ('Wrote ### lines to MIR database file.',)""",
         )
         parser.add_argument(
             "-r",
@@ -264,17 +268,12 @@ if __name__ == "__main__":
         )
 
         args = parser.parse_args()
-        remake_off = args.remake_off
-        tasks_off = args.tasks_off
-        pipes_off = args.tasks_off
+        remake = not args.remake_off
+        tasks = not args.tasks_off
+        pipes = not args.pipes_off
 
-    # mir_db = MIRDatabase()
-    sys.path.append(os.getcwd())
-    mir_db = main(remake_off=remake_off)
-    if not tasks_off:
-        from nnll.model_detect.tasks import main
-    mir_db = main()
-    if not pipes_off:
-        from nnll.model_detect.tasks import pipe
-    mir_db = pipe()
-    mir_db.write_to_disk()
+    main(remake=remake)
+    from nnll.model_detect.tasks import run_task, pipe
+
+    run_task()
+    pipe()
