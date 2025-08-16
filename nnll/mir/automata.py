@@ -259,7 +259,7 @@ def add_mir_schedulers(mir_db: MIRDatabase):
 # ai-forever/Real-ESRGAN
 
 
-def mir_update(mir_db: MIRDatabase):
+def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = None):
     """Create mir unet info database"""
     from nnll.mir.tag import tag_pipe, tag_base_model
 
@@ -796,6 +796,7 @@ def mir_update(mir_db: MIRDatabase):
             },
         ),
     ]
+
     alt_details = [
         (
             "google-t5/t5-small",
@@ -997,7 +998,7 @@ def mir_update(mir_db: MIRDatabase):
                 ],
                 "layer_b3": [
                     "a1d616c37711ec7b9073d04734af2f5fd02f9035a322eb46efeace922e104c51",
-                    "bc71d4259f4feaa0fb27c1f288765004840f39247cddc98b3ac37329ff1354d0",  # fp16 enc
+                    # "bc71d4259f4feaa0fb27c1f288765004840f39247cddc98b3ac37329ff1354d0",  # fp16 enc
                 ],
                 "layer_256": [
                     "bd337daf0c1aa36896013109b406a0580aa3bb8ab9291d89df3015d737358e95",
@@ -1079,8 +1080,69 @@ def mir_update(mir_db: MIRDatabase):
             },
         ),
     ]
-    assimilate(mir_db, [tag_pipe(*entry) for entry in details])
-    assimilate(mir_db, [tag_base_model(*entry) for entry in alt_details])
+
+    cosmos = [
+        (
+            "nvidia/cosmos-predict2-text2image",
+            "Cosmos2TextToImagePipeline",
+            {
+                "file_256": [
+                    "7fbd20dae97cc26a55c7aff3024bc84e554cff8f69966c725a24c8238c5431ec",  # gguf
+                    "6d211f1c14cd793156da3a840dd5462ae072046fcd6f1dc64c613a5343bfe896",
+                    "95a2b32ad31a271eb64d35985c7ea46f1448528af70932eb1f35d57f90c27be2",
+                    "344e67faf333b7849fa94290c9028bdd5e40eb19700754c833cda0423bc10ad0",
+                    "ce15ef565cbb9ef414a6f7a396c455d82d5f762d2174493da87fe009c5fee75b",
+                    "94aa9f2b59330b88e97b6b439e2f206a51c86e6b154fb66d43ed149bfac23cf8",
+                    "636de5388da249130d51752991a1792b90af31cbf43f021ae07f75756ee2d79a",
+                    "472c5e4cf5056a1a59085addb5a86d801de39bf5e000d253f206a7f63c710029",
+                    "663266ace67c22529c3b6bfa0e8bd69f0ba6e683f5f02b8e3da50881057ba142",
+                    "21a674b314c1364d0dbb3712f5ed702996a7b7403c452835cac22709e01c2f77",
+                    "3bf2df806c6472e039efc9e8d3181163d7faa7b385e61519b7d17d5e9c993a49",
+                    "1de35e1603c4c30bc80b132ccea15fc0503369caf68290708f17e679e98cd41f",
+                    "0738e559bbd71f7351ccba34b2b47362a3f829b92f3dbcffeaf1e44b0d52f42c",
+                ],
+                "layer_b3": [
+                    "5a18ba14c41c6601dcc1195ca180ac7744357eb15ace39272788bda1a7151e9b",  # gguf
+                    "67cc3eaf7987c89cd7ccff13de6bc03e3eec59d260d44486e2367cd946ce6f20",
+                    "3c6fefa107742488d2e6856714198a762f2fd35c67edd50d4657eaf4b59c7ca3",
+                    "4e1f90ee1e8959d334c9b1ea2cc5e58d0b8340e271c35f81c8a5ec26e16d9d76",
+                    "f8171071e828524fcc2806126ad100a2198e450c82c0864c8fe8b358c5cbbfbd",
+                    "8126101a0207ecfbd741394fd59f306bcb4c492b2a921e0921c426ca7bd38985",
+                    "c942c5a85ff7cb602d8ca894f5d180c2224e91f0b62c3a21f6a425f9e0e8554b",
+                    "c8c500de74da879a547875fe1046f62ab18bdfd09c09eb3da723cbc2319cb4e3",
+                    "c0ac3f67501004e9e9a55d1658402ad97e42bf8a266edf81f6f3bb835ee476b9",
+                    "84f5926eb4e11d826815682b076ed7d3bba4c86520859be80aa1ef92c72b26a4",
+                    "1d4375aab5548708559b0fde150754a2163cd211eb20a5471e17afaeeb26e082",
+                    "68bd8982f59c60d69c301d16dfb5a60f5d43d66c0b60138d48a22f5ded598e7b",
+                    "c3e9a10cad7aebf979072092008be6e2815d03d28cbf316c15e8daf22116bd7d",
+                ],
+                "layer_256": [
+                    "38f2a75eab667c0cc85f3946a23ca6dc2278438c25a9f93aaaa9f79c3808e180",  # gguf
+                    "ee8434a5e9bc6fa07199de2d0c69fb87f7922c31792bafd13f527c9d92fecb0c",
+                    "2f8382657babb4d0ae4f8e425ae33b21ad71deb6ba457fd6734f05208d52e06a",
+                    "34b181a8291b571857cdbf67ac0081fea594a2f223bf20bd2fc8b0c889e9602d",
+                    "d198c412b972e381acfb812304fa98ed0d97a2f072ddc195cd9a1eb83b1d8146",
+                    "79580a13aff9859e67b0a9f4f8893236cdcfa58c3d43770641aaac8daee55a94",
+                    "cfd48c7ad71c913fa8768167ed0c2ee8c207311b22b1e5a8761369b5a780e8d6",
+                    "da91362ad85d4d2e80a2cb7a55e4ae0e52c9eef8b437a95894ce5ab75d36568c",
+                    "15f84001f5205b6dd8c6f1334cb51c46f6171c7795fb2a557ea16b874f0c71e5",
+                    "5d29179ad15a15d2561defcdda66f1d1e4d065c1e0738f9cba4db5b68b93d2ea",
+                    "7ec489d1e461f5fb2af627b68034ca57f19c516aeccbc5d188b3bd27e3353a15",
+                    "c8dc42fe7b411d746ebdf86286b91cd6893c5f028076b8fe4103f7ea8e1d8833",
+                    "86df7c095aee01588e961438f322b85ca0100a9e440b8a2b6c724e00f748d8b5",
+                ],
+            },
+        ),
+    ]
+
+    additional_tags = [tag_pipe(*entry) for entry in details]
+    additional_tags.extend([tag_pipe(*entry) for entry in cosmos])
+    additional_tags.extend([tag_base_model(*entry) for entry in alt_details])
+
+    assimilate(
+        mir_db,  # format
+        additional_tags,
+    )
 
 
 def add_mir_diffusion(mir_db: MIRDatabase):

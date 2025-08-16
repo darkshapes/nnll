@@ -27,9 +27,10 @@ def test_restore_mir():
     mir_db = MIRDatabase()
     mir_db.database.pop("empty")
     main(mir_db)
-    expected = mir_db.database
     with open(MIR_PATH_NAMED, "r", encoding="UTF-8") as f:
         result = json.load(f)
+    mir_db = MIRDatabase()
+    expected = mir_db.database
     for tag, compatibility in result.items():
         for comp, field in compatibility.items():
             for header, definition in field.items():

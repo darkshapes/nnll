@@ -255,6 +255,10 @@ def main(mir_db: MIRDatabase = None):
     return mir_db
 
 
+def run_task():
+    main()
+
+
 def pipe(mir_db: MIRDatabase = None):
     import argparse
     import asyncio
@@ -281,5 +285,5 @@ def pipe(mir_db: MIRDatabase = None):
     return mir_db
 
 
-if __name__ == "__main__":
-    pipe()
+# if __name__ == "__main__":
+#     pipe()
