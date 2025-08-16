@@ -110,7 +110,7 @@ class HexSum:
         hash_calculator = compute_hash_for if self.sha else compute_b3_for
         hash_values = {}
         nfo(f"{folder_path} : TYPE:{'LAYER   W METADATA: False' if self.layer else 'FILE'}   ALGORITHM:{'SHA256' if self.sha else 'BLAKE3'}")
-        if not self.quiet:
+        if not self.quiet and os.path.isdir(path_named):
             data = {
                 "type": "LAYER" if self.layer else "FILE",
                 "algorithm": "SHA256" if self.sha else "BLAKE3",
