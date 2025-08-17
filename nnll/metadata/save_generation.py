@@ -84,6 +84,7 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, libr
 
             export_to_gif(content, file_path_absolute)
         else:
+            # `imageio` / `imageio-ffmpeg` ??
             from diffusers.utils import export_to_video
 
             export_to_video(content, file_path_absolute, fps=15)

@@ -54,6 +54,8 @@ def random_int_from_gpu(input_seed: int = soft_random()) -> int:
     """
     import torch
 
+    torch.set_num_threads(1)
+
     return torch.random.seed() if input_seed is None else torch.random.manual_seed(input_seed)
 
 
@@ -68,6 +70,7 @@ def seed_planter(seed: int = soft_random(), deterministic: bool = False, device:
     import torch
     from numpy import random
 
+    torch.set_num_threads(1)
     torch.manual_seed(seed)
     random.seed(seed)
     if "cuda" in device:
@@ -97,6 +100,7 @@ def random_tensor_from_gpu(device: str, input_seed: int = soft_random()):
 
     import torch
 
+    torch.set_num_threads(1)
     if input_seed is not None:
         seed_planter(device=device)
     return torch.rand(1, device=device)
@@ -116,6 +120,7 @@ def first_available(processor: str = None, assign: bool = True, clean: bool = Fa
 
     import torch
 
+    torch.set_num_threads(1)
     if not processor:
         processor = reduce(
             lambda acc, check: check() if acc == "cpu" else acc,

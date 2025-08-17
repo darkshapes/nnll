@@ -48,6 +48,7 @@ def add_generator(pipe: Callable, noise_seed: int = 0) -> Callable:
 
     import torch
 
+    torch.set_num_threads(1)
     pipe.generator = torch.Generator(pipe.device).manual_seed(noise_seed)
     return pipe
 
@@ -59,6 +60,7 @@ def dynamo_compile(pipe, unet: bool = True, vae: bool = True, transformer: bool 
     """
     import torch
 
+    torch.set_num_threads(1)
     if transformer:
         pipe.transformer = torch.compile(pipe.transformer, mode="reduce-overhead", fullgraph=True)
     if unet:
