@@ -27,15 +27,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -y install libportaudio2
-          pip cache purge
-          rm -rf venv
-          python -m venv .venv
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv python install 3.12
+          uv python pin 3.12
+          uv sync --group dev --extra cpu
+          uv venv .venv
           source .venv/bin/activate
-          python3 -m pip install --upgrade pip
-          pip install ".[dev]"
           nnll-info
-          python3 -m pip install cyclonedx-bom
-          python3 -m cyclonedx_py environment '.venv' --spec-version 1.6 --output-format JSON --output-file nnll-sbom.json -v
+          uv pip install cyclonedx-bom
+          cyclonedx_py environment '.venv' --spec-version 1.6 --output-format JSON --output-file nnll-sbom.json -v
 
           pytest -v
 
