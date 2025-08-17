@@ -4,7 +4,7 @@
 import pkgutil
 from typing import Dict, Generator, Iterator, List, Tuple
 
-import diffusers.pipelines
+import diffusers
 
 from nnll.metadata.helpers import make_callable
 from nnll.tensor_pipe.deconstructors import root_class
@@ -102,7 +102,8 @@ def pkg_path_to_docstring(pkg_name: str, folder_path: bool) -> Iterator[Tuple[st
         if file_name == "pipeline_stable_diffusion_xl_inpaint":
             continue
         try:
-            pkg_path = f"diffusers.pipelines.{pkg_name}.{file_name}"
+            pkg_path = f"diffusers.pipelines.{str(pkg_name)}.{file_name}"
+            print(pkg_path)
             path_exists = os.path.exists(os.path.join(module_path, pkg_name, file_name + ".py"))
             if path_exists:
                 pipe_file = make_callable(file_name, pkg_path)
@@ -132,7 +133,7 @@ def file_name_to_docstring(pkg_name: str, file_specific: bool) -> Iterator[Tuple
 
     file_name = f"pipeline_{file_specific}"
     try:
-        pkg_path = f"diffusers.pipelines.{pkg_name}"
+        pkg_path = f"diffusers.pipelines.{str(pkg_name)}"
         pipe_file = make_callable(file_name, pkg_path)
     except ModuleNotFoundError:
         if pkg_name != "skyreels_v2":
@@ -197,7 +198,7 @@ def cut_docs() -> Generator:
     for _, pkg_name, is_pkg in pkgutil.iter_modules(diffusers.pipelines.__path__):
         if is_pkg and pkg_name not in exclusion_list:
             file_specific = non_standard.get(pkg_name, pkg_name)
-            folder_name = getattr(diffusers.pipelines, pkg_name)
+            folder_name = getattr(diffusers.pipelines, str(pkg_name))
             if folder_name:
                 if hasattr(folder_name, "_import_structure"):
                     yield from pkg_path_to_docstring(pkg_name, folder_name)

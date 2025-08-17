@@ -121,7 +121,7 @@ class ChipStats:
         ram = psutil.virtual_memory()
         chip_stats = self.get_stats()
         data = {
-            "timestamp": datetime.now().strftime("%YY-%dd-%mm %HH:%MM:%Ss.%s"),
+            "timestamp": datetime.now().strftime("%YY-%dd-%mm %HH:%MM:%Ss"),
             "cpu_%": Decimal(str(psutil.cpu_percent(interval=1))),
             "dram_%": psutil.virtual_memory().percent,
             "dram_used_%": Decimal(str(round(ram.used / (1024**3), 2))),
