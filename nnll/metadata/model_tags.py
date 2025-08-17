@@ -268,6 +268,8 @@ class ReadModelTags:
         :rtype: dict"""
 
         import torch
+
+        torch.set_num_threads(1)
         from _pickle import UnpicklingError
 
         try:

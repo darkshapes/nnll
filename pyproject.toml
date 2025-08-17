@@ -51,80 +51,94 @@ classifiers = [
     "Topic :: Multimedia :: Video :: Non-Linear Editor",
 ]
 dependencies = [
-    "accelerate>=1.8.1",
-    "aiofiles>=24.1.0",
-    "aiohttp>=3.12.13",
-    "bitsandbytes>=0.46.0 ; sys_platform != 'darwin'",
-    "blake3>=1.0.5",
-    "diffusers  @ git+https://github.com/huggingface/diffusers.git",
-    "gguf>=0.17.1",
-    "huggingface-hub[cli,hf-transfer,hf-xet]>=0.33.2",
-    "llama-cpp-python>=0.3.9",
-    "nnll[cu126,rocm,cpu,torch]; sys_platform != 'darwin' and python_version < '3.13'",
-    "nnll[cu128,rocm,cpu,torch]; sys_platform != 'darwin' and python_version > '3.12' ",
-    "nnll[mps,torch]; sys_platform == 'darwin'",
-    "peft>=0.15.2",
-    "pillow>=11.2.1",
-    "protobuf>=5.29.5",
-    "psutil>=7.0.0",
-    "pydantic>=2.11.7",
-    "rich>=14.0.0",
-    "sentencepiece ; python_version < '3.13' ",
-    "sentencepiece @ git+https://github.com/google/sentencepiece.git#subdirectory=python ; python_version > '3.12' ",
+    #basic
+    "rich>=14.1.0",
     "structlog>=25.4.0",
-    "transformers>=4.53.2",
+    #gguf
+    "gguf>=0.17.1",
+    "llama-cpp-python>=0.3.16",
+    "bitsandbytes>=0.46.0 ; sys_platform != 'darwin'",
+    #diffusers
+    "diffusers  @ git+https://github.com/huggingface/diffusers.git",
+    "huggingface-hub[cli,hf-transfer,hf-xet]>=0.35.0rc0",
+    "transformers>=4.55.2",
+    "accelerate>=1.10.0",
+    "peft>=0.17.0",
+    #async
+    "aiohttp>=3.12.15",
+    "aiofiles>=24.1.0",
+    "blake3>=1.0.5",
 ]
-
 [dependency-groups]
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
     "pytest>=8.4.1",
-    "pytest-asyncio>=1.0.0",
+    "pytest-asyncio>=1.1.0",
     "pytest-mock>=3.14.1",
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
-    "ruff>=0.12.0",
+    "ruff>=0.12.9",
 ]
 
 [project.optional-dependencies]
-# -- platforms --
+# -- frameworks --
+onnx = ["onnx>=1.18.0"]
+jax  = ["flax>=0.10.7", "jax>=0.6.2"]
+
+# -- accelerators --
+
+cpu = ["torch>=2.8", "torchvision", "torchaudio", "torchsde"]
+xpu = [
+    "torch>=2.8",
+    "torchvision",
+    "torchaudio",
+    "torchsde",
+    "pytorch-triton-xpu ; platform_machine == 'AMD64'",
+]
+
 mps = [
+    "torch>=2.8",
+    "torchvision",
+    "torchaudio",
+    "torchsde",
+    "nnll[openai]",
     "mlx-vlm<=0.1.26 ; sys_platform == 'darwin'",                                                                 # all specifc due to mlx-audio
     "mlx-lm<=0.24.1 ; sys_platform == 'darwin'",                                                                  # ...
     "mlx-audio; sys_platform == 'darwin'",                                                                        # ... etc
     "numpy<=2.2; sys_platform == 'darwin'",
     "misaki>=0.8.2 ; python_version < '3.13' and sys_platform == 'darwin'",
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version >= '3.13' and sys_platform == 'darwin'",
-    "pip>=25.0.1",
-    "nnll[openai]",                                                                                               # chroma",
-    "mflux>=0.2.1 ; sys_platform == 'darwin'",                                                                    # flux
+    "pip>=25.0.1",                                                                                                # chroma",
+    "mflux>=0.2.1 ; sys_platform == 'darwin'",
+
 ]
-
-cu126 = ["nnll[triton]"]
-cu128 = ["nnll[triton,attention]"]
-rocm  = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform == 'Linux'"]
-
-# -- frameworks --
-torch = ["torch", "torchvision", "torchaudio"]
-onnx  = ["onnx>=1.18.0"]
-jax   = ["flax>=0.10.7", "jax>=0.6.2"]
-
-# -- techniques --
-attention = [
-    "sageattention; sys_platform != 'darwin'",
-    "flash_attn ; sys_platform == 'Linux'",
-]
-triton = [
+cuda = [
+    "torch>=2.8",
+    "torchvision",
+    "torchaudio",
+    "torchsde",
+    "triton",
     "triton ; sys_platform == 'Linux'",
-    "triton-windows ; sys_platform == 'windows'",
+    "triton-windows ; sys_platform == 'win32'",
+] #cu128
+rocm = [
+    "torch>=2.8",
+    "torchvision",
+    "torchaudio",
+    "torchsde",
+
+    "flash_attn ; sys_platform == 'Linux'",
+    "pytorch-triton-rocm ; sys_platform == 'Linux'",
 ]
-hidiffusion = ["hidiffusion>=0.1.10"]
+
+# -- efficiency --
+attention = ["sageattention; sys_platform != 'darwin'"]
 
 # -- providers --
 ollama   = ["ollama>=0.5.1"]
 lmstudio = ["lmstudio>=1.3.1"]
-vllm     = ["vllm>=0.9.0.1 ; sys_platform == 'windows'"]
+# vllm     = ["vllm>=0.9.0.1 ; sys_platform == 'Linux'"]
 
 openai = [
     "openai>=1.84.0",
@@ -136,32 +150,17 @@ openai = [
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 
-full = [
-    "nnll[torch,lmstudio,ollama,openai,vllm,hidiffusion,cu126,cu128,mps,rocm,flax,jax,onnx]",
-]
+full = ["nnll[jax,onnx,ollama,openai,lmstudio]"]
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
     "pytest>=8.4.1",
-    "pytest-asyncio>=1.0.0",
+    "pytest-asyncio>=1.1.0",
     "pytest-mock>=3.14.1",
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
-    "ruff>=0.12.0",
+    "ruff>=0.12.9",
 ]
-
-# probably should be installed by sdbx
-# audiocraft = [
-# "audiocraft @ git+https://github.com/exdysa/facebookresearch-audiocraft-revamp.git@x/dev",
-# ]
-# bagel = ["bagel @ git+https://github.com/exdysa/ByteDance-Bagel.git"]
-# chroma = ["mlx-chroma @ git+https://github.com/exdysa/jack813-mlx-chroma.git"]
-
-# orpheus_tts = ["orpheus_tts @ git+https://github.com/canopyai/Orpheus-TTS.git"]
-# parler_tts = ["parler-tts @ git+https://github.com/huggingface/parler-tts.git"]
-# xllmx = ["xllmx @ git+https://github.com/Alpha-VLLM/Lumina-mGPT"]
-# tts = [ "nnll[audiocraft, bagel, parler_tts]", "nnll[audiocraft, bagel, parler_tts] ; platform_system != 'darwin'",]
-
 
 [project.urls]
 Homepage      = "https://github.com/darkshapes/nnll"
@@ -176,34 +175,26 @@ mir-pipe      = "nnll.model_detect.tasks:pipe"
 nnll-autocard = "nnll.metadata.autocard:main"
 nnll-autohash = "nnll.download.hub_cache:main"
 nnll-hash     = "nnll.integrity.hash_256:main"
+nnll-info     = "nnll.configure.chip_stats:main"
 nnll-layer    = "nnll.model_detect.layer_compare:main"
 nnll-meta     = "nnll.metadata.model_tags:main"
 
+
 [tool.uv]
-preview = true
-prerelease = "allow"
+dev-dependencies = ["nnll[dev]"]
+prerelease       = "allow"
+preview          = true
+
 conflicts = [
     [
-        { extra = "mlx" },
-        { extra = "cpu" },
         { extra = "mps" },
-        { extra = "cu126" },
-        { extra = "cu128" },
+        { extra = "cuda" },
+        { extra = "xpu" },
         { extra = "rocm" },
-        { extra = "attention" },
-        # { extra = "torch" },
-        # { extra = "triton" },
-        # { extra = "hidiffusion" },
-        # { extra = "lmstudio" },
-        # { extra = "ollama" },
-        # { extra = "outetts" },
-        # { extra = "onnx" },
-        # { extra = "jax" },
+        { extra = "triton" },
     ],
 ]
-
-[tool.uv.pip] # ignore: even-better-toml
-torch-backend = "auto"
+no-build-isolation-package = ["sageattention", "sage-attention", "flash_attn"]
 
 [[tool.uv.index]]
 name     = "pytorch-cpu"
@@ -216,8 +207,8 @@ url      = "https://download.pytorch.org/whl/nightly/cpu"
 explicit = true
 
 [[tool.uv.index]]
-name     = "pytorch-cu126"
-url      = "https://download.pytorch.org/whl/cu126"
+name     = "pytorch-darwin"
+url      = "https://download.pytorch.org/whl/nightly/cpu"
 explicit = true
 
 [[tool.uv.index]]
@@ -230,32 +221,49 @@ name     = "pytorch-rocm"
 url      = "https://download.pytorch.org/whl/rocm6.3"
 explicit = true
 
-torch = [
-    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-]
-torchvision = [
-    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-]
-torchaudio = [
-    { default-index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
-    { default-index = "pytorch-nightly", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { default-index = "pytorch-cu126", extra = "cu126", marker = "python_version < '3.12' and sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-cu128", extra = "cu128", marker = "sys_platform == 'Linux' or sys_platform == 'win32'" },
-    { default-index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-]
+[[tool.uv.index]]
+name     = "pytorch-xpu"
+url      = "https://download.pytorch.org/whl/xpu"
+explicit = true
 
 [tool.uv.sources]
-diffusers     = { git = "https://github.com/huggingface/diffusers" }
-sentencepiece = { git = "https://github.com/google/sentencepiece.git", subdirectory = "python", marker = "python_version >= '3.13'" }
-# transformers  = { git = "https://github.com/huggingface/transformers" }
+torchaudio = [
+    { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
+    { index = "pytorch-cu128", extra = "cuda" },
+    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
+    { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
+]
+
+torchvision = [
+    # { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
+    { index = "pytorch-cpu", marker = "sys_platform != 'darwin'" },
+]
+torch = [
+    { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
+    { index = "pytorch-cu128", extra = "cuda" },
+    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
+    { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
+
+]
+pytorch-triton-xpu = [
+    { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
+
+]
+"sageattention" = [
+    { git = "https://github.com/thu-ml/SageAttention.git", extra = "attention", marker = "sys_platform != 'darwin'" },
+]
+
+diffusers = { git = "https://github.com/huggingface/diffusers" }
+
+[[tool.uv.dependency-metadata]]
+name          = "flash-attn"
+version       = "2.6.3"
+requires-dist = ["torch", "einops"]
+
+[[tool.uv.dependency-metadata]]
+name          = "sageattention"
+version       = "2.2.0"
+requires-dist = ["torch"]
 
 [tool.setuptools_scm]
 write_to = "_version.py"

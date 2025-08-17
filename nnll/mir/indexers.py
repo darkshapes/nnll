@@ -106,6 +106,8 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
             mir_prefix = "info.lora"
         elif class_name == "WanPipeline":
             mir_prefix = "info.dit"
+        elif class_name == "CogVideoXVideoToVideoPipeline":
+            class_name = "CogVideoXPipeline"
         elif any(maybe for maybe in control_net if maybe.lower() in class_name.lower()):
             mir_prefix = "info.controlnet"
         else:

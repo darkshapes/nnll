@@ -36,7 +36,7 @@ class MockKolors:
     modules = {
         0: {
             "diffusers": "KolorsImg2ImgPipeline",
-            "precision": "ops.precision.float.f16",
+            "precision": "ops.precision.float.F16",
             "generation": {"negative_prompt": "", "guidance_scale": 5.0, "num_inference_steps": 50, "width": 1024, "height": 1024},
         }
     }
@@ -93,7 +93,10 @@ class TestConstructPipeline(unittest.TestCase):
             pkg_data=(0, "StableDiffusionXLPipeline", MockType.DIFFUSERS),
             mir_db={},
         )
-        mock_from_single_file.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0")
+        mock_from_single_file.assert_called_once_with(
+            "stabilityai/stable-diffusion-xl-base-1.0",
+            use_safetensors=True,
+        )
         self.assertEqual(pipe, "mock_pipe")
         self.assertEqual(repo, "stabilityai/stable-diffusion-xl-base-1.0")
         self.assertEqual(
@@ -114,7 +117,10 @@ class TestConstructPipeline(unittest.TestCase):
             mir_db={},
         )
 
-        mock_from_pretrained.assert_called_once_with("stabilityai/stable-diffusion-xl-base-1.0")
+        mock_from_pretrained.assert_called_once_with(
+            "stabilityai/stable-diffusion-xl-base-1.0",
+            use_safetensors=True,
+        )
 
     @patch("os.path.isfile", return_value=False)
     @patch("diffusers.KolorsPipeline.from_pretrained")
@@ -132,7 +138,7 @@ class TestConstructPipeline(unittest.TestCase):
         )
         import torch
 
-        mock_from_pretrained.assert_called_once_with("Kwai-Kolors/Kolors-diffusers", torch_dtype=torch.float16, variant="fp16")
+        mock_from_pretrained.assert_called_once_with("Kwai-Kolors/Kolors-diffusers", use_safetensors=True, torch_dtype=torch.float16, variant="fp16")
 
     @patch("os.path.isfile", return_value=False)
     @patch("diffusers.WanPipeline.from_pretrained")
@@ -147,7 +153,10 @@ class TestConstructPipeline(unittest.TestCase):
             mir_db={},
         )
 
-        mock_from_pretrained.assert_called_once_with("Wan-AI/Wan2.1-T2V-1.3B-Diffusers")
+        mock_from_pretrained.assert_called_once_with(
+            "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+            use_safetensors=True,
+        )
 
 
 if __name__ == "__main__":

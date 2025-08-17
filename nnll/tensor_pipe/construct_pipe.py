@@ -7,9 +7,11 @@
 import os
 from typing import Callable, List, Union
 
+from nnll.configure.chip_stats import ChipStats
+from nnll.metadata.json_io import read_json_file
+from nnll.mir.maid import MIRDatabase
 from nnll.monitor.console import nfo
 from nnll.monitor.file import dbug, debug_monitor
-from nnll.mir.maid import MIRDatabase
 
 
 @debug_monitor
@@ -82,9 +84,15 @@ class ConstructPipeline:
         model = model.model
         if pkg_name in ["diffusers", "transformers", "parler-tts"]:
             if os.path.isfile(model):
-                return pipe_obj.from_single_file(model, **kwargs)
+                try:
+                    return pipe_obj.from_single_file(model, use_safetensors=True, **kwargs)
+                except (EnvironmentError, OSError):
+                    return pipe_obj.from_single_file(model, **kwargs)
             else:
-                return pipe_obj.from_pretrained(model, **kwargs)
+                try:
+                    return pipe_obj.from_pretrained(model, use_safetensors=True, **kwargs)
+                except (EnvironmentError, OSError):
+                    return pipe_obj.from_pretrained(model, **kwargs)
         elif pkg_name == "mflux":
             return pipe_obj(model_name="model", **kwargs)
         elif pkg_name == "audiogen":
@@ -105,9 +113,10 @@ class ConstructPipeline:
         :return: `tuple` constructed pipe, model/repo name `str`, arguments used in the pipe, and a `dict` of default settings
         """
         from importlib import import_module
-
         from nnll.metadata.helpers import make_callable
 
+        chip_stats = ChipStats()
+        metrics = chip_stats.get_metrics()
         pkg_name = pkg_data[-1].value[1].lower()
         pkg_obj = import_module(pkg_name)
         if "." in pkg_data:
@@ -122,6 +131,8 @@ class ConstructPipeline:
             precision = precision.rsplit(".", 1)
             dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]  # get the precision class, currently assumed to be torch
             precision = next(iter(dtype["torch"]))
+            pipe_call.setdefault("torch_dtype", getattr(import_module("torch"), precision))
+            variant = dtype["torch"][precision]
             pipe_call.setdefault("torch_dtype", getattr(import_module("torch"), precision))
             variant = dtype["torch"][precision]
             if variant:

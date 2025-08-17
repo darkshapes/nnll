@@ -26,14 +26,14 @@ def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__)
     return ensure_path(folder_path_named, file_name)
 
 
-constants = [
+VARIABLE_NAMES = [
     file_name.stem
     for file_name in Path(os.path.join(os.path.dirname(__file__), "config")).iterdir()
     if "__" not in Path(file_name).stem
     # comment for formatting
 ]
 
-for const in constants:
+for const in VARIABLE_NAMES:
     paths = {}
     path_var = f"{const.upper()}_PATH_NAMED"
     globals()[path_var] = set_path_stable(const + ".json")

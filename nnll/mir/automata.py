@@ -263,7 +263,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
     """Create mir unet info database"""
     from nnll.mir.tag import tag_pipe, tag_base_model
 
-    details = [
+    diffusers_addons = [
         (
             "stabilityai/stable-diffusion-xl-base-1.0",
             "StableDiffusionXLPipeline",
@@ -354,9 +354,24 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             "AuraFlowPipeline",
             {
                 "identifiers": [[8192, 3072], "mlpX.c_fc2.weight", "joint_transformer_blocks.2.ff_context.linear_2.weight"],
-                "file_256": ["ce3e475246258b94ee9dcb8b83292cb34edfffc2bbde46c74604d9c6cd7c585c"],
-                "layer_b3": ["cc6d383576c35a9709798d2e2b9e3eb31ba8c608040cf3712bc37871cfd14e21"],
-                "layer_256": ["3c13e6a965d03a49227d8b1606ba6a343a23772d8768407cc78d4ddb9102bc80"],
+                "file_256": [
+                    "ce3e475246258b94ee9dcb8b83292cb34edfffc2bbde46c74604d9c6cd7c585c",
+                    "526be97cf581c89ad87c6b19c1f7c2378851137698f7ec436596d061a382d37b",  # sai
+                    "6a40b011f287452dbca80face78e667055904c5ad97eb2097ade3200259b2203",  # diffusers fp16
+                    "05e5493018333d947bb5940083dbc2f071093027ff414bc5b1b1229e4836e5cb",  # diffusers
+                ],
+                "layer_b3": [
+                    "cc6d383576c35a9709798d2e2b9e3eb31ba8c608040cf3712bc37871cfd14e21",
+                    "ddd54c44fa28fbddecf7cfae91cfa04917fd2f2fa94fc78c528cef2356a4ec3a",  # sai
+                    "90c694e7d1e20e6da49b571e9954338d384775419790be315304103227b1051b",
+                    "9e85aec1bdb616f52f88c80ddc7ab1eae8c16c0b5fbfcdb61a71ac02c325003d",
+                ],
+                "layer_256": [
+                    "3c13e6a965d03a49227d8b1606ba6a343a23772d8768407cc78d4ddb9102bc80",
+                    "b356cc84a23bc93bda4cc0fce1d0ba1b8e3d5a521e659ffc72e9e4a2d2c7f204",
+                    "270df7317fe01abf06333acbbd4f15f8fc7a7c56053219f42efb598454a3af24",
+                    "7ab6aa4514dd09f3cf589587d51a81734193ce45dd51bda9db0bd62fe48ef7d5",
+                ],
             },
         ),
         (
@@ -367,14 +382,17 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 "file_256": [
                     "4fb84f84079cda457d171b3c6b15d1be95b5a3e5d9825703951a99ddf92d1787",  # normal
                     "e01db5e129e8ca1117e9cf473fc5a2b096949f03ab90048aeabbc328de7ec800",  # distilled
+                    "8af691cadb78047d55721259355d708e87ddbba1b7845df9377d9a5ae917b45d",  # 1.2
                 ],
                 "layer_b3": [
                     "aead6b61b17ebc77c4c186a4b82c193f11ec267b20d909726422ee9852e2e0b2",
                     "885a056b94f6f9844c0660be489844d63bb74cc13316f441d10968fff3dd3120",  # distilled
+                    "390d951cbdda6e2cffb690031b60f02921624651534c2effaaa7d68ab476c700",
                 ],
                 "layer_256": [
                     "d4842ce2b7f927203326b25ff4d6738ec9a8b95327f06791c387e4a351ed6ed0",
                     "5af943f96f5dc9fecb1e92fe2b1fa17c94dd6947690201f4a5ee1a4a2721a68e",  # distilled
+                    "4a1f2b8234fa4336e263842e042d42e8d64d8a4d3941d9c0c78366b50303950c",  # 1.2
                 ],
             },
         ),
@@ -382,6 +400,11 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             "Alpha-VLLM/Lumina-Next-SFT-diffusers",
             "LuminaPipeline",
             {
+                "pkg": {
+                    0: {
+                        "precision": " ops.precision.bfloat.B16",
+                    },
+                },
                 "identifiers": ["time_caption", "feed_forward"],
                 "file_256": [
                     "371153b7c7b7a64899d4016970c7cc472039f9c9b21ebe073adf0b8525cdf1bd",
@@ -420,6 +443,9 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             "stabilityai/stable-diffusion-3-medium",
             "StableDiffusion3Pipeline",
             {
+                "pkg": {
+                    0: {"precision": "ops.precision.float.F16"},
+                },
                 "identifiers": ["model.diffusion_model.joint_blocks.", "transformer_blocks.21.norm1_context.linear.weight", "transformer_blocks.31.norm1_context.linear.weight", "blocks.11.ff.net.2.weight"],
                 "file_256": [
                     "ffef7a279d9134626e6ce0d494fba84fc1c7e720b3c7df2d19a09dc3796d8f93",  # large
@@ -772,6 +798,17 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             "Wan-AI/Wan2.1-T2V-14B-Diffusers",
             "WanPipeline",
             {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.bfloat.B16",
+                        "generation": {
+                            "height": 480,
+                            "width": 832,
+                            "num_frames": 81,
+                            "guidance_scale": 5.0,
+                        },
+                    },
+                },
                 "file_256": [
                     "299e6304544f2783896372fa919e755a8bb9ab8caf898ce08a678dae391e1179",  # diffusers
                     "a9278e6e9c82d174e6c67b3c97d8b97fef30af51dcf59160f2fc241f6819f5dc",  # diffusers 2
@@ -802,9 +839,195 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 ],
             },
         ),
+        (
+            "nvidia/cosmos-predict2-text2image",
+            "Cosmos2TextToImagePipeline",
+            {
+                "file_256": [
+                    "7fbd20dae97cc26a55c7aff3024bc84e554cff8f69966c725a24c8238c5431ec",  # gguf
+                    "6d211f1c14cd793156da3a840dd5462ae072046fcd6f1dc64c613a5343bfe896",
+                    "95a2b32ad31a271eb64d35985c7ea46f1448528af70932eb1f35d57f90c27be2",
+                    "344e67faf333b7849fa94290c9028bdd5e40eb19700754c833cda0423bc10ad0",
+                    "ce15ef565cbb9ef414a6f7a396c455d82d5f762d2174493da87fe009c5fee75b",
+                    "94aa9f2b59330b88e97b6b439e2f206a51c86e6b154fb66d43ed149bfac23cf8",
+                    "636de5388da249130d51752991a1792b90af31cbf43f021ae07f75756ee2d79a",
+                    "472c5e4cf5056a1a59085addb5a86d801de39bf5e000d253f206a7f63c710029",
+                    "663266ace67c22529c3b6bfa0e8bd69f0ba6e683f5f02b8e3da50881057ba142",
+                    "21a674b314c1364d0dbb3712f5ed702996a7b7403c452835cac22709e01c2f77",
+                    "3bf2df806c6472e039efc9e8d3181163d7faa7b385e61519b7d17d5e9c993a49",
+                    "1de35e1603c4c30bc80b132ccea15fc0503369caf68290708f17e679e98cd41f",
+                    "0738e559bbd71f7351ccba34b2b47362a3f829b92f3dbcffeaf1e44b0d52f42c",
+                ],
+                "layer_b3": [
+                    "5a18ba14c41c6601dcc1195ca180ac7744357eb15ace39272788bda1a7151e9b",  # gguf
+                    "67cc3eaf7987c89cd7ccff13de6bc03e3eec59d260d44486e2367cd946ce6f20",
+                    "3c6fefa107742488d2e6856714198a762f2fd35c67edd50d4657eaf4b59c7ca3",
+                    "4e1f90ee1e8959d334c9b1ea2cc5e58d0b8340e271c35f81c8a5ec26e16d9d76",
+                    "f8171071e828524fcc2806126ad100a2198e450c82c0864c8fe8b358c5cbbfbd",
+                    "8126101a0207ecfbd741394fd59f306bcb4c492b2a921e0921c426ca7bd38985",
+                    "c942c5a85ff7cb602d8ca894f5d180c2224e91f0b62c3a21f6a425f9e0e8554b",
+                    "c8c500de74da879a547875fe1046f62ab18bdfd09c09eb3da723cbc2319cb4e3",
+                    "c0ac3f67501004e9e9a55d1658402ad97e42bf8a266edf81f6f3bb835ee476b9",
+                    "84f5926eb4e11d826815682b076ed7d3bba4c86520859be80aa1ef92c72b26a4",
+                    "1d4375aab5548708559b0fde150754a2163cd211eb20a5471e17afaeeb26e082",
+                    "68bd8982f59c60d69c301d16dfb5a60f5d43d66c0b60138d48a22f5ded598e7b",
+                    "c3e9a10cad7aebf979072092008be6e2815d03d28cbf316c15e8daf22116bd7d",
+                ],
+                "layer_256": [
+                    "38f2a75eab667c0cc85f3946a23ca6dc2278438c25a9f93aaaa9f79c3808e180",  # gguf
+                    "ee8434a5e9bc6fa07199de2d0c69fb87f7922c31792bafd13f527c9d92fecb0c",
+                    "2f8382657babb4d0ae4f8e425ae33b21ad71deb6ba457fd6734f05208d52e06a",
+                    "34b181a8291b571857cdbf67ac0081fea594a2f223bf20bd2fc8b0c889e9602d",
+                    "d198c412b972e381acfb812304fa98ed0d97a2f072ddc195cd9a1eb83b1d8146",
+                    "79580a13aff9859e67b0a9f4f8893236cdcfa58c3d43770641aaac8daee55a94",
+                    "cfd48c7ad71c913fa8768167ed0c2ee8c207311b22b1e5a8761369b5a780e8d6",
+                    "da91362ad85d4d2e80a2cb7a55e4ae0e52c9eef8b437a95894ce5ab75d36568c",
+                    "15f84001f5205b6dd8c6f1334cb51c46f6171c7795fb2a557ea16b874f0c71e5",
+                    "5d29179ad15a15d2561defcdda66f1d1e4d065c1e0738f9cba4db5b68b93d2ea",
+                    "7ec489d1e461f5fb2af627b68034ca57f19c516aeccbc5d188b3bd27e3353a15",
+                    "c8dc42fe7b411d746ebdf86286b91cd6893c5f028076b8fe4103f7ea8e1d8833",
+                    "86df7c095aee01588e961438f322b85ca0100a9e440b8a2b6c724e00f748d8b5",
+                ],
+            },
+        ),
+        (
+            "rhymes-ai/Allegro",
+            "AllegroPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.bfloat.B16",
+                        "generation": {
+                            "guidance_scale": 7.5,
+                            "max_sequence_length": 512,
+                            "num_inference_steps": 100,
+                        },
+                    },
+                },
+                "file_256": ["6927dcc812841c1da549bf11c97ddf30532aee0e708a6642fa64cf8e0dfcdef7"],
+                "layer_b3": ["8b20714a6af89ea4bf4ada1f805c5b9d529ef136c229e9b75392242d62d80c3e"],
+                "layer_256": ["9e44e6c919dc71c24a193641e6265cd9983a2a773b9bbaf527c10ac4837b29fd"],
+            },
+        ),
+        (
+            "audioldm-s-v2",
+            "AudioLDMPipeline",
+            {
+                "file_256": ["fc30d5b5a3bb8d08672736efb1fff10755ba7024dace39b2dcb579a105aa2a5a"],
+                "layer_b3": ["82fbcc553c1ad770d28fd1866b935249c5ebfbf75f3166ae823e1bc6ef39a95a"],
+                "layer_256": ["d076446a58a36bf436e37444679d62bcf2f45689d4aa3d799b3fe801c71ed2c8"],
+            },
+        ),
+        (
+            "zai-org/CogVideoX-2b",
+            "CogVideoXPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.F16",
+                        "generation": {"num_videos_per_prompt": 1, "num_inference_steps": 50, "num_frames": 49, "guidance_scale": 6},
+                    }
+                },
+                "file_256": ["8fbb6a5e67c70885a8ed8e33df144ac61253e45977be5035fa18cfdf77d386c7"],
+                "layer_b3": ["1db3439649b5362448455fb2ed6ebde0c3b973655a206832731149757ad165bb"],
+                "layer_256": ["edd6bd51f1236f528ff8d32dc754f0b86cfac901b800642ea497358156dc00bd"],
+            },
+        ),
+        (
+            "HiDream-ai/HiDream-I1-Full",
+            "StableDiffusion3Pipeline",
+            {
+                "file_256": ["3cb3f6d77a3fce19b90fa7f66da0cbe997b0785a38a788b559290d3062f6fd26"],
+                "layer_b3": ["612eb9b2676a3e7b28b10aae045a97a95de2a399fe3801c8f6369589c3a832a6"],
+                "layer_256": ["78fbfb7fddb9ccbdf91f22b0c3d304cbf0cc7305dbccb216982233849ec727df"],
+            },
+        ),
+        (
+            "cvssp/audioldm2",
+            "AudioLDM2Pipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.F16",
+                        "generation": {"num_inference_steps": 200, "audio_length_in_s": 10.0},
+                    },
+                },
+                "file_256": ["359a5ffb89a844beb2fcfac584aae2cd7cd6e87c3ab1ec4e892ef45d91db77c2"],
+                "layer_b3": ["eac241273f9f30982fc04aa88b4dc1c38b533430956a55b9ed4d3e5c717ec962"],
+                "layer_256": ["ab109d01b43788063802f00c6ecab024c830ea58d668f5c2df9e3ae5b87d86cb"],
+            },
+        ),
+        (
+            "tencent-hunyuan/hunyuandiT-v1.2-diffusers",
+            "HunyuanDiTPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.F16",
+                    }
+                },
+                "file_256": ["7d31ac8fa389ff39dd0a81430010e52c43b59f15adc00c83625a47881e16830e"],
+                "layer_b3": ["bccd37ecc9f85d132b46d0bb67b4facb49fc6c091428a4feba9ab9a93140f5fe"],
+                "layer_256": ["ed25d241d58ca298d28abd5919e70341ad194e77dce4859436b52ea4d8fcb616"],
+            },
+        ),
+        (
+            "Alpha-VLLM/Lumina-Image-2.0",
+            "Lumina2Pipeline",
+            {
+                "pkg": {},
+                "file_256": [
+                    "132b4d213fdd3cfc14333746fc3eb8bbe6358cd73c3bc95ac4ccec230b97dca3",
+                    "a7c09ebae62996a8289782161338a3cdba58c11d2d849c50b2d6502e152b0d6d",  # pth single file
+                ],
+                "layer_b3": [
+                    "198bde52f09736f1fc650dcdbd0e6b0f6a5ce186582554c1d9ee8ab16ac0feb2",
+                    "b52807536902cabbf84f99e4fa2f8713fb4ef77e739f06367ee0d486e3222faa",
+                ],
+                "layer_256": [
+                    "982893c99860aac8198c2e435cf85f782fce8f10732daf1f2881a26864400a4e",
+                    "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91",
+                ],
+            },
+        ),
+        (
+            "ucsd-reach/musicldm",
+            "MusicLDMPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "generation": {
+                            "num_inference_steps": 200,
+                            "audio_length_in_s": 10.0,
+                        },
+                    }
+                },
+                "file_256": [
+                    "853d0ef1d61cbf5d682872322ea8b761ba3d2f85bfbccd58363bd6b2f837268f",  #
+                ],
+                "layer_b3": [
+                    "82fbcc553c1ad770d28fd1866b935249c5ebfbf75f3166ae823e1bc6ef39a95a"  #
+                ],
+                "layer_256": [
+                    "d076446a58a36bf436e37444679d62bcf2f45689d4aa3d799b3fe801c71ed2c8",  #
+                ],
+            },
+        ),
+        (
+            "openai/shap-e",
+            "ShapEPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.F16",
+                        "generation": {"num_inference_steps": 64, "size": 256, "guidance_scale": 15},
+                    }
+                },
+            },
+        ),
     ]
 
-    alt_details = [
+    transformer_details = [
         (
             "google-t5/t5-small",
             "T5Model",
@@ -817,14 +1040,13 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "encoder.block.0.layer.1.DenseReluDense.wi.weight",  # small\
                 ],
                 "file_256": [
-                    "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # shuttle/flux diffusers
+                    "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # shuttle/flux diffusers# flux dev
                     "565cb2487351282e8e4dbeb88e63f4ad28217ce0439f5a8e6525a924807d2d9b",  # bf16 modelspec sai
                     "6e480b09fae049a72d2a8c5fbccb8d3e92febeb233bbe9dfe7256958a9167635",  # fp16 modelspec sai
-                    "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",  # fp16 diffusers
+                    "4f2751ceeb2a96edd693e539dc5d6bba0b8d3814f49a9b3798403a0cec4b2e3d",  # fp16 diffusers  cogvideox
                     "83690f3cc37cecb5e907f41ab0f7abb0855ef24a0a8aab9259f2888ce85a34e2",  # flux diffusers
                     "7d330da4816157540d6bb7838bf63a0f02f573fc48ca4d8de34bb0cbfd514f09",  # fp8_e4m3fn
                     "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34n
-                    "8490f7a22615c20651a63dbe7b4241929826a4de20292dc8e63bfc3c61e3654f",  # qfp8_e4m34
                     "d8720addef2596fef86b1b22e4b62875c9118779ba8723759a75dfcbc649ffd5",  # mystic mlx
                     "7d0eac95abe8daae454bcd3d166b8bfc6a35fe68278f97479d62dbb6850f38c0",  # mlx flex2
                     "ceabd6f71c7112cfaa4dfca8711dda97b79fb9b25983f1c95532de226045f1f8",  # mlx jaguar q8
@@ -832,7 +1054,6 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "211ade1d474f5dc83190aec8be5c4baf52643777790d64de0cbd84f63613e5e9",  # mlx flex1 q8
                     "7894547154ba3fd6e364e66e2951ee82b4c3fc1ae0f95df6a4f9d1c5a4e98f17",  # DeepFloyd/t5-v1_1-xxl sft
                     "eb529f693f4b17773a24e787fcba29486d5e1700dadcc20bb91e4c8b00212d08",  # pixart a
-                    "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",  # flux dev
                     "d80116f6fc39801e4eef425a584e7a7a41cbe5119797bef2dad67299909fe2ae",  # Q6K
                     "31ebe18e901bfb6e5709a20ec1c95fce29bce2b9545073231e0f909a53239f5c",  # Q3 KS
                     "6be2b0b7e2de7cf2919340c88cb802a103a997ce46c53131cec91958c1db1af4",  # Q4 KM
@@ -844,6 +1065,8 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "1dc600961d3c5ed081f6700485cdc7ed9cfb4631f2dc385b7ac6bd3c80846d0d",  # f16 gguf
                     "f28631189911f8d7931e8fe642a4cb2a3c51f50da7cabbfa06b89bafc19c00d0",  # q3km
                     "de9dfdd19d7ba6859993cadec5100665dc7a4fb71e1c6c8970959cbdaf4366e3",  # f32gguf
+                    "7a68b2c8c080696a10109612a649bc69330991ecfea65930ccfdfbdb011f2686",  # allegro
+                    "2c0c539ab8e8fba3877cc94bc483e427f74c525f817a809b028ebc8d96d75a94",  # hyd 1.1
                 ],
                 "layer_b3": [
                     "ca94e03b7b1fdcb0d6ff5205eac56f145d2dff8a9c489faf80935bfec8387f18",  # bf16
@@ -873,6 +1096,9 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "4a844772638ffed2f61d45eaac984094b92540fa1391a4098608fc73a6cd4fd8",
                     "76c31e1fd35da7de7cee97c1e7c5ccde640e6fac3e17a62e115ecf484c7196c3",
                     "a4d672e22b5bdd8f8b0885cec4a173d0466bb1dcbfbf8400cedcc41c2494f16c",  # ggufs
+                    "d1860c3f01dc9f260d98b50d3d2bbc8dc2d3eefaa93778a8de9d7adfb897fc6e",  # allegro
+                    "b8719092fc58487406211f52dc55bf40b573ccfd29933a989c33a36b694f6f0a",  # cogvideox
+                    "795e272409bc4fa55f402485acf86b607256f91aa965295c5bb771c61f8e9e74",  # hyd 1.1
                 ],
                 "layer_256": [
                     "bb20f7805209379aea4d6548f17e551cf27d0f8426ca169e4df8234f718ed5ef",
@@ -900,6 +1126,9 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "72478320b8dbfd9aeaea010dcf0896e3116fa5ab940f3b472882d9f9d2d7333f",
                     "9c1a88e36334a48d8482fec54b14ea1d5fd31f0dbb65d13cc616e63dc7c42be5",
                     "d0689f727e8ac4fef3ec4b1f29e8a3bd12e1116559eeefb2a1a457cd4e676d1e",
+                    "fea158a4afcfaa6e95e04799bae0287de0c4fcb188f3b41768a46ce48c71c9df",
+                    "2e5bc4e73312b5aec4c1a55631cb4ed69cf34ccaa6d1f28f7045f137a579b439",  # cogvideox
+                    "015fdecbc3b5369dbcb2302e4b79985437ac4496d1b9ad63316423a222fb0803",  # hyd 1.1
                 ],
             },
         ),
@@ -911,7 +1140,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 "file_256": [
                     "a8e861969c7433e707cc5a74065d795d36cca07ec96eb6763eb4083df7248f58",  # wan t2i diffusers
                     "decf9b70814ed5e9965bfca9fbd0483462e2bf743790663025b7742f8c014c72",  # fp16
-                    "0a07449cf1141c0ec86e653c00465f6f0d79c6e58a2c60c8bcf4203d0e4ec4f6",
+                    "0a07449cf1141c0ec86e653c00465f6f0d79c6e58a2c60c8bcf4203d0e4ec4f6",  # auraflow
                     "c0ef3a140898e228a3520c9adec60743d2e8e5b3d229651bb37f1a3921919f99",  # wan
                     "7b8850f1961e1cf8a77cca4c964a358d303f490833c6c087d0cff4b2f99db2af",  # wan i2ixxl sai fp16
                     "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68",  # wan i2i xxl sai fp8_e4m3fn scaled sai
@@ -943,6 +1172,8 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "e170559d8551cfe651344594e54c0a9a90c0068b00f3866f6e9a3737e20925cb",
                     "e8dc7442a20bcdc7b6e5dd0265939d88896eab5ddd33ee16f1f09537e65914b8",
                     "4d3d5049857d01741780daf01e96617092973305637b435f4895499a26bbaede",
+                    "7a2adadc2372feda23b2169337276adda6d1fdef82ba69f0d3321c4c6ba8c604",
+                    "0a7c61a85bb3f51f75924de48ef3f5e87cbf8901f600cbfcae97f5e2919c4148",
                 ],
                 "layer_256": [
                     "467916d35f3053dce1d40d998fcaf6aa03feda75aa578d964dd61461e23641a3",  # wan i2i diff
@@ -961,6 +1192,8 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "bfb178b1ce27f00e122d2328c662fdef6cc239c07efc749aa61ae2d395441b02",
                     "50addf6a911b90194a75b0212429d1af55eb2f9d24715479b9ccc4a40adc299b",
                     "2e46e9f1b714d72160d3b3b775a845b3049a01396fab935f1278d9e8de2ef0c6",
+                    "db8d2b49d9042e39d6531b33ec3bebb9cdf42b9e6ad56163f08da2a7da2a53cd",
+                    "2d81d19ad5440422b85e0b17c71914269f6c25c9b1fa321c0dd6119ddb41d62d",
                 ],
             },
         ),
@@ -970,12 +1203,15 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             {
                 "file_256": [
                     "e909230aabafad02d097c7dc02f2ae062b4e6b0593477c1f07679d277e09ce71",  # sana bf16
+                    "d61628bc793240439e608c5ae744f55ec8770f684abb63602648a24cb6da60bc",  # lumina 2
                 ],
                 "layer_b3": [
                     "55a3c812ac0832d154867f5927365bcc776926e48e65f7f35a81fc11f4bb81da",
+                    "543572889beb25cad83a43ce70cdd255d2c82951d6595e8c97ff62fd05871c99",
                 ],
                 "layer_256": [
                     "a0d820c39578cf888f398579d9a00d69b31c81e049795ba70008dad8fe5b3a33",
+                    "abc83b04a04467579ea1952a7efbdd252b8641ac0e2a6a9be2a5a73e371111d6",
                 ],
             },
         ),
@@ -1086,65 +1322,43 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 ],
             },
         ),
-    ]
-
-    cosmos = [
         (
-            "nvidia/cosmos-predict2-text2image",
-            "Cosmos2TextToImagePipeline",
+            "laion/clap-htsat-fused",
+            "ClapModel",
             {
                 "file_256": [
-                    "7fbd20dae97cc26a55c7aff3024bc84e554cff8f69966c725a24c8238c5431ec",  # gguf
-                    "6d211f1c14cd793156da3a840dd5462ae072046fcd6f1dc64c613a5343bfe896",
-                    "95a2b32ad31a271eb64d35985c7ea46f1448528af70932eb1f35d57f90c27be2",
-                    "344e67faf333b7849fa94290c9028bdd5e40eb19700754c833cda0423bc10ad0",
-                    "ce15ef565cbb9ef414a6f7a396c455d82d5f762d2174493da87fe009c5fee75b",
-                    "94aa9f2b59330b88e97b6b439e2f206a51c86e6b154fb66d43ed149bfac23cf8",
-                    "636de5388da249130d51752991a1792b90af31cbf43f021ae07f75756ee2d79a",
-                    "472c5e4cf5056a1a59085addb5a86d801de39bf5e000d253f206a7f63c710029",
-                    "663266ace67c22529c3b6bfa0e8bd69f0ba6e683f5f02b8e3da50881057ba142",
-                    "21a674b314c1364d0dbb3712f5ed702996a7b7403c452835cac22709e01c2f77",
-                    "3bf2df806c6472e039efc9e8d3181163d7faa7b385e61519b7d17d5e9c993a49",
-                    "1de35e1603c4c30bc80b132ccea15fc0503369caf68290708f17e679e98cd41f",
-                    "0738e559bbd71f7351ccba34b2b47362a3f829b92f3dbcffeaf1e44b0d52f42c",
+                    "c92b5a2bee69ff5dd05820d9e0a5cddbc9c9b9dd19a6cb3214f0cf4f29a4d1b0",  # audio ldm
+                    "ae69f555e7f1a2333b8e684c9fa8233f44a47bbadf76d484f941b74f74d2753d",  # music ldm
                 ],
                 "layer_b3": [
-                    "5a18ba14c41c6601dcc1195ca180ac7744357eb15ace39272788bda1a7151e9b",  # gguf
-                    "67cc3eaf7987c89cd7ccff13de6bc03e3eec59d260d44486e2367cd946ce6f20",
-                    "3c6fefa107742488d2e6856714198a762f2fd35c67edd50d4657eaf4b59c7ca3",
-                    "4e1f90ee1e8959d334c9b1ea2cc5e58d0b8340e271c35f81c8a5ec26e16d9d76",
-                    "f8171071e828524fcc2806126ad100a2198e450c82c0864c8fe8b358c5cbbfbd",
-                    "8126101a0207ecfbd741394fd59f306bcb4c492b2a921e0921c426ca7bd38985",
-                    "c942c5a85ff7cb602d8ca894f5d180c2224e91f0b62c3a21f6a425f9e0e8554b",
-                    "c8c500de74da879a547875fe1046f62ab18bdfd09c09eb3da723cbc2319cb4e3",
-                    "c0ac3f67501004e9e9a55d1658402ad97e42bf8a266edf81f6f3bb835ee476b9",
-                    "84f5926eb4e11d826815682b076ed7d3bba4c86520859be80aa1ef92c72b26a4",
-                    "1d4375aab5548708559b0fde150754a2163cd211eb20a5471e17afaeeb26e082",
-                    "68bd8982f59c60d69c301d16dfb5a60f5d43d66c0b60138d48a22f5ded598e7b",
-                    "c3e9a10cad7aebf979072092008be6e2815d03d28cbf316c15e8daf22116bd7d",
+                    "a4d26450ac399d51b9abbe37859615bb02a5cbf63521da4c7cdc549d04a2872c",
+                    "ddf310d8eb2d4e3f61e605978675a9d3a748cad9406b9aee8335eae013e77573",  # music ldm
                 ],
                 "layer_256": [
-                    "38f2a75eab667c0cc85f3946a23ca6dc2278438c25a9f93aaaa9f79c3808e180",  # gguf
-                    "ee8434a5e9bc6fa07199de2d0c69fb87f7922c31792bafd13f527c9d92fecb0c",
-                    "2f8382657babb4d0ae4f8e425ae33b21ad71deb6ba457fd6734f05208d52e06a",
-                    "34b181a8291b571857cdbf67ac0081fea594a2f223bf20bd2fc8b0c889e9602d",
-                    "d198c412b972e381acfb812304fa98ed0d97a2f072ddc195cd9a1eb83b1d8146",
-                    "79580a13aff9859e67b0a9f4f8893236cdcfa58c3d43770641aaac8daee55a94",
-                    "cfd48c7ad71c913fa8768167ed0c2ee8c207311b22b1e5a8761369b5a780e8d6",
-                    "da91362ad85d4d2e80a2cb7a55e4ae0e52c9eef8b437a95894ce5ab75d36568c",
-                    "15f84001f5205b6dd8c6f1334cb51c46f6171c7795fb2a557ea16b874f0c71e5",
-                    "5d29179ad15a15d2561defcdda66f1d1e4d065c1e0738f9cba4db5b68b93d2ea",
-                    "7ec489d1e461f5fb2af627b68034ca57f19c516aeccbc5d188b3bd27e3353a15",
-                    "c8dc42fe7b411d746ebdf86286b91cd6893c5f028076b8fe4103f7ea8e1d8833",
-                    "86df7c095aee01588e961438f322b85ca0100a9e440b8a2b6c724e00f748d8b5",
+                    "843ba86000971d6067bfc4f3ed6dd01bd6f6726188aaa15d86b05554f4fe8481",
+                    "27529e30442d030a28badf9d62710f4b74e38e9c4424ed169c7e0ac072f5a771",  # musicldm
+                ],
+            },
+        ),
+        (
+            "google-bert/bert-base-uncased",
+            "BertModel",
+            {
+                "file_256": [
+                    "c6c6348af2cb4d5852fe51102ce39605903dbe7925c005cf8995506cc21ea914",  # hunyuandit
+                ],
+                "layer_b3": [
+                    "30d7d2cc3ec9e4ba45844e005d0bbcb5887b6a0976042f73da916237dc5c4c12",
+                ],
+                "layer_256": [
+                    "94fd2508680ff684eff57e4a5a8ca46bf338fc356a9cf6fe8db2b84543dd7971",
                 ],
             },
         ),
     ]
 
-    additional_tags = [tag_pipe(*entry) for entry in details]
-    additional_tags.extend([tag_pipe(*entry) for entry in cosmos])
-    additional_tags.extend([tag_base_model(*entry) for entry in alt_details])
+    additional_tags = [tag_pipe(*entry) for entry in diffusers_addons]
+    additional_tags.extend([tag_base_model(*entry) for entry in transformer_details])
 
     assimilate(
         mir_db,  # format
@@ -1155,6 +1369,25 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
 def add_mir_diffusion(mir_db: MIRDatabase):
     """Create MIR entries missing from the database"""
 
+    repo = "microsoft/speecht5_hifigan"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="gan",
+            series=series,
+            comp=comp,
+            file_256=[
+                "d9dc6513c30a5b86c2497712690c04fe74b4aa79fdab6d490b34fcb4e24c590c",
+            ],
+            layer_b3=[
+                "85b5acdf29ad04c63f885383340d8e3445ae0055521f82cabb82bd09cfb9a956",
+            ],
+            layer_256=[
+                "bd52b538e7ac05711be9321cfb7619d4056996ce32923c9c91ee02cf69154770",
+            ],
+        )
+    )
     mir_db.add(
         mir_entry(
             domain="info",
@@ -1563,6 +1796,29 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             ],
         ),
     )
+    repo = "tensorart/stable-diffusion-3.5-medium-turbo"
+    series, comp = make_mir_tag(repo)
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series=sd3_series,
+            comp=comp,
+            repo=repo,
+            pkg={
+                0: {
+                    "generation": {"num_inference_steps": 8, "guidance_scale": 1.5, "height": 1024, "width": 768},
+                },
+            },
+            file_256=[
+                "",
+            ],
+            layer_b3=[
+                "",
+            ],
+            layer_256=[""],
+        ),
+    )
     repo = "Wan-AI/Wan2.1-FLF2V-14B-720P-Diffusers"
     series, comp = make_mir_tag(repo)
     mir_db.add(
@@ -1695,6 +1951,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "11807cb2522cfe99240e5ee2bbeb1ccb42cecca2215102ee872567c7773b28b9",  # flux
                 "d008943c017f0092921106440254dbbe00b6a285f7883ec8ba160c3faad88334",  # sd1
                 "77795e2023adcf39bc29a884661950380bd093cf0750a966d473d1718dc9ef4e",  # sd1 fp16
+                "b70c11ad5d7e9abf6109348908f599ea382f8019e1f36910bbc8ebecde936633",  # hidream i1
             ],
             layer_b3=[
                 "f58a22a381f79985b6d38782f6110a52c2f319b40fdedd3b88b24945dfcbdf64",
@@ -1710,6 +1967,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "e43fae8d5fd1e562607da172369cc0c5ec99b834e42502e682287ff7d12baacc",  # vega fp16
                 "c6f79f7416a882891957b815fbdfd6edfaa253c43970b1a25ef14e217599c7bc",  # flux
                 "daf5e09f67ad09a909f58a01298fec0132324634cb8fca2a604c3a240c2c453f",  # jaguar mlx q8
+                "3f62bfb6bbde05f01435129326166c44aeb113ac0d9f735f31ed3f7dd04f6980",  # hidream i1
             ],
             layer_256=[
                 "48daa3d8f939972e69f044533a4312a941971c18c78255f5e555fa26faf664c1",
@@ -1724,6 +1982,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "68fb122f7d6c3cfbef320341b2af8f5916678e36a69ed36fa8cfcb19e7d5c43d",
                 "11807cb2522cfe99240e5ee2bbeb1ccb42cecca2215102ee872567c7773b28b9",
                 "50c46cdddbe9f0162278c69b9a1f818519330e3a91b994272e19b5c789670471",  # jaguar mlx q8
+                "ffe1c4f55e07c2010ace7b9cf35798bb9f431bc954a32784e5acbdc16acc0364",  # hidream i1
             ],
         )
     )
@@ -1746,6 +2005,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "d3df577f6e3799c8e1bd9b40e30133710e02e8e25d0ce48cdcc790e7dfe12d6d",  # ssd1b fp16
                 "943a2924ee888295a156dd47089d67181d633b782337890af11ef4b15af17ec5",  # vega
                 "5b98e4a57a9292eeb819d67e2d2100f66f17db723cde4ecea27a7c3741160d0c",  # vega fp16
+                "4d6effa7a5e600cabf7528ed7234146a13ead1b2c151211d706b293a060b112a",  # hidream i1
             ],
             layer_b3=[
                 "d754db276f2d89d2808abb7086b3b8eccee43ac521c128d21a071f3a631474a8",
@@ -1754,6 +2014,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "16d0eec4e55b0aa63cdca4e4d36f78f66a4b1b9605ce3b1089305026f853c3d2",  # ssd1b fp16
                 "f606463295ecf3bae8920d3d45bb9d180793418b3d08c3e84d4c4135c7dc2aa5",  # vega
                 "7060993a5eb32d94d1ea8aef7a7301e7be73b199c639c63f8f7cfbfcd2abf10e",  # vega fp16
+                "b92af95334c657371af6051a91374a41b5455907fa6622bb66a8c112dc511600",  # hidream i1
             ],
             layer_256=[
                 "270e998633eb22145100a3889a62ca270d5080654735e5ff8dda09a7c233af8d",
@@ -1762,6 +2023,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "f7fc81d8b5ae91ec28a5106ecc0d067be9a94fd3f394c4aa4686ed131ce5a5b3",  # ssd1b fp16
                 "61ab42bd5c0fcb9fd3db1d4014cb844ccae8dc17fd69a108cf077a573d092946",  # vega
                 "6c64e36cdda3bec7067e94b05619f882f5d31070792acaadac60ddbef580453a",  # vega fp16
+                "43c9e64995b485a7f128771c48defce128640df28e65c7f79537d472f43ebe46",  # hidream i1
             ],
         )
     )
@@ -2532,7 +2794,10 @@ def add_mir_vae(mir_db: MIRDatabase):
             comp=series,
             # no repo here, may conflict
             pkg={
-                0: {"diffusers": "AutoencoderKLWan"},
+                0: {
+                    "diffusers": "AutoencoderKLWan",
+                    "precision": "ops.precision.float.F32",
+                }
             },
             file_256=[
                 "d6e524b3fffede1787a74e81b30976dce5400c4439ba64222168e607ed19e793",  # diffusers
@@ -2617,9 +2882,9 @@ def add_mir_vae(mir_db: MIRDatabase):
             pkg={
                 0: {"diffusers": "AutoencoderKLCogVideoX"},
             },
-            file_256=[],
-            layer_b3=[],
-            layer_256=[],
+            file_256=["a410e48d988c8224cef392b68db0654485cfd41f345f4a3a81d3e6b765bb995e"],
+            layer_b3=["246addb8dc798240638bffee4546a3c5c83572139b4a2a602d68b4c4146226eb"],
+            layer_256=["43c7e9cb4364e55fd563817f01484ede8a09ff19a8e69eb61a32a12f93d6f66e"],
         )
     )
     mir_db.add(
@@ -2692,8 +2957,8 @@ def add_mir_vae(mir_db: MIRDatabase):
             file_256=[
                 "95d1fc707c1421ccd88ea542838ab4c5d45a5babb48205bac9ce0985525f9818",  # pt,
             ],
-            layer_b3=[],
-            layer_256=[],
+            # layer_b3=[],
+            # layer_256=[],
         )
     )
     series, comp = make_mir_tag("genmo/mochi-1-preview")
@@ -2712,6 +2977,43 @@ def add_mir_vae(mir_db: MIRDatabase):
             layer_256=[],
         )
     )
+    series, comp = make_mir_tag("rhymes-ai/Allegro")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="kl",
+            comp=series,
+            # no repo here, may conflict
+            pkg={
+                0: {
+                    "diffusers": "AutoencoderKLAllegro",
+                },
+            },
+            file_256=["47871a698b18f92f15019d361a81cbc8af4676f8eef9a47fd2b95354a39f831a"],
+            layer_b3=["93654cbab7541504d2377c66e72943c7fd9947fca2eb1be01bcc8877c322c1e0"],
+            layer_256=["bfd496586118165a13243997101fc7cdd4f855b2d8a73ee2b771a4484c4c2f9f"],
+        )
+    )
+    series, comp = make_mir_tag("cvssp/audioldm-s-full-v2")
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="kl",
+            comp=series,
+            # no repo here, may conflict
+            pkg={
+                0: {
+                    "diffusers": "AutoencoderKL",
+                },
+            },
+            file_256=["42f64f7565b23eabde68c9694e39f18b8bba5f7a14f477e7ed4b51e0ea7de8a5"],
+            layer_b3=["00959677dae940b9cfdbe5380c8cbb5a6b4951864cd26f8211d74a3d22b4f3de"],
+            layer_256=["54d075953d5253a3abac651de070736c1d5510b857a8ab24c624304f428146b6"],
+        )
+    )
+
     series, comp = make_mir_tag("Efficient-Large-Model/Sana_1600M_1024px_BF16_diffusers")
     mir_db.add(
         mir_entry(
@@ -2739,9 +3041,9 @@ def add_mir_vae(mir_db: MIRDatabase):
             pkg={
                 0: {"diffusers": "AutoencoderOobleck"},
             },
-            file_256=[],
-            layer_b3=[],
-            layer_256=[],
+            # file_256=[],
+            # layer_b3=[],
+            # layer_256=[],
         )
     )
     series, comp = make_mir_tag("stable-video-diffusion-img2vid-xt")
@@ -2755,9 +3057,9 @@ def add_mir_vae(mir_db: MIRDatabase):
             pkg={
                 0: {"diffusers": "AutoencoderKLTemporalDecoder"},
             },
-            file_256=[],
-            layer_b3=[],
-            layer_256=[],
+            # file_256=[],
+            # layer_b3=[],
+            # layer_256=[],
         )
     )
     mir_db.add(
@@ -2776,8 +3078,9 @@ def add_mir_vae(mir_db: MIRDatabase):
                 "78f6189c8492013e3cac81637a1f657f790a237387f8a9dfd6bfa5fee28eb646",  # ssd1b diffusers
                 "6353737672c94b96174cb590f711eac6edf2fcce5b6e91aa9d73c5adc589ee48",  # ssd1b diffusers fp16
                 "bcb60880a46b63dea58e9bc591abe15f8350bde47b405f9c38f4be70c6161e68",  # kolors fp16
-                "1598f3d24932bcfe6634e8b618ea1e30ab1d57f5aad13a6d2de446d2199f2341",  # vega / lumina next sft d
+                "1598f3d24932bcfe6634e8b618ea1e30ab1d57f5aad13a6d2de446d2199f2341",  # vega / lumina next sft d / auraflow
                 "703abdcd7c389316b5128faa9b750a530ea1680b453170b27afebac5e4db30c4",  # pixart a
+                "98a14dc6fe8d71c83576f135a87c61a16561c9c080abba418d2cc976ee034f88",  # hyd 1.1
             ],
             layer_b3=[
                 "bd5b356b509814025a9cf692710b87116d4fcd0e30a8232ed1db133e908d0e74",  # modelspec sai
@@ -2828,15 +3131,18 @@ def add_mir_vae(mir_db: MIRDatabase):
             file_256=[
                 "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",  # dev
                 "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",  # dev diffusers
+                "8c717328c8ad41faab2ccfd52ae17332505c6833cf176aad56e7b58f2c4d4c94",  # lumina2
             ],
             layer_b3=[
                 # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
                 "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
+                "a8a3ebdec4d7b38d65b7169d3604c19b587330e5e66f69ebf0ded56a24ec6903",  # lumina2
             ],
             layer_256=[
                 "7950e4f3897c75affaa5f9f3c51c88b4d9a27bfd9b05ad41c3f71d8c1c620b89",
                 "79d2bfe93a2ac037cdc59ccb5576e32d00d75d4741fba49fc7e82b9724928216",  # diffusers
                 "8f084dc91fd5b481875bc9c86a4ef05e5f176896b7d31c6a5c2ce45c2e174004",  # dev diffusers
+                "322e01bd511e20bc2a3c27cd611f81ed85f0046b7c023b5622c2c9a5b8b34f80",  # lumina2
             ],
         )
     )
@@ -2864,6 +3170,25 @@ def add_mir_vae(mir_db: MIRDatabase):
                     "diffusers": "AutoencoderKL",
                 },
             },
+        )
+    )
+    repo = "ucsd-reach/musicldm"
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="kl",
+            comp=make_mir_tag(repo)[0],
+            # no repo here, may conflict
+            file_256=[
+                "16e0c6c7c34e459c19500cc15cf538e6331db14969ea15917caa9b0966e44fd4",
+            ],  # q8,
+            layer_b3=[
+                "c5c32b3fb3e73799838836ccce27d883254254daecd10f86ba8ddc55214014e0",
+            ],
+            layer_256=[
+                "1610c0ce39d1379091eb9ab2a4d14a8567e0f1a5dc6cca40fc0fa6f8e4e97c0f",
+            ],
         )
     )
 

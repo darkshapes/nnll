@@ -3,5 +3,8 @@
 
 
 def test_list_diffusers_models():
-    __import__("nnll").mir.indexers.diffusers_index()
-    __import__("nnll").mir.indexers.transformers_index()
+    import nnll
+    from nnll.mir.indexers import diffusers_index, transformers_index
+
+    nnll.mir.indexers.diffusers_index()
+    nnll.mir.indexers.transformers_index()

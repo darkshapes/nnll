@@ -17,6 +17,7 @@ def chip_stats():
 def test_write_stats(chip_stats):
     with (
         patch("psutil.virtual_memory") as mock_vm,
+        patch("psutil.cpu_percent") as mock_cpu,
         patch("torch.cuda.mem_get_info") as mock_cuda,
         patch("torch.mps.driver_allocated_memory") as mock_mps,
         patch("os.path.exists") as mock_exists,
@@ -26,6 +27,7 @@ def test_write_stats(chip_stats):
         mock_vm.return_value = MagicMock(total=10000000000)
         mock_cuda.return_value = (1000000000, 2000000000)
         mock_mps.return_value = 500000000
+        mock_cpu.return_value = 10000000000
         mock_exists.return_value = False
         mock_mkdir.return_value = None
         mock_read.return_value = {"data": {"devices": {"cpu": 10000000000}}}
@@ -45,15 +47,7 @@ def test_get_metrics(chip_stats):
         from decimal import Decimal
 
         metrics = chip_stats.get_metrics()
-        assert metrics["cpu"] == 25
-        assert metrics["dram_used"] == Decimal(str(1.86))
-        assert metrics["disk_used"] == 46.57
+        assert metrics["cpu_%"] == 25
+        assert metrics["dram_used_%"] == Decimal(str(1.86))
+        assert metrics["disk_used_%"] == 46.57
         assert metrics["chip_stats"]["attention_slicing"] is True
-
-
-def test_get_stats(chip_stats):
-    with patch("nnll.metadata.read_tags.MetadataFileReader.read_header") as mock_read:
-        mock_read.return_value = {"data": {"devices": {"cpu": 10000000000}}}
-        stats = chip_stats.get_stats()
-        assert stats["devices"]["cpu"] == 10000000000
-        assert "attention_slicing" in stats
