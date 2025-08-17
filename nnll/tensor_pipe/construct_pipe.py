@@ -84,9 +84,15 @@ class ConstructPipeline:
         model = model.model
         if pkg_name in ["diffusers", "transformers", "parler-tts"]:
             if os.path.isfile(model):
-                return pipe_obj.from_single_file(model, **kwargs)
+                try:
+                    return pipe_obj.from_single_file(model, use_safetensors=True, **kwargs)
+                except (EnvironmentError, OSError):
+                    return pipe_obj.from_single_file(model, **kwargs)
             else:
-                return pipe_obj.from_pretrained(model, **kwargs)
+                try:
+                    return pipe_obj.from_pretrained(model, use_safetensors=True, **kwargs)
+                except (EnvironmentError, OSError):
+                    return pipe_obj.from_pretrained(model, **kwargs)
         elif pkg_name == "mflux":
             return pipe_obj(model_name="model", **kwargs)
         elif pkg_name == "audiogen":

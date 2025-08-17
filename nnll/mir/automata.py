@@ -1013,6 +1013,18 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 ],
             },
         ),
+        (
+            "openai/shap-e",
+            "ShapEPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.F16",
+                        "generation": {"num_inference_steps": 64, "size": 256, "guidance_scale": 15},
+                    }
+                },
+            },
+        ),
     ]
 
     transformer_details = [

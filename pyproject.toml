@@ -61,7 +61,7 @@ dependencies = [
     "llama-cpp-python>=0.3.16",
     "bitsandbytes>=0.46.0 ; sys_platform != 'darwin'",
     #diffusers
-    "diffusers>=0.34.0",
+    "diffusers @ git+https://github.com/huggingface/diffusers.git",
     "transformers>=4.55.2",
     "accelerate>=1.10.0",
     "peft>=0.17.0",
@@ -139,7 +139,6 @@ outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 full = ["nnll[cu126,cu128,mps,rocm,torch,jax,onnx,ollama,openai,vllm,lmstudio]"]
 dev = [
     "nnll[full]",
-    "diffusers @ git+https://github.com/huggingface/diffusers.git",
     "transformers @ git+https://github.com/huggingface/transformers.git",
     "aioresponses>=0.7.8",
     "pytest>=8.4.1",

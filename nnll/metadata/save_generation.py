@@ -64,6 +64,11 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, libr
         embed.add_text("parameters", str(metadata))
         content.save(file_path_absolute, extension.upper().strip("."), pnginfo=embed)
         content.show()
+
+    elif extension.strip(".") == "gif":
+        from diffusers.utils import export_to_gif
+
+        export_to_gif(content, file_path_absolute)
     elif isinstance(content, ArrayType):
         if library == ["audiocraft"]:
             from audiocraft.data.audio import audio_write  # pyright: ignore[reportMissingImports] | pylint:disable=import-error
@@ -79,12 +84,7 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, libr
 
             sf.write(file_path_absolute, content, metadata)
     else:
-        if output_type == "gif":
-            from diffusers.utils import export_to_gif
+        # `imageio` / `imageio-ffmpeg` ??
+        from diffusers.utils import export_to_video
 
-            export_to_gif(content, file_path_absolute)
-        else:
-            # `imageio` / `imageio-ffmpeg` ??
-            from diffusers.utils import export_to_video
-
-            export_to_video(content, file_path_absolute, fps=15)
+        export_to_video(content, file_path_absolute, fps=15)

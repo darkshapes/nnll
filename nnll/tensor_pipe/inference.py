@@ -23,6 +23,7 @@ def run_inference(pipe_data: tuple, prompts: dict, out_type: str, **user_set) ->
     # memory threshold formula function returns boolean value here
     chip_stats = ChipStats()
     metrics = chip_stats.get_metrics()
+    print(metrics)
     prompt = prompts.get("text", "")
     pipe, model, pipe_call, generation = pipe_data
     nfo(f"pre-generator Model {model} Pipe {pipe} Arguments {generation}")
@@ -37,7 +38,12 @@ def run_inference(pipe_data: tuple, prompts: dict, out_type: str, **user_set) ->
             pipe = add_generator(pipe=pipe, noise_seed=noise_seed)
             content = pipe(prompt=prompt, **generation).images[0]
             file_type = ".png"
-        if out_type == "video":
+        elif out_type == "3d" and model == "openai/shap-e":
+            pipe.to(device)
+            # pipe = add_generator(pipe=pipe, noise_seed=noise_seed)
+            content = pipe(prompt=prompt, **generation).images
+            file_type = ".gif"
+        elif out_type == "video":
             pipe.to(device)
             pipe.vae.enable_tiling()
             pipe = add_generator(pipe=pipe, noise_seed=noise_seed)
@@ -69,4 +75,4 @@ def run_inference(pipe_data: tuple, prompts: dict, out_type: str, **user_set) ->
         # from nnll.integrity.hashing import collect_hashescollect_hashes(kwargs["model"]
         metadata = {"parameters": {"pipe": pipe, "model": model, "prompt": prompts, "kwargs": generation}}
         nfo(f"content type output {content}, {type(content)}")
-        disk.write_to_disk(content=content, metadata=metadata, extension=file_type)
+        disk.write_to_disk(content=content, metadata=metadata, extension=file_type, output_type=file_type)
