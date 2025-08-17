@@ -113,9 +113,6 @@ def tag_pipe(repo_path: str, class_name: str, addendum: dict) -> tuple:
     mir_series, mir_data = create_pipe_entry(repo_path=repo_path, class_name=class_name)
     mir_prefix, mir_series = mir_series.rsplit(".", 1)
     mir_comp = list(mir_data)[0]
-    if "nvidia/cosmos" in repo_path:
-        print(repo_path, mir_series, mir_comp)
-
     return mir_prefix, mir_series, {mir_comp: addendum}
 
 

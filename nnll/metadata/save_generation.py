@@ -38,8 +38,9 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
     file_path_absolute = os.path.join(save_folder_path_absolute, file_name)
     return file_path_absolute
 
+
 # do not log here
-def write_to_disk(content: Any, metadata: dict[str], extension: str = None, library: Optional[str] = None) -> None:
+def write_to_disk(content: Any, metadata: dict[str], extension: str = None, library: Optional[str] = None, output_type: str | None = None) -> None:
     """Save Image to File\n
     :param content: File data in memory
     :param pipe_data: Pipe metadata to write into the file
@@ -52,26 +53,37 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, libr
             #   `-kwargs    dict   \-image  array
             #                      `-video  array
     ```
-    :param extension: Type of Image file to write, defaults to None
+    :param extension: Type of file to write, defaults to None
     :param library: Originating library, defaults to None\n\n"""
 
+    file_path_absolute = name_save_file_as(extension)
     if isinstance(content, PIL.Image.Image):
         from PIL import PngImagePlugin
 
-        file_path_absolute = name_save_file_as(".png")
         embed = PngImagePlugin.PngInfo()
         embed.add_text("parameters", str(metadata))
-        content.save(file_path_absolute, "PNG", pnginfo=embed)
+        content.save(file_path_absolute, extension.upper().strip("."), pnginfo=embed)
         content.show()
-
     elif isinstance(content, ArrayType):
         if library == ["audiocraft"]:
             from audiocraft.data.audio import audio_write  # pyright: ignore[reportMissingImports] | pylint:disable=import-error
 
             for idx, one_wav in enumerate(content):
-                audio_write(f"{name_save_file_as('.wav')}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)
+                audio_write(f"{file_path_absolute}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)
+        elif output_type == "scipy":
+            import scipy
+
+            scipy.io.wavfile.write(file_path_absolute, rate=16000, data=content)
         else:
             import soundfile as sf  # pyright: ignore[reportMissingImports] | pylint:disable=import-error
 
-            file_path_absolute = name_save_file_as(extension or ".wav")
             sf.write(file_path_absolute, content, metadata)
+    else:
+        if output_type == "gif":
+            from diffusers.utils import export_to_gif
+
+            export_to_gif(content, file_path_absolute)
+        else:
+            from diffusers.utils import export_to_video
+
+            export_to_video(content, file_path_absolute, fps=15)

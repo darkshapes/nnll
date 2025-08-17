@@ -106,7 +106,7 @@ cu128 = ["nnll[triton,attention]"]
 rocm  = ["nnll[attention]", "pytorch-triton-rocm ; sys_platform == 'Linux'"]
 
 # -- frameworks --
-torch = ["torch", "torchvision", "torchaudio"]
+torch = ["torch", "torchvision", "torchaudio", "torchsde"]
 onnx  = ["onnx>=1.18.0"]
 jax   = ["flax>=0.10.7", "jax>=0.6.2"]
 

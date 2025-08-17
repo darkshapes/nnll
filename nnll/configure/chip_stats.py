@@ -51,7 +51,7 @@ class ChipStats:
                 # patches async issues with torch and MacOS
                 mp.set_start_method("fork", force=True)
                 stats["data"]["devices"]["mps"] = torch.mps.driver_allocated_memory()
-                stats["data"]["attention_slicing"] = True
+                stats["data"]["attention_slicing"] = False
                 if testing:
                     stats["data"]["mps"]["memory_fraction"] = 1.7
                     torch.mps.set_per_process_memory_fraction(stats["data"]["mps"]["memory_fraction"])
@@ -80,8 +80,19 @@ class ChipStats:
 
     @lru_cache
     def get_metrics(self):
-        """Retrieves system metrics including CPU usage, RAM usage and disk usage. Caches results to optimize performance.\n
-        :return: A dictionary of the system hardware state"""
+        """Retrieves current system metrics including CPU usage, RAM usage and disk usage. Caches results to optimize performance.\n
+        :return: A dictionary of the system hardware state
+            - "hostname" - network host name\n
+            - "timestamp" - system clock\n
+            - "cpu" - cpu utilization\n
+            - "dram" - cpu utilization percentage\n
+            - "dram_used" - allocated cpu memory\n
+            - "dram_total" - all cpu memory\n
+            - "disk" - disk utilization percentage\n
+            - "disk_used" - allocated disk space\n
+            - "disk_total" - all disk space\n
+            - "chip_stats" - static information from launch\n
+        """
         from decimal import Decimal
         import psutil
         from socket import gethostname
@@ -91,24 +102,31 @@ class ChipStats:
         ram = psutil.virtual_memory()
         chip_stats = self.get_stats()
         data = {
-            "hostname": gethostname(),
             "timestamp": datetime.now().strftime("%YY-%dd-%mm %H:%M:%SSS"),
             "cpu": psutil.cpu_percent(interval=1),
             "dram": psutil.virtual_memory().percent,
             "dram_used": Decimal(str(round(ram.used / (1024**3), 2))),
-            "dram_total": Decimal(str(round(ram.total / (1024**3), 2))),
             "disk": disk.percent,
             "disk_used": round(disk.used / (1024**3), 2),
-            "disk_total": round(disk.total / (1024**3), 2),
             "chip_stats": chip_stats,
+            "dram_total": Decimal(str(round(ram.total / (1024**3), 2))),
+            "disk_total": round(disk.total / (1024**3), 2),
+            "hostname": gethostname(),
         }
         return data
 
     @lru_cache
     def get_stats(self, folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:
-        """Retrieve configuration options from configuration file\n
+        """Retrieve static, launch time environment configuration options from configuration file\n
         :param folder_path_named: Path to the application configuration folder
-        :return: A mapping of the discovered flags
+        :return: A mapping of the discovered flags\n
+            - "attention_slicing - memory management\n
+            - "devices" - available processors\n
+            - "dynamo" - pipe compilation\n
+            - "flash_attention" - additional memory package\n
+            - "memory_fraction" - memory allocation\n
+            - "tf32" tf32 format toggle\n
+            - "xformers" - legacy memory management\n
         """
 
         import os

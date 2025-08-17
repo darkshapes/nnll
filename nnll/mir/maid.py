@@ -37,13 +37,16 @@ class MIRDatabase:
         """Save data to JSON file\n"""
         from nnll.monitor.console import nfo
 
-        try:
-            os.remove(MIR_PATH_NAMED)
-        except (FileNotFoundError, OSError) as error_log:
-            nfo(f"MIR file not found before write, regenerating... {error_log}")
+        os.remove(MIR_PATH_NAMED)
+        # except (FileNotFoundError, OSError) as error_log:
+        #     nfo(f"MIR file not found before write, regenerating... {error_log}")
+        from nnll.integrity import ensure_path
+
+        path = ensure_path(os.path.dirname(MIR_PATH_NAMED), os.path.basename(MIR_PATH_NAMED))
         self.mir_file.update_cache(self.database, replace=True)
+        self.test = self.read_from_disk()
+        nfo(f"Wrote {len(self.test)} lines to MIR database file.")
         self.database = self.read_from_disk()
-        nfo(f"Wrote {len(self.database)} lines to MIR database file.")
 
     @mir_file.decorator
     def read_from_disk(self, data: Optional[dict] = None) -> dict[str, Any]:
@@ -275,5 +278,5 @@ if __name__ == "__main__":
     main(remake=remake)
     from nnll.model_detect.tasks import run_task, pipe
 
-    run_task()
-    pipe()
+    mir_db = run_task()
+    pipe(mir_db)
