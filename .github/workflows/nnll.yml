@@ -34,7 +34,7 @@ jobs:
           uv venv .venv
           source .venv/bin/activate
           nnll-info
-          uv pip install cyclonedx-bom
+          uv pip install cyclonedx_py
           cyclonedx_py environment '.venv' --spec-version 1.6 --output-format JSON --output-file nnll-sbom.json -v
 
           pytest -v
