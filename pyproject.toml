@@ -88,6 +88,7 @@ jax  = ["flax>=0.10.7", "jax>=0.6.2"]
 
 # -- accelerators --
 
+cpu = ["torch>=2.8", "torchvision", "torchaudio", "torchsde"]
 xpu = [
     "torch>=2.8",
     "torchvision",
