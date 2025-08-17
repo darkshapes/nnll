@@ -35,7 +35,7 @@ class MockKolors:
     model = "Kwai-Kolors/Kolors-diffusers"
     modules = {
         0: {
-            "diffusers": "KolorsImg2ImgPipeline",
+            "diffusers": "KolorsPipeline",
             "precision": "ops.precision.float.F16",
             "generation": {"negative_prompt": "", "guidance_scale": 5.0, "num_inference_steps": 50, "width": 1024, "height": 1024},
         }
@@ -129,12 +129,12 @@ class TestConstructPipeline(unittest.TestCase):
         from nnll.mir.maid import MIRDatabase
 
         mock_from_pretrained.return_value = "mock_pipe"
-
+        mir_db = MIRDatabase()
         pipeline = ConstructPipeline()
         pipe, repo, import_pkg, settings = pipeline.create_pipeline(
             registry_entry=MockKolors,
             pkg_data=(0, "KolorsPipeline", MockType.DIFFUSERS),
-            mir_db=MIRDatabase(),
+            mir_db=mir_db,
         )
         import torch
 

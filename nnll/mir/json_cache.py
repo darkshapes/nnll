@@ -26,6 +26,7 @@ def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__)
     return ensure_path(folder_path_named, file_name)
 
 
+ensure_path(os.path.join(os.path.dirname(__file__), "config"), "mir.json")
 VARIABLE_NAMES = [
     file_name.stem
     for file_name in Path(os.path.join(os.path.dirname(__file__), "config")).iterdir()
