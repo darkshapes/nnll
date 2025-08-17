@@ -23,7 +23,7 @@ def run_inference(pipe_data: tuple, prompts: dict, out_type: str, **user_set) ->
     # memory threshold formula function returns boolean value here
     chip_stats = ChipStats()
     metrics = chip_stats.get_metrics()
-    print(metrics)
+    nfo(metrics)
     prompt = prompts.get("text", "")
     pipe, model, pipe_call, generation = pipe_data
     nfo(f"pre-generator Model {model} Pipe {pipe} Arguments {generation}")

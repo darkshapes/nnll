@@ -8,8 +8,8 @@ import diffusers
 
 from nnll.metadata.helpers import make_callable
 from nnll.tensor_pipe.deconstructors import root_class
-
-nfo = print
+from nnll.monitor.file import dbuq
+from nnll.monitor.console import nfo
 
 
 def stock_llm_data() -> Dict[str, List[str]]:
@@ -103,7 +103,7 @@ def pkg_path_to_docstring(pkg_name: str, folder_path: bool) -> Iterator[Tuple[st
             continue
         try:
             pkg_path = f"diffusers.pipelines.{str(pkg_name)}.{file_name}"
-            print(pkg_path)
+            dbuq(pkg_path)
             path_exists = os.path.exists(os.path.join(module_path, pkg_name, file_name + ".py"))
             if path_exists:
                 pipe_file = make_callable(file_name, pkg_path)

@@ -24,7 +24,7 @@ dev_series, dev_comp = make_mir_tag("black-forest-labs/FLUX.1-dev")
 schnell_series, schnell_comp = make_mir_tag("black-forest-labs/FLUX.1-schnell")
 ssd_series, ssd_comp = make_mir_tag("segmind/SSD-1B")
 vega_series, vega_comp = make_mir_tag("segmind/Segmind-Vega")
-sd3_series, sd3_comp = make_mir_tag("stable-diffusion-3")
+sd3_series, sd3_comp = make_mir_tag("stable-diffusion-3.5-medium")  #
 
 # def gen_attention_processors(mir_db: MIRDatabase): # upstream not quite ready for this yet
 #     from diffusers.models.attention_processor import AttentionProcessor
@@ -424,9 +424,18 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             "PixArtSigmaPipeline",
             {
                 "identifiers": ["adaln_single", "scale_shift_table"],
-                "file_256": ["c34b520ef473329b945c2a21083cdf1337c5a468d23b3215b65576789bfd0305"],
-                "layer_b3": ["a199930ff537994872da77391955f0dd52eddd22ab9105388f0c5852f1b8021f"],
-                "layer_256": ["e0afd203aff5a1d192e325d0f59361373273d85d138b51768c3f10a75c154dc0"],
+                "file_256": [
+                    "c34b520ef473329b945c2a21083cdf1337c5a468d23b3215b65576789bfd0305",
+                    "2fa4dee9229c02b03163f57bdb8e80c7a5ee364b7161796abe9c05e8dd13f239",
+                ],
+                "layer_b3": [
+                    "a199930ff537994872da77391955f0dd52eddd22ab9105388f0c5852f1b8021f",
+                    "ee6f980c32e98da6885f3e97d3f88d9158031e362cd3a49b20d1e23924b251e3",
+                ],
+                "layer_256": [
+                    "e0afd203aff5a1d192e325d0f59361373273d85d138b51768c3f10a75c154dc0",
+                    "987f3c2ff5d399191e5fd7dd7b1f1f285c197dc8124ad77f05cde7f2fb677a3c",
+                ],
             },
         ),
         (
@@ -440,7 +449,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             },
         ),
         (
-            "stabilityai/stable-diffusion-3-medium",
+            "stabilityai/stable-diffusion-3.5-medium",
             "StableDiffusion3Pipeline",
             {
                 "pkg": {
@@ -1025,6 +1034,21 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 },
             },
         ),
+        (
+            "hunyuanvideo-community/HunyuanVideo",
+            "HunyuanVideoFramepackPipeline",
+            {
+                "file_256": [
+                    "bdb957b35585ea74ae42ca92865a68fa1bf1ebc6c5b7e686a889e5c977dc24c7",  #
+                ],
+                "layer_b3": [
+                    "d31c56b4c9444d4c2f1b10120fe964e0956f6b8c7e7c1e4cc5a1f37406fc49f5"  #
+                ],
+                "layer_256": [
+                    "fe741fdfd163bcb1e0ed81d80f79ac3576dbf6e6740674efadfeff782a48bed4",  #
+                ],
+            },
+        ),
     ]
 
     transformer_details = [
@@ -1352,6 +1376,21 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 ],
                 "layer_256": [
                     "94fd2508680ff684eff57e4a5a8ca46bf338fc356a9cf6fe8db2b84543dd7971",
+                ],
+            },
+        ),
+        (
+            "llava-hf/llava-9b",
+            "LlavaModel",
+            {
+                "file_256": [
+                    "f5ad57d3eda300a3195bc9c0bb36ab76ebe88831f128e9851e63440aff4a6741",  # hunyuanvideo
+                ],
+                "layer_b3": [
+                    "d7d6ccb9dbba90b64e4cd259b6309e56708b3f4fbd6e9f85e9f0410e549133ef",
+                ],
+                "layer_256": [
+                    "9969c41152aba689413b7f63888ecdc0c0badad2c2960e689ebc4c0e4a696c73",
                 ],
             },
         ),
@@ -1797,26 +1836,37 @@ def add_mir_diffusion(mir_db: MIRDatabase):
         ),
     )
     repo = "tensorart/stable-diffusion-3.5-medium-turbo"
-    series, comp = make_mir_tag(repo)
     mir_db.add(
         mir_entry(
             domain="info",
             arch="dit",
             series=sd3_series,
-            comp=comp,
+            comp=make_mir_tag(repo)[0],
             repo=repo,
             pkg={
                 0: {
+                    "precision": "ops.precision.bfloat.B16",
                     "generation": {"num_inference_steps": 8, "guidance_scale": 1.5, "height": 1024, "width": 768},
-                },
+                }
             },
             file_256=[
-                "",
+                "5b0530e8d71b49fa1358f1208047cd789a40bae5b44406c9524b0f0d88f8b246",  # diffusers
+                "07119c77c3548a1d9eb30923df4dd55ec74914dc5ec81626804dcbe51ce17a5d",  # sai
+                "3c379381344d2a2b3ee3d7a1bc97f7d1e58fa95c6b5187fb48b3ce446f99f17b",  # q4km gguf
+                "6b3806cafdb4303ea2638e9e08eb186067b4a46a95ddf344ccdbe56537afaf6e",  # q8km gguf
             ],
             layer_b3=[
-                "",
+                "873821614080a98e1ebfe56673bc96c2ac57379720d4ad2f97e4bca317571d48",  # diffusers
+                "7284d2027523482af9ef47405667ca891cc518bfb6ebf1f1d4666cb0accc8cd5",
+                "d938ee5738c73f701760ed18acad274b074d2796123aee3f2eee1328b6c36ea4",
+                "c4c40056c2a77959083b5a69a1a4b205caa463ccabde057352c5c4e38b2c67b6",
             ],
-            layer_256=[""],
+            layer_256=[
+                "3c324055a1ec6eb4ee0242e344bb2b6356afcbd2e215fdd9d160cda691a72fae",
+                "7284d2027523482af9ef47405667ca891cc518bfb6ebf1f1d4666cb0accc8cd5",
+                "d938ee5738c73f701760ed18acad274b074d2796123aee3f2eee1328b6c36ea4",
+                "c4c40056c2a77959083b5a69a1a4b205caa463ccabde057352c5c4e38b2c67b6",
+            ],
         ),
     )
     repo = "Wan-AI/Wan2.1-FLF2V-14B-720P-Diffusers"
@@ -1952,6 +2002,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "d008943c017f0092921106440254dbbe00b6a285f7883ec8ba160c3faad88334",  # sd1
                 "77795e2023adcf39bc29a884661950380bd093cf0750a966d473d1718dc9ef4e",  # sd1 fp16
                 "b70c11ad5d7e9abf6109348908f599ea382f8019e1f36910bbc8ebecde936633",  # hidream i1
+                "fc42badf529dd83f2f7c3d20fe6bda1e22036162f37c4c668b9e130884e20561",
             ],
             layer_b3=[
                 "f58a22a381f79985b6d38782f6110a52c2f319b40fdedd3b88b24945dfcbdf64",
@@ -1968,6 +2019,8 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "c6f79f7416a882891957b815fbdfd6edfaa253c43970b1a25ef14e217599c7bc",  # flux
                 "daf5e09f67ad09a909f58a01298fec0132324634cb8fca2a604c3a240c2c453f",  # jaguar mlx q8
                 "3f62bfb6bbde05f01435129326166c44aeb113ac0d9f735f31ed3f7dd04f6980",  # hidream i1
+                "22f866f3c96a92bc61e9965cf366d706db942ad047ba8cb82109edcd4e68fa40",  # sd3 turbo
+                "f3fa9d7a8f15741621c1fe82f8a1bcc5c601c900d947ac09fba7016615a252a5",  # shap-e
             ],
             layer_256=[
                 "48daa3d8f939972e69f044533a4312a941971c18c78255f5e555fa26faf664c1",
@@ -1983,6 +2036,8 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "11807cb2522cfe99240e5ee2bbeb1ccb42cecca2215102ee872567c7773b28b9",
                 "50c46cdddbe9f0162278c69b9a1f818519330e3a91b994272e19b5c789670471",  # jaguar mlx q8
                 "ffe1c4f55e07c2010ace7b9cf35798bb9f431bc954a32784e5acbdc16acc0364",  # hidream i1
+                "146ea48d234e05a934db9d8988e9a9dd86b2ac70f535eaa550ecb0ee23ec135e",  # sd3 turbo
+                "d97560cf9704cf71711f6121df2bf55e55a1eda4b574a6ddba074767420bc8c3",
             ],
         )
     )
@@ -2956,6 +3011,9 @@ def add_mir_vae(mir_db: MIRDatabase):
             },
             file_256=[
                 "95d1fc707c1421ccd88ea542838ab4c5d45a5babb48205bac9ce0985525f9818",  # pt,
+                "7c68a6295f9034a88225fbafb1f3258291a08d57a1fdb938233fa57b1b8f4883",
+                "fbe5ea338431bc8ba20f7019b474e83379fe5763abfd562adcc04b1c0d35c728",
+                "019973c147e0c3462629d8d06bdbdbb83408f3ebd4ea4b4ae21a99c3cdcb54c0",
             ],
             # layer_b3=[],
             # layer_256=[],
@@ -3132,6 +3190,7 @@ def add_mir_vae(mir_db: MIRDatabase):
                 "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",  # dev
                 "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",  # dev diffusers
                 "8c717328c8ad41faab2ccfd52ae17332505c6833cf176aad56e7b58f2c4d4c94",  # lumina2
+                "8f53304a79335b55e13ec50f63e5157fee4deb2f30d5fae0654e2b2653c109dc",  # sd3 turbo
             ],
             layer_b3=[
                 # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",

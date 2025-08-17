@@ -8,18 +8,25 @@ import os
 import sys
 from typing import Any, AsyncGenerator, Callable, List, Optional
 
-from nnll.mir.json_cache import MIR_PATH_NAMED, JSONCache  # pylint:disable=no-name-in-module
-from nnll.monitor.file import dbug as nfo, dbuq
+from nnll.integrity import ensure_path
+from nnll.mir.json_cache import MIR_PATH_NAMED, JSONCache
+from nnll.metadata.json_io import read_json_file, write_json_file  # pylint:disable=no-name-in-module
+from nnll.monitor.file import dbug as nfo
+from nnll.monitor.file import dbuq
 
 
 class MIRDatabase:
     """Machine Intelligence Resource Database"""
 
-    database: Optional[dict[str, Any]]
-    mir_file = JSONCache(MIR_PATH_NAMED)
+    def __init__(self, database: dict | None = None) -> None:
+        from json.decoder import JSONDecodeError
 
-    def __init__(self) -> None:
-        self.read_from_disk()
+        if not database:
+            try:
+                self.database = read_json_file(MIR_PATH_NAMED)
+            except JSONDecodeError as error_log:
+                dbuq(error_log)
+                self.database = {}
 
     def add(self, resource: dict[str, Any]) -> None:
         """Merge pre-existing MIR entries, or add new ones
@@ -32,28 +39,26 @@ class MIRDatabase:
             else:
                 self.database[parent_key] = resource[parent_key]
 
-    @mir_file.decorator
     def write_to_disk(self, data: Optional[dict] = None) -> None:  # pylint:disable=unused-argument
         """Save data to JSON file\n"""
+        from nnll.integrity import ensure_path
         from nnll.monitor.console import nfo
 
-        os.remove(MIR_PATH_NAMED)
         # except (FileNotFoundError, OSError) as error_log:
         #     nfo(f"MIR file not found before write, regenerating... {error_log}")
-        from nnll.integrity import ensure_path
 
-        path = ensure_path(os.path.dirname(MIR_PATH_NAMED), os.path.basename(MIR_PATH_NAMED))
-        self.mir_file.update_cache(self.database, replace=True)
-        self.test = self.read_from_disk()
-        nfo(f"Wrote {len(self.test)} lines to MIR database file.")
-        self.database = self.read_from_disk()
+        folder_path_named = ensure_path(os.path.dirname(MIR_PATH_NAMED), os.path.basename(MIR_PATH_NAMED))
+        write_json_file(os.path.dirname(folder_path_named), file_name="mir.json", data=self.database, mode="w")
+        written_data = self.read_from_disk()
+        nfo(f"Wrote {len(written_data)} lines to MIR database file.")
+        self.database = written_data
 
-    @mir_file.decorator
     def read_from_disk(self, data: Optional[dict] = None) -> dict[str, Any]:
         """Populate mir database\n
         :param data: mir decorater auto-populated, defaults to None
         :return: dict of MIR data"""
-        self.database = data
+        folder_path_named = ensure_path(os.path.dirname(MIR_PATH_NAMED), os.path.basename(MIR_PATH_NAMED))
+        self.database = read_json_file(MIR_PATH_NAMED)
         return self.database
 
     def _stage_maybes(self, maybe_match: str, target: str, series: str, compatibility: str) -> List[str]:
@@ -64,8 +69,9 @@ class MIRDatabase:
         :param compatibility: MIR URI compatibility identifier\n
         (found value, path, sub-path,boolean for exact match)
         :return: A list of likely options and their MIR paths"""
-        from nnll.configure.constants import SEARCH_SUFFIX
         import re
+
+        from nnll.configure.constants import SEARCH_SUFFIX
 
         results = []
         if isinstance(maybe_match, str):
@@ -165,12 +171,13 @@ class MIRDatabase:
             return None
 
 
-def main(mir_db: Callable = MIRDatabase(), remake: bool = True) -> None:
+def main(mir_db: Callable | None = None, remake: bool = True) -> None:
     """Build the database"""
     from sys import modules as sys_modules
 
     if __name__ != "__main__" and "pytest" not in sys_modules:  #
         import argparse
+
         from nnll.monitor.console import nfo
 
         parser = argparse.ArgumentParser(
@@ -194,28 +201,25 @@ def main(mir_db: Callable = MIRDatabase(), remake: bool = True) -> None:
 
     from nnll.mir.automata import (
         add_mir_audio,
-        mir_update,
+        add_mir_diffusion,
         add_mir_dtype,
-        hf_pkg_to_mir,
+        add_mir_llm,
         add_mir_lora,
         add_mir_schedulers,
-        add_mir_diffusion,
-        add_mir_llm,
         add_mir_vae,
+        hf_pkg_to_mir,
+        mir_update,
     )
-    from nnll.integrity import ensure_path
     from nnll.monitor.console import nfo
+    from nnll.metadata.json_io import write_json_file
 
-    try:
-        os.remove(MIR_PATH_NAMED)
-    except (FileNotFoundError, OSError) as error_log:
-        nfo(f"MIR file not found before write, regenerating... {error_log}")
-    ensure_path(folder_path_named=os.path.dirname(MIR_PATH_NAMED), file_name=os.path.basename(MIR_PATH_NAMED))
-
-    mir_db = MIRDatabase()
     if remake:
-        mir_db.database = {}
-        mir_db.write_to_disk()
+        os.remove(MIR_PATH_NAMED)
+        folder_path_named = ensure_path(os.path.dirname(MIR_PATH_NAMED), os.path.basename(MIR_PATH_NAMED))
+        folder_path_named = os.path.dirname(folder_path_named)
+        write_json_file(folder_path_named, file_name="mir.json", data={"expected": "data"}, mode="w")
+    mir_db = MIRDatabase()
+    mir_db.database.pop("expected", {})
     hf_pkg_to_mir(mir_db)
     add_mir_dtype(mir_db)
     add_mir_schedulers(mir_db)
@@ -232,10 +236,12 @@ if __name__ == "__main__":
     remake: bool = True
     tasks = True
     pipes = True
+
     from sys import modules as sys_modules
 
     if "pytest" not in sys_modules:  #
         import argparse
+
         from nnll.monitor.console import nfo
 
         parser = argparse.ArgumentParser(
@@ -276,7 +282,7 @@ if __name__ == "__main__":
         pipes = not args.pipes_off
 
     main(remake=remake)
-    from nnll.model_detect.tasks import run_task, pipe
+    from nnll.model_detect.tasks import pipe, run_task
 
     mir_db = run_task()
     pipe(mir_db)

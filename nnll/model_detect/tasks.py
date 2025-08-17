@@ -63,7 +63,10 @@ class AutoPkg:
 
             class_obj: Callable = make_callable(class_name, "transformers")
             class_module: Callable = make_callable(*class_obj.__module__.split(".", 1)[-1:], class_obj.__module__.split(".", 1)[0])
-            task_classes = getattr(class_module, "__all__")
+            if class_module and class_module.__name__ != "DummyPipe":
+                task_classes = getattr(class_module, "__all__")
+            else:
+                return None
         elif code_name:
             from transformers.utils.fx import _generate_supported_model_class_names
 

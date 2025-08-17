@@ -116,6 +116,9 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
                 nfo(f"Failed to detect type for {class_name} {list(sub_segments)}\n")
             else:
                 mir_prefix = "info." + mir_prefix
+        if class_name == "StableDiffusion3InpaintPipeline" or repo_path in ["stabilityai/stable-diffusion-3-medium-diffusers"]:
+            class_name = "StableDiffusion3Pipeline"
+            repo_path = "stabilityai/stable-diffusion-3.5-medium"
         mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
         mir_series = mir_prefix + "." + mir_series
         repo_path = check_migrations(repo_path)
@@ -132,12 +135,12 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
     """Generate diffusion model data for MIR index\n
     :return: Dictionary ready to be applied to MIR data fields
     """
-    special_cases = {
+    special_repos = {
         "black-forest-labs/FLUX.1-schnell": "black-forest-labs/FLUX.1-dev",
-        "stabilityai/stable-diffusion-3-medium": "stabilityai/stable-diffusion-3.5-medium",
+        # "stabilityai/stable-diffusion-3-medium-diffusers": "stabilityai/stable-diffusion-3.5-medium",
     }
     special_classes = {
-        "StableDiffusion3Pipeline": "stabilityai/stable-diffusion-3.5-medium",  # NOT sd3
+        # "StableDiffusion3Pipeline": "stabilityai/stable-diffusion-3.5-medium",  # NOT sd3
         "HunyuanDiTPipeline": "tencent-hunyuan/hunyuandiT-v1.2-diffusers",  #  NOT hyd .ckpt
         "ChromaPipeline": "lodestones/Chroma",
     }
@@ -165,14 +168,17 @@ def diffusers_index() -> Dict[str, Dict[str, Dict[str, Any]]]:
                 if "img2img" in pipe_class.lower():
                     continue
             pipe_data.setdefault(series, {}).update(comp_data)
-            if staged_class or pipe_repo in special_cases:
-                test = special_cases.get(pipe_repo)
+            special_conditions = special_repos | special_classes
+            if staged_class or pipe_repo in list(special_conditions):
+                test = special_conditions.get(pipe_repo)
                 if test:
                     staged_repo = test
                     staged_class = pipe_class
                 try:
-                    series, comp_data = create_pipe_entry(staged_repo or pipe_repo, staged_class or pipe_class)
-                except TypeError:
+                    series, comp_data = create_pipe_entry(staged_repo if staged_repo else pipe_repo, staged_class if staged_class else pipe_class)
+                except TypeError as error_log:
+                    print(series, comp_data)
+                    print(error_log)
                     continue  # Attempt 2,
                 pipe_data.setdefault(series, {}).update(comp_data)
     return dict(pipe_data)

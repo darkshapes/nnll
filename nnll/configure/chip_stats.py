@@ -77,7 +77,6 @@ class ChipStats:
                 "torch_git": torch.version.git_version,
             },
         )
-        print(stats)
         self.stats = stats
         if not self.debug:
             # consider: set cpu floats fp32?
