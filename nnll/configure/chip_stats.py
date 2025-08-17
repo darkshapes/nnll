@@ -44,36 +44,37 @@ class ChipStats:
         stats = dict()
         stats.setdefault("data", dict())
         stats["data"].setdefault("devices", dict())
-        stats["data"].setdefault("dynamo", False if platform.system().lower() != "linux" else True)
+        stats["data"].setdefault("torch", dict())
+        stats["data"]["torch"].setdefault("dynamo", False if platform.system().lower() != "linux" else True)
         if "cuda" in device:
             stats["data"]["devices"].setdefault("cuda", torch.cuda.mem_get_info()[1])
-            stats["data"]["flash_attention"] = torch.backends.cuda.flash_sdp_enabled() if platform.system().lower() == "linux" else False
-            stats["data"]["allow_tf32"] = False
-            stats["data"]["xformers"] = torch.backends.cuda.mem_efficient_sdp_enabled()
-            if "True" in [stats["data"].get("xformers"), stats["data"].get("flash_attention")]:
-                stats["data"]["attention_slicing"] = False
+            stats["data"]["torch"].setdefault("flash_attention", torch.backends.cuda.flash_sdp_enabled() if platform.system().lower() == "linux" else False)
+            stats["data"]["torch"].setdefault("allow_tf32", False)
+            stats["data"]["torch"].setdefault("xformers", torch.backends.cuda.mem_efficient_sdp_enabled())
+            if "True" in [stats["data"]["torch"].get("xformers"), stats["data"].get("flash_attention")]:
+                stats["data"]["torch"]["attention_slicing"] = False
         if "mps" in device:
             if torch.backends.mps.is_available() & torch.backends.mps.is_built():
                 # patches async issues with torch and MacOS
                 mp.set_start_method("fork", force=True)
                 stats["data"]["devices"].setdefault("mps", torch.mps.driver_allocated_memory())
-                stats["data"].setdefault("attention_slicing", False)
+                stats["data"]["torch"].setdefault("attention_slicing", False)
                 if testing:
-                    stats["data"].setdefault("mps_memory_fraction", 1.7)
-                    torch.mps.set_per_process_memory_fraction(stats["data"]["mps_memory_fraction"])
+                    stats["data"]["torch"].setdefault("mps_memory_fraction", 1.7)
+                    torch.mps.set_per_process_memory_fraction(stats["data"]["torch"]["mps_memory_fraction"])
                     os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
         if "xpu" in device:
             stats["data"]["devices"].setdefault("xps", torch.xpu.mem_get_info())  # mostly just placeholder
         if "mtia" in device:
             stats["data"]["devices"].setdefault("mtia", torch.mtia.memory_stats())  # also mostly just placeholder
         stats["data"]["devices"].setdefault("cpu", int(psutil.virtual_memory().total))
-        stats["data"].setdefault(
-            "torch",
+        stats["data"]["torch"].setdefault(
+            "versions",
             {
                 "cuda": torch.version.cuda,
                 "hip": torch.version.hip,
                 "xpu": torch.version.xpu,
-                "git_version": torch.version.git_version,
+                "torch_git": torch.version.git_version,
             },
         )
         print(stats)
@@ -165,14 +166,14 @@ class ChipStats:
                         break
         stats = self.stats.get("data")
         chip_stats = {
-            "attention_slicing": stats.get("attention_slicing", 0),
+            "attention_slicing": stats["torch"].get("attention_slicing", 0),
             "devices": stats.get("devices", 0),
-            "dynamo": stats.get("dynamo", 0),
-            "flash_attention": stats.get("flash_attention", 0),
-            "memory_fraction": stats.get("set_per_process_memory_fraction", 0),
-            "tf32": stats.get("allow_tf32", 0),
-            "xformers": stats.get("xformers", 0),
-            "torch": stats.get("torch"),
+            "dynamo": stats["torch"].get("dynamo", 0),
+            "flash_attention": stats["torch"].get("flash_attention", 0),
+            "memory_fraction": stats["torch"].get("mps_memory_fraction", 0),
+            "tf32": stats["torch"].get("allow_tf32", 0),
+            "xformers": stats["torch"].get("xformers", 0),
+            "torch": stats["torch"].get("version"),
         }
         return chip_stats
 

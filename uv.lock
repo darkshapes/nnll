@@ -3575,7 +3575,7 @@ requires-dist = [
     { name = "torchaudio", marker = "extra == 'torch'" },
     { name = "torchsde", marker = "extra == 'torch'" },
     { name = "torchvision", marker = "extra == 'torch'" },
-    { name = "transformers", specifier = ">=4.56.0.dev0" },
+    { name = "transformers", specifier = ">=4.55.2" },
     { name = "transformers", marker = "extra == 'dev'", git = "https://github.com/huggingface/transformers.git" },
     { name = "triton", marker = "sys_platform == 'Linux' and extra == 'triton'" },
     { name = "triton-windows", marker = "sys_platform == 'win32' and extra == 'triton'" },
