@@ -36,7 +36,7 @@ class MockKolors:
     modules = {
         0: {
             "diffusers": "KolorsImg2ImgPipeline",
-            "precision": "ops.precision.float.f16",
+            "precision": "ops.precision.float.F16",
             "generation": {"negative_prompt": "", "guidance_scale": 5.0, "num_inference_steps": 50, "width": 1024, "height": 1024},
         }
     }
