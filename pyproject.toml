@@ -62,8 +62,10 @@ dependencies = [
     "bitsandbytes>=0.46.0 ; sys_platform != 'darwin'",
     #diffusers
     "diffusers>=0.34.0",
+    "transformers>=4.56.0.dev0",
     "accelerate>=1.10.0",
     "peft>=0.17.0",
+
     #async
     "aiohttp>=3.12.15",
     "aiofiles>=24.1.0",
@@ -86,7 +88,6 @@ dev = [
     "ruff>=0.12.9",
 ]
 
-torch = ["torch", "torchvision", "torchaudio", "torchsde"]
 [project.optional-dependencies]
 # -- frameworks --
 torch = ["torch", "torchvision", "torchaudio", "torchsde"]
