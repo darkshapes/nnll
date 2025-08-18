@@ -733,7 +733,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             },
         ),
         (
-            "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
+            "Wan-AI/Wan21-I2V-14B-480P-Diffusers",
             "WanImageToVideoPipeline",
             {
                 "file_256": [
@@ -804,7 +804,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             },
         ),
         (
-            "Wan-AI/Wan2.1-T2V-14B-Diffusers",
+            "Wan-AI/Wan21-T2V-1.3B-Diffusers",
             "WanPipeline",
             {
                 "pkg": {
