@@ -195,6 +195,8 @@ conflicts = [
         { extra = "xpu" },
         { extra = "rocm" },
         { extra = "triton" },
+        { extra = "torch" },
+
     ],
 ]
 
@@ -223,21 +225,15 @@ torchaudio = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-    { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
 ]
 
-torchvision = [
-    # { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
-    { index = "pytorch-cpu", marker = "sys_platform != 'darwin'" },
-]
+torchvision = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
 torch = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
     { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
-    { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
 
 ]
-
 
 diffusers = { git = "https://github.com/huggingface/diffusers" }
 
