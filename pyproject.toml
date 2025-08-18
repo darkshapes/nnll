@@ -58,7 +58,6 @@ dependencies = [
     #gguf
     "gguf>=0.17.1",
     "llama-cpp-python>=0.3.16",
-    "bitsandbytes>=0.46.0 ; sys_platform != 'darwin'",
 
     #diffusers
     "diffusers @ git+https://github.com/huggingface/diffusers.git",
@@ -91,27 +90,29 @@ jax  = ["flax>=0.10.7", "jax>=0.6.2"]
 
 # -- accelerators --
 cuda = [
-    "torch>=2.8",
+    "torch",
     "torchvision",
     "torchaudio",
     "torchsde",
     "triton ; sys_platform != 'win32' and sys_platform != 'darwin'",
     "triton-windows ; sys_platform == 'win32'",
+    "bitsandbytes>=0.45 ; sys_platform != 'darwin'",
     "nnll[jax,onnx,ollama,openai,lmstudio]",
+    "bitsandbytes>=0.46.0 ; sys_platform == 'Linux'",
+
 ]
 #cu128
-cpu = ["torch>=2.8", "torchvision", "torchaudio", "torchsde"]
+cpu = ["torch", "torchvision", "torchaudio", "torchsde"]
 xpu = [
-    "torch>=2.8",                                       # entries duplicated (unfortunately) for indexes to work
+    "torch",                                 # entries duplicated (unfortunately) for indexes to work
     "torchvision",
     "torchaudio",
     "torchsde",
-    "pytorch-triton-xpu ; platform_machine == 'AMD64'",
     "nnll[jax,onnx,ollama,openai,lmstudio]",
 
 ]
 mps = [
-    "torch>=2.8",
+    "torch",
     "torchvision",
     "torchaudio",
     "torchsde",
@@ -126,17 +127,15 @@ mps = [
     "nnll[jax,onnx,ollama,openai,lmstudio]",
 ]
 rocm = [
-    "torch>=2.8",
+    "torch",
     "torchvision",
     "torchaudio",
     "torchsde",
     "flash_attn ; sys_platform == 'Linux'",
     "pytorch-triton-rocm ; sys_platform == 'Linux'",
-    "nnll[jax,onnx,ollama,openai,lmstudio,attention]",
+    "nnll[jax,onnx,ollama,openai,lmstudio]",
+    "bitsandbytes>=0.46.0 ; sys_platform == 'Linux'",
 ]
-
-# -- mem efficiency --
-attention = ["sageattention; sys_platform != 'darwin'"]
 
 # -- providers --
 ollama   = ["ollama>=0.5.1"]
@@ -198,7 +197,6 @@ conflicts = [
         { extra = "triton" },
     ],
 ]
-no-build-isolation-package = ["sageattention", "flash_attn"]
 
 [[tool.uv.index]]
 name     = "pytorch-cpu"
@@ -240,25 +238,8 @@ torch = [
 
 ]
 
-pytorch-triton-xpu = [
-    { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
-
-]
-"sageattention" = [
-    { git = "https://github.com/thu-ml/SageAttention.git", extra = "attention", marker = "sys_platform != 'darwin'" },
-]
 
 diffusers = { git = "https://github.com/huggingface/diffusers" }
-
-[[tool.uv.dependency-metadata]]
-name          = "flash-attn"
-version       = "2.6.3"
-requires-dist = ["torch", "einops"]
-
-[[tool.uv.dependency-metadata]]
-name          = "sageattention"
-version       = "2.2.0"
-requires-dist = ["torch"]
 
 [tool.setuptools_scm]
 write_to = "_version.py"
