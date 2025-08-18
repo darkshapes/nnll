@@ -809,6 +809,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             {
                 "pkg": {
                     0: {
+                        "diffusers": "WanPipeline",
                         "precision": "ops.precision.bfloat.B16",
                         "generation": {
                             "height": 480,
