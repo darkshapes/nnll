@@ -75,7 +75,6 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
-    "nnll[full]",
     "aioresponses>=0.7.8",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.1.0",
@@ -84,17 +83,23 @@ dev = [
     "pytest-trio>=0.8.0",
     "ruff>=0.12.9",
 ]
-full = [
-    "nnll[cuda,jax,onnx,ollama,openai,lmstudio,attention] ; sys_platform == 'win32'",
-    "nnll[mps,jax,onnx,ollama,openai,lmstudio] ; sys_platform == 'mps'",
-]
 [project.optional-dependencies]
 # -- frameworks --
 onnx = ["onnx>=1.18.0"]
 jax  = ["flax>=0.10.7", "jax>=0.6.2"]
 
-# -- accelerators --
 
+# -- accelerators --
+cuda = [
+    "torch>=2.8",
+    "torchvision",
+    "torchaudio",
+    "torchsde",
+    "triton ; sys_platform != 'win32' and sys_platform != 'darwin'",
+    "triton-windows ; sys_platform == 'win32'",
+    "nnll[jax,onnx,ollama,openai,lmstudio]",
+]
+#cu128
 cpu = ["torch>=2.8", "torchvision", "torchaudio", "torchsde"]
 xpu = [
     "torch>=2.8",                                       # entries duplicated (unfortunately) for indexes to work
@@ -102,13 +107,14 @@ xpu = [
     "torchaudio",
     "torchsde",
     "pytorch-triton-xpu ; platform_machine == 'AMD64'",
+    "nnll[jax,onnx,ollama,openai,lmstudio]",
+
 ]
 mps = [
     "torch>=2.8",
     "torchvision",
     "torchaudio",
     "torchsde",
-    "nnll[openai]",
     "mlx-vlm<=0.1.26 ; sys_platform == 'darwin'",                                                                 # all specifc due to mlx-audio
     "mlx-lm<=0.24.1 ; sys_platform == 'darwin'",                                                                  # ...
     "mlx-audio; sys_platform == 'darwin'",                                                                        # ... etc
@@ -117,16 +123,8 @@ mps = [
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version >= '3.13' and sys_platform == 'darwin'",
     "pip>=25.0.1",                                                                                                # chroma",
     "mflux>=0.2.1 ; sys_platform == 'darwin'",
+    "nnll[jax,onnx,ollama,openai,lmstudio]",
 ]
-cuda = [
-    "torch>=2.8",
-    "torchvision",
-    "torchaudio",
-    "torchsde",
-    "triton",
-    "triton ; sys_platform != 'win32' and sys_platform != 'darwin'",
-    "triton-windows ; sys_platform == 'win32'",
-] #cu128
 rocm = [
     "torch>=2.8",
     "torchvision",
@@ -134,6 +132,7 @@ rocm = [
     "torchsde",
     "flash_attn ; sys_platform == 'Linux'",
     "pytorch-triton-rocm ; sys_platform == 'Linux'",
+    "nnll[jax,onnx,ollama,openai,lmstudio,attention]",
 ]
 
 # -- mem efficiency --
@@ -152,9 +151,6 @@ openai = [
     "numba>=0.47.0 ; python_version < '3.13'",
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
-
-vllm = ["vllm; sys_platform != 'win32' and sys_platform != 'darwin'"]
-
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
@@ -166,8 +162,8 @@ dev = [
     "ruff>=0.12.9",
 ]
 full = [
-    "nnll[cuda,jax,onnx,ollama,openai,lmstudio] ; sys_platform == 'win32' or sys_platform == 'Linux'",
-    "nnll[mps,jax,onnx,ollama,openai,lmstudio] ; sys_platform == 'darwin'",
+    "nnll[mps] ; sys_platform == 'darwin'",
+    "nnll[cuda] ; sys_platform != 'darwin'",
 ]
 
 [project.urls]
@@ -243,9 +239,7 @@ torch = [
     { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
 
 ]
-vllm = [
-    { git = "https://github.com/vllm-project/vllm", extra = "vllm", marker = "sys_platform == 'Linux'" },
-]
+
 pytorch-triton-xpu = [
     { index = "pytorch-xpu", extra = "xpu", marker = "platform_machine == 'AMD64'" },
 
