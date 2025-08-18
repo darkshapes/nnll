@@ -54,20 +54,24 @@ dependencies = [
     #basic
     "rich>=14.1.0",
     "structlog>=25.4.0",
+
     #gguf
     "gguf>=0.17.1",
     "llama-cpp-python>=0.3.16",
     "bitsandbytes>=0.46.0 ; sys_platform != 'darwin'",
+
     #diffusers
     "diffusers @ git+https://github.com/huggingface/diffusers.git",
     "huggingface-hub[cli,hf-transfer,hf-xet]>=0.35.0rc0",
     "transformers>=4.55.2",
     "accelerate>=1.10.0",
     "peft>=0.17.0",
+
     #async
     "aiohttp>=3.12.15",
     "aiofiles>=24.1.0",
     "blake3>=1.0.5",
+    "ftfy>=6.3.1",
 ]
 [dependency-groups]
 dev = [
@@ -80,7 +84,10 @@ dev = [
     "pytest-trio>=0.8.0",
     "ruff>=0.12.9",
 ]
-
+full = [
+    "nnll[cuda,jax,onnx,ollama,openai,lmstudio,attention] ; sys_platform == 'win32'",
+    "nnll[mps,jax,onnx,ollama,openai,lmstudio] ; sys_platform == 'mps'",
+]
 [project.optional-dependencies]
 # -- frameworks --
 onnx = ["onnx>=1.18.0"]
@@ -90,13 +97,12 @@ jax  = ["flax>=0.10.7", "jax>=0.6.2"]
 
 cpu = ["torch>=2.8", "torchvision", "torchaudio", "torchsde"]
 xpu = [
-    "torch>=2.8",
+    "torch>=2.8",                                       # entries duplicated (unfortunately) for indexes to work
     "torchvision",
     "torchaudio",
     "torchsde",
     "pytorch-triton-xpu ; platform_machine == 'AMD64'",
 ]
-
 mps = [
     "torch>=2.8",
     "torchvision",
@@ -111,7 +117,6 @@ mps = [
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version >= '3.13' and sys_platform == 'darwin'",
     "pip>=25.0.1",                                                                                                # chroma",
     "mflux>=0.2.1 ; sys_platform == 'darwin'",
-
 ]
 cuda = [
     "torch>=2.8",
@@ -127,18 +132,16 @@ rocm = [
     "torchvision",
     "torchaudio",
     "torchsde",
-
     "flash_attn ; sys_platform == 'Linux'",
     "pytorch-triton-rocm ; sys_platform == 'Linux'",
 ]
 
-# -- efficiency --
+# -- mem efficiency --
 attention = ["sageattention; sys_platform != 'darwin'"]
 
 # -- providers --
 ollama   = ["ollama>=0.5.1"]
 lmstudio = ["lmstudio>=1.3.1"]
-# vllm     = ["vllm>=0.9.0.1 ; sys_platform == 'Linux'"]
 
 openai = [
     "openai>=1.84.0",
@@ -150,7 +153,6 @@ openai = [
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 
-full = ["nnll[jax,onnx,ollama,openai,lmstudio]"]
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
@@ -160,6 +162,10 @@ dev = [
     "pytest-tornasync>=0.6.0.post2",
     "pytest-trio>=0.8.0",
     "ruff>=0.12.9",
+]
+full = [
+    "nnll[cuda,jax,onnx,ollama,openai,lmstudio] ; sys_platform == 'win32' or sys_platform == 'Linux'",
+    "nnll[mps,jax,onnx,ollama,openai,lmstudio] ; sys_platform == 'darwin'",
 ]
 
 [project.urls]
