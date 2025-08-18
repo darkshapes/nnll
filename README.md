@@ -234,6 +234,10 @@ options:
 ```
 [A link to an output of the `nnll-hash` command](https://huggingface.co/darkshapes/MIR/blob/main/layer_hash/b3_layer_0725.json)
 
+#### nnll-info
+
+Immediate diagnostic system status information
+
 #### nnll-layer
 ```
 usage: nnll-layer adaln

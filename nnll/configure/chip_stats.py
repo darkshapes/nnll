@@ -190,9 +190,15 @@ class ChipStats:
 
 def main():
     from nnll.monitor.console import nfo
+    from pathlib import Path
+    import os
 
     chip_stats = ChipStats(debug=True)
-    nfo(chip_stats.get_metrics())
+    metrics = chip_stats.get_metrics()
+    user_name = os.path.basename(Path.home())
+    paths_to_strip = metrics.copy()
+    metrics["paths"] = {name: path.replace(user_name, "____") for name, path in paths_to_strip["paths"].items() if isinstance(path, str)}
+    nfo(metrics)
 
 
 if __name__ == "__main__":
