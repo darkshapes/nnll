@@ -152,7 +152,9 @@ openai = [
     "numba>=0.47.0 ; python_version < '3.13'",
 ]
 outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
+
 vllm = ["vllm; sys_platform != 'win32' and sys_platform != 'darwin'"]
+
 dev = [
     "nnll[full]",
     "aioresponses>=0.7.8",
