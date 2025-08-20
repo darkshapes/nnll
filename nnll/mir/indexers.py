@@ -119,6 +119,8 @@ def create_pipe_entry(repo_path: str, class_name: str, model_class_obj: Optional
         if class_name == "StableDiffusion3InpaintPipeline" or repo_path in ["stabilityai/stable-diffusion-3-medium-diffusers"]:
             class_name = "StableDiffusion3Pipeline"
             repo_path = "stabilityai/stable-diffusion-3.5-medium"
+        if class_name == "HunyuanVideoFramepackPipeline" or repo_path in ["hunyuanvideo-community/HunyuanVideo"]:
+            class_name = "HunyuanVideoPipeline"
         mir_series, mir_comp = list(make_mir_tag(repo_path, decoder))
         mir_series = mir_prefix + "." + mir_series
         repo_path = check_migrations(repo_path)

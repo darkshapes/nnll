@@ -20,8 +20,8 @@ PackageIndex = int
 TimestepType = List[int]  # never none
 ParameterField = Union[str, bool, int, float, TimestepType]  # never none
 
-PkgType = Dict[
-    PackageIndex,  # Outer key is an integer (e.g., 0)
+PkgType = Dict[  # Outer key is an integer (e.g., 0, otherwise information gets mixed between package names and their attributes)
+    PackageIndex,
     Dict[ParameterField, Union[Dict, ParameterField]],
 ]
 

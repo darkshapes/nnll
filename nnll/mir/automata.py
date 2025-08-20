@@ -227,14 +227,18 @@ def add_mir_schedulers(mir_db: MIRDatabase):
             series_name, comp_name = make_scheduler_tag(class_name)
             class_obj = import_module("diffusers.schedulers")
             class_path = getattr(class_obj, class_name).__module__
-            class_path = class_obj.__module__
             mir_db.add(
                 mir_entry(
                     domain="ops",
                     arch="scheduler",
                     series=series_name,
                     comp=comp_name.lower(),
-                    pkg={0: {"diffusers": class_name}},
+                    pkg={
+                        0: {
+                            "diffusers": class_name,
+                            "module_path": class_path,
+                        },
+                    },
                 )
             )
 
@@ -249,7 +253,10 @@ def add_mir_schedulers(mir_db: MIRDatabase):
             series=series_name,
             comp=comp_name,
             pkg={
-                0: {"diffusers": class_name},
+                0: {
+                    "diffusers": class_name,
+                    "module_path": class_path,
+                },
             },
         ),
     )
@@ -270,6 +277,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             {
                 "pkg": {
                     0: {
+                        "precision": "ops.precision.float.F16",
                         "generation": {
                             "denoising_end": 0.8,
                             "num_inference_steps": 40,
@@ -282,10 +290,10 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     1: {"diffusers": "DiffusionPipeline"},
                 },
                 "file_256": [
-                    "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",  # modelspec sai
-                    "e6bb9ea85bbf7bf6478a7c6d18b71246f22e95d41bcdd80ed40aa212c33cfeff",  # modelspec sai vae 0.9
                     "357650fbfb3c7b4d94c1f5fd7664da819ad1ff5a839430484b4ec422d03f710a",  # diffusers
                     "83e012a805b84c7ca28e5646747c90a243c65c8ba4f070e2d7ddc9d74661e139",  # fp16 diffusers
+                    "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",  # modelspec sai
+                    "6f001c090fb13c0d0f8b0a5916da814712a94400b99471fabe77c1c4a51ecaaf",  # onnx
                 ],
                 "layer_256": [
                     "62a5ab1b5fdfa4fedb32323841298c6effe1af25be94a8583350b0a7641503ef",  # any modelspec sai
@@ -615,7 +623,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                         },
                     },
                     1: {
-                        "mflux": {"Flux1": {"model_name": "dev"}},
+                        "mflux": "flux.flux.Flux1",
                         "generation": {
                             "height": 1024,
                             "width": 1024,
@@ -664,7 +672,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                         },
                     },
                     1: {
-                        "mflux": {"Flux1": {"model_name": "schnell"}},
+                        "mflux": "flux.flux.Flux1",
                         "generation": {
                             "height": 1024,
                             "width": 1024,
@@ -809,7 +817,6 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
             {
                 "pkg": {
                     0: {
-                        "diffusers": "WanPipeline",
                         "precision": "ops.precision.bfloat.B16",
                         "generation": {
                             "height": 480,
@@ -847,6 +854,19 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                     "e925b8222774905c8fbf10af77811fde7870e563eedcde2c94bd5c727e952d49",
                     "3d915854976284347efa7aa0a117c0fc3b415c4208e1a6c94beb4ccb9720743d",
                 ],
+            },
+        ),
+        (
+            "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+            "WanVideoToVideoPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "diffusers": "WanPipeline",
+                        "precision": "ops.precision.bfloat.B16",
+                        "generation": {"height": 480, "width": 832, "num_frames": 81, "guidance_scale": 5.0},
+                    },
+                }
             },
         ),
         (
@@ -1037,7 +1057,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
         ),
         (
             "hunyuanvideo-community/HunyuanVideo",
-            "HunyuanVideoFramepackPipeline",
+            "HunyuanVideoPipeline",
             {
                 "file_256": [
                     "bdb957b35585ea74ae42ca92865a68fa1bf1ebc6c5b7e686a889e5c977dc24c7",  #
@@ -1050,9 +1070,43 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 ],
             },
         ),
+        (
+            "zai-org/CogView3-Plus-3B",
+            "CogView3PlusPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.F16",
+                        "generation": {
+                            "guidance_scale": 7.0,
+                            "num_images_per_prompt": 1,
+                            "num_inference_steps": 50,
+                            "width": 1024,
+                            "height": 1024,
+                        },
+                    },
+                },
+            },
+        ),
+        (
+            "stabilityai/stable-audio-open-1.0",
+            "StableAudioPipeline",
+            {
+                "pkg": {
+                    0: {
+                        "precision": "ops.precision.float.F16",
+                        "generation": {
+                            "num_inference_steps": 200,
+                            "audio_end_in_s": 10,
+                            "num_waveforms_per_prompt": 3,
+                        },
+                    }
+                }
+            },
+        ),
     ]
 
-    transformer_details = [
+    transformers_addons = [
         (
             "google-t5/t5-small",
             "T5Model",
@@ -1398,7 +1452,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
     ]
 
     additional_tags = [tag_pipe(*entry) for entry in diffusers_addons]
-    additional_tags.extend([tag_base_model(*entry) for entry in transformer_details])
+    additional_tags.extend([tag_base_model(*entry) for entry in transformers_addons])
 
     assimilate(
         mir_db,  # format
@@ -1426,6 +1480,65 @@ def add_mir_diffusion(mir_db: MIRDatabase):
             layer_256=[
                 "bd52b538e7ac05711be9321cfb7619d4056996ce32923c9c91ee02cf69154770",
             ],
+        )
+    )
+    series, comp = make_mir_tag("lodestones/Chroma")
+    repo = "lodestones/Chroma1-HD"
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series=series,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            pkg={
+                "0": {
+                    # "diffusers": "ChromaPipeline",
+                    "generation": {
+                        "num_inference_steps": 40,
+                        # "guidance_scale": 3.0,
+                        # "num_images_per_prompt": 1,
+                    },
+                }
+            },
+            file_256=[
+                "d845553f11e6afe8139c41ca73678f9f03eab2e68d2e1c6f03ae19509a4d546",  # sai
+                "1b2993a44e63b2250496f69edce643bac2fb79833cf92ba8dd95cbd764d970c7",  # annealed sai
+                "2dd46f08516246df1f582047cc09268ce4f747357baff05b13148e71519029fc",  # diffusers
+            ],
+            # layer_b3=[
+            # "8da38c3719e77a38a20356c9f92f5ca0101c17406d7a9817323cf67b74088520",  # diffusers
+            # ],
+            # layer_256=[
+            # "267798815e0855c2253061c6a6ab70edf9590e8ea1ba9b4621eeb0f6615ee37b",
+            # ],
+        )
+    )
+    repo = "lodestones/Chroma1-Flash"
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="dit",
+            series=series,
+            comp=make_mir_tag(repo)[0],
+            repo=repo,
+            pkg={
+                "0": {
+                    "diffusers": "ChromaPipeline",
+                    "generation": {
+                        "num_inference_steps": 8,
+                        "guidance_scale": 1.0,
+                        "num_images_per_prompt": 1,
+                    },
+                },
+            },
+            file_256=[
+                "2c0c7d908d04418a48b453c293237a9826d54472cf0ba76e28697d1309d1021b",  # sai
+                "c88f6794753ba23e8f6bf8c84cf220daa35a6aa16d54ea0c3e0136f52e5da7e1",  # sai delta
+                "c759d67ca3ef50a9a1c242e3291c57f406646f226a95f43f66577996494986db",  # diffusers
+            ],
+            # layer_b3= [""],
+            # "layer_256"= [""],
         )
     )
     mir_db.add(
@@ -2004,6 +2117,7 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "77795e2023adcf39bc29a884661950380bd093cf0750a966d473d1718dc9ef4e",  # sd1 fp16
                 "b70c11ad5d7e9abf6109348908f599ea382f8019e1f36910bbc8ebecde936633",  # hidream i1
                 "fc42badf529dd83f2f7c3d20fe6bda1e22036162f37c4c668b9e130884e20561",
+                "e27bafa0b3029ad637ef3ace24ce1efe85b8d0dbd22e03a2e70bda6fc88963a1",  # onnx
             ],
             layer_b3=[
                 "f58a22a381f79985b6d38782f6110a52c2f319b40fdedd3b88b24945dfcbdf64",
@@ -2062,6 +2176,8 @@ def add_mir_llm(mir_db: MIRDatabase):
                 "943a2924ee888295a156dd47089d67181d633b782337890af11ef4b15af17ec5",  # vega
                 "5b98e4a57a9292eeb819d67e2d2100f66f17db723cde4ecea27a7c3741160d0c",  # vega fp16
                 "4d6effa7a5e600cabf7528ed7234146a13ead1b2c151211d706b293a060b112a",  # hidream i1
+                "3a6032f63d37ae02bbc74ccd6a27440578cd71701f96532229d0154f55a8d3ff",  # modelspec sai
+                "162042ac6556e73f93d4172d4c67532c1cbe4dc7a6a8fa7e44dd2e3d7cbb772b",  # onnx
             ],
             layer_b3=[
                 "d754db276f2d89d2808abb7086b3b8eccee43ac521c128d21a071f3a631474a8",
@@ -2284,15 +2400,15 @@ def add_mir_audio(mir_db: MIRDatabase):
             },
             file_256=["591f853590d11ddde2f2a54f9e7ccecb2533a8af7716330e8adfa6f3849787a9"],
             layer_b3=[
-                "7939427700c3b4d91428a490bde1a6d893f63ee5d79b86f68de9e89c7094d3e7"  # onnx
                 "41ca5931452b3ffee588c6c7e5bd327c4e914141604eaf3fd05f4a790ac83bb2",
                 "7dc736cd5d840182792bde4edfbf5ddc5aeaf16826a9c72d1ba8166c1e3fab9b",
                 "6e2c1bdbad74f56663ffb5710c7cb849a2b91ba331d81acdba47a21f69107434",  # onnx
                 "ab5ff443aece9171af5e7603d0b4309d3ecc934e3940ccedefff10f0b54b931e",  # onnx vad
+                # "7939427700c3b4d91428a490bde1a6d893f63ee5d79b86f68de9e89c7094d3e7"  # onnx # <- clip-g ?? unet? innacurate test at layer level
             ],
             layer_256=[
                 "2ffef1834d5fe14ad8db58fc78d769d5dc38dda5eddbfc396786f74b326215fd",
-                "94ea015f5f7f65b1d8e80f7d52859535e7761d7ed2752e24d57a8d9d9da96672",
+                # "94ea015f5f7f65b1d8e80f7d52859535e7761d7ed2752e24d57a8d9d9da96672", # onnx lose reliability with layer search apparently
             ],
         ),
     )
@@ -2840,8 +2956,8 @@ def add_mir_vae(mir_db: MIRDatabase):
         )
     )
     series, comp = make_mir_tag("Wan-AI/Wan2.1-I2V-14B-480P-Diffusers")
-    sr_series_t2v, _ = make_mir_tag("Skywork/SkyReels-V2-T2V-14B-720P-Diffusers")
-    sr_series_i2v, _ = make_mir_tag("Skywork/SkyReels-V2-I2V-14B-720P-Diffusers")
+    sr_series_text2v, _ = make_mir_tag("Skywork/SkyReels-V2-T2V-14B-720P-Diffusers")
+    sr_series_image2v, _ = make_mir_tag("Skywork/SkyReels-V2-I2V-14B-720P-Diffusers")
     mir_db.add(
         mir_entry(
             domain="info",
@@ -2874,7 +2990,7 @@ def add_mir_vae(mir_db: MIRDatabase):
             domain="info",
             arch="vae",
             series="wan",
-            comp=sr_series_t2v,
+            comp=sr_series_text2v,
             # no repo here, may conflict
             file_256=[],
             layer_b3=[],
@@ -2886,7 +3002,7 @@ def add_mir_vae(mir_db: MIRDatabase):
             domain="info",
             arch="vae",
             series="wan",
-            comp=sr_series_i2v,
+            comp=sr_series_image2v,
             # no repo here, may conflict
             file_256=[],
             layer_b3=[],
@@ -3150,10 +3266,39 @@ def add_mir_vae(mir_db: MIRDatabase):
             layer_256=[
                 "c9399a4cd39a180a0bb2af96a8297b9330541e090c21e83317cebb2f7cc651da",  # modelspec sai
                 "2240ae134a3b983abf45200c198f07e3d8068012fbbd2f658bbaa1fd6a0629c0",  # diffusers
-                # "35641f65ad7ea600cb931dcab556f7503279f1d8d99eda170fe7976d48502a2a",  # diffusers fp16 matches sd1
+                # "35641f65ad7ea600cb931dcab556f7503279f1d8d99eda170fe7976d48502a2a",  # diffusers fp16 matches sd1 (incorrect)
             ],
         )
     )
+    mir_db.add(
+        mir_entry(
+            domain="info",
+            arch="vae",
+            series="kl",
+            comp=sdxl_series + sdxl_comp,
+            pkg={
+                0: {"diffusers": "AutoencoderKL"},
+            },
+            file_256=[
+                "235745af8d86bf4a4c1b5b4f529868b37019a10f7c0b2e79ad0abca3a22bc6e1",  # modelspec sai
+                "27ed3b02e09638568e99d4398c67bc654dde04e6c0db61fb2d21dba630e7058a",  # diffusers
+                "eb6516ab7e1104d5d1a174a4d65c57835ae38061531d0a2192103aecfb790cc1",  # diffusers fp16
+                "e6bb9ea85bbf7bf6478a7c6d18b71246f22e95d41bcdd80ed40aa212c33cfeff",  # modelspec sai vae 0.9
+            ],
+            layer_b3=[
+                "bd5b356b509814025a9cf692710b87116d4fcd0e30a8232ed1db133e908d0e74",  # modelspec sai
+                # "9106380403dee83238af63ff1738396d2fdff9f6d78d0d9c1d0bf770ae4294d0",  # diffusers
+                # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
+                # "50e65a628b5fe379798d8956e4a4e1d4b105c84b329f088d577f7f28c22abc49",  # diffusers fp16 matches sd1
+            ],
+            layer_256=[
+                "c9399a4cd39a180a0bb2af96a8297b9330541e090c21e83317cebb2f7cc651da",  # modelspec sai
+                "2240ae134a3b983abf45200c198f07e3d8068012fbbd2f658bbaa1fd6a0629c0",  # diffusers
+                # "35641f65ad7ea600cb931dcab556f7503279f1d8d99eda170fe7976d48502a2a",  # diffusers fp16 matches sd1 (incorrect)
+            ],
+        )
+    )
+
     repo = "shuttleai/shuttle-jaguar"
     mir_db.add(
         mir_entry(
@@ -3194,9 +3339,9 @@ def add_mir_vae(mir_db: MIRDatabase):
                 "8f53304a79335b55e13ec50f63e5157fee4deb2f30d5fae0654e2b2653c109dc",  # sd3 turbo
             ],
             layer_b3=[
-                # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
                 "b6db93ed78c4a10d69e80831c1b8fbc1447f04e9b3d494889ee2056b98d41f17",  # diffusers
                 "a8a3ebdec4d7b38d65b7169d3604c19b587330e5e66f69ebf0ded56a24ec6903",  # lumina2
+                # "245070a60a25ca080cb4951220c3fb1503da43829930d5f6f7a6770b491eafe1",
             ],
             layer_256=[
                 "7950e4f3897c75affaa5f9f3c51c88b4d9a27bfd9b05ad41c3f71d8c1c620b89",

@@ -8,17 +8,18 @@
 import os
 from array import ArrayType
 from pathlib import Path
-from typing import Any, Dict, Literal, Optional
+from typing import Any
 
 import PIL.Image
 
 from nnll.configure import HOME_FOLDER_PATH, USER_PATH_NAMED
 from nnll.metadata.read_tags import MetadataFileReader
 from nnll.monitor.file import debug_monitor
+from nnll.configure.constants import ExtensionType
 
 
 @debug_monitor
-def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Path:
+def name_save_file_as(extension: ExtensionType) -> Path:
     """Construct the file name of a save file\n
     :param extension: The extension of the file
     :return: `str` A file path with a name"""
@@ -40,7 +41,7 @@ def name_save_file_as(extension: Literal[".png", ".wav", ".jpg"] = ".png") -> Pa
 
 
 # do not log here
-def write_to_disk(content: Any, metadata: dict[str], extension: str = None, library: Optional[str] = None, output_type: str | None = None) -> None:
+def write_to_disk(content: Any, metadata: dict[str], extension: str = None, **kwargs) -> None:
     """Save Image to File\n
     :param content: File data in memory
     :param pipe_data: Pipe metadata to write into the file
@@ -56,34 +57,37 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, libr
     :param extension: Type of file to write, defaults to None
     :param library: Originating library, defaults to None\n\n"""
 
-    file_path_absolute = name_save_file_as(extension)
-    if isinstance(content, PIL.Image.Image):
+    file_path_absolute = name_save_file_as(next(iter(extension)))
+    if extension == ExtensionType.GIF_:
+        from diffusers.utils import export_to_gif
+
+        export_to_gif(content, file_path_absolute)
+    elif isinstance(content, PIL.Image.Image):
         from PIL import PngImagePlugin
 
         embed = PngImagePlugin.PngInfo()
         embed.add_text("parameters", str(metadata))
-        content.save(file_path_absolute, extension.upper().strip("."), pnginfo=embed)
+        file_suffix = extension.pop()
+        file_suffix.strip(".")
+        content.save(file_path_absolute, file_suffix.upper().strip("."), pnginfo=embed)
         content.show()
 
-    elif extension.strip(".") == "gif":
-        from diffusers.utils import export_to_gif
-
-        export_to_gif(content, file_path_absolute)
-    elif isinstance(content, ArrayType):
-        if library == ["audiocraft"]:
+    elif isinstance(content, ArrayType) and extension in ExtensionType.AUDIO:
+        if kwargs.get("library") == ["audiocraft"]:
             from audiocraft.data.audio import audio_write  # pyright: ignore[reportMissingImports] | pylint:disable=import-error
 
             for idx, one_wav in enumerate(content):
                 audio_write(f"{file_path_absolute}{idx}", one_wav.cpu(), metadata, strategy="loudness", loudness_compressor=True)
-        elif output_type == "scipy":
+        elif kwargs.get("library") == "scipy":
             import scipy
 
             scipy.io.wavfile.write(file_path_absolute, rate=16000, data=content)
         else:
             import soundfile as sf  # pyright: ignore[reportMissingImports] | pylint:disable=import-error
 
-            sf.write(file_path_absolute, content, metadata)
-    else:
+            kwargs.pop("library", "")
+            sf.write(file_path_absolute, content, kwargs.get("sampling_rate"))
+    elif extension in ExtensionType.VIDEO:
         # `imageio` / `imageio-ffmpeg` ??
         from diffusers.utils import export_to_video
 

@@ -5,7 +5,7 @@
 
 # pylint: disable=unsubscriptable-object, import-outside-toplevel, unused-argument, line-too-long
 import os
-from typing import Callable, List, Union
+from typing import Optional, Callable, Any
 
 from nnll.configure.chip_stats import ChipStats
 from nnll.metadata.json_io import read_json_file
@@ -33,34 +33,52 @@ def pipe_call(func):
 class ConstructPipeline:
     """Build and configure Diffusers pipelines"""
 
+    schnell = "schnell"
+    dev = "dev"
     last_pipe: Callable = None
 
-    def _load_pipe(self, pipe_obj: str, model: str, pkg_name: str, **kwargs) -> Callable:
+    def _load_pipe(self, pipe_stack: dict[str, Any]) -> Callable:
+        stack_items = pipe_stack.get("main")
+        pipe_obj = stack_items.pop("pipe_obj")
+        model = stack_items.pop("model")
+        pkg_name = stack_items.pop("pkg_name")
+
         model = model.model
         if pkg_name in ["diffusers", "transformers", "parler-tts"]:
             if os.path.isfile(model):
-                try:
-                    return pipe_obj.from_single_file(model, use_safetensors=True, **kwargs)
-                except (EnvironmentError, OSError):
-                    return pipe_obj.from_single_file(model, **kwargs)
+                pipe_method = pipe_obj.from_single_file
             else:
+                pipe_method = pipe_obj.from_pretrained
                 try:
-                    return pipe_obj.from_pretrained(model, use_safetensors=True, **kwargs)
+                    pipe = pipe_method(model, use_safetensors=True, **stack_items)
                 except (EnvironmentError, OSError):
-                    return pipe_obj.from_pretrained(model, **kwargs)
+                    pipe = pipe_method(model, **stack_items)
+        if stack_items := pipe_stack.get("scheduler", {}):
+            pipe_obj = stack_items.pop("pipe_obj", {})
+            print(stack_items)
+            pipe.scheduler = pipe_obj.from_config(pipe.scheduler.config, **stack_items)  # replace with setattr?
+        if stack_items := pipe_stack.get("lora", {}):
+            pipe_obj = stack_items.pop("pipe_obj")
+            model = stack_items.pop("model")
+            pipe.load_lora_weights = pipe_obj(model.model, weight_name=model.mir)
+            if kwargs := stack_items.get("fuse", {}):
+                pipe.fuse_lora(**kwargs)
         elif pkg_name == "mflux":
-            return pipe_obj(model_name="model", **kwargs)
+            base_name = self.schnell if self.schnell in model.base_name[0] else self.dev
+            pipe_args = {"base_name": base_name, "local_path": model.path}
+            if stack_items := pipe_stack.get("lora", {}):
+                pipe(**pipe_args, **kwargs)
         elif pkg_name == "audiogen":
-            return pipe_obj.get_pretrained(model, **kwargs)
+            return pipe.get_pretrained(model, **kwargs)
         elif pkg_name == "chroma":
-            return pipe_obj(**kwargs)
-
-        if pipe_obj is None:
+            return pipe(**kwargs)
+        return pipe
+        if pipe is None:
             raise TypeError("Pipe should be Callable `class` object, not `None`")
 
     @debug_monitor
     @pipe_call
-    def create_pipeline(self, registry_entry: Callable, pkg_data: tuple[str], mir_db: MIRDatabase, **kwargs):
+    async def create_pipeline(self, registry_entry: Callable, pkg_data: tuple[str], mir_db: MIRDatabase, **kwargs):
         """
         Build an inference pipe based on model type\n
         :param registry_entry: Data for the model
@@ -70,39 +88,54 @@ class ConstructPipeline:
         from importlib import import_module
         from nnll.metadata.helpers import make_callable
 
-        chip_stats = ChipStats()
-        metrics = chip_stats.get_metrics()
+        # chip_stats = ChipStats()
+        # stats = await chip_stats.show_stats(True)
         pkg_name = pkg_data[-1].value[1].lower()
         pkg_obj = import_module(pkg_name)
-        if "." in pkg_data:
-            split_pkg_data = pkg_data[1].rsplit(".", 1)
-            pipe_obj = make_callable(split_pkg_data[-1], f"{pkg_name}.{split_pkg_data[0]}")
+        if "." in pkg_data[1]:
+            module_path = pkg_data[1].rsplit(".", 1)
+            pipe_obj = make_callable(module_path[-1], f"{pkg_name}.{module_path[0]}")
         else:
             pipe_obj = getattr(pkg_obj, pkg_data[1])
-
-        model_id = registry_entry.model
-        pipe_call = {"pipe_obj": pipe_obj, "model": registry_entry, "pkg_name": pkg_name} | kwargs
-        if precision := registry_entry.modules[pkg_data[0]].get("precision"):
+        nfo(next(iter(pkg_data[0])))
+        main_pipe = {"pipe_obj": pipe_obj, "model": registry_entry, "pkg_name": pkg_name} | kwargs
+        if precision := registry_entry.modules.get(pkg_data[0], {}).get("precision"):
             precision = precision.rsplit(".", 1)
             dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]  # get the precision class, currently assumed to be torch
-            precision = next(iter(dtype["torch"]))
-            pipe_call.setdefault("torch_dtype", getattr(import_module("torch"), precision))
-            variant = dtype["torch"][precision]
-            pipe_call.setdefault("torch_dtype", getattr(import_module("torch"), precision))
-            variant = dtype["torch"][precision]  # this should only happen if the file is fp16 already!
-            if variant:
-                pipe_call.setdefault(*variant.keys(), *variant.values())
+            precision = next(iter(dtype["torch"]))  # add default?
+            main_pipe.setdefault("torch_dtype", getattr(import_module("torch"), precision))
+            if registry_entry.modules[pkg_data[0]].get("variant"):  # Added to skip non-available variants
+                if variant := dtype["torch"].get(precision, {}):  # because of above, should only happen if the file is fp16 already!
+                    main_pipe.setdefault(*variant.keys(), *variant.values())
         if isinstance(registry_entry.modules[pkg_data[0]].get(pkg_name), dict):
-            if extra_kwargs := registry_entry.modules[pkg_data[0]][pkg_name].get(pipe_obj):
-                pipe_call = pipe_call | extra_kwargs | {"path": registry_entry.path}
+            if extra_kwargs := registry_entry.modules[pkg_data[0]][pkg_name].get(pipe_obj, {}):
+                main_pipe = main_pipe | extra_kwargs
+        pipe_stack = {"main": main_pipe}
+        if registry_entry.modules[pkg_data[0]].get("scheduler"):  # a simple toggle for key presence
+            if scheduler := mir_db.database[registry_entry.mir[0]][registry_entry.mir[1]].get("pipe_names", {}).get("scheduler", {}):
+                if isinstance(scheduler[0], list):
+                    scheduler = next(iter(scheduler))
+                scheduler_data = mir_db.database[scheduler[0]][scheduler[1]]["pkg"]["0"]  # get the scheduler class, currently assumed to be in diffusers/transformers
+                scheduler_path = scheduler_data.pop("module_path", {})
+                scheduler_obj = make_callable(scheduler_data[pkg_name], f"{scheduler_path}")
+                scheduler_pipe = {"pipe_obj": scheduler_obj}
+                if kwargs := scheduler_data.pop("generation", {}):
+                    scheduler_pipe.setdefault(*kwargs.keys(), *kwargs.values())
+            pipe_stack.setdefault("scheduler", scheduler_pipe)
+        # iterator/generator logic for processing stacks of loras will go here
         generation = registry_entry.modules[pkg_data[0]].get("generation", {})
+        model_id = registry_entry.model
+        # display here before possible crashes
+        nfo(f"""status mid-pipe:
+            id -{model_id}
+            pipe_stack -{pipe_stack}
+            generation - {generation} """)  # lora_pipe:{lora_pipe}
 
-        nfo(f"status mid-pipe: {model_id}, {pipe_obj}, {pipe_call}, {generation} ")
-        dbug(f"status mid-pipe: {model_id}, {pipe_obj}, {pipe_call}, {generation}, ")
+        dbug(f"status mid-pipe: {pipe_stack}")
         pipe = self._load_pipe(
-            **pipe_call,
+            pipe_stack,
         )
-        return (pipe, model_id, pipe_call, generation)
+        return (pipe, model_id, pkg_name, generation)
 
     # def add_lora(self, pipe: Callable, lora_repo: str, init_kwargs: dict, scheduler_data=None, scheduler_kwargs=None):
     #     if scheduler_data:

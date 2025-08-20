@@ -87,14 +87,22 @@ class ExtensionType:
     SAFE: Set[str] = {".safetensors", ".sft"}
     PICK: Set[str] = {".pt", ".pth", ".ckpt", ".pickletensor"}
     ONNX: Set[str] = {".onnx"}
+    MPG4: Set[str] = {".mp4"}
+    MPG3: Set[str] = {".mp3"}
+    WAVE: Set[str] = {".wav"}
+    OGG_: Set[str] = {".ogg"}
+    FLAC: Set[str] = {".flac"}
+    GIF_: Set[str] = {".gif"}
 
-    IMAGE: List[str] = list(JPEG.union(WEBP, PNG_))
+    IMAGE: List[str] = list(JPEG.union(WEBP, PNG_, GIF_))
     EXIF: List[str] = list(JPEG.union(WEBP))
     SCHEMA: List[str] = list(JSON.union(TOML))
     PLAIN: List[str] = list(TEXT.union(XML_, HTML))
+    AUDIO: List[str] = list(MPG3.union(WAVE, MPG4, OGG_, FLAC))
+    VIDEO: List[str] = list(MPG4.union(GIF_))
     MODEL: List[str] = list(SAFE.union(GGUF, PICK, ONNX))
 
-    MEDIA: List[str] = IMAGE + EXIF + SCHEMA + PLAIN
+    MEDIA: List[str] = IMAGE + EXIF + SCHEMA + PLAIN + AUDIO + VIDEO
 
     IGNORE: List[Constant] = [
         "Thumbs.db",
