@@ -7,9 +7,11 @@
 
 from functools import lru_cache
 from typing import Any, Dict
+from decimal import Decimal
 
 from nnll.configure import HOME_FOLDER_PATH
 from nnll.metadata.json_io import write_json_file
+from nnll.monitor.console import nfo
 from nnll.monitor.file import dbug
 
 
@@ -32,6 +34,7 @@ class ChipStats:
         import os
         import platform
         from decimal import Decimal
+
         import psutil
         import torch
 
@@ -96,7 +99,7 @@ class ChipStats:
                     break
 
     @lru_cache
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_stats(self) -> Dict[str, Any]:
         """Retrieves current system metrics including CPU usage, RAM usage and disk usage. Caches results to optimize performance.\n
         :return: A dictionary of the system hardware state
             - "hostname" - network host name\n
@@ -111,14 +114,13 @@ class ChipStats:
             - "chip_stats" - static information from launch\n
         """
         from datetime import datetime
-        from decimal import Decimal
         from socket import gethostname
 
         import psutil
 
         disk = psutil.disk_usage("/")
         ram = psutil.virtual_memory()
-        chip_stats = self.get_stats()
+        chip_stats = self.read_stats()
         data = {
             "timestamp": datetime.now().strftime("%YY-%dd-%mm %HH:%MM:%Ss"),
             "cpu_%": Decimal(str(psutil.cpu_percent(interval=1))),
@@ -135,7 +137,7 @@ class ChipStats:
         return data
 
     @lru_cache
-    def get_stats(self, folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:
+    def read_stats(self, folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:
         """Retrieve static, launch time environment configuration options from configuration file\n
         :param folder_path_named: Path to the application configuration folder
         :return: A mapping of the discovered flags\n
@@ -187,18 +189,30 @@ class ChipStats:
             "log_path": LOG_FOLDER_PATH,
         }
 
+    async def show_stats(self, and_return: bool = True) -> dict[str, int | str | float | Decimal]:
+        """System specifications for current and launch s
+
+        :return: _description_
+        """
+        import os
+        from pathlib import Path
+
+        stats = self.get_stats()
+        user_name = os.path.basename(Path.home())
+        paths_to_strip = stats.copy()
+        stats["paths"] = {name: path.replace(user_name, "____") for name, path in paths_to_strip["paths"].items() if isinstance(path, str)}
+        nfo(stats)
+        dbug(stats)
+        if and_return:
+            return stats
+
 
 def main():
-    from nnll.monitor.console import nfo
-    from pathlib import Path
-    import os
+    import asyncio
 
     chip_stats = ChipStats(debug=True)
-    metrics = chip_stats.get_metrics()
-    user_name = os.path.basename(Path.home())
-    paths_to_strip = metrics.copy()
-    metrics["paths"] = {name: path.replace(user_name, "____") for name, path in paths_to_strip["paths"].items() if isinstance(path, str)}
-    nfo(metrics)
+    asyncio.run(chip_stats.show_stats())
+    return nfo("Done.")
 
 
 if __name__ == "__main__":

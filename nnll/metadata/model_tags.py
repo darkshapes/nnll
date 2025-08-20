@@ -41,7 +41,7 @@ class ReadModelTags:
         )
         meta_onnx = (
             self.metadata_from_onnx_rt,
-            self.metadata_from_onnx,
+            # self.metadata_from_onnx,
         )
         meta_combined = (
             self.meta_load_pickletensor,
@@ -110,8 +110,8 @@ class ReadModelTags:
             )
         elif file_extension in ExtensionType.ONNX and "pytest" not in sys_modules:
             attempt_metadata(
-                lambda: self.metadata_from_onnx(file_path_named, separate_desc),
                 lambda: self.metadata_from_onnx_rt(file_path_named, separate_desc),
+                # lambda: self.metadata_from_onnx(file_path_named, separate_desc),
             )
 
         return metadata
@@ -354,7 +354,7 @@ class ReadModelTags:
             if separate_desc:
                 return {"custom_metadata_map": meta.custom_metadata_map}
             else:
-                {tag: getattr(meta, tag, {}) for tag in dir(meta) if not tag.startswith("_")}
+                return {tag: getattr(meta, tag, {}) for tag in dir(meta) if not tag.startswith("_")}
 
     def metadata_from_onnx(self, file_path_named: str, separate_desc: bool = True) -> Dict[str, str]:
         """Extract metadata from an ONNX model using the ONNX library.\n
@@ -375,9 +375,8 @@ class ReadModelTags:
             pass
         else:
             if separate_desc:
-                return {"metadata_props": model.metadata_props}
-            else:
-                return {tag: getattr(model, tag, {}) for tag in dir(model) if not tag.startswith("_")}
+                metadata = {"metadata_props": model.metadata_props}
+                return metadata
 
 
 def main(
