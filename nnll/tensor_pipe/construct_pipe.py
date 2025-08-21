@@ -43,35 +43,43 @@ class ConstructPipeline:
         model = stack_items.pop("model")
         pkg_name = stack_items.pop("pkg_name")
 
-        model = model.model
+        model_name = model.model
         if pkg_name in ["diffusers", "transformers", "parler-tts"]:
-            if os.path.isfile(model):
+            if os.path.isfile(model_name):
                 pipe_method = pipe_obj.from_single_file
             else:
                 pipe_method = pipe_obj.from_pretrained
                 try:
-                    pipe = pipe_method(model, use_safetensors=True, **stack_items)
+                    pipe = pipe_method(model_name, use_safetensors=True, **stack_items)
                 except (EnvironmentError, OSError):
-                    pipe = pipe_method(model, **stack_items)
-        if stack_items := pipe_stack.get("scheduler", {}):
-            pipe_obj = stack_items.pop("pipe_obj", {})
-            print(stack_items)
-            pipe.scheduler = pipe_obj.from_config(pipe.scheduler.config, **stack_items)  # replace with setattr?
-        if stack_items := pipe_stack.get("lora", {}):
-            pipe_obj = stack_items.pop("pipe_obj")
-            model = stack_items.pop("model")
-            pipe.load_lora_weights = pipe_obj(model.model, weight_name=model.mir)
-            if kwargs := stack_items.get("fuse", {}):
-                pipe.fuse_lora(**kwargs)
-        elif pkg_name == "mflux":
-            base_name = self.schnell if self.schnell in model.base_name[0] else self.dev
-            pipe_args = {"base_name": base_name, "local_path": model.path}
+                    pipe = pipe_method(model_name, **stack_items)
             if stack_items := pipe_stack.get("lora", {}):
-                pipe(**pipe_args, **kwargs)
+                pipe_obj = stack_items.pop("pipe_obj")
+                model = stack_items.pop("model")
+                pipe.load_lora_weights = pipe_obj(model.model, weight_name=model.mir)
+                if kwargs := stack_items.get("fuse", {}):
+                    pipe.fuse_lora(**kwargs)
+            if stack_items := pipe_stack.get("scheduler", {}):
+                pipe_obj = stack_items.pop("pipe_obj", {})
+                print(stack_items)
+                pipe.scheduler = pipe_obj.from_config(pipe.scheduler.config, **stack_items)  # replace with setattr?
+        elif pkg_name == "mflux":
+            from mflux.config.model_config import ModelConfig
+
+            base_name = self.schnell if self.schnell in model.mir[0] else self.dev
+            pipe_args = (ModelConfig.from_name(model_name=model.model, base_model=base_name), {"local_path": model.path})
+            if stack_items := pipe_stack.get("lora", {}):
+                # do the lora dance
+                pipe = pipe_obj(*pipe_args, **kwargs)
+            else:
+                pipe = pipe_obj(
+                    *pipe_args,
+                )
         elif pkg_name == "audiogen":
-            return pipe.get_pretrained(model, **kwargs)
+            pipe.get_pretrained(model, **kwargs)
         elif pkg_name == "chroma":
-            return pipe(**kwargs)
+            pipe(**kwargs)
+
         return pipe
         if pipe is None:
             raise TypeError("Pipe should be Callable `class` object, not `None`")
@@ -88,30 +96,37 @@ class ConstructPipeline:
         from importlib import import_module
         from nnll.metadata.helpers import make_callable
 
+        print(registry_entry, pkg_data)
         # chip_stats = ChipStats()
         # stats = await chip_stats.show_stats(True)
+        print(registry_entry.modules)
         pkg_name = pkg_data[-1].value[1].lower()
         pkg_obj = import_module(pkg_name)
-        if "." in pkg_data[1]:
-            module_path = pkg_data[1].rsplit(".", 1)
+        original_pkg_data = pkg_data
+        base_details = pkg_data[1]
+        local_details = registry_entry.modules.get(pkg_data[0], {})
+
+        class_name = pkg_data[1][pkg_name]
+        if "." in class_name:
+            module_path = class_name.rsplit(".", 1)
             pipe_obj = make_callable(module_path[-1], f"{pkg_name}.{module_path[0]}")
         else:
-            pipe_obj = getattr(pkg_obj, pkg_data[1])
-        nfo(next(iter(pkg_data[0])))
+            pipe_obj = getattr(pkg_obj, class_name)
+        nfo(pkg_data)
         main_pipe = {"pipe_obj": pipe_obj, "model": registry_entry, "pkg_name": pkg_name} | kwargs
-        if precision := registry_entry.modules.get(pkg_data[0], {}).get("precision"):
+        if precision := local_details.get("precision", base_details.get("precision", {})):
             precision = precision.rsplit(".", 1)
             dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]  # get the precision class, currently assumed to be torch
             precision = next(iter(dtype["torch"]))  # add default?
             main_pipe.setdefault("torch_dtype", getattr(import_module("torch"), precision))
-            if registry_entry.modules[pkg_data[0]].get("variant"):  # Added to skip non-available variants
+            if local_details.get("variant", base_details.get("variant")):  # Added to skip non-available variants
                 if variant := dtype["torch"].get(precision, {}):  # because of above, should only happen if the file is fp16 already!
                     main_pipe.setdefault(*variant.keys(), *variant.values())
-        if isinstance(registry_entry.modules[pkg_data[0]].get(pkg_name), dict):
-            if extra_kwargs := registry_entry.modules[pkg_data[0]][pkg_name].get(pipe_obj, {}):
+        if isinstance(local_details.get(pkg_name, base_details.get(pkg_name, "")), dict):
+            if extra_kwargs := local_details.get("pkg_name", base_details.get(pkg_name, {})).get(pipe_obj, {}):
                 main_pipe = main_pipe | extra_kwargs
         pipe_stack = {"main": main_pipe}
-        if registry_entry.modules[pkg_data[0]].get("scheduler"):  # a simple toggle for key presence
+        if local_details.get("scheduler", base_details.get("scheduler", {})):  # a simple toggle for key presence
             if scheduler := mir_db.database[registry_entry.mir[0]][registry_entry.mir[1]].get("pipe_names", {}).get("scheduler", {}):
                 if isinstance(scheduler[0], list):
                     scheduler = next(iter(scheduler))
@@ -123,7 +138,7 @@ class ConstructPipeline:
                     scheduler_pipe.setdefault(*kwargs.keys(), *kwargs.values())
             pipe_stack.setdefault("scheduler", scheduler_pipe)
         # iterator/generator logic for processing stacks of loras will go here
-        generation = registry_entry.modules[pkg_data[0]].get("generation", {})
+        generation = local_details.get("generation", base_details.get("generation", {}))
         model_id = registry_entry.model
         # display here before possible crashes
         nfo(f"""status mid-pipe:

@@ -69,8 +69,13 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, **kw
         embed.add_text("parameters", str(metadata))
         file_suffix = extension.pop()
         file_suffix.strip(".")
-        content.save(file_path_absolute, file_suffix.upper().strip("."), pnginfo=embed)
+        kwargs.setdefault("pnginfo", embed)
+        content.save(file_path_absolute, file_suffix.upper().strip("."), **kwargs)
         content.show()
+    elif extension == ExtensionType.PNG_:  # MFLUX case
+        file_suffix = extension.pop()
+        file_suffix.strip(".")
+        content.save(file_path_absolute, file_suffix.upper().strip("."))
 
     elif isinstance(content, ArrayType) and extension in ExtensionType.AUDIO:
         if kwargs.get("library") == ["audiocraft"]:

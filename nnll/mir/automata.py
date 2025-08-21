@@ -628,7 +628,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                             "height": 1024,
                             "width": 1024,
                             "gudance": 3.5,
-                            "steps": 25,
+                            "num_inference_steps": 25,
                         },
                     },
                 },
@@ -676,7 +676,7 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                         "generation": {
                             "height": 1024,
                             "width": 1024,
-                            "steps": 4,
+                            "num_inference_steps": 4,
                         },
                     },
                 },
