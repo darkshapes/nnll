@@ -17,9 +17,6 @@ async def run_inference(pipe_data: tuple, prompts: dict, out_type: str, **user_s
     from nnll.monitor.console import nfo
     from nnll.tensor_pipe.segments import add_generator
 
-    user_set = {
-        "output_type": "pil",
-    }
     noise_seed = soft_random()
     seed_planter(noise_seed)
     nfo(noise_seed)
@@ -63,6 +60,7 @@ async def run_inference(pipe_data: tuple, prompts: dict, out_type: str, **user_s
         from mflux.config.config import Config
 
         content = pipe.generate_image(seed=noise_seed, prompt=prompt, config=Config(**generation))
+        file_type = ExtensionType.PNG_
     elif "audiogen" in pkg_name.lower():
         pipe = next(iter(pipe))
         metadata = pipe.sample_rate
