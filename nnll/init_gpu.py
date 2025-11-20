@@ -4,7 +4,7 @@
 # pylint: disable=import-outside-toplevel
 from nnll.console import nfo
 
-from typing import Callable, Union
+from typing import Callable, Union, Literal, Optional, Any
 
 
 def soft_random(size: int = 0x100000000) -> int:  # previously 0x2540BE3FF
@@ -69,15 +69,8 @@ def seed_planter(seed: int = soft_random(), deterministic: bool = False, device:
     if "cuda" in device:
         torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
-        if deterministic:
-            torch.backends.cudnn.deterministic = True
-            torch.backends.cudnn.benchmark = False
     if "mps" in device:
         torch.mps.manual_seed(seed)
-        torch.backends.mps.torch.use_deterministic_algorithms(deterministic)
-    if "xpo" in device:
-        torch.xpu.manual_seed(seed)
-        torch.xpu.manual_seed_all(seed)
 
     return seed
 
@@ -98,50 +91,79 @@ def random_tensor_from_gpu(device: str, input_seed: int = soft_random()):
     return torch.rand(1, device=device)
 
 
-def first_available(processor: str = None, assign: bool = True, clean: bool = False, init: bool = True) -> Union[Callable, str]:
-    """Return first available processor of the highest capacity\n
-    :param processor: Name of an existing processing device, defaults to None (autodetect)
-    :param assign: Direct torch to use the detected device, defaults to True
-    :param clean: Clear any previous cache, defaults to False
-    :param init: Initialize the device with a test tensor and discard, defaults to True\n
-    :return: The torch device handler, or the name of the processor
-
-    """
-    from functools import reduce
-
+def set_torch_device(
+    device_override: Optional[Literal["cuda", "mps", "cpu"]] = None,
+) -> Any:
+    """Set the PyTorch device, with optional manual override.\n
+    :param device_override: Optional device to use. "cuda", "mps", or "cpu"
+    :returns: The selected torchdevice
+    :raises ValueError: If device_override is not one of the allowed values"""
     import torch
 
-    torch.set_num_threads(1)
-    if not processor:
-        processor = reduce(
-            lambda acc, check: check() if acc == "cpu" else acc,
-            [
-                lambda: "cuda" if torch.cuda.is_available() else "cpu",
-                lambda: "mps" if torch.backends.mps.is_available() else "cpu",
-                lambda: "xpu" if torch.xpu.is_available() else "cpu",
-                lambda: "mtia" if torch.mtia.is_available() else "cpu",
-            ],
-            "cpu",
-        )
+    if device_override is not None:
+        return torch.device(device_override)
+    else:
+        return torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
-    if clean:
-        import gc
 
-        gc.collect()
-        if processor == "cuda":
-            torch.cuda.empty_cache()
-        if processor == "mps":
-            torch.mps.empty_cache()
-        if processor == "xpu":
-            torch.xpu.empty_cache()
-        if processor == "mtia":
-            torch.mtia.empty_cache()
+device = set_torch_device()
 
-    if init:
-        tensor = random_tensor_from_gpu(device=processor)
-        if tensor:
-            del tensor
-        tensor = None
 
-    nfo(f"Available torch devices: {processor}")
-    return torch.device(processor) if assign else processor
+def clear_cache(device_override: Optional[Literal["cuda", "mps", "cpu"]] = None):
+    import gc
+    import torch
+
+    gc.collect()
+    if device.type == "cuda" or device_override == "cuda":
+        torch.cuda.empty_cache()
+    if device.type == "mps" or device_override == "mps":
+        torch.mps.empty_cache()
+
+
+# def first_available(processor: str = None, assign: bool = True, clean: bool = False, init: bool = True) -> Union[Callable, str]:
+#     """Return first available processor of the highest capacity\n
+#     :param processor: Name of an existing processing device, defaults to None (autodetect)
+#     :param assign: Direct torch to use the detected device, defaults to True
+#     :param clean: Clear any previous cache, defaults to False
+#     :param init: Initialize the device with a test tensor and discard, defaults to True\n
+#     :return: The torch device handler, or the name of the processor
+
+#     """
+#     from functools import reduce
+
+#     import torch
+
+#     torch.set_num_threads(1)
+#     if not processor:
+#         processor = reduce(
+#             lambda acc, check: check() if acc == "cpu" else acc,
+#             [
+#                 lambda: "cuda" if torch.cuda.is_available() else "cpu",
+#                 lambda: "mps" if torch.backends.mps.is_available() else "cpu",
+#                 lambda: "xpu" if torch.xpu.is_available() else "cpu",
+#                 lambda: "mtia" if torch.mtia.is_available() else "cpu",
+#             ],
+#             "cpu",
+#         )
+
+#     if clean:
+#         import gc
+
+#         gc.collect()
+#         if processor == "cuda":
+#             torch.cuda.empty_cache()
+#         if processor == "mps":
+#             torch.mps.empty_cache()
+#         if processor == "xpu":
+#             torch.xpu.empty_cache()
+#         if processor == "mtia":
+#             torch.mtia.empty_cache()
+
+#     if init:
+#         tensor = random_tensor_from_gpu(device=processor)
+#         if tensor:
+#             del tensor
+#         tensor = None
+
+#     nfo(f"Available torch devices: {processor}")
+#     return torch.device(processor) if assign else processor
