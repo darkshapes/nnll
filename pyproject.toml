@@ -51,42 +51,21 @@ classifiers = [
     "Topic :: Multimedia :: Video :: Non-Linear Editor",
 ]
 dependencies = [
-    #basic
-    "rich>=14.1.0",
-    "structlog>=25.4.0",
-
-    #gguf
-    "gguf>=0.17.1",
-    "llama-cpp-python>=0.3.16",
-
-    #diffusers
     "diffusers @ git+https://github.com/huggingface/diffusers.git",
     "huggingface-hub[cli,hf-transfer,hf-xet]>=0.35.0rc0",
     "transformers>=4.55.2",
     "accelerate>=1.10.0",
     "peft>=0.17.0",
-
-    #async
-    "aiohttp>=3.12.15",
-    "aiofiles>=24.1.0",
-    "blake3>=1.0.5",
-    "ftfy>=6.3.1",
 ]
 [dependency-groups]
 dev = [
-    "aioresponses>=0.7.8",
+    "pyright>=1.1.407",
     "pytest>=8.4.1",
-    "pytest-asyncio>=1.1.0",
     "pytest-mock>=3.14.1",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
     "ruff>=0.12.9",
 ]
 [project.optional-dependencies]
 # -- frameworks --
-onnx = ["onnx>=1.18.0"]
-jax  = ["flax>=0.10.7", "jax>=0.6.2"]
-
 
 # -- accelerators --
 cuda = [
@@ -101,6 +80,7 @@ cuda = [
     "bitsandbytes>=0.46.0 ; sys_platform == 'Linux'",
 
 ]
+
 #cu128
 cpu = ["torch", "torchvision", "torchaudio", "torchsde"]
 xpu = [
@@ -108,8 +88,6 @@ xpu = [
     "torchvision",
     "torchaudio",
     "torchsde",
-    "nnll[jax,onnx,ollama,openai,lmstudio]",
-
 ]
 mps = [
     "torch",
@@ -124,7 +102,6 @@ mps = [
     "misaki[en] @ git+https://github.com/hexgrad/misaki ; python_version >= '3.13' and sys_platform == 'darwin'",
     "pip>=25.0.1",                                                                                                # chroma",
     "mflux>=0.2.1 ; sys_platform == 'darwin'",
-    "nnll[jax,onnx,ollama,openai,lmstudio]",
 ]
 rocm = [
     "torch",
@@ -133,31 +110,13 @@ rocm = [
     "torchsde",
     "flash_attn ; sys_platform == 'Linux'",
     "pytorch-triton-rocm ; sys_platform == 'Linux'",
-    "nnll[jax,onnx,ollama,openai,lmstudio]",
     "bitsandbytes>=0.46.0 ; sys_platform == 'Linux'",
 ]
-
-# -- providers --
-ollama   = ["ollama>=0.5.1"]
-lmstudio = ["lmstudio>=1.3.1"]
-
-openai = [
-    "openai>=1.84.0",
-    "openai-whisper @ git+https://github.com/openai/whisper.git",
-    "llvmlite>=0.44 ; python_version > '3.12'",
-    "llvmlite>=0.36 ; python_version < '3.13'",
-    "numba>=0.61.2 ; python_version > '3.12'",
-    "numba>=0.47.0 ; python_version < '3.13'",
-]
-outetts = ["nnll[openai]", "outetts ; sys_platform != 'darwin'"]
 dev = [
     "nnll[full]",
-    "aioresponses>=0.7.8",
+    "pyright>=1.1.407",
     "pytest>=8.4.1",
-    "pytest-asyncio>=1.1.0",
     "pytest-mock>=3.14.1",
-    "pytest-tornasync>=0.6.0.post2",
-    "pytest-trio>=0.8.0",
     "ruff>=0.12.9",
 ]
 full = [

@@ -10,6 +10,10 @@ from typing import Union
 from nnll.console import nfo
 from nnll.helpers import ensure_path
 
+config_path = os.path.join(os.path.dirname(__file__), "config")
+ensure_path(config_path, "hyperchain.json")
+ensure_path(config_path, "chip_stats.json")
+
 
 def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__), prefix: str = "config") -> Path:
     """Create a constant for a given path, or the path of the current file\n
@@ -23,16 +27,13 @@ def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__)
     return ensure_path(folder_path_named, file_name)
 
 
-ensure_path(os.path.join(os.path.dirname(__file__), "config"), "hyperchain.json")
-ensure_path(os.path.join(os.path.dirname(__file__), "config"), "chip_stats.json")
-
 VARIABLE_NAMES = [
     file_name.stem
     for file_name in Path(os.path.join(os.path.dirname(__file__), "config")).iterdir()
     if "__" not in Path(file_name).stem
     # comment for formatting
 ]
-
+print(VARIABLE_NAMES)
 for const in VARIABLE_NAMES:
     paths = {}
     path_var = f"{const.upper()}_PATH_NAMED"

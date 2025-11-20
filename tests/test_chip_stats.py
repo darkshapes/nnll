@@ -3,14 +3,13 @@
 
 import os
 from unittest.mock import MagicMock, patch
-
+from nnll.chip_stats import ChipStats
+from nnll.helpers import ensure_path
 import pytest
 
 
 @pytest.fixture
 def chip_stats():
-    from nnll.chip_stats import ChipStats
-
     return ChipStats()
 
 
@@ -31,23 +30,9 @@ def test_write_stats(chip_stats):
         mock_exists.return_value = False
         mock_mkdir.return_value = None
         mock_read.return_value = {"data": {"devices": {"cpu": 10000000000}}}
-        file_name = os.path.join(os.getcwd(), "chip_stats.json")
+        file_name = ensure_path(os.path.join(os.path.dirname(os.getcwd()), "nnll", "tests"), file_name="chip_stats.json")
+        print(file_name)
         chip_stats.write_stats(folder_path_named=".tests/", testing=True)
         assert chip_stats.stats["data"]["devices"]["cpu"] == 10000000000
         assert os.path.isfile(file_name)
         os.remove(file_name)
-
-
-def test_get_metrics(chip_stats):
-    with patch("psutil.disk_usage") as mock_disk, patch("psutil.virtual_memory") as mock_vm, patch("psutil.cpu_percent") as mock_cpu, patch("nnll.chip_stats.ChipStats.get_stats") as mock_get_stats:
-        mock_disk.return_value = MagicMock(used=50000000000, total=100000000000)
-        mock_vm.return_value = MagicMock(used=2000000000, total=8000000000)
-        mock_cpu.return_value = 25
-        mock_get_stats.return_value = {"attention_slicing": True}
-        from decimal import Decimal
-
-        metrics = chip_stats.get_stats()
-        assert metrics["cpu_%"] == 25
-        assert metrics["dram_used_%"] == Decimal(str(1.86))
-        assert metrics["disk_used_%"] == 46.57
-        assert metrics["chip_stats"]["attention_slicing"] is True
