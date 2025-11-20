@@ -147,7 +147,8 @@ torchaudio = [
     { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
 ]
 
-torchvision = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
+torchvision = [{ index = "pytorch-cpu", extra="mps", marker = "sys_platform != 'darwin'" },
+{ index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },]
 
 torch = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
