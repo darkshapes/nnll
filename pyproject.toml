@@ -76,19 +76,11 @@ cuda = [
     "triton ; sys_platform != 'win32' and sys_platform != 'darwin'",
     "triton-windows ; sys_platform == 'win32'",
     "bitsandbytes>=0.45 ; sys_platform != 'darwin'",
-    "nnll[jax,onnx,ollama,openai,lmstudio]",
     "bitsandbytes>=0.46.0 ; sys_platform == 'Linux'",
-
 ]
 
 #cu128
 cpu = ["torch", "torchvision", "torchaudio", "torchsde"]
-xpu = [
-    "torch",                                 # entries duplicated (unfortunately) for indexes to work
-    "torchvision",
-    "torchaudio",
-    "torchsde",
-]
 mps = [
     "torch",
     "torchvision",
@@ -130,9 +122,7 @@ Documentation = "https://github.com/darkshapes/sdbx/wiki"
 
 [project.scripts]
 nnll-autocard = "nnll.autocard:main"
-nnll-autohash = "nnll.hub_cache:main"
 nnll-info     = "nnll.chip_stats:main"
-
 
 [tool.uv]
 dev-dependencies = ["nnll[dev]"]
@@ -143,7 +133,6 @@ conflicts = [
     [
         { extra = "mps" },
         { extra = "cuda" },
-        { extra = "xpu" },
         { extra = "rocm" },
         { extra = "triton" },
         { extra = "torch" },
@@ -164,11 +153,6 @@ explicit = true
 [[tool.uv.index]]
 name     = "pytorch-rocm"
 url      = "https://download.pytorch.org/whl/rocm6.3"
-explicit = true
-
-[[tool.uv.index]]
-name     = "pytorch-xpu"
-url      = "https://download.pytorch.org/whl/xpu"
 explicit = true
 
 [tool.uv.sources]
@@ -198,7 +182,7 @@ include = ["nnll*"]
 exclude = ["tests*"]
 
 [tool.setuptools.package-data]
-nnll = ['nnll/integrity/*.json', "nnll/mir/config/*.json"]
+nnll = ["nnll/config/*.json"]
 
 [tool.ruff]
 line-length    = 140
