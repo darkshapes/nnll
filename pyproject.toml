@@ -170,17 +170,9 @@ Homepage      = "https://github.com/darkshapes/nnll"
 Documentation = "https://github.com/darkshapes/sdbx/wiki"
 
 [project.scripts]
-mir-add       = "nnll.mir.mir:main"
-mir-autopipe  = "nnll.download.autopipe:main"
-mir-maid      = "nnll.mir.maid:main"
-mir-tasks     = "nnll.model_detect.tasks:main"
-mir-pipe      = "nnll.model_detect.tasks:pipe"
-nnll-autocard = "nnll.metadata.autocard:main"
-nnll-autohash = "nnll.download.hub_cache:main"
-nnll-hash     = "nnll.integrity.hash_256:main"
-nnll-info     = "nnll.configure.chip_stats:main"
-nnll-layer    = "nnll.model_detect.layer_compare:main"
-nnll-meta     = "nnll.metadata.model_tags:main"
+nnll-autocard = "nnll.autocard:main"
+nnll-autohash = "nnll.hub_cache:main"
+nnll-info     = "nnll.chip_stats:main"
 
 
 [tool.uv]

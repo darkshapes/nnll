@@ -8,7 +8,7 @@ import hashlib
 import json
 import unittest
 from dataclasses import FrozenInstanceError, asdict
-from nnll.integrity.hyper_chain import Block
+from nnll.hyperchain import Block
 
 
 class TestBlock(unittest.TestCase):
