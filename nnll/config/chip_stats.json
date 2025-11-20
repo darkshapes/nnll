@@ -1,13 +1,12 @@
 {
     "data": {
         "devices": {
-            "mps": 500000000,
-            "cpu": 10000000000
+            "mps": 8880128,
+            "cpu": 137438953472
         },
         "torch": {
             "dynamo": false,
             "attention_slicing": false,
-            "mps_memory_fraction": 1.7,
             "versions": {
                 "cuda": null,
                 "hip": null,

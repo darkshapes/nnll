@@ -111,25 +111,8 @@ options:
 
 Immediate diagnostic system status information
 
-#### nnll-layer
-
 ```
-usage: nnll-layer adaln
-
-Recursively search for layer name metadata in state dict .JSON files of the current folder.
-Print filenames with matching layers to console along with the first matching layer's corresponding shape, and tensor counts.
-Offline function.
-
-positional arguments:
-  pattern     Pattern to search for
-
-options:
-  -h, --help  show this help message and exit
-
-Output:
-2025-08-03 14:57:10 INFO     ('./Pixart-Sigma-XL-2-2k-ms.diffusers.safetensors.json', {'shape': [1152], 'tensors': 604})                             console.py:84
-                    INFO     ('./PixartXL-2-1024-ms.diffusers.safetensors.json', {'shape': [384], 'tensors': 613})                                   console.py:84
-                    INFO     ('./flash-pixart-a.safetensors.json', {'shape': [64, 256], 'tensors': 587})
+usage: nnll-info
 ```
 
 ### [Detailed instructions for all version branches:](https://github.com/darkshapes/sdbx/wiki/Develop)
