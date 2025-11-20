@@ -33,7 +33,6 @@ VARIABLE_NAMES = [
     if "__" not in Path(file_name).stem
     # comment for formatting
 ]
-print(VARIABLE_NAMES)
 for const in VARIABLE_NAMES:
     paths = {}
     path_var = f"{const.upper()}_PATH_NAMED"
