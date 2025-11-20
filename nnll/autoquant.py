@@ -37,6 +37,7 @@ def convert_repo(conditions: tuple) -> str:
 
     try:
         output = subprocess.run(command, check=True)
+        print(output.returncode)
     except (TypeError, subprocess.CalledProcessError):
         nfo(f"command was {command}")
 

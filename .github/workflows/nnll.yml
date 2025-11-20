@@ -26,7 +26,6 @@ jobs:
       - name: Install dependencies and run tests
         run: |
           sudo apt-get update
-          sudo apt-get -y install libportaudio2
           curl -LsSf https://astral.sh/uv/install.sh | sh
           uv python install 3.12
           uv python pin 3.12

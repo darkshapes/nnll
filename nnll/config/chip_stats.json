@@ -1,17 +1,18 @@
 {
     "data": {
         "devices": {
-            "mps": 8880128,
-            "cpu": 137438953472
+            "mps": 500000000,
+            "cpu": 10000000000
         },
         "torch": {
             "dynamo": false,
             "attention_slicing": false,
+            "mps_memory_fraction": 1.7,
             "versions": {
                 "cuda": null,
                 "hip": null,
                 "xpu": null,
-                "torch_git": "a1cb3cc05d46d198467bebbb6e8fba50a325d4e7"
+                "torch_git": "5811a8d7da873dd699ff6687092c225caffcf1bb"
             }
         }
     }
