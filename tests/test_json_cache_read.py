@@ -6,7 +6,7 @@
 import unittest
 import json
 import os
-from nnll.mir.json_cache import JSONCache
+from nnll.json_cache import JSONCache
 
 
 class TestJSONCache(unittest.TestCase):

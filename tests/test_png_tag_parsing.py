@@ -4,7 +4,7 @@
 import unittest
 import os
 
-from nnll.metadata.read_tags import MetadataFileReader
+from nnll.read_tags import MetadataFileReader
 
 
 class TestDiskInterface(unittest.TestCase):

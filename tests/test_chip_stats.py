@@ -9,7 +9,7 @@ import pytest
 
 @pytest.fixture
 def chip_stats():
-    from nnll.configure.chip_stats import ChipStats
+    from nnll.chip_stats import ChipStats
 
     return ChipStats()
 
@@ -22,7 +22,7 @@ def test_write_stats(chip_stats):
         patch("torch.mps.driver_allocated_memory") as mock_mps,
         patch("os.path.exists") as mock_exists,
         patch("os.mkdir") as mock_mkdir,
-        patch("nnll.metadata.read_tags.MetadataFileReader.read_header") as mock_read,
+        patch("nnll.read_tags.MetadataFileReader.read_header") as mock_read,
     ):
         mock_vm.return_value = MagicMock(total=10000000000)
         mock_cuda.return_value = (1000000000, 2000000000)
@@ -39,14 +39,14 @@ def test_write_stats(chip_stats):
 
 
 def test_get_metrics(chip_stats):
-    with patch("psutil.disk_usage") as mock_disk, patch("psutil.virtual_memory") as mock_vm, patch("psutil.cpu_percent") as mock_cpu, patch("nnll.configure.chip_stats.ChipStats.get_stats") as mock_get_stats:
+    with patch("psutil.disk_usage") as mock_disk, patch("psutil.virtual_memory") as mock_vm, patch("psutil.cpu_percent") as mock_cpu, patch("nnll.chip_stats.ChipStats.get_stats") as mock_get_stats:
         mock_disk.return_value = MagicMock(used=50000000000, total=100000000000)
         mock_vm.return_value = MagicMock(used=2000000000, total=8000000000)
         mock_cpu.return_value = 25
         mock_get_stats.return_value = {"attention_slicing": True}
         from decimal import Decimal
 
-        metrics = chip_stats.get_metrics()
+        metrics = chip_stats.get_stats()
         assert metrics["cpu_%"] == 25
         assert metrics["dram_used_%"] == Decimal(str(1.86))
         assert metrics["disk_used_%"] == 46.57
