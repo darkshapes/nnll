@@ -57,6 +57,8 @@ dependencies = [
     "accelerate>=1.10.0",
     "peft>=0.17.0",
     "rich>=14.2.0",
+    "pydantic>=2.11.10",
+    "pydantic-core>=2.33.2",
 ]
 [dependency-groups]
 dev = [
