@@ -9,33 +9,25 @@ import os
 from array import ArrayType
 from pathlib import Path
 from typing import Any
-
 import PIL.Image
 
-from nnll import HOME_FOLDER_PATH, USER_PATH_NAMED
-from nnll.read_tags import MetadataFileReader
 from nnll.constants import ExtensionType
 
 
-def name_save_file_as(extension: ExtensionType) -> Path:
+def name_save_file_as(extension: ExtensionType, save_folder_path=".output") -> Path:
     """Construct the file name of a save file\n
      :param extension: The extension of the file
     b :return: `str` A file path with a name"""
 
-    file_reader = MetadataFileReader()
-    user_settings = file_reader.read_header(USER_PATH_NAMED)
-    save_folder_path_absolute = user_settings["location"].get("output", os.getcwd())  # pylint: disable=unsubscriptable-object
-    if save_folder_path_absolute == "output":
-        save_folder_path_absolute = os.path.join(HOME_FOLDER_PATH, "output")
-    if not os.path.isdir(save_folder_path_absolute):
+    if not os.path.isdir(save_folder_path):
         raise FileNotFoundError("Invalid folder location. {error_log}")
-    files_in_save_location = os.listdir(save_folder_path_absolute)
+    files_in_save_location = os.listdir(save_folder_path)
     file_extension = extension
     file_count = sum(f.endswith(extension) for f in files_in_save_location)
     file_count = str(file_count).zfill(6)
-    file_name = "Shadowbox_" + file_count + file_extension
-    file_path_absolute = os.path.join(save_folder_path_absolute, file_name)
-    return file_path_absolute
+    file_name = "divisor_" + file_count + file_extension
+    file_path_named = os.path.join(save_folder_path, file_name)
+    return file_path_named
 
 
 # do not log here
@@ -60,6 +52,25 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, **kw
         from diffusers.utils import export_to_gif
 
         export_to_gif(content, file_path_absolute)
+    if extension == ExtensionType.WEBP:
+        import numpy as np
+        from PIL import Image
+
+        if not file_path_absolute.endswith(".webp"):
+            filename = file_path_absolute.rsplit(".", 1)[0] + ".webp"
+
+        # Convert tensor to PIL Image
+        if content.dim() == 4:
+            image = content[0]  # Take first batch item
+        if image.dim() == 3:
+            image_tensor = image.clamp(0, 1).permute(1, 2, 0).cpu()
+            image_np: np.ndarray = image_tensor.numpy()
+            image_np = (image_np * 255).astype(np.uint8)
+            pil_image = Image.fromarray(image_np)
+        else:
+            raise ValueError(f"Expected 3D or 4D tensor, got {image.dim()}D")
+
+        pil_image.save(filename, "WEBP", lossless=True)
     elif isinstance(content, PIL.Image.Image):
         from PIL import PngImagePlugin
 
