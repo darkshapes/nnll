@@ -56,6 +56,7 @@ dependencies = [
     "transformers>=4.55.2",
     "accelerate>=1.10.0",
     "peft>=0.17.0",
+    "rich>=14.2.0",
 ]
 [dependency-groups]
 dev = [
