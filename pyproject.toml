@@ -76,7 +76,7 @@ cuda = [
     "triton ; sys_platform != 'win32' and sys_platform != 'darwin'",
     "triton-windows ; sys_platform == 'win32'",
     "bitsandbytes>=0.45 ; sys_platform != 'darwin'",
-    "bitsandbytes>=0.46.0 ; sys_platform == 'Linux'",
+    "bitsandbytes>=0.46.0 ; sys_platform == 'linux'",
 ]
 
 #cu128
@@ -100,9 +100,9 @@ rocm = [
     "torchvision",
     "torchaudio",
     "torchsde",
-    "flash_attn ; sys_platform == 'Linux'",
-    "pytorch-triton-rocm ; sys_platform == 'Linux'",
-    "bitsandbytes>=0.46.0 ; sys_platform == 'Linux'",
+    "flash_attn ; sys_platform == 'linux'",
+    "pytorch-triton-rocm ; sys_platform == 'linux'",
+    "bitsandbytes>=0.46.0 ; sys_platform == 'linux'",
 ]
 dev = [
     "nnll[full]",
@@ -159,7 +159,7 @@ explicit = true
 torchaudio = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
+    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'linux'" },
 ]
 
 torchvision = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
@@ -167,7 +167,7 @@ torchvision = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
 torch = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'Linux'" },
+    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'linux'" },
 
 ]
 
