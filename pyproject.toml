@@ -95,15 +95,7 @@ mps = [
     "pip>=25.0.1",                                                                                                # chroma",
     "mflux>=0.2.1 ; sys_platform == 'darwin'",
 ]
-rocm = [
-    "torch",
-    "torchvision",
-    "torchaudio",
-    "torchsde",
-    "flash_attn ; sys_platform == 'linux'",
-    "pytorch-triton-rocm ; sys_platform == 'linux'",
-    "bitsandbytes>=0.46.0 ; sys_platform == 'linux'",
-]
+
 dev = [
     "nnll[full]",
     "pyright>=1.1.407",
@@ -133,7 +125,6 @@ conflicts = [
     [
         { extra = "mps" },
         { extra = "cuda" },
-        { extra = "rocm" },
         { extra = "triton" },
         { extra = "torch" },
 
@@ -150,16 +141,10 @@ name     = "pytorch-cu128"
 url      = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
-[[tool.uv.index]]
-name     = "pytorch-rocm"
-url      = "https://download.pytorch.org/whl/rocm6.3"
-explicit = true
-
 [tool.uv.sources]
 torchaudio = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'linux'" },
 ]
 
 torchvision = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
@@ -167,7 +152,6 @@ torchvision = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
 torch = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
     { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
-    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'linux'" },
 
 ]
 
