@@ -6,15 +6,20 @@
 # pylint: disable=import-outside-toplevel
 
 import os
+from einops import rearrange
 from array import ArrayType
 from pathlib import Path
 from typing import Any
+import torch
 import PIL.Image
 
+
 from nnll.constants import ExtensionType
+from nnll.console import nfo
+from nnll.hyperchain import HyperChain
 
 
-def name_save_file_as(extension: ExtensionType, save_folder_path=".output") -> Path:
+def name_save_file_as(extension: set(str), save_folder_path=".output") -> Path:
     """Construct the file name of a save file\n
      :param extension: The extension of the file
     b :return: `str` A file path with a name"""
@@ -28,6 +33,24 @@ def name_save_file_as(extension: ExtensionType, save_folder_path=".output") -> P
     file_name = "divisor_" + file_count + file_extension
     file_path_named = os.path.join(save_folder_path, file_name)
     return file_path_named
+
+
+def save_with_hyperchain(
+    file_path_named: str,
+    tensor: torch.Tensor,
+    hyperchain: HyperChain,
+    extension: set(str),
+) -> None:
+    nfo(f"Saving {file_path_named}")
+    if extension == ExtensionType.WEBP:
+        from PIL import Image, WebPImagePlugin
+
+        embed = WebPImagePlugin.WebPImagePlugin()
+        embed.add_text("divisor", str(hyperchain))
+        latent = tensor.clamp(-1, 1)
+        numeric = rearrange(latent[0], "c h w -> h w c")
+        img = Image.fromarray((127.5 * (numeric + 1.0)).cpu().byte().numpy())
+        img.save(file_path_named, format="WEBP", lossless=True)
 
 
 # do not log here
