@@ -87,7 +87,7 @@ class HyperChain:
         self.chain = []
         self.chain_file.refresh()
         if "_hyperchain" in data:
-            self.load_chain_from_file(data)
+            self.load_chain_from_file()
             # Ensure latest data is loaded
         # self.cache = chain_file
 
@@ -122,8 +122,10 @@ class HyperChain:
             raise ValueError("Invalid Block Value, chain cannot save. File handling error or otherwise corrupt chain.")
 
     @chain_file.decorator
-    def load_chain_from_file(self, data: str):
+    def load_chain_from_file(self, data: dict = None):
         """Load and validate chain"""
+        if data is None or "_hyperchain" not in data:
+            return
         for block_data in data["_hyperchain"]:
             block = Block.from_dict(block_data)
             self.chain.append(block)
