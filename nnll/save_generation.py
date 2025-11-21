@@ -51,7 +51,7 @@ def save_with_hyperchain(
         numeric = rearrange(latent[0], "c h w -> h w c")
         img = Image.fromarray((127.5 * (numeric + 1.0)).cpu().byte().numpy())
         exif_data = Image.Exif()
-        hyperchain_metadata = str(hyperchain)
+        hyperchain_metadata = str(hyperchain.chain)
 
         # Store hyperchain data in ImageDescription (EXIF tag 270)
         exif_data[Base.ImageDescription] = hyperchain_metadata
