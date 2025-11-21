@@ -37,7 +37,7 @@ def name_save_file_as(extension: set[str], save_folder_path=".output") -> Path:
 
 
 def save_with_hyperchain(
-    file_path_named: str,
+    file_path_named: str | Path,
     tensor: torch.Tensor,
     hyperchain: HyperChain,
     extension: set[str],
