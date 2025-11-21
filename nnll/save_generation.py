@@ -31,14 +31,14 @@ def name_save_file_as(extension: ExtensionType, save_folder_path=".output") -> P
 
 
 # do not log here
-def write_to_disk(content: Any, metadata: dict[str], extension: str = None, **kwargs) -> None:
+def write_to_disk(content: Any, metadata: dict[str], extension: ExtensionType | None = None, **kwargs) -> None:
     """Save Image to File\n
     :param content: File data in memory
     :param pipe_data: Pipe metadata to write into the file
     ```
-        name    [ header:  type   : medium: type ]
+    #   name    [ header:  type   : medium: type ]
 
-                ,-pipe      dict
+            #    ,-pipe      dict
             #   \-model     str    ,-text   string
             #   \-prompt    dict___\-audio  array
             #   `-kwargs    dict   \-image  array
@@ -56,8 +56,8 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, **kw
         import numpy as np
         from PIL import Image
 
-        if not file_path_absolute.endswith(".webp"):
-            filename = file_path_absolute.rsplit(".", 1)[0] + ".webp"
+        if not file_path_absolute.endswith(ExtensionType.WEBP):
+            filename = file_path_absolute.rsplit(".", 1)[0] + ExtensionType.WEBP
 
         # Convert tensor to PIL Image
         if content.dim() == 4:
