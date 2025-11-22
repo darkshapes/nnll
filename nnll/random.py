@@ -30,7 +30,7 @@ class RNGState:
         """
         return self._seed
 
-    def set_seed(self, seed: int | None = None) -> int:
+    def next_seed(self, seed: int | None = None) -> int:
         """Set seed across all random generators and devices.\n
         :param seed: Seed value. If None, generates a random seed using numpy_random.
         :param deterministic: Whether to use deterministic algorithms (currently unused, reserved for future use)

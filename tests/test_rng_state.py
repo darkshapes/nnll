@@ -27,14 +27,14 @@ class TestRNGState:
         seed_state = RNGState(initial_seed=seed)
         assert seed_state.seed == seed, "Seed should be stored correctly"
         new_seed = 123
-        seed_state.set_seed(new_seed)
+        seed_state.next_seed(new_seed)
         assert seed_state.seed == new_seed, "New seed should be stored correctly"
 
     def test_stores_seed_when_none_provided(self):
         """Test that RNGState generates and stores a seed when None is provided."""
         seed_state = RNGState()
         assert seed_state.seed is None, "Initial seed should be None when not provided"
-        generated_seed = seed_state.set_seed()
+        generated_seed = seed_state.next_seed()
         assert seed_state.seed is not None, "Seed should be generated and stored"
         assert isinstance(seed_state.seed, int), "Stored seed should be an integer"
         assert seed_state.seed == generated_seed, "Returned seed should match stored seed"
@@ -68,7 +68,7 @@ class TestRNGState:
         """Test that set_seed properly seeds torch global RNG state."""
         seed = 999
         seed_state = RNGState()
-        seed_state.set_seed(seed)
+        seed_state.next_seed(seed)
         torch.manual_seed(seed)
         global_result1 = torch.rand(1).item()
         torch.manual_seed(seed)
@@ -81,9 +81,9 @@ class TestRNGState:
         if torch.cuda.is_available():
             seed = 12345
             seed_state = RNGState(device="cuda")
-            seed_state.set_seed(seed)
+            seed_state.next_seed(seed)
             cuda_result1 = torch.rand(1, device="cuda").item()
-            seed_state.set_seed(seed)
+            seed_state.next_seed(seed)
             cuda_result2 = torch.rand(1, device="cuda").item()
 
             assert cuda_result1 == cuda_result2, "CUDA RNG should be seeded correctly"
@@ -91,9 +91,9 @@ class TestRNGState:
         if torch.backends.mps.is_available():
             seed = 54321
             seed_state = RNGState(device="mps")
-            seed_state.set_seed(seed)
+            seed_state.next_seed(seed)
             mps_result1 = torch.rand(1, device="mps").item()
-            seed_state.set_seed(seed)
+            seed_state.next_seed(seed)
             mps_result2 = torch.rand(1, device="mps").item()
 
             assert mps_result1 == mps_result2, "MPS RNG should be seeded correctly"
