@@ -55,7 +55,6 @@ class ChipStats:
             stats["data"]["torch"].setdefault("flash_attention", torch.backends.cuda.flash_sdp_enabled() if platform.system().lower() == "linux" else False)
             stats["data"]["torch"].setdefault("allow_tf32", False)
             stats["data"]["torch"].setdefault("xformers", torch.backends.cuda.mem_efficient_sdp_enabled())
-            torch.backends.cudnn.deterministic = False
             if "True" in [stats["data"]["torch"].get("xformers"), stats["data"].get("flash_attention")]:
                 stats["data"]["torch"]["attention_slicing"] = False
         if "mps" in device:
@@ -64,7 +63,6 @@ class ChipStats:
                 mp.set_start_method("fork", force=True)
                 stats["data"]["devices"].setdefault("mps", torch.mps.driver_allocated_memory())
                 stats["data"]["torch"].setdefault("attention_slicing", False)
-                torch.backends.mps.torch.use_deterministic_algorithms(False)
                 if testing:
                     stats["data"]["torch"].setdefault("mps_memory_fraction", 1.7)
                     torch.mps.set_per_process_memory_fraction(stats["data"]["torch"]["mps_memory_fraction"])
