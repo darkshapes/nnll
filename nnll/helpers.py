@@ -5,11 +5,10 @@ from typing import List
 
 
 from pathlib import Path
-from typing import Optional
 import os
 
 
-def ensure_path(folder_path_named: Path, file_name: Optional[str] = None) -> Optional[Path]:
+def ensure_path(folder_path_named: Path, file_name: str | None = None) -> Path | None:
     """Provide absolute certainty a file location exists\n
     :param folder_path_named: Location to test
     :param file_name: Optional file name to test, defaults to None
@@ -77,3 +76,73 @@ def prefix_inner_caps(text: str) -> str:
     import re
 
     return re.sub(r"(?<!^)([A-Z])(?!$)", r"_\1", text)
+
+
+def soft_random(size: int = 0x100000000) -> int:  # previously 0x2540BE3FF
+    """Generate a deterministic random number using philox\n
+    :params size: `int` RNG ceiling in hex format
+    :returns: `int` a random number of the specified length\n
+    pair with `random.seed()` for best effect"""
+
+    import secrets
+
+    from numpy.random import Generator, Philox, SeedSequence
+
+    entropy = f"0x{secrets.randbits(128):x}"  # good entropy
+    rndmc = Generator(Philox(SeedSequence(int(entropy, 16))))
+    return int(rndmc.integers(0, size))
+
+
+def hard_random(hardness: int = 5) -> int:
+    """Generate a cryptographically secure random number\n
+    :param hardness: `int` byte length of generated number
+    :returns: `int` Non-prng random number"""
+    from secrets import token_hex
+
+    return int(token_hex(hardness), 16)
+
+
+def seed_planter(seed: int = soft_random(), deterministic: bool = False, device: str = "cpu") -> int:
+    """Force seed number to all available devices\n
+    :param seed: The number to grow all random generation from, defaults to `soft_random` function
+    :param deterministic: Identical number provides identical output, defaults to True
+    :param device: Processor to use, defaults to `first_available(assign=False)` function
+    :return: The `int` seed that was provided to the functions."""
+
+    from numpy import random
+    import torch
+
+    torch.set_num_threads(1)
+    torch.manual_seed(seed)
+    random.seed(seed)
+    if "cuda" in device:
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+    if "mps" in device:
+        torch.mps.manual_seed(seed)
+
+    return seed
+
+
+def random_tensor_from_gpu(device: str, input_seed: int = soft_random()):
+    """Create a random tensor shape (for testing or other purposes)\n
+    :params device: `str` device to assign generation to, defaults to `first_available()` function
+    :params input_seed: `int` the seed to control randomization, defaults to soft_random() generator
+    :returns: `tensor` Random dimensional tensor"""
+
+    import torch
+
+    torch.set_num_threads(1)
+    if input_seed is not None:
+        seed_planter(device=device)
+    return torch.rand(1, device=device)
+
+
+def random_int_from_gpu(input_seed: int = soft_random()) -> int:
+    """Generate a random number via pytorch
+    :params input_seed: `int`a seed to feed the random generator, defaults to `soft_random()` function
+    :returns: `int` A random number from current device"""
+    import torch
+
+    torch.set_num_threads(1)
+    return torch.random.seed() if input_seed is None else torch.random.manual_seed(input_seed)

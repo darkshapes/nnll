@@ -20,13 +20,14 @@ def set_path_stable(file_name: str, folder_path: str = os.path.dirname(__file__)
     :param file_name: The tail/basename of the absolute file path to
     :param folder_path: The head of the absolute file path, defaults to `os.path.dirname(__file__)`
     :param prefix: Optional folder between `folder_path` and `file_name`, defaults to "config"
-    :return: A combined path string of the given values
-    """
+    :return: A combined path string of the given values"""
+
     folder_path_named = os.path.join(folder_path, prefix)
     Path(folder_path_named).touch()
     return ensure_path(folder_path_named, file_name)
 
 
+# Dynamically generate constants for all files in the config folder
 VARIABLE_NAMES = [
     file_name.stem
     for file_name in Path(os.path.join(os.path.dirname(__file__), "config")).iterdir()
@@ -52,8 +53,7 @@ class JSONCache:
             print(data)
         ```
         Force save:
-        `cache_manager.update({"new_key": "new_value"})`
-        """
+        `cache_manager.update({"new_key": "new_value"})`"""
 
         self.file: Union[str, Path] = file_path_named
         self._cache: dict = {}
@@ -80,10 +80,8 @@ class JSONCache:
                     self._cache = {}
 
     def _save_cache(self):
-        """
-        Write data to a temporary file to minimize data corruption.
-        Replace the original file with the updated cache.
-        """
+        """Write data to a temporary file to minimize data corruption.\n
+        Replace the original file with the updated cache."""
         import json
 
         temp_file = str(self.file) + ".tmp"
@@ -101,8 +99,7 @@ class JSONCache:
     def update_cache(self, new_data: dict, replace: bool = False):
         """Save changes only if data actually changed
         :param new_data: Updated dictionary
-        :param replace: Force clear entire cache and replace with new_data, defaults to False
-        """
+        :param replace: Force clear entire cache and replace with new_data, defaults to False"""
         if replace:
             self._cache = {"empty": ""}  # sanity check
             self._save_cache()
@@ -121,10 +118,8 @@ class JSONCache:
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            """
-            Triggers cache read when called, feeds it to calling function.
-            Not yet implemented: trigger save automatically with data discrepancy
-            """
+            """Triggers cache read when called, feeds it to calling function."""
+            # Consider: trigger save automatically with data discrepancy
             self._load_cache()
 
             updated_data = kwargs.pop("data", {})

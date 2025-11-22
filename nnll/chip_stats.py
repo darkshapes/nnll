@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
-# # pylint: disable=line-too-long
-
+# pylint: disable=line-too-long
 # pylint: disable=import-outside-toplevel
 
 from functools import lru_cache
@@ -10,6 +9,7 @@ from typing import Any, Dict
 from decimal import Decimal
 from functools import cache
 import os
+
 from nnll import HOME_FOLDER_PATH
 from nnll.json_cache import JSONCache, CHIP_STATS_PATH_NAMED
 
@@ -31,8 +31,7 @@ class ChipStats:
     @lru_cache
     def write_stats(self, folder_path_named: str = os.path.dirname(__file__), testing=False) -> None:
         """Create a configuration file for current system specifications\n
-        :param folder_path_named: Path to the application configuration folder
-        """
+        :param folder_path_named: Path to the application configuration folder"""
         import multiprocessing as mp
         import os
         import platform
@@ -115,8 +114,7 @@ class ChipStats:
             - "disk_%" - disk utilization percentage\n
             - "disk_used_%" - allocated disk space for current task\n
             - "disk_total" - all disk space\n
-            - "chip_stats" - static information from launch\n
-        """
+            - "chip_stats" - static information from launch"""
         from datetime import datetime
         from socket import gethostname
 
@@ -151,7 +149,8 @@ class ChipStats:
             - "flash_attention" - additional memory package\n
             - "memory_fraction" - memory allocation\n
             - "tf32" tf32 format toggle\n
-            - "xformers" - legacy memory management\n
+            - "xformers" - legacy memory management
+            - "torch" - torch version
         """
 
         import os
@@ -194,10 +193,18 @@ class ChipStats:
         }
 
     async def show_stats(self, and_return: bool = True) -> dict[str, int | str | float | Decimal]:
-        """System specifications for current and launch s
-
-        :return: _description_
-        """
+        """System specifications for current and launch statistics\n
+        :return: A dictionary of the system hardware state
+            - "timestamp" - system clock\n
+            - "cpu_%" - cpu utilization\n
+            - "dram_%" - cpu utilization percentage\n
+            - "dram_used" - allocated cpu memory\n
+            - "dram_total" - all cpu memory\n
+            - "disk_%" - disk utilization percentage\n
+            - "disk_used_%" - allocated disk space for current task\n
+            - "disk_total" - all disk space\n
+            - "chip_stats" - static information from launch\n
+            - "paths" - paths to the application configuration folder"""
         import os
         from pathlib import Path
 
@@ -212,13 +219,15 @@ class ChipStats:
 
 def make_chip_stats(folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:
     """Create a system profile of important hardware and firmware settings on launch\n
+    :param folder_path_named: Path to the application configuration folder
     :return: A mapping of parameters for retrieval
-    """
+            - "home_folder" - home folder\n
+            - "app_settings" - application settings\n
+            - "app_data" - application data\n
+            - "log_path" - log path"""
 
     @cache
     def _init_stats():
-        from nnll.chip_stats import ChipStats
-
         stats = ChipStats()
         stats = stats.write_stats(folder_path_named)
 
