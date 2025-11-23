@@ -9,19 +9,16 @@ from typing import Literal
 class RNGState:
     """Centralized random number generator controller and state management.\n"""
 
-    def __init__(self, device: str = "cpu", initial_seed: int | None = None, deterministic: bool = False, source: Literal["torch", "mps"] = "torch"):
+    def __init__(self, device: str = "cpu", initial_seed: int | None = None, reproducible: bool = False, source: Literal["torch", "mps"] = "torch"):
         """Initialize the random generator.\n
         :param device: Device to use for torch operations ("cpu", "cuda", or "mps")
         :param initial_seed: Optional initial seed. If None, generates a random seed.
         """
-        import torch
 
         self._seed: int | None = initial_seed
         self.set_device(device)
         self._source = source
-        torch.use_deterministic_algorithms(deterministic)
-        torch.backends.mps.torch.use_deterministic_algorithms(deterministic)
-        torch.backends.cudnn.deterministic = deterministic
+        self.random_mode(reproducible)
 
     @property
     def seed(self) -> int | None:
@@ -63,3 +60,13 @@ class RNGState:
         self.device = device
         self._torch_generator = None  # Reset generator for new device
         self._torch_generator: Generator | None = torch.Generator(device=self.device)
+
+    def random_mode(self, reproducible: bool) -> None:
+        """Set deterministic mode for PyTorch operations.\n
+        :param reproducible: Whether to use deterministic algorithms (False = non-deterministic, True = deterministic)
+        """
+        import torch
+
+        torch.set_deterministic_debug_mode(reproducible)
+        torch.use_deterministic_algorithms(reproducible)
+        torch.backends.cudnn.deterministic = reproducible
