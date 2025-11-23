@@ -3,13 +3,11 @@
 
 from typing import List
 
-
 from pathlib import Path
-from typing import Optional
 import os
 
 
-def ensure_path(folder_path_named: Path, file_name: Optional[str] = None) -> Optional[Path]:
+def ensure_path(folder_path_named: Path, file_name: str | None = None) -> Path | None:
     """Provide absolute certainty a file location exists\n
     :param folder_path_named: Location to test
     :param file_name: Optional file name to test, defaults to None
@@ -77,3 +75,40 @@ def prefix_inner_caps(text: str) -> str:
     import re
 
     return re.sub(r"(?<!^)([A-Z])(?!$)", r"_\1", text)
+
+
+def generate_valid_resolutions(initial_width: int, initial_height: int) -> list[tuple[int, int]]:
+    """Generate valid resolutions based on initial width/height using patch calculations.\n
+    :param initial_width: Initial image width
+    :param initial_height: Initial image height
+    :returns: List of valid (width, height) tuples sorted by aspect ratio
+    """
+    import math
+
+    # Calculate patch counts for initial resolution
+    height_patches = math.ceil(initial_height / 16)
+    width_patches = math.ceil(initial_width / 16)
+    total_patches = height_patches * width_patches
+
+    valid_resolutions = []
+
+    # Generate all valid (H_patches, W_patches) pairs that maintain the same total patches
+    # Find all factor pairs of total_patches
+    for h_patches in range(1, total_patches + 1):
+        if total_patches % h_patches == 0:
+            w_patches = total_patches // h_patches
+
+            # Calculate valid dimension ranges for this patch pair
+            # Height: (16 × (H_patches - 1) + 1) to (16 × H_patches)
+            # Width: (16 × (W_patches - 1) + 1) to (16 × W_patches)
+            # Use the maximum values for each dimension (standard resolution)
+            height_max = 16 * h_patches
+            width_max = 16 * w_patches
+
+            if height_max <= 16383 and width_max <= 16383:  # max WebP pixels
+                valid_resolutions.append((width_max, height_max))
+
+    # Sort by aspect ratio (width/height) for consistent ordering
+    valid_resolutions.sort(key=lambda x: x[0] / x[1] if x[1] > 0 else 0)
+
+    return valid_resolutions

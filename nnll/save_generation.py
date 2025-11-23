@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
-# # pylint: disable=line-too-long
-
+# pylint: disable=line-too-long
 # pylint: disable=import-outside-toplevel
 
 import os
@@ -19,8 +18,9 @@ from nnll.helpers import ensure_path
 
 def name_save_file_as(extension: set[str], save_folder_path=".output") -> Path:
     """Construct the file name of a save file\n
-     :param extension: The extension of the file
-    b :return: `str` A file path with a name"""
+    :param extension: The extension of the file
+    :param save_folder_path: The folder path to save the file
+    :return: `str` A file path with a name"""
 
     if not os.path.isdir(save_folder_path):
         try:
@@ -42,14 +42,20 @@ def save_with_hyperchain(
     hyperchain: HyperChain,
     extension: set[str],
 ) -> None:
+    """Save a tensor to a file with hyperchain metadata\n
+    :param file_path_named: The path to save the file
+    :param tensor: The tensor to save
+    :param hyperchain: The hyperchain to save
+    :param extension: The extension of the file
+    :return: None"""
     nfo(f"Saving {file_path_named}")
     if extension == ExtensionType.WEBP:
         from PIL import Image
         from PIL.ExifTags import Base
 
-        latent = tensor.clamp(-1, 1)
-        numeric = rearrange(latent[0], "c h w -> h w c")
-        img = Image.fromarray((127.5 * (numeric + 1.0)).cpu().byte().numpy())
+        tensor = tensor.clamp(-1, 1)
+        latent = rearrange(tensor[0], "c h w -> h w c")
+        img = Image.fromarray((127.5 * (latent + 1.0)).cpu().byte().numpy())
         exif_data = Image.Exif()
         hyperchain_metadata = str(hyperchain.chain)
 

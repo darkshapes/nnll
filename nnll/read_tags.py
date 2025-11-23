@@ -19,11 +19,9 @@ class MetadataFileReader:
         self.nfo = nfo
 
     def _read_jpg_header(self, file_path_named: str) -> Optional[dict]:
-        """
-        Open jpg format files\n
+        """Open jpg format files and return metadata\n
         :param file_path_named: The path and file name of the jpg file
-        :return: Generator element containing header tags
-        """
+        :return: Generator element containing header tags"""
         from PIL import ExifTags, Image
 
         img = Image.open(file_path_named)  # pylint: disable=protected-access, line-too-long
@@ -31,11 +29,9 @@ class MetadataFileReader:
         return exif_tags
 
     def _read_png_header(self, file_path_named: str) -> Optional[dict]:
-        """
-        Open png format files\n
+        """Open png format files and return metadata\n
         :param file_path_named: The path and file name of the png file
-        :return: Generator element containing header tags
-        """
+        :return: Generator element containing header tags"""
 
         from PIL import Image, UnidentifiedImageError
 
@@ -50,11 +46,9 @@ class MetadataFileReader:
             return None
 
     def _read_txt_contents(self, file_path_named: str) -> Optional[dict]:
-        """
-        Open plaintext files\n
+        """Open plaintext files and return content\n
         :param file_path_named: The path and file name of the text file
-        :return: Generator element containing content
-        """
+        :return: Generator element containing content"""
 
         try:
             with open(file_path_named, "r", encoding="utf_8") as open_file:
@@ -70,11 +64,10 @@ class MetadataFileReader:
             return None
 
     def _read_schema_file(self, file_path_named: str, mode="r") -> Optional[dict]:
-        """
-        Open .json or toml files\n
+        """Open .json or toml files and return content\n
         :param file_path_named: The path and file name of the json file
-        :return: Generator element containing content
-        """
+        :return: Generator element containing content"""
+
         import json
         import os
         import tomllib
@@ -93,11 +86,9 @@ class MetadataFileReader:
                 raise SyntaxError(f"Couldn't read file {file_path_named}") from error_log
 
     def read_header(self, file_path_named: str) -> Optional[dict]:
-        """
-        Direct file read operations for various file formats\n
+        """Direct file read operations for various file formats and return metadata\n
         :param file_path_named: Location of file with file name and path
-        :return: A mapping of information contained within it
-        """
+        :return: A mapping of information contained within the file"""
         from pathlib import Path
 
         from nnll.constants import ExtensionType as Ext

@@ -11,11 +11,8 @@ from rich.logging import RichHandler
 
 
 def wipe_printer(*formatted_data: dict) -> None:
-    """
-    Print data sp that it replaces itself in the console buffer\n
-    :param formatted_data: Output of `pretty_tabled_output()`
-    :return: None
-    """
+    """Print data sp that it replaces itself in the console buffer\n
+    :param formatted_data: Output of `pretty_tabled_output()`"""
     from sys import stdout
 
     stdout.write("\033[F\r" * (len(formatted_data)))  # ANSI escape codes to move the cursor up `len`` lines
@@ -27,15 +24,11 @@ def wipe_printer(*formatted_data: dict) -> None:
 
 
 def pretty_tabled_output(table_title: str, aggregate_data: dict, width: int = 18) -> None:
-    """
-    Pretty print data in column format\n
-    horizontal divider of arbitrary length
-    shrink print columns to data width
-    todo: consider shutil to dynamically create
-    :param title: `dict` Header key to use for the table
-    :param aggregate_data: `dict` A dictionary of values to print
-    :return: `dict` A formatted bundle of data ready to print
-    """
+    """Pretty print data in column format\n
+    :param table_title: Header key to use for the table
+    :param aggregate_data: A dictionary of values to print
+    :param width: The character width of the table
+    :return: A formatted bundle of data ready to print"""
     table_contents = aggregate_data
     key_value_length = len(table_contents)
     # width_top = key_value_length * 1.5
@@ -49,8 +42,7 @@ def pretty_tabled_output(table_title: str, aggregate_data: dict, width: int = 18
 
 def info_stream():
     """info console logging\n
-    :return: INFO level logging object
-    """
+    :return: INFO level logging object"""
     try:
         console_out = Console(stderr=True)
         log_handler = RichHandler(console=console_out)

@@ -7,7 +7,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from nnll.helpers import ask_multi_input, ensure_path, nfo
+from nnll.helpers import ask_multi_input, ensure_path
+from nnll.console import nfo
 
 
 def index_model_card(repo_path) -> Optional[Dict[str, Any]]:
@@ -171,11 +172,26 @@ def main():
         "safetensors": "",
     }
     parser.add_argument("repo", type=str, help="Relative path to HF repository")
-    parser.add_argument("-l", "--library", type=str, choices=list(example), default="mlx", help="Output model type [gguf,mlx,dev,schnell,safetensors] (optional, default: 'mlx') NOTE: dev/schnell use MFLUX. Safetensors is for dry run only")
+    parser.add_argument(
+        "-l",
+        "--library",
+        type=str,
+        choices=list(example),
+        default="mlx",
+        help="Output model type [gguf,mlx,dev,schnell,safetensors] (optional, default: 'mlx') NOTE: dev/schnell use MFLUX. Safetensors is for dry run only",
+    )
     parser.add_argument("-q", "--quantization", type=int, choices=[8, 6, 4, 3, 2], required=False, help="Set quantization level (optional, default: None)")
-    parser.add_argument("-d", "--dry_run", action="store_true", help="Perform a dry run, reading and generating a repo card without converting the model (optional, default: False)")
+    parser.add_argument(
+        "-d", "--dry_run", action="store_true", help="Perform a dry run, reading and generating a repo card without converting the model (optional, default: False)"
+    )
     parser.add_argument("-u", "--user", type=str, default="darkshapes", help="User for generated repo card (optional)")
-    parser.add_argument("-f", "--folder", type=str, default=os.path.join(str(Path.home()), "Downloads"), help=f"Folder path for downloading (optional, default: {os.path.join(str(Path.home()), 'Downloads')})")
+    parser.add_argument(
+        "-f",
+        "--folder",
+        type=str,
+        default=os.path.join(str(Path.home()), "Downloads"),
+        help=f"Folder path for downloading (optional, default: {os.path.join(str(Path.home()), 'Downloads')})",
+    )
     parser.add_argument("-p", "--prompt", type=str, default="Test Prompt", help="A prompt for the code example (optional, default: 'Test Prompt')")
 
     args = parser.parse_args()
@@ -210,7 +226,7 @@ def main():
     folder_path_named = None
     readme = write_card(".", autocard(conditions=conditions))
     if readme and not args.dry_run:
-        from nnll.tensor_pipe.autoquant import convert_repo
+        from nnll.autoquant import convert_repo
 
         folder_path_named = convert_repo(conditions)
     elif readme:
