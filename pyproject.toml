@@ -53,7 +53,7 @@ classifiers = [
 dependencies = [
     "diffusers @ git+https://github.com/huggingface/diffusers.git",
     "huggingface-hub[cli,hf-transfer,hf-xet]>=0.35.0rc0",
-    "transformers>=4.55.2",
+    "transformers>=4.57.1",
     "accelerate>=1.10.0",
     "peft>=0.17.0",
     "rich>=14.2.0",
