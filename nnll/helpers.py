@@ -81,34 +81,33 @@ def generate_valid_resolutions(initial_width: int, initial_height: int) -> list[
     """Generate valid resolutions based on initial width/height using patch calculations.\n
     :param initial_width: Initial image width
     :param initial_height: Initial image height
-    :returns: List of valid (width, height) tuples sorted by aspect ratio
-    """
+    :returns: List of valid (width, height) tuples sorted by aspect ratio"""
     import math
 
-    # Calculate patch counts for initial resolution
     height_patches = math.ceil(initial_height / 16)
     width_patches = math.ceil(initial_width / 16)
     total_patches = height_patches * width_patches
 
     valid_resolutions = []
 
-    # Generate all valid (H_patches, W_patches) pairs that maintain the same total patches
-    # Find all factor pairs of total_patches
     for h_patches in range(1, total_patches + 1):
         if total_patches % h_patches == 0:
             w_patches = total_patches // h_patches
-
-            # Calculate valid dimension ranges for this patch pair
-            # Height: (16 × (H_patches - 1) + 1) to (16 × H_patches)
-            # Width: (16 × (W_patches - 1) + 1) to (16 × W_patches)
-            # Use the maximum values for each dimension (standard resolution)
             height_max = 16 * h_patches
             width_max = 16 * w_patches
-
             if height_max <= 16383 and width_max <= 16383:  # max WebP pixels
                 valid_resolutions.append((width_max, height_max))
 
-    # Sort by aspect ratio (width/height) for consistent ordering
     valid_resolutions.sort(key=lambda x: x[0] / x[1] if x[1] > 0 else 0)
 
     return valid_resolutions
+
+
+def check_optional_import(module_name: str) -> tuple[bool, any]:
+    """Check if an optional module can be imported.\n
+    :return: A tuple of the module's availability and the module itself"""
+    try:
+        module = __import__(module_name)
+        return True, module
+    except ImportError:
+        return False, None

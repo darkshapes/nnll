@@ -10,7 +10,7 @@ import pytest
 
 @pytest.fixture
 def chip_stats():
-    return ChipStats()
+    return ChipStats(debug=True)
 
 
 def test_write_stats(chip_stats):
@@ -32,7 +32,8 @@ def test_write_stats(chip_stats):
         mock_read.return_value = {"data": {"devices": {"cpu": 10000000000}}}
         file_name = ensure_path(os.path.join(os.path.dirname(os.getcwd()), "nnll", "tests"), file_name="chip_stats.json")
         print(file_name)
-        chip_stats.write_stats(folder_path_named=".tests/", testing=True)
+        chip_stats.debug = True
+        chip_stats.write_stats(folder_path_named="./tests/")
         assert chip_stats.stats["data"]["devices"]["cpu"] == 10000000000
         assert os.path.isfile(file_name)
         os.remove(file_name)

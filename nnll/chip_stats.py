@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
+"""System profiler utility"""
+
 # pylint: disable=line-too-long
 # pylint: disable=import-outside-toplevel
 
+import asyncio
 from functools import lru_cache
 from typing import Any, Dict
 from decimal import Decimal
@@ -11,15 +14,21 @@ from functools import cache
 import os
 
 from nnll import HOME_FOLDER_PATH
-from nnll.json_cache import JSONCache, CHIP_STATS_PATH_NAMED
-
 from nnll.console import nfo
+from nnll.json_cache import JSONCache, CHIP_STATS_PATH_NAMED
+from nnll.helpers import check_optional_import
 
 CHIP_STATS_FILE = JSONCache(CHIP_STATS_PATH_NAMED)
 
 
 class ChipStats:
-    """GPU performance management"""
+    """GPU performance management and system profiler
+    "write_stats" write static, launch time GPU configuration to stats file
+    "get_stats" report current system utilization
+    "read_stats" retrieve static, launch time environment configuration options from configuration file
+    "_get_paths" internal helper to list app config paths
+    "show_stats" display current and launch time stats in console
+    """
 
     debug = False
     stats = 0
@@ -29,8 +38,8 @@ class ChipStats:
         self.debug = debug
 
     @lru_cache
-    def write_stats(self, folder_path_named: str = os.path.dirname(__file__), testing=False) -> None:
-        """Create a configuration file for current system specifications\n
+    def write_stats(self, folder_path_named: str = os.path.dirname(CHIP_STATS_PATH_NAMED), testing=debug) -> None:
+        """Create a configuration file for low-level GPUspecifications\n
         :param folder_path_named: Path to the application configuration folder"""
         import multiprocessing as mp
         import os
@@ -45,18 +54,22 @@ class ChipStats:
 
         mp.set_start_method("spawn", force=True)
         device = set_torch_device().type
+        torch.set_num_threads(1)
         stats = dict()
         stats.setdefault("data", dict())
         stats["data"].setdefault("devices", dict())
         stats["data"].setdefault("torch", dict())
-        stats["data"]["torch"].setdefault("dynamo", False if platform.system().lower() != "linux" else True)
+        stats["data"]["torch"].setdefault("dynamo", platform.system().lower() == "linux")
         if "cuda" in device:
             stats["data"]["devices"].setdefault("cuda", torch.cuda.mem_get_info()[1])
             stats["data"]["torch"].setdefault("flash_attention", torch.backends.cuda.flash_sdp_enabled() if platform.system().lower() == "linux" else False)
-            stats["data"]["torch"].setdefault("allow_tf32", False)
+            stats["data"]["torch"].setdefault("allow_tf32", False)  # high-end datacenter gpus only
             stats["data"]["torch"].setdefault("xformers", torch.backends.cuda.mem_efficient_sdp_enabled())
             if "True" in [stats["data"]["torch"].get("xformers"), stats["data"].get("flash_attention")]:
                 stats["data"]["torch"]["attention_slicing"] = False
+            if torch.cuda.get_device_capability() >= (12, 0):
+                stats["data"]["torch"].setdefault("triton", check_optional_import("triton"))
+                stats["data"]["torch"].setdefault("sageattn", check_optional_import("sageattention"))
         if "mps" in device:
             if torch.backends.mps.is_available() & torch.backends.mps.is_built():
                 # patches async issues with torch and MacOS
@@ -82,7 +95,7 @@ class ChipStats:
             },
         )
         self.stats = stats
-        if not self.debug:
+        if not self.debug and not testing:
             # consider: set cpu floats fp32?
             if not os.path.exists(folder_path_named):
                 os.mkdir(folder_path_named)
@@ -100,7 +113,7 @@ class ChipStats:
                     break
 
     @lru_cache
-    def get_stats(self) -> Dict[str, Any]:
+    def active_stats(self) -> Dict[str, Any]:
         """Retrieves current system metrics including CPU usage, RAM usage and disk usage. Caches results to optimize performance.\n
         :return: A dictionary of the system hardware state
             - "hostname" - network host name\n
@@ -132,7 +145,7 @@ class ChipStats:
             "disk_total_gb": round(disk.total / (1024**3), 2),
             "hostname": gethostname(),
             "chip_stats": chip_stats,
-            "paths": self.get_paths(),
+            "paths": self._get_paths(),
         }
         return data
 
@@ -148,6 +161,9 @@ class ChipStats:
             - "memory_fraction" - memory allocation\n
             - "tf32" tf32 format toggle\n
             - "xformers" - legacy memory management
+            - "triton" - legacy memory management
+            - "sageattn" - legacy memory management
+
             - "torch" - torch version
         """
 
@@ -179,7 +195,7 @@ class ChipStats:
         }
         return chip_stats
 
-    def get_paths(self):
+    def _get_paths(self):
         from nnll import LOG_FOLDER_PATH, USER_PATH_NAMED
         from nnll.json_cache import VARIABLE_NAMES
 
@@ -206,7 +222,7 @@ class ChipStats:
         import os
         from pathlib import Path
 
-        stats = self.get_stats()
+        stats = self.active_stats()
         user_name = os.path.basename(Path.home())
         paths_to_strip = stats.copy()
         stats["paths"] = {name: path.replace(user_name, "____") for name, path in paths_to_strip["paths"].items() if isinstance(path, str)}
@@ -215,7 +231,7 @@ class ChipStats:
             return stats
 
 
-def make_chip_stats(folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:
+def make_chip_stats(stats: ChipStats = ChipStats()) -> Dict[str, Any]:
     """Create a system profile of important hardware and firmware settings on launch\n
     :param folder_path_named: Path to the application configuration folder
     :return: A mapping of parameters for retrieval
@@ -226,16 +242,16 @@ def make_chip_stats(folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]
 
     @cache
     def _init_stats():
-        stats = ChipStats()
-        stats = stats.write_stats(folder_path_named)
+        stats.write_stats(HOME_FOLDER_PATH)
+        return stats
+
+    return _init_stats()
 
 
 CHIP_STATS = make_chip_stats()
 
 
 def main():
-    import asyncio
-
     chip_stats = ChipStats(debug=True)
     asyncio.run(chip_stats.show_stats())
     return nfo("Done.")
