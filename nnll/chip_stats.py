@@ -6,6 +6,7 @@
 # pylint: disable=line-too-long
 # pylint: disable=import-outside-toplevel
 
+import asyncio
 from functools import lru_cache
 from typing import Any, Dict
 from decimal import Decimal
@@ -112,7 +113,7 @@ class ChipStats:
                     break
 
     @lru_cache
-    def get_stats(self) -> Dict[str, Any]:
+    def active_stats(self) -> Dict[str, Any]:
         """Retrieves current system metrics including CPU usage, RAM usage and disk usage. Caches results to optimize performance.\n
         :return: A dictionary of the system hardware state
             - "hostname" - network host name\n
@@ -221,7 +222,7 @@ class ChipStats:
         import os
         from pathlib import Path
 
-        stats = self.get_stats()
+        stats = self.active_stats()
         user_name = os.path.basename(Path.home())
         paths_to_strip = stats.copy()
         stats["paths"] = {name: path.replace(user_name, "____") for name, path in paths_to_strip["paths"].items() if isinstance(path, str)}
@@ -230,7 +231,7 @@ class ChipStats:
             return stats
 
 
-def make_chip_stats(folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:
+def make_chip_stats(stats: ChipStats = ChipStats()) -> Dict[str, Any]:
     """Create a system profile of important hardware and firmware settings on launch\n
     :param folder_path_named: Path to the application configuration folder
     :return: A mapping of parameters for retrieval
@@ -241,16 +242,16 @@ def make_chip_stats(folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]
 
     @cache
     def _init_stats():
-        stats = ChipStats()
-        stats = stats.write_stats(folder_path_named)
+        stats.write_stats(HOME_FOLDER_PATH)
+        return stats
+
+    return _init_stats()
 
 
 CHIP_STATS = make_chip_stats()
 
 
 def main():
-    import asyncio
-
     chip_stats = ChipStats(debug=True)
     asyncio.run(chip_stats.show_stats())
     return nfo("Done.")
