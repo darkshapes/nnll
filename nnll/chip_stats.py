@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
 # <!-- // /*  d a r k s h a p e s */ -->
 
+"""System profiler utility"""
+
 # pylint: disable=line-too-long
 # pylint: disable=import-outside-toplevel
 
@@ -19,7 +21,13 @@ CHIP_STATS_FILE = JSONCache(CHIP_STATS_PATH_NAMED)
 
 
 class ChipStats:
-    """GPU performance management"""
+    """GPU performance management and system profiler
+    "write_stats" write static, launch time GPU configuration to stats file
+    "get_stats" report current system utilization
+    "read_stats" retrieve static, launch time environment configuration options from configuration file
+    "_get_paths" internal helper to list app config paths
+    "show_stats" display current and launch time stats in console
+    """
 
     debug = False
     stats = 0
@@ -30,7 +38,7 @@ class ChipStats:
 
     @lru_cache
     def write_stats(self, folder_path_named: str = os.path.dirname(CHIP_STATS_PATH_NAMED), testing=debug) -> None:
-        """Create a configuration file for current system specifications\n
+        """Create a configuration file for low-level GPUspecifications\n
         :param folder_path_named: Path to the application configuration folder"""
         import multiprocessing as mp
         import os
@@ -136,7 +144,7 @@ class ChipStats:
             "disk_total_gb": round(disk.total / (1024**3), 2),
             "hostname": gethostname(),
             "chip_stats": chip_stats,
-            "paths": self.get_paths(),
+            "paths": self._get_paths(),
         }
         return data
 
@@ -186,7 +194,7 @@ class ChipStats:
         }
         return chip_stats
 
-    def get_paths(self):
+    def _get_paths(self):
         from nnll import LOG_FOLDER_PATH, USER_PATH_NAMED
         from nnll.json_cache import VARIABLE_NAMES
 
