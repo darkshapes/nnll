@@ -101,3 +101,13 @@ def generate_valid_resolutions(initial_width: int, initial_height: int) -> list[
     valid_resolutions.sort(key=lambda x: x[0] / x[1] if x[1] > 0 else 0)
 
     return valid_resolutions
+
+
+def check_optional_import(module_name: str) -> tuple[bool, any]:
+    """Check if an optional module can be imported.\n
+    :return: A tuple of the module's availability and the module itself"""
+    try:
+        module = __import__(module_name)
+        return True, module
+    except ImportError:
+        return False, None

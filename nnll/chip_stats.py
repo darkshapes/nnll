@@ -11,9 +11,9 @@ from functools import cache
 import os
 
 from nnll import HOME_FOLDER_PATH
-from nnll.json_cache import JSONCache, CHIP_STATS_PATH_NAMED
-
 from nnll.console import nfo
+from nnll.json_cache import JSONCache, CHIP_STATS_PATH_NAMED
+from nnll.helpers import check_optional_import
 
 CHIP_STATS_FILE = JSONCache(CHIP_STATS_PATH_NAMED)
 
@@ -29,7 +29,7 @@ class ChipStats:
         self.debug = debug
 
     @lru_cache
-    def write_stats(self, folder_path_named: str = os.path.dirname(__file__), testing=False) -> None:
+    def write_stats(self, folder_path_named: str = os.path.dirname(CHIP_STATS_PATH_NAMED), testing=debug) -> None:
         """Create a configuration file for current system specifications\n
         :param folder_path_named: Path to the application configuration folder"""
         import multiprocessing as mp
@@ -45,18 +45,22 @@ class ChipStats:
 
         mp.set_start_method("spawn", force=True)
         device = set_torch_device().type
+        torch.set_num_threads(1)
         stats = dict()
         stats.setdefault("data", dict())
         stats["data"].setdefault("devices", dict())
         stats["data"].setdefault("torch", dict())
-        stats["data"]["torch"].setdefault("dynamo", False if platform.system().lower() != "linux" else True)
+        stats["data"]["torch"].setdefault("dynamo", platform.system().lower() == "linux")
         if "cuda" in device:
             stats["data"]["devices"].setdefault("cuda", torch.cuda.mem_get_info()[1])
             stats["data"]["torch"].setdefault("flash_attention", torch.backends.cuda.flash_sdp_enabled() if platform.system().lower() == "linux" else False)
-            stats["data"]["torch"].setdefault("allow_tf32", False)
+            stats["data"]["torch"].setdefault("allow_tf32", False)  # high-end datacenter gpus only
             stats["data"]["torch"].setdefault("xformers", torch.backends.cuda.mem_efficient_sdp_enabled())
             if "True" in [stats["data"]["torch"].get("xformers"), stats["data"].get("flash_attention")]:
                 stats["data"]["torch"]["attention_slicing"] = False
+            if torch.cuda.get_device_capability() >= (12, 0):
+                stats["data"]["torch"].setdefault("triton", check_optional_import("triton"))
+                stats["data"]["torch"].setdefault("sageattn", check_optional_import("sageattention"))
         if "mps" in device:
             if torch.backends.mps.is_available() & torch.backends.mps.is_built():
                 # patches async issues with torch and MacOS
@@ -82,7 +86,7 @@ class ChipStats:
             },
         )
         self.stats = stats
-        if not self.debug:
+        if not self.debug and not testing:
             # consider: set cpu floats fp32?
             if not os.path.exists(folder_path_named):
                 os.mkdir(folder_path_named)
@@ -148,6 +152,9 @@ class ChipStats:
             - "memory_fraction" - memory allocation\n
             - "tf32" tf32 format toggle\n
             - "xformers" - legacy memory management
+            - "triton" - legacy memory management
+            - "sageattn" - legacy memory management
+
             - "torch" - torch version
         """
 
