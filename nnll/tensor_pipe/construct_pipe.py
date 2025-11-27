@@ -44,9 +44,12 @@ class ConstructPipeline:
         pkg_name = stack_items.pop("pkg_name")
 
         model_name = model.model
+        print("test")
         if pkg_name in ["diffusers", "transformers", "parler-tts"]:
+            print("test2")
             if os.path.isfile(model_name):
                 pipe_method = pipe_obj.from_single_file
+                pipe = pipe_method(model_name, use_safetensors=True, **stack_items)
             else:
                 pipe_method = pipe_obj.from_pretrained
                 try:
@@ -115,13 +118,14 @@ class ConstructPipeline:
         nfo(pkg_data)
         main_pipe = {"pipe_obj": pipe_obj, "model": registry_entry, "pkg_name": pkg_name} | kwargs
         if precision := local_details.get("precision", base_details.get("precision", {})):
-            precision = precision.rsplit(".", 1)
-            dtype = mir_db.database[precision[0]][precision[1].upper()]["pkg"]["0"]  # get the precision class, currently assumed to be torch
+            precision_key, precision_val = precision.rsplit(".", 1)
+            dtype = mir_db.database[precision_key][precision_val.upper()]["pkg"]["0"]  # get the precision class, currently assumed to be torch
             precision = next(iter(dtype["torch"]))  # add default?
             main_pipe.setdefault("torch_dtype", getattr(import_module("torch"), precision))
-            if local_details.get("variant", base_details.get("variant")):  # Added to skip non-available variants
-                if variant := dtype["torch"].get(precision, {}):  # because of above, should only happen if the file is fp16 already!
-                    main_pipe.setdefault(*variant.keys(), *variant.values())
+            if (
+                variant := dtype["torch"].get(precision, {}).get("variant", None)
+            ):  # Added to skip non-available variants# because of above, should only happen if the file is fp16 already!
+                main_pipe.setdefault("variant", variant)
         if isinstance(local_details.get(pkg_name, base_details.get(pkg_name, "")), dict):
             if extra_kwargs := local_details.get("pkg_name", base_details.get(pkg_name, {})).get(pipe_obj, {}):
                 main_pipe = main_pipe | extra_kwargs
