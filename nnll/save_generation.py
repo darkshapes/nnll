@@ -64,3 +64,4 @@ def save_with_hyperchain(
         exif_data[Base.Software] = "divisor"
 
         img.save(file_path_named, format="WEBP", lossless=True, exif=exif_data)
+        # img.show()

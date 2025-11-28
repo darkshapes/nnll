@@ -7,7 +7,7 @@ license_name: MPL-2.0 + Commons Clause 1.0
 
 <div align="center">
 
-![nnll75_transparent](https://github.com/user-attachments/assets/de8c1a49-4695-4c4b-b7c4-29fba483a65d)</div>
+![nnll75_transparent](https://raw.githubusercontent.com/darkshapes/entity-statement/refs/heads/main/png/nnll/nnll150_transparent.png)</div>
 
 # nnll <br><sub>neural network link library: Flexible code for multimodal AI apps</sub>
 
