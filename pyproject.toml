@@ -61,6 +61,9 @@ dependencies = [
     "pydantic-core>=2.33.2",
     "sentencepiece>=0.2.1",
     "protobuf>=6.33.1",
+    "einops>=0.8.1",
+    "openai>=2.8.1",
+    "torchvision>=0.24.1",
 ]
 [dependency-groups]
 dev = [
