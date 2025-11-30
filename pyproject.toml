@@ -64,11 +64,14 @@ dependencies = [
     "einops>=0.8.1",
     "openai>=2.8.1",
     "torchvision>=0.24.1",
+    "opencv-python>=4.10.0.84",
+
 ]
 [dependency-groups]
 dev = [
+    "nnll[dev]",
     "pyright>=1.1.407",
-    "pytest>=8.4.1",
+    "pytest>=9.0.1",
     "pytest-mock>=3.14.1",
     "ruff>=0.12.9",
 ]
@@ -87,8 +90,12 @@ cuda = [
     "bitsandbytes>=0.46.0 ; sys_platform == 'linux'",
 ]
 
-#cu128
-cpu = ["torch", "torchvision", "torchaudio", "torchsde"]
+cpu = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "torchsde",
+]
 mps = [
     "torch",
     "torchvision",
@@ -125,7 +132,6 @@ nnll-autocard = "nnll.autocard:main"
 nnll-info     = "nnll.chip_stats:main"
 
 [tool.uv]
-dev-dependencies = ["nnll[dev]"]
 prerelease       = "allow"
 preview          = true
 
@@ -141,7 +147,7 @@ conflicts = [
 
 [[tool.uv.index]]
 name     = "pytorch-cpu"
-url      = "https://download.pytorch.org/whl/cpu"
+url      = "https://download.pytorch.org/whl/nightly/cpu"
 explicit = true
 
 [[tool.uv.index]]
@@ -157,7 +163,8 @@ torchaudio = [
 
 torchvision = [
     { index = "pytorch-cpu", extra="mps", marker = "sys_platform == 'darwin'" },
-{ index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },]
+    { index = "pytorch-cu128", extra = "cuda", marker = "sys_platform != 'darwin'" },
+]
 
 torch = [
     { index = "pytorch-cpu", extra = "mps", marker = "sys_platform == 'darwin'" },
