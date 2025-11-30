@@ -69,6 +69,7 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
+    "nnll[dev]",
     "pyright>=1.1.407",
     "pytest>=9.0.1",
     "pytest-mock>=3.14.1",
@@ -89,6 +90,12 @@ cuda = [
     "bitsandbytes>=0.46.0 ; sys_platform == 'linux'",
 ]
 
+cpu = [
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "torchsde",
+]
 mps = [
     "torch",
     "torchvision",
@@ -125,7 +132,6 @@ nnll-autocard = "nnll.autocard:main"
 nnll-info     = "nnll.chip_stats:main"
 
 [tool.uv]
-dev-dependencies = ["nnll[dev]"]
 prerelease       = "allow"
 preview          = true
 
