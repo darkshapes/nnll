@@ -7,8 +7,8 @@
 # pylint:disable=line-too-long, import-outside-toplevel
 
 from dataclasses import dataclass
-
 from nnll.json_cache import JSONCache, HYPERCHAIN_PATH_NAMED
+from nnll.reverse_codec import ReversibleBytes
 
 
 @dataclass(frozen=True)
@@ -27,7 +27,7 @@ class Block:
 
     index: int
     previous_hash: str
-    data: str
+    data: ReversibleBytes
     timestamp: str = None
     block_hash: str = None
 
@@ -58,7 +58,7 @@ class Block:
     @classmethod
     def from_dict(cls, data: dict):
         """Recreate existing block"""
-        block = cls(index=data["index"], data=data["data"], previous_hash=data["previous_hash"])
+        block = cls(index=data["index"], data=data["value"].decompress_data(), previous_hash=data["previous_hash"])
         object.__setattr__(block, "timestamp", data["timestamp"])
         object.__setattr__(block, "block_hash", data["block_hash"])
         return block
@@ -106,7 +106,8 @@ class HyperChain:
         """
         index = len(self.chain)
         previous_hash = self.chain[-1].block_hash
-        new_block = Block.create(index=index, previous_hash=previous_hash, data=data)
+        reversible_bytes = ReversibleBytes(data)
+        new_block = Block.create(index=index, previous_hash=previous_hash, data=reversible_bytes.value.decode())
         self.chain.append(new_block)
         self.save_chain_to_file()
         return new_block

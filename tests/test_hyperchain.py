@@ -8,6 +8,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 import hashlib
 from nnll.hyperchain import HyperChain
+from nnll.reverse_codec import ReversibleBytes
 from nnll.json_cache import JSONCache, HYPERCHAIN_PATH_NAMED
 import json
 
@@ -31,18 +32,17 @@ class TestHyperChain(unittest.TestCase):
 
         self.hyperchain.add_block("Transaction 1")
         self.hyperchain.add_block("Transaction 2")
+        print(self.hyperchain.chain)
 
         self.assert_block_tags(index=0, previous_hash="init", data="Genesis Block")
-        self.assert_block_tags(index=1, previous_hash=self.hyperchain.chain[0].block_hash, data="Transaction 1")
-        self.assert_block_tags(index=2, previous_hash=self.hyperchain.chain[1].block_hash, data="Transaction 2")
-        # print(self.hyperchain.chain)
+        self.assert_block_tags(index=1, previous_hash=self.hyperchain.chain[0].block_hash, data="Z*?*;302i>r&HdJfOx)W3O<C^$c")
+        self.assert_block_tags(index=2, previous_hash=self.hyperchain.chain[1].block_hash, data="#*@;;300i>r&HdJfOx)W3O<C^$c")
         self.assertTrue(self.hyperchain.is_chain_valid())
 
     def assert_block_tags(self, **kwargs):
         """loop for block attributes"""
         # print(kwargs)
         for k, v in kwargs.items():
-            # print(getattr(self.hyperchain.chain[kwargs["index"]], f"{k}"))
             assert getattr(self.hyperchain.chain[kwargs["index"]], f"{k}") == v
 
     @classmethod

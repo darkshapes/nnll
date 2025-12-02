@@ -11,7 +11,7 @@ from rich.logging import RichHandler
 
 
 def wipe_printer(*formatted_data: dict) -> None:
-    """Print data sp that it replaces itself in the console buffer\n
+    """Print data so that it replaces itself in the console buffer\n
     :param formatted_data: Output of `pretty_tabled_output()`"""
     from sys import stdout
 
