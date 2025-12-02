@@ -7,8 +7,8 @@
 # pylint:disable=line-too-long, import-outside-toplevel
 
 from dataclasses import dataclass
-
 from nnll.json_cache import JSONCache, HYPERCHAIN_PATH_NAMED
+from nnll.reverse_codec import ReversibleBytes
 
 
 @dataclass(frozen=True)
@@ -27,7 +27,7 @@ class Block:
 
     index: int
     previous_hash: str
-    data: str
+    data: ReversibleBytes
     timestamp: str = None
     block_hash: str = None
 
@@ -51,14 +51,14 @@ class Block:
         return strftime("%Y-%m-%d %H:%M:%s", gmtime(time_ns() // 1e9))
 
     @classmethod
-    def create(cls, index: int, previous_hash: str, data: str) -> "Block":
+    def create(cls, index: int, previous_hash: str, text: ReversibleBytes) -> "Block":
         """Form a new block"""
-        return cls(index=index, previous_hash=previous_hash, data=data)
+        return cls(index=index, previous_hash=previous_hash, data=text.compress_data())
 
     @classmethod
     def from_dict(cls, data: dict):
         """Recreate existing block"""
-        block = cls(index=data["index"], data=data["data"], previous_hash=data["previous_hash"])
+        block = cls(index=data["index"], data=data["data"].decompress_data(), previous_hash=data["previous_hash"])
         object.__setattr__(block, "timestamp", data["timestamp"])
         object.__setattr__(block, "block_hash", data["block_hash"])
         return block
@@ -105,7 +105,10 @@ class HyperChain:
         :return: `Block` the new block
         """
         index = len(self.chain)
+        if len(self.chain) == 0:
+            self.synthesize_genesis_block()
         previous_hash = self.chain[-1].block_hash
+        reversible_bytes = HyperChainData.encode_data(data)
         new_block = Block.create(index=index, previous_hash=previous_hash, data=data)
         self.chain.append(new_block)
         self.save_chain_to_file()
