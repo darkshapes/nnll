@@ -51,14 +51,14 @@ class Block:
         return strftime("%Y-%m-%d %H:%M:%s", gmtime(time_ns() // 1e9))
 
     @classmethod
-    def create(cls, index: int, previous_hash: str, text: ReversibleBytes) -> "Block":
+    def create(cls, index: int, previous_hash: str, data: str) -> "Block":
         """Form a new block"""
-        return cls(index=index, previous_hash=previous_hash, data=text.compress_data())
+        return cls(index=index, previous_hash=previous_hash, data=data)
 
     @classmethod
     def from_dict(cls, data: dict):
         """Recreate existing block"""
-        block = cls(index=data["index"], data=data["data"].decompress_data(), previous_hash=data["previous_hash"])
+        block = cls(index=data["index"], data=data["value"].decompress_data(), previous_hash=data["previous_hash"])
         object.__setattr__(block, "timestamp", data["timestamp"])
         object.__setattr__(block, "block_hash", data["block_hash"])
         return block
@@ -105,11 +105,9 @@ class HyperChain:
         :return: `Block` the new block
         """
         index = len(self.chain)
-        if len(self.chain) == 0:
-            self.synthesize_genesis_block()
         previous_hash = self.chain[-1].block_hash
-        reversible_bytes = HyperChainData.encode_data(data)
-        new_block = Block.create(index=index, previous_hash=previous_hash, data=data)
+        reversible_bytes = ReversibleBytes(data)
+        new_block = Block.create(index=index, previous_hash=previous_hash, data=reversible_bytes.value.decode())
         self.chain.append(new_block)
         self.save_chain_to_file()
         return new_block

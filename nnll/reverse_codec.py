@@ -12,17 +12,17 @@ import base64
 
 @dataclass
 class ReversibleBytes:
-    data: bytes
+    value: bytes
 
     def __post_init__(self):
-        if self.data is not None:
-            self.data = self._compress_state(self.data)
+        if self.value is not None:
+            self.value = self._compress_state(self.value)
 
     def __getstate__(self):
-        return {"value": self.data}
+        return {"value": self.value}
 
     def __setstate__(self, state):
-        self.data = state["value"]
+        self.value = state["value"]
 
     @classmethod
     def _compress_state(cls, text: str) -> "ReversibleBytes":
@@ -31,15 +31,9 @@ class ReversibleBytes:
         :return: Compressed transformed text"""
         return base64.b85encode(zlib.compress(text.encode()))[::-1]
 
-    def _decompress_state(self, data: bytes) -> str:
+    def decompress_state(self, data: bytes) -> str:
         """Decompress the encoded string and reverse the decoded string\n
         :param encoded_text: The encoded text to decompress
         :return: Decompressed translated text"""
-        reversed_value = self.data[::-1]
-        return zlib.decompress(base64.b85decode(reversed_value))
-
-    def to_dict(self):
-        return {"data": self.data.decode()}
-
-    def from_dict(self, data: dict):
-        return self._decompress_state(data=data["data"]).decode()
+        reversed_value = data[::-1]
+        return zlib.decompress(base64.b85decode(reversed_value)).decode()

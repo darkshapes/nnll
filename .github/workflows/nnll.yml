@@ -36,17 +36,6 @@ jobs:
           uv pip install cyclonedx_py
 
           pytest -v
-      - run: pdoc nnll -o docs/
-
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs/
-
-      - run: cyclonedx-py environment '.venv' --spec-version 1.6 --output-format JSON --output-file nnll.json -v
-
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: sbom/
   # call-workflow-in-another-repo:
   #   uses: darkshapes/MIR/.github/workflows/mir.yml
 

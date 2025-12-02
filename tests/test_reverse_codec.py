@@ -12,15 +12,12 @@ def test_reverse_codec_encodes():
     text = "Hello, World!"
     reversible_bytes = ReversibleBytes(text)
     assert isinstance(reversible_bytes, ReversibleBytes)
-    assert reversible_bytes.data == b"5YN(V30KcK1%3g%3Qv8@B&{V1%c"
-    assert reversible_bytes.to_dict() == {"data": "5YN(V30KcK1%3g%3Qv8@B&{V1%c"}
+    assert reversible_bytes.value == b"5YN(V30KcK1%3g%3Qv8@B&{V1%c"
 
 
 def test_reverse_codec_reverses():
     text = "Hello, World!"
     reversible_bytes = ReversibleBytes(text)
-    assert reversible_bytes.data == b"5YN(V30KcK1%3g%3Qv8@B&{V1%c"
-    assert reversible_bytes.to_dict() == {"data": "5YN(V30KcK1%3g%3Qv8@B&{V1%c"}
-    assert reversible_bytes.data == b"5YN(V30KcK1%3g%3Qv8@B&{V1%c"
-    byte_data = reversible_bytes.data
-    assert reversible_bytes.from_dict({"data": byte_data}) == text
+    assert reversible_bytes.value == b"5YN(V30KcK1%3g%3Qv8@B&{V1%c"
+    byte_data = reversible_bytes.value
+    assert reversible_bytes.decompress_state(byte_data) == text
