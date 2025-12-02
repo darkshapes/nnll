@@ -22,10 +22,10 @@ jobs:
           python-version: '3.14'
 
       # ADJUST THIS: install all dependencies (including pdoc)
-      - run: pip install -e .
-      # ADJUST THIS: build your documentation into docs/.
-      # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
-      - run: pdoc -o docs/ nnll
+      - run: |
+          pip install -e .
+          uv pip install pdoc
+          pdoc -o docs/ nnll
 
       - uses: actions/upload-pages-artifact@v4
         with:
