@@ -24,7 +24,7 @@ jobs:
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: |
           pip install -e .
-          uv pip install pdoc
+          pip install pdoc
           pdoc -o docs/ nnll
 
       - uses: actions/upload-pages-artifact@v4
