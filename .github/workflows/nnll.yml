@@ -33,8 +33,6 @@ jobs:
           uv venv .venv
           source .venv/bin/activate
           nnll-info
-          uv pip install cyclonedx_py
-
           pytest -v
   # call-workflow-in-another-repo:
   #   uses: darkshapes/MIR/.github/workflows/mir.yml
