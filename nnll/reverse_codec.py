@@ -8,39 +8,41 @@
 from dataclasses import dataclass
 import zlib
 import base64
+import msgpack
 
 
 @dataclass
 class ReversibleBytes:
     value: str
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.value is not None:
-            self.value = self._compress_state(self.value)
+            self.__setstate__({"value": self._compress_state(self.value)})
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict[str, str]:
         return {"value": self.value}
 
-    def __setstate__(self, state):
+    def __setstate__(self, state) -> None:
         self.value = state["value"]
 
     @classmethod
-    def _compress_state(cls, text: str) -> "ReversibleBytes":
+    def _compress_state(cls, text: str) -> str:
         """Compress plain text and reverse the encoded string\n
         :param plain_text: The plain text to compress
         :return: Compressed transformed text"""
-        data = text.encode("utf-8")
-        data = cls.z_compress(data)
-        data = cls.b85_encode(data)
-        return data
+        unicode_value = text.encode("utf-8")
+        serialized_bytes = msgpack.packb(unicode_value)
+        compressed_bytes: bytes = cls.z_compress(serialized_bytes)  # type: ignore[arg-type]
+        encoded_text: str = cls.b85_encode(compressed_bytes)
+        return encoded_text
 
     def readable_value(self, data: str) -> str:
         """Decompress the encoded string and reverse the decoded string"""
-        # Reverse the compression steps in reverse order
-        data_bytes = self.b85_decode(data)  # 1. str → bytes
-        data_bytes = self.z_decompress(data_bytes)  # 3. undo compress
-        original_text = data_bytes.decode("utf-8")  # 6. bytes → original str
-        return original_text
+        decoded_bytes = self.b85_decode(data)
+        decompressed_bytes = self.z_decompress(decoded_bytes)
+        deserialized_bytes = msgpack.unpackb(decompressed_bytes)
+        decoded_text = deserialized_bytes.decode("utf-8")
+        return decoded_text
 
     @classmethod
     def z_compress(cls, x: bytes) -> bytes:
