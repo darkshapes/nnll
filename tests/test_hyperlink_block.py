@@ -7,7 +7,7 @@ import hashlib
 import json
 import unittest
 from dataclasses import FrozenInstanceError
-from nnll.hyperchain import Block
+from nnll.block import Block
 from nnll.reverse_codec import ReversibleBytes
 
 

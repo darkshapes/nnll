@@ -6,76 +6,11 @@
 
 # pylint:disable=line-too-long, import-outside-toplevel
 
-from dataclasses import dataclass
 import json
-from nnll.json_cache import JSONCache, HYPERCHAIN_PATH_NAMED
+import os
+from nnll.json_cache import HYPERCHAIN_PATH_NAMED  # type: ignore
 from nnll.reverse_codec import ReversibleBytes
-
-
-@dataclass(frozen=True)
-class Block:
-    """
-    Basic block class.\n
-    Use hash value to assert validity of contents\n
-    Frozen creates immutability.\n
-    Attributes are locked after creation.\n
-    Warning: Clock precision may contain OS specific implementation differences.\n
-
-    Block schema\n
-    [index_num], [timestamp], [prior_hash], [contents], [hash]\n
-    `int`, `YYYY-MM-DD` `HH:MM:SSSSSSSSSS`, 0a0a0a0a0, <data>, "9f9f9f9f9"\n
-    """
-
-    index: int
-    previous_hash: str
-    data: ReversibleBytes
-    timestamp: str = None
-    block_hash: str = None
-
-    def __post_init__(self):
-        if self.timestamp is None:
-            object.__setattr__(self, "timestamp", self.create_timestamp())
-        if self.block_hash is None:
-            object.__setattr__(self, "block_hash", self.calculate_hash())
-
-    def calculate_hash(self) -> str:
-        """Calculate hash for string of prior hash, contents, and time combined"""
-        import hashlib
-
-        block_contents = f"{self.index}{self.previous_hash}{self.data.value}{self.timestamp}".encode("utf-8")
-        return hashlib.sha256(block_contents).hexdigest()
-
-    def create_timestamp(self):
-        """Add timestamp attribute"""
-        from time import gmtime, strftime, time_ns
-
-        return strftime("%Y-%m-%d %H:%M:%s", gmtime(time_ns() // 1e9))
-
-    @classmethod
-    def create(cls, index: int, previous_hash: str, data: ReversibleBytes) -> "Block":
-        """Form a new block"""
-        return cls(index=index, previous_hash=previous_hash, data=data)
-
-    @classmethod
-    def from_dict(cls, stored_data: dict):
-        """Recreate existing block"""
-        converter = ReversibleBytes("")
-        decompressed_text = converter.readable_value(stored_data["data"])  # Returns string
-        readable_bytes = ReversibleBytes(decompressed_text)  # Create new ReversibleBytes from decompressed text
-        block = cls(index=stored_data["index"], data=readable_bytes, previous_hash=stored_data["previous_hash"])
-        object.__setattr__(block, "timestamp", stored_data["timestamp"])
-        object.__setattr__(block, "block_hash", stored_data["block_hash"])
-        return block
-
-    def to_dict(self):
-        """Flatten block into serializable structure"""
-        return {
-            "index": self.index,
-            "data": self.data.value,
-            "previous_hash": self.previous_hash,
-            "timestamp": self.timestamp,
-            "block_hash": self.block_hash,
-        }
+from nnll.block import Block
 
 
 class HyperChain:
@@ -97,7 +32,7 @@ class HyperChain:
         self.chain.append(genesis_block)
         return genesis_block
 
-    def add_block(self, data: str) -> Block:
+    def add_block(self, raw_data: str) -> Block:
         """
         Add a new block to the chain\n
         :param data: The contents to store on-chain
@@ -105,7 +40,7 @@ class HyperChain:
         """
         index = len(self.chain)
         previous_hash = self.chain[-1].block_hash
-        reversible_bytes = ReversibleBytes(data)
+        reversible_bytes = ReversibleBytes(raw_data)
 
         new_block = Block.create(index=index, previous_hash=previous_hash, data=reversible_bytes)
         self.chain.append(new_block)
@@ -125,17 +60,28 @@ class HyperChain:
         """Load and validate chain"""
         from nnll.helpers import ensure_path
 
-        ensure_path(self.chain_file)
-        with open(str(self.chain_file), "r", encoding="ascii") as doc:
-            if content := doc.read():
-                data = json.loads(content)
-                if not data.get("_hyperchain"):
+        ensure_path(os.path.dirname(self.chain_file), os.path.basename(self.chain_file))
+        try:
+            with open(str(self.chain_file), "r", encoding="ascii") as doc:
+                content = doc.read()
+                if content:
+                    data = json.loads(content)
+                    if not data.get("_hyperchain"):
+                        self.synthesize_genesis_block()
+                        self.save_chain_to_file()
+                    else:
+                        for block_data in data.get("_hyperchain"):
+                            block = Block.from_dict(block_data)
+                            self.chain.append(block)
+                else:
+                    # File is empty, create genesis block
                     self.synthesize_genesis_block()
                     self.save_chain_to_file()
-                else:
-                    for block_data in data.get("_hyperchain"):
-                        block = Block.from_dict(block_data)
-                        self.chain.append(block)
+        except (FileNotFoundError, json.JSONDecodeError):
+            # File doesn't exist or is invalid, create genesis block
+            self.synthesize_genesis_block()
+            self.save_chain_to_file()
+
         if not self.is_chain_valid():
             print(self.chain)
             self.chain = []
@@ -166,3 +112,42 @@ class HyperChain:
                 return False
 
         return True
+
+    def block_data_diff(self, incoming_data: dict) -> dict:
+        """Add new data applying the three rules. \n
+        When previous k/v pair is index, **copy indexref**. \n
+        When previous k/v pair equals new, **create index ref**. \n
+        When previous k/v pair differs, move to next k/v pair. \n
+        :param incoming_data: The new data to add to the chain
+        :return: Mapping with index pointers added, or original data if new data is identical
+        """
+        converter = ReversibleBytes("")
+
+        def _get_block_data_dict(block: Block) -> dict:
+            """Extract dict from block's ReversibleBytes"""
+            try:
+                decompressed = converter.readable_value(block.data.value)
+                return json.loads(decompressed)
+            except (json.JSONDecodeError, ValueError):
+                # If data is not JSON, return empty dict
+                return {}
+
+        mutable_data = incoming_data.copy()  # create a copy of the new data to avoid modifying the original data
+
+        for key, _ in incoming_data.items():  # iterate through the new data
+            # Reset state for each key - start with the last block
+            previous_data_index = len(self.chain) - 1
+            index_block = self.chain[-1]
+            index_pointer_key: str = f"{key}_<ref>"  # the unique key for this key's index pointer
+            block_data: dict = _get_block_data_dict(index_block)  # get the previous data
+
+            if block_data.get(index_pointer_key, None):  # rule1 – previous entry is an index pointer, follow it
+                previous_data_index = block_data[index_pointer_key]  # get the previous index
+                index_block = self.chain[previous_data_index]  # get the block at the previous index
+                block_data = _get_block_data_dict(index_block)  # get the previous data
+
+            if incoming_data[key] == block_data.get(key, {}):  # if the new data is the same as the previous data,
+                mutable_data[index_pointer_key] = previous_data_index  # create an index pointer (rule 2)
+            # if the new data is different, we leave the value unchanged (rule 3)
+
+        return mutable_data

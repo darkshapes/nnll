@@ -64,6 +64,7 @@ dependencies = [
     "einops>=0.8.1",
     "openai>=2.8.1",
     "opencv-python>=4.10.0.84",
+    "msgpack>=1.1.2",
 ]
 [dependency-groups]
 dev = [
@@ -192,14 +193,22 @@ extend-exclude = ["^tests/.*$", "test.*$"]
 [tool.ruff.lint]
 ignore = ["E731"]
 
+[tool.ruff.lint.pycodestyle]
+max-line-length               = 140
+ignore-overlong-task-comments = true
+
 [tool.pylint]
 max-line-length = 140
 ignore-paths    = ["^tests/.*$", "test_.*$"]
 disable         = ["C0415"]
 
-[tool.ruff.lint.pycodestyle]
-max-line-length               = 140
-ignore-overlong-task-comments = true
+[tool.pyright]
+include = ["nnll"]
+exclude = [
+    "^tests/.*$",
+  "**/__pycache__", # cache directories
+  "./typings",      # generated type stubs
+]
 
 [tool.typos]
 files.extend-exclude = ["^tests/.*$", "test.*$"]
