@@ -8,7 +8,7 @@
 
 import json
 import os
-from nnll.json_cache import HYPERCHAIN_PATH_NAMED
+from nnll.json_cache import HYPERCHAIN_PATH_NAMED  # type: ignore
 from nnll.reverse_codec import ReversibleBytes
 from nnll.block import Block
 
@@ -32,7 +32,7 @@ class HyperChain:
         self.chain.append(genesis_block)
         return genesis_block
 
-    def add_block(self, data: str) -> Block:
+    def add_block(self, raw_data: str) -> Block:
         """
         Add a new block to the chain\n
         :param data: The contents to store on-chain
@@ -40,7 +40,7 @@ class HyperChain:
         """
         index = len(self.chain)
         previous_hash = self.chain[-1].block_hash
-        reversible_bytes = ReversibleBytes(data)
+        reversible_bytes = ReversibleBytes(raw_data)
 
         new_block = Block.create(index=index, previous_hash=previous_hash, data=reversible_bytes)
         self.chain.append(new_block)
