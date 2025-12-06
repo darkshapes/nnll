@@ -8,6 +8,7 @@
 from dataclasses import dataclass
 from nnll.reverse_codec import ReversibleBytes
 
+
 @dataclass(frozen=True)
 class Block:
     """
@@ -45,7 +46,7 @@ class Block:
         """Add timestamp attribute"""
         from time import gmtime, strftime, time_ns
 
-        return strftime("%Y-%m-%d %H:%M:%s", gmtime(time_ns() // 1e9))
+        return strftime("%Y-%m-%d %H:%M:%S", gmtime(time_ns() // 1e9))
 
     @classmethod
     def create(cls, index: int, previous_hash: str, data: ReversibleBytes) -> "Block":
@@ -72,4 +73,3 @@ class Block:
             "timestamp": self.timestamp,
             "block_hash": self.block_hash,
         }
-
