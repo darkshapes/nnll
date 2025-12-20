@@ -1,18 +1,18 @@
 ---
 title: "Code of Conduct"
-date-last-modified: 2027-07-28,
+date-last-modified: 2025-20-12,
 authors:
-  name: ["EXDYSA"],
+  name: ["˶𝞢⤬⫒ⵖsᐼ˶"],
   pronouns: ["she/her"]
   name: ["Marinus Savoritias"]
   pronouns: ["fae/faer, ve/veirs"]
 license: CC0-1.0
-version: 0.0.2
+version: 0.0.4
 ---
 
 # Code of Conduct Quick Reference
 
-Version = 0.0.2_2025-20-11
+Version = 0.0.4_2025-20-12
 
 ## Behavior Guide
 
@@ -45,3 +45,7 @@ Version = 0.0.2_2025-20-11
 - Patience. Everyone feels ready to leave something behind at their own speed.
 
 > Remember: Designs mirror creator relationships. Treat others to the same service you want to build.
+
+\*More communication techniques:
+
+https://en.wikipedia.org/wiki/Nonviolent_Communication
