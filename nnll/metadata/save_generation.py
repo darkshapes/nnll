@@ -14,6 +14,7 @@ import PIL.Image
 
 from nnll.configure import HOME_FOLDER_PATH, USER_PATH_NAMED
 from nnll.metadata.read_tags import MetadataFileReader
+from nnll.monitor import file
 from nnll.monitor.file import debug_monitor
 from nnll.configure.constants import ExtensionType
 
@@ -32,8 +33,11 @@ def name_save_file_as(extension: ExtensionType) -> Path:
     if not os.path.isdir(save_folder_path_absolute):
         raise FileNotFoundError("Invalid folder location. {error_log}")
     files_in_save_location = os.listdir(save_folder_path_absolute)
-    file_extension = extension
-    file_count = sum(f.endswith(extension) for f in files_in_save_location)
+    if isinstance(extension, set):
+        file_extension = next(iter(extension))
+    else:
+        file_extension = extension
+    file_count = sum(f.endswith(file_extension) for f in files_in_save_location)
     file_count = str(file_count).zfill(6)
     file_name = "Shadowbox_" + file_count + file_extension
     file_path_absolute = os.path.join(save_folder_path_absolute, file_name)
@@ -67,13 +71,19 @@ def write_to_disk(content: Any, metadata: dict[str], extension: str = None, **kw
 
         embed = PngImagePlugin.PngInfo()
         embed.add_text("parameters", str(metadata))
-        file_suffix = extension.pop()
+        if isinstance(extension, set):
+            file_suffix = next(iter(extension))
+        else:
+            file_suffix = extension
         file_suffix.strip(".")
         kwargs.setdefault("pnginfo", embed)
         content.save(file_path_absolute, file_suffix.upper().strip("."), **kwargs)
         content.show()
     elif extension == ExtensionType.PNG_:  # MFLUX case
-        file_suffix = extension.pop()
+        if isinstance(extension, set):
+            file_suffix = next(iter(extension))
+        else:
+            file_suffix = extension
         file_suffix.strip(".")
         content.save(file_path_absolute, file_suffix.upper().strip("."))
 

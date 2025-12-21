@@ -463,7 +463,12 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                 "pkg": {
                     0: {"precision": "ops.precision.float.F16"},
                 },
-                "identifiers": ["model.diffusion_model.joint_blocks.", "transformer_blocks.21.norm1_context.linear.weight", "transformer_blocks.31.norm1_context.linear.weight", "blocks.11.ff.net.2.weight"],
+                "identifiers": [
+                    "model.diffusion_model.joint_blocks.",
+                    "transformer_blocks.21.norm1_context.linear.weight",
+                    "transformer_blocks.31.norm1_context.linear.weight",
+                    "blocks.11.ff.net.2.weight",
+                ],
                 "file_256": [
                     "ffef7a279d9134626e6ce0d494fba84fc1c7e720b3c7df2d19a09dc3796d8f93",  # large
                     "11fe06e22364b823dfeedc275912336b932b32a293a0b2f35ffac071990cc4de",  # medium
@@ -544,9 +549,9 @@ def mir_update(mir_db: MIRDatabase, task_list: list = None, pipe_list: list = No
                         "generation": {
                             "negative_prompt": "",
                             "guidance_scale": 5.0,
-                            "num_inference_steps": 50,
-                            "width": 1024,
-                            "height": 1024,
+                            "num_inference_steps": 30,
+                            "width": 768,
+                            "height": 1360,
                         },
                     },
                     1: {"diffusers": "DiffusionPipeline"},
