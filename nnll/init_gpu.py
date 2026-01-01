@@ -3,46 +3,74 @@
 
 # pylint: disable=import-outside-toplevel
 
-# SPDX-License-Identifier: MPL-2.0 AND LicenseRef-Commons-Clause-License-Condition-1.0
-# <!-- // /*  d a r k s h a p e s */ -->
-import torch
-import gc
+from __future__ import annotations
+
 from typing import Literal
 
-
-def set_torch_device(
-    device_override: Literal["cuda", "mps", "cpu"] | None = None,
-) -> torch.device:
-    """Set the PyTorch device, with optional manual override.\n
-    :param device_override: Optional device to use. "cuda", "mps", or "cpu"
-    :returns: The selected torchdevice
-    :raises ValueError: If device_override is not one of the allowed values"""
-    if device_override is not None:
-        if device_override not in ("cuda", "mps", "cpu"):
-            raise ValueError(f"device_override must be one of 'cuda', 'mps', or 'cpu', got '{device_override}'")
-        return torch.device(device_override)
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-
-    return device
+import torch
 
 
-device = set_torch_device()
-dtype = torch.float16
+class Gfx:
+    """
+    Detects the best available Torch device (CUDA → MPS → CPU) at instantiation time and provides a matching default dtype.\n
+    `>>> gfx = Gfx()`
+    `>>> gfx.device`
+    device(type='cuda')
+    `>>> gfx.dtype`
+    torch.float16
+    """
 
+    _PREFERENCE: tuple[tuple[bool, Literal["cuda"]], tuple[bool, Literal["mps"]], tuple[bool, Literal["cpu"]]] = (
+        (torch.cuda.is_available(), "cuda"),
+        (torch.backends.mps.is_available(), "mps"),
+        (True, "cpu"),  # always fallback to CPU
+    )
 
-def sync_torch(device: torch.device):
-    if device.type == "cuda":
-        torch.cuda.synchronize()
-    if device.type == "mps":
-        torch.mps.synchronize()
-    if device.type == "cpu":
-        pass
+    def __init__(self, full_precision: bool = False, device: str | None = None) -> None:
+        """Resolve the device once; store as a private attribute
+        :param full_precision: whether to use full precision (float32) instead"""
 
+        self.full_precision = full_precision
+        if device is not None:
+            self._device = torch.device(device)
+        for available, name in self._PREFERENCE:
+            if available:
+                self._device: torch.device = torch.device(name)
+                break
 
-def clear_cache(device_override: Literal["cuda", "mps", "cpu"] | None = None):
-    if device.type == "cuda" or device_override == "cuda":
-        torch.cuda.empty_cache()
-    if device.type == "mps" or device_override == "mps":
-        torch.mps.empty_cache()
-    gc.collect()
+    @property
+    def auto(self) -> torch.device:
+        """Return the selected torch device (e.g. ``torch.device('cuda')``)."""
+        return self._device
+
+    @property
+    def dtype(self, full_precision: bool = False) -> torch.dtype:
+        """Retrieve a compatible dtype for the device
+        :param full_precision: whether to use full precision (float32) instead
+        :returns: A sensible default dtype for the selected device
+        """
+        if self._device.type == "cuda":
+            return torch.float16 if not self.full_precision else torch.float32
+        if self._device.type == "mps":
+            return torch.bfloat16 if not self.full_precision else torch.float32
+        return torch.float32
+
+    @property
+    def sync(self) -> None:
+        """Synchronise the current device."""
+        device_type = getattr(torch, self._device.type)
+        device_type.synchronize()
+
+    @property
+    def empty_cache(self) -> None:
+        """Clear the device cache and run garbage collection."""
+        import gc
+
+        device_type = getattr(torch, self._device.type)
+        device_type.synchronize()
+        gc.collect()
+
+    @property
+    def device(self) -> torch.device:
+        """Get the current torch device (e.g. ``torch.device``)"""
+        return self._device

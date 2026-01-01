@@ -22,18 +22,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.12
+          python-version: 3.13
       - name: Install dependencies and run tests
         run: |
-          sudo apt-get update
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv python install 3.12
-          uv python pin 3.12
-          uv sync --group dev --extra cpu
-          uv venv .venv
+          pip cache purge
+          rm -rf venv
+          python -m venv .venv
           source .venv/bin/activate
-          nnll-info
-          pytest -v
-  # call-workflow-in-another-repo:
-  #   uses: darkshapes/MIR/.github/workflows/mir.yml
-
+          python3 -m pip install --upgrade pip
+          pip install ".[dev]"
+          pytest -rPvv

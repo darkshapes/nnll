@@ -5,22 +5,45 @@
 import torch
 from torch import Tensor, nn
 from einops import rearrange, repeat
-from transformers import CLIPTokenizer, CLIPTextModel, T5TokenizerFast, T5EncoderModel
+
+
+from pathlib import Path
+
+
+def load_image_as_tensor(image_path: Path, dtype: torch.dtype, device: torch.device, normalize: bool = False) -> torch.Tensor:
+    """Convert a Pillow ``Image`` to a batched ``torch.Tensor``\n
+    :param image: Pillow image (RGB) to encode.
+    :param device: Target device for the tensor (default: ``gpu.device``).
+    :param normalize:  Normalize tensor to [-1, 1]:
+    :return: Tensor of shape ``[1, 3, H, W]`` on ``device``."""
+    from numpy._typing import NDArray
+    from numpy import array as np_array
+    from PIL.Image import open as open_img
+
+    with open_img(str(image_path)).convert("RGB") as pil_image:
+        numeric_image: NDArray = np_array(pil_image).astype("float32") / 255.0  # HWC, 0‑1
+        numeric_image: NDArray = numeric_image.transpose(2, 0, 1)  # CHW
+        tensor = torch.from_numpy(numeric_image).unsqueeze(0).to(dtype=dtype, device=device)
+        if normalize:
+            tensor = tensor * 2.0 - 1.0
+        return tensor
 
 
 class HFEmbedder(nn.Module):
-    def __init__(self, version: str, max_length: int, **hf_kwargs):
+    def __init__(self, model_version: str, max_length: int, **hf_kwargs):
+        from transformers import CLIPTokenizer, CLIPTextModel, T5TokenizerFast, T5EncoderModel
+
         super().__init__()
-        self.is_clip = version.startswith("openai")
+        self.is_clip = model_version.startswith("openai")
         self.max_length = max_length
         self.output_key = "pooler_output" if self.is_clip else "last_hidden_state"
 
         if self.is_clip:
-            self.tokenizer: CLIPTokenizer = CLIPTokenizer.from_pretrained(version, max_length=max_length)
-            self.hf_module: CLIPTextModel = CLIPTextModel.from_pretrained(version, **hf_kwargs)
+            self.tokenizer: CLIPTokenizer = CLIPTokenizer.from_pretrained(model_version, max_length=max_length)
+            self.hf_module: CLIPTextModel = CLIPTextModel.from_pretrained(model_version, **hf_kwargs)
         else:
-            self.tokenizer: T5TokenizerFast = T5TokenizerFast.from_pretrained(version, max_length=max_length)
-            self.hf_module: T5EncoderModel = T5EncoderModel.from_pretrained(version, **hf_kwargs)
+            self.tokenizer: T5TokenizerFast = T5TokenizerFast.from_pretrained(model_version, max_length=max_length)
+            self.hf_module: T5EncoderModel = T5EncoderModel.from_pretrained(model_version, **hf_kwargs)
 
         self.hf_module = self.hf_module.eval().requires_grad_(False)
 
