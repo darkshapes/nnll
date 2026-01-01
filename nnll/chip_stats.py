@@ -7,16 +7,16 @@
 # pylint: disable=import-outside-toplevel
 
 import asyncio
-from functools import lru_cache
-from typing import Any, Dict
-from decimal import Decimal
-from functools import cache
 import os
+from pathlib import Path
+from decimal import Decimal
+from functools import cache, lru_cache
+from typing import Any, Dict
 
 from nnll import HOME_FOLDER_PATH
 from nnll.console import nfo
-from nnll.json_cache import JSONCache, CHIP_STATS_PATH_NAMED
 from nnll.helpers import check_optional_import
+from nnll.json_cache import CHIP_STATS_PATH_NAMED, JSONCache
 
 CHIP_STATS_FILE = JSONCache(CHIP_STATS_PATH_NAMED)
 
@@ -151,7 +151,7 @@ class ChipStats:
         return data
 
     @lru_cache
-    def read_stats(self, folder_path_named: str = HOME_FOLDER_PATH) -> Dict[str, Any]:
+    def read_stats(self, folder_path_named: Path | str = HOME_FOLDER_PATH) -> Dict[str, Any]:
         """Retrieve static, launch time environment configuration options from configuration file\n
         :param folder_path_named: Path to the application configuration folder
         :return: A mapping of the discovered flags\n
@@ -183,7 +183,7 @@ class ChipStats:
                         pass
                     else:
                         break
-        stats = self.stats.get("data")
+        stats: dict = self.stats.get("data", {})
         chip_stats = {
             "attention_slicing": stats["torch"].get("attention_slicing", 0),
             "devices": stats.get("devices", 0),
@@ -207,7 +207,7 @@ class ChipStats:
             "log_path": LOG_FOLDER_PATH,
         }
 
-    async def show_stats(self, and_return: bool = True) -> dict[str, int | str | float | Decimal]:
+    async def show_stats(self, and_return: bool = True) -> None | dict[str, int | str | float | Decimal]:
         """System specifications for current and launch statistics\n
         :return: A dictionary of the system hardware state
             - "timestamp" - system clock\n
@@ -221,7 +221,6 @@ class ChipStats:
             - "chip_stats" - static information from launch\n
             - "paths" - paths to the application configuration folder"""
         import os
-        from pathlib import Path
 
         stats = self.active_stats()
         user_name = os.path.basename(Path.home())
@@ -232,7 +231,7 @@ class ChipStats:
             return stats
 
 
-def make_chip_stats(stats: ChipStats = ChipStats()) -> Dict[str, Any]:
+def make_chip_stats(stats: ChipStats = ChipStats()) -> ChipStats:
     """Create a system profile of important hardware and firmware settings on launch\n
     :param folder_path_named: Path to the application configuration folder
     :return: A mapping of parameters for retrieval

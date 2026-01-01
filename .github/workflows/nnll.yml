@@ -19,19 +19,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-      - name: Install dependencies and run tests
+      - name: Install system
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv python install 3.12
-          uv python pin 3.12
-          uv sync --group dev --extra cpu
-          uv venv --clear .venv
+          uv python install 3.13
+          uv python pin 3.13
+          uv sync --group dev
           source .venv/bin/activate
-          pytest -v
+
+
+      - name: Run Python Tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+      - name: Run Tests
+        run: |
+          pytest -rPvv
   # call-workflow-in-another-repo:
   #   uses: darkshapes/MIR/.github/workflows/mir.yml
 
