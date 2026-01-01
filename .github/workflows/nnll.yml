@@ -18,10 +18,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Python Tests
+      - uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.13
+      - name: Install dependencies and run tests
         run: |
           pip cache purge
           rm -rf venv
