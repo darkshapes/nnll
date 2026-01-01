@@ -11,7 +11,7 @@ license_name: MPL-2.0 + Commons Clause 1.0
 
 # nnll <br><sub>neural network link library: Flexible code for multimodal AI apps</sub>
 
-`nnll` (or <em>null</em>)is a toolkit for researchers and developers working with AI models like Diffusion and Large Language Models (LLMs). It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing these complex systems.
+`nnll` (or <em>null</em>)is a toolkit for unified inference pipelines. It provides modular, reusable, and efficient components as a foundation to simplify the process of building and managing complex generative systems.
 
 - Generative AI pipeline preparation & execution
 - Writing metadata from images

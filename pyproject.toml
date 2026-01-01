@@ -52,7 +52,7 @@ classifiers = [
 ]
 dependencies = [
     "diffusers @ git+https://github.com/huggingface/diffusers.git",
-    "huggingface-hub[hf-xet,cli]>=0.35.0rc0",
+    "huggingface-hub[hf-xet,cli]>=0.36",
     "transformers>=4.57.1",
     "accelerate>=1.10.0",
     "peft>=0.17.0",
@@ -65,11 +65,12 @@ dependencies = [
     "openai>=2.8.1",
     "opencv-python>=4.10.0.84",
     "msgpack>=1.1.2",
+    "pdoc>=16.0.0",
+
 ]
 [dependency-groups]
 dev = [
     "nnll[dev]",
-    "pdoc>=16.0.0",
     "pyright>=1.1.407",
     "pytest>=9.0.1",
     "pytest-mock>=3.14.1",
@@ -137,11 +138,9 @@ preview          = true
 
 conflicts = [
     [
+        { extra = "cpu" },
         { extra = "mps" },
         { extra = "cuda" },
-        { extra = "triton" },
-        { extra = "torch" },
-
     ],
 ]
 

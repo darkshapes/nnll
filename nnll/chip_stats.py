@@ -48,12 +48,13 @@ class ChipStats:
         import psutil
         import torch
 
-        from nnll.init_gpu import set_torch_device
+        from nnll.init_gpu import Gfx
 
         torch.set_num_threads(1)
 
+        gfx = Gfx()
         mp.set_start_method("spawn", force=True)
-        device = set_torch_device().type
+        device = gfx.device.type
         torch.set_num_threads(1)
         stats = dict()
         stats.setdefault("data", dict())
